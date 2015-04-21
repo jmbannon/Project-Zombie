@@ -5,6 +5,18 @@
  */
 package com.projectzombie.care_package;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,17 +30,6 @@ import org.bukkit.util.Vector;
  */
 public class AltState {
 
-    private class BlockInfo {
-	private final Material material;
-	private final Byte data;
-	
-	private BlockInfo(final Material material, 
-		          final Byte data) 
-	{
-	    this.material = material;
-	    this.data = data;
-	}
-    }
     
     private Location altStateLoc;
     private Location baseStateLoc;
@@ -39,14 +40,15 @@ public class AltState {
     private String altStateDesc;
     private String baseStateDesc;
     
-    private BlockInfo[][][] blockBuffer = new BlockInfo[30][30][8];
-    
-    private boolean success;
+    private final File stateFile;
     
     public AltState(final String altStateName,
                     final String baseStateName,
-	            final FileConfiguration file) 
+	            final FileConfiguration file) throws IOException
     {
+	stateFile = new File(file.getCurrentPath(), "buffer.txt");	
+	final FileWriter stateWriter = new FileWriter(stateFile);
+	
         /* Initialize file paths */
         this.altStateName = altStateName;
 	final String altPath = "alt_states." + this.altStateName;
@@ -92,6 +94,7 @@ public class AltState {
 	    
         final Block altInitBlock = altStateLoc.getBlock();
         final Block baseInitBlock = baseStateLoc.getBlock(); 
+	Block temp;
             
         for (int i = 0; i < 30; i++) 
         {
@@ -99,43 +102,27 @@ public class AltState {
             {
                 for (int k = 0; k < 8; k++) 
                 {
-                    blockBuffer[i][j][k] = new BlockInfo(
-                        baseInitBlock.getRelative(i, k, j).getType(),
-                        baseInitBlock.getRelative(i, k, j).getData());
-                    
-                    baseInitBlock.getRelative(i, k, j).setType(
-                        altInitBlock.getRelative(i, k, j).getType());
-                    
-                    baseInitBlock.getRelative(i, k, j).setData(
-                        altInitBlock.getRelative(i, k, j).getData());
-                }
-            }
-        }	
-    }
-    
-    public void restoreState() 
-    {
-        if (blockBuffer == null)
-            return;
-        
-        final Block baseInitBlock = baseStateLoc.getBlock(); 
-        
-        for (int i = 0; i < 30; i++)
-        {
-            for (int j = 0; j < 30; j++) 
-            {
-                for (int k = 0; k < 8; k++) 
-                {
-                    baseInitBlock.getRelative(i, j, k).setType(
-                        blockBuffer[i][j][k].material);
-                    
-                    baseInitBlock.getRelative(i, j, k).setData(
-                        blockBuffer[i][j][k].data);
-                    
-                    blockBuffer[i][j][k] = null;
+		    temp = baseInitBlock.getRelative(i, k, j);
+                    if (temp.getType() == Material.AIR)
+		    {
+			stateWriter.write(new BlockSerialize(temp).getSerialized());
+			temp.setType(altInitBlock.getRelative(i, k, j).getType());
+			temp.setData(altInitBlock.getRelative(i, k, j).getData());
+		    }
                 }
             }
         }
-        blockBuffer = null;
+	stateWriter.flush();
+	stateWriter.close();
+    }
+    
+    public void restoreState() throws FileNotFoundException, IOException 
+    {
+	BufferedReader reader = new BufferedReader(new FileReader(stateFile));
+	BlockDeserialize deserialize;
+	String[] blocks = reader.readLine().split("#");
+	
+	for (String block : blocks)
+	     deserialize = new BlockDeserialize(block);
     }
 }
