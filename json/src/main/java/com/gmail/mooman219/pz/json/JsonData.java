@@ -10,7 +10,7 @@ public abstract class JsonData {
     private final boolean isObject;
 
     /**
-     * Constructor used to define is this is an object or array of objects.
+     * Constructor used to define if this is a JSON object or JSON array.
      *
      * @param isObject true, this is an object and will be wrapped by "{}",
      * false this is an array and will be wrapped by "[]"
@@ -19,6 +19,9 @@ public abstract class JsonData {
         this.isObject = isObject;
     }
 
+    /**
+     * Constructor used to define this an JSON object
+     */
     public JsonData() {
         this.isObject = true;
     }
@@ -32,9 +35,9 @@ public abstract class JsonData {
     protected abstract void write(JsonGenerator g) throws IOException;
 
     /**
-     * Produces a non-fancy string representation of this class.
+     * Produces a pretty string representation of this class.
      *
-     * @return the json string representing this class
+     * @return the JSON representing this class
      */
     public String serialize() {
         return serialize(false);
@@ -46,7 +49,7 @@ public abstract class JsonData {
      * @param fancy if true the pretty printing will be use, else the standard
      * formatting will be used. Pretty printing makes the resulting string more
      * human readable adding indentation
-     * @return the json string representing this class
+     * @return the JSON representing this class
      */
     public String serialize(boolean fancy) {
         JsonFactory factory = JsonHelper.getFactory();
