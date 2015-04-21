@@ -18,6 +18,10 @@ public class JsonHelper {
     private static final ObjectMapper fancyMapper = new ObjectMapper();
     private static final JsonFactory factory = new JsonFactory();
 
+    /**
+     * Configure the mapper and fancyMapper objects to play nicely with
+     * malformatted data.
+     */
     static {
         JsonHelper.mapper.registerModule(new AfterburnerModule());
         JsonHelper.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
