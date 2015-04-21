@@ -20,7 +20,7 @@ public class JsonHelper {
 
     /**
      * Configure the mapper and fancyMapper objects to play nicely with
-     * malformatted data.
+     * malformated data.
      */
     static {
         JsonHelper.mapper.registerModule(new AfterburnerModule());
