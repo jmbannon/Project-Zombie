@@ -64,6 +64,7 @@ public class DropConfig implements CommandExecutor {
 	else if (args[0].equalsIgnoreCase("setalt") && args.length == 2)
 	{
 	    createState(player, args[1], dropConfig, true);
+	    
 	}
 	else if (args[0].equalsIgnoreCase("remove") && args.length == 2)
 	{
@@ -72,6 +73,7 @@ public class DropConfig implements CommandExecutor {
 	else if (args[0].equalsIgnoreCase("basetoalt") && args.length == 3)
 	{
 	    swapStates(args[1], args[2], dropConfig);
+	    player.sendMessage("attemping to swap states" + args[1] + " and " + args[2]);
 	}
 	else if (args[0].equalsIgnoreCase("restore"))
 	{
@@ -94,6 +96,7 @@ public class DropConfig implements CommandExecutor {
 	file.set(statePath + ".desc", "fill in desc");
 	
 	sender.sendMessage(stateName + " created.");
+	this.saveConfig();
     }
     
     public void swapStates(final String baseName, final String altName, final FileConfiguration file)
@@ -101,12 +104,13 @@ public class DropConfig implements CommandExecutor {
 	if (!stateChange)
 	{
 	    try {
-		state = new AltState(altName, baseName, file);
+		state = new AltState(altName, baseName, dropFile, file);
 		stateChange = true;
 	    } catch (IOException ex) {
 		Logger.getLogger(DropConfig.class.getName()).log(Level.SEVERE, null, ex);  
 	    }
 	}
+	
     }
     
     public void restoreState() {
@@ -136,7 +140,7 @@ public class DropConfig implements CommandExecutor {
     /**
     * Saves all changes to file and file configuration.
     */
-    private void saveConfig() {
+    public void saveConfig() {
 	if (dropFile == null || dropConfig == null)
 	    return;
 	try {

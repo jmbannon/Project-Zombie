@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,9 +39,10 @@ public class AltState {
     
     public AltState(final String altStateName,
                     final String baseStateName,
-	            final FileConfiguration file) throws IOException
+		    final File file,
+	            final FileConfiguration stateConfig) throws IOException
     {
-	stateFile = new File(file.getCurrentPath(), "buffer.txt");	
+	stateFile = new File(file.getParentFile().getAbsolutePath(), "buffer.txt");	
 	final FileWriter stateWriter = new FileWriter(stateFile);
 	
         /* Initialize file paths */
@@ -56,32 +58,32 @@ public class AltState {
 	final String baseCoordPath = basePath + ".coords";
         final String baseDescPath = basePath + ".desc";
         
-	if (!file.contains(altPath) 
-		|| !file.contains(altWorldPath) 
-		|| !file.contains(altCoordPath)
-                || !file.contains(altDescPath)
-                || !file.contains(basePath) 
-		|| !file.contains(baseWorldPath) 
-		|| !file.contains(baseCoordPath)
-                || !file.contains(baseDescPath))
+	if (!stateConfig.contains(altPath) 
+		|| !stateConfig.contains(altWorldPath) 
+		|| !stateConfig.contains(altCoordPath)
+                || !stateConfig.contains(altDescPath)
+                || !stateConfig.contains(basePath) 
+		|| !stateConfig.contains(baseWorldPath) 
+		|| !stateConfig.contains(baseCoordPath)
+                || !stateConfig.contains(baseDescPath))
 	{
             return;
         } 
         
-        altStateDesc = file.getString(altDescPath);
-        baseStateDesc = file.getString(baseDescPath);
+        altStateDesc = stateConfig.getString(altDescPath);
+        baseStateDesc = stateConfig.getString(baseDescPath);
         
-        final Vector altVector = file.getVector(altCoordPath);
-        final Vector baseVector = file.getVector(baseCoordPath);
+        final Vector altVector = stateConfig.getVector(altCoordPath);
+        final Vector baseVector = stateConfig.getVector(baseCoordPath);
         
         altStateLoc = new Location(
-                Bukkit.getWorld(file.getString(altWorldPath)),
+                Bukkit.getWorld(stateConfig.getString(altWorldPath)),
                 altVector.getX(), 
                 altVector.getY(), 
                 altVector.getZ());
         
         baseStateLoc = new Location(
-                Bukkit.getWorld(file.getString(baseWorldPath)),
+                Bukkit.getWorld(stateConfig.getString(baseWorldPath)),
                 baseVector.getX(), 
                 baseVector.getY(), 
                 baseVector.getZ());

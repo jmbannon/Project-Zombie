@@ -28,6 +28,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
 	dropExec.restoreState();
+	dropExec.saveConfig();
 	this.getLogger().info("CarePackage disabled");
     }
     

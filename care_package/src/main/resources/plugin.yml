@@ -1,0 +1,7 @@
+name: carepackage
+main: com.projectzombie.care_package.Main
+version: 1.0
+commands:
+  cp:
+    description: Nope.
+    usage: "WIP"
