@@ -120,14 +120,6 @@ public final class JsonWorld extends JsonProxy<World> {
     }
 
     /**
-     * Attempts to deserialize the data on the given parser as a JsonWorld
-     * object. If the parser is missing data, default values will be used.
-     *
-     * @param p the parser with the serialized JsonWorld on it
-     * @return a new JsonWorld object representing the data on the given parser
-     * @throws IOException if an error occurred with the parser
-     */
-    /**
      * Attempts to deserialize the data as a JsonWorld. If there is an exception
      * in the process, null is returned. If the parser is missing data, default
      * values will be used.

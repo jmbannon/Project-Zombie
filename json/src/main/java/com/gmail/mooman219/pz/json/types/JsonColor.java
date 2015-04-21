@@ -129,6 +129,14 @@ public final class JsonColor extends JsonProxy<Color> {
         return new JsonColor(red, blue, green);
     }
 
+    /**
+     * Attempts to deserialize the data as a JsonColor. If there is an exception
+     * in the process, null is returned. If the parser is missing data, default
+     * values will be used.
+     *
+     * @param data the string containing a serialized JsonColor on it
+     * @return a new JsonColor object representing the given data
+     */
     public static JsonColor deserialize(String data) {
         JsonFactory factory = JsonHelper.getFactory();
         JsonColor o = null;
