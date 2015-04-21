@@ -13,14 +13,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Main extends JavaPlugin {
     
+    private DropConfig dropExec;
+    
     @Override
     public void onEnable() {
+	dropExec = new DropConfig(this);
+	dropExec.loadConfig();
 	
+	this.getCommand("cp").setExecutor(dropExec);
+	
+	this.getLogger().info("Care Package Enabled!");
     }
     
     @Override
     public void onDisable() {
-	
+	dropExec.restoreState();
+	this.getLogger().info("CarePackage disabled");
     }
     
 }

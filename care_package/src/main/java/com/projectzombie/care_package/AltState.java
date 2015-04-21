@@ -7,16 +7,10 @@ package com.projectzombie.care_package;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -124,5 +118,8 @@ public class AltState {
 	
 	for (String block : blocks)
 	     deserialize = new BlockDeserialize(block);
+	
+	reader.close();
+	stateFile.delete();
     }
 }
