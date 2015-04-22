@@ -53,9 +53,9 @@ public class StateChanger implements CommandExecutor
 	 */
     @Override
     public boolean onCommand(CommandSender cs, 
-	                     Command cmd, 
-			             String label, 
-                	     String[] args) 
+	                         Command cmd, 
+			                 String label, 
+                	         String[] args) 
 	{
 		final Player player = (Player) cs;
 	
@@ -223,11 +223,17 @@ public class StateChanger implements CommandExecutor
 		}
 	}
 	
+	/**
+	 * Initializes configuration file on server start-up.
+	 */
 	public void onEnable()
 	{
 		this.loadConfig();
 	}
 	
+	/**
+	 * Restores any states changed and saves configuration file.
+	 */
 	public void onDisable()
 	{
 		this.restoreState();

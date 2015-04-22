@@ -16,7 +16,7 @@ import org.bukkit.block.Block;
 public class BlockSerialize 
 {
     private final String serializedBlock;
-    private static final Server server = Bukkit.getServer();
+    
     /**
      * Serializes blocks in the form of
      * "world_name,x,y,z,id,data#"
@@ -24,26 +24,30 @@ public class BlockSerialize
      */
     public BlockSerialize(final Block block)
     {
-	final StringBuilder temp = new StringBuilder();
+		final StringBuilder temp = new StringBuilder();
 	
-	temp.append(block.getWorld().getName());
-	temp.append(',');
-	temp.append(block.getX());
-	temp.append(',');
-	temp.append(block.getY());
-	temp.append(',');
-	temp.append(block.getZ());
-	temp.append(',');
-	temp.append(block.getTypeId());
-	temp.append(',');
-	temp.append(block.getData());
-	temp.append('\n');
+		temp.append(block.getWorld().getName());
+		temp.append(',');
+		temp.append(block.getX());
+		temp.append(',');
+		temp.append(block.getY());
+		temp.append(',');
+		temp.append(block.getZ());
+		temp.append(',');
+		temp.append(block.getTypeId());
+		temp.append(',');
+		temp.append(block.getData());
+		temp.append('\n');
 	
-	serializedBlock = temp.toString();
+		serializedBlock = temp.toString();
     }
     
+	/**
+	 * Returns the serialized block string.
+	 * @return 
+	 */
     public String getSerialized() 
     {
-	return serializedBlock;
+		return serializedBlock;
     }
 }
