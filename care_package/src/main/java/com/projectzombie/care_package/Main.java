@@ -11,24 +11,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author jbannon
  */
-public class Main extends JavaPlugin 
-{
+public class Main extends JavaPlugin {
+
     private StateChanger dropExec;
-    
+
     @Override
-    public void onEnable() 
-	{
-		dropExec = new StateChanger(this);
-		dropExec.onEnable();
-	
-		this.getCommand("cp").setExecutor(dropExec);
-		this.getLogger().info("Care Package Enabled!");
+    public void onEnable() {
+        dropExec = new StateChanger(this);
+        dropExec.onEnable();
+
+        this.getCommand("cp").setExecutor(dropExec);
+        this.getLogger().info("Care Package Enabled!");
     }
-    
+
     @Override
-    public void onDisable() 
-	{
-		dropExec.onDisable();
-		this.getLogger().info("CarePackage disabled");
+    public void onDisable() {
+        dropExec.onDisable();
+        this.getLogger().info("CarePackage disabled");
     }
 }

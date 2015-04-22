@@ -5,49 +5,46 @@
  */
 package com.projectzombie.care_package;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 /**
  *
  * @author jbannon
  */
-public class BlockSerialize 
-{
+public class BlockSerialize {
+
     private final String serializedBlock;
-    
+
     /**
-     * Serializes blocks in the form of
-     * "world_name,x,y,z,id,data#"
-     * @param block 
+     * Serializes blocks in the form of "world_name,x,y,z,id,data#"
+     *
+     * @param block
      */
-    public BlockSerialize(final Block block)
-    {
-		final StringBuilder temp = new StringBuilder();
-	
-		temp.append(block.getWorld().getName());
-		temp.append(',');
-		temp.append(block.getX());
-		temp.append(',');
-		temp.append(block.getY());
-		temp.append(',');
-		temp.append(block.getZ());
-		temp.append(',');
-		temp.append(block.getTypeId());
-		temp.append(',');
-		temp.append(block.getData());
-		temp.append('\n');
-	
-		serializedBlock = temp.toString();
+    public BlockSerialize(final Block block) {
+        final StringBuilder temp = new StringBuilder();
+
+        temp.append(block.getWorld().getName());
+        temp.append(',');
+        temp.append(block.getX());
+        temp.append(',');
+        temp.append(block.getY());
+        temp.append(',');
+        temp.append(block.getZ());
+        temp.append(',');
+        temp.append(block.getTypeId());
+        temp.append(',');
+        temp.append(block.getData());
+        temp.append('\n');
+
+        serializedBlock = temp.toString();
     }
-    
-	/**
-	 * Returns the serialized block string.
-	 * @return 
-	 */
-    public String getSerialized() 
-    {
-		return serializedBlock;
+
+    /**
+     * Returns the serialized block string.
+     *
+     * @return
+     */
+    public String getSerialized() {
+        return serializedBlock;
     }
 }
