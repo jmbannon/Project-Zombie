@@ -16,6 +16,7 @@
 # NetBeans specific
 ############
 
+nb-configuration.xml
 
 #################
 ## IntelliJ
@@ -44,6 +45,6 @@ Desktop.ini
 ## Maven
 ############
 
-/build/
-/target/
+*/build/
+*/target/
 dependency-reduced-pom.xml
