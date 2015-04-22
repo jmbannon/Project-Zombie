@@ -37,7 +37,7 @@ public class BlockSerialize
 	temp.append(block.getTypeId());
 	temp.append(',');
 	temp.append(block.getData());
-	temp.append('#');
+	temp.append('\n');
 	
 	serializedBlock = temp.toString();
     }
