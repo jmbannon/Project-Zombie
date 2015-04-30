@@ -5,7 +5,6 @@
  */
 package com.projectzombie.care_package;
 
-import com.projectzombie.care_package.serialize.BlockDeserialize;
 import com.projectzombie.care_package.serialize.BlockSerialize;
 import java.io.BufferedReader;
 import java.io.File;
@@ -117,7 +116,7 @@ public class AltState {
                 for (int k = 0; k < ALT_STATE_HEIGHT; k++) {
                     temp = baseInitBlock.getRelative(i, k, j);
                     if (temp.getType() == Material.AIR) {
-                        stateWriter.write(new BlockSerialize(temp).getSerialized());
+                        stateWriter.write(BlockSerialize.serialize(temp));
                         temp.setType(altInitBlock.getRelative(i, k, j).getType());
                         temp.setData(altInitBlock.getRelative(i, k, j).getData());
                     }
@@ -139,7 +138,7 @@ public class AltState {
         final String[] blocks = reader.readLine().split("\n");
 
         for (String block : blocks) {
-            BlockDeserialize.deserialize(block);
+            BlockSerialize.deserializeAndSet(block);
         }
 
         reader.close();

@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -25,7 +27,25 @@ public class ChestContents {
         this.plugin = plugin;   
     }
     
-    //private void 
+    private void createChest(final Player sender,
+                             final String chestName) 
+    {
+        final StringBuilder temp = new StringBuilder();
+        
+        if (chestConfig == null) {
+            sender.sendMessage("The file is null! Please contact the server administrator.");
+            return;
+        }
+ 
+        chestConfig.set("chest_configs", chestName);
+        
+        for (ItemStack item : sender.getInventory()) {
+            
+        }
+        chestConfig.set("chest_configs." + chestName, sender); //set with loot!
+        
+        
+    }
     
     /**
      * Loads file from plugin folder.

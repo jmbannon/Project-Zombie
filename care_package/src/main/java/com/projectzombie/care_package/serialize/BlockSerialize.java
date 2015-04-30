@@ -5,6 +5,8 @@
  */
 package com.projectzombie.care_package.serialize;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 
 /**
@@ -13,16 +15,18 @@ import org.bukkit.block.Block;
  */
 public class BlockSerialize {
 
-    private final String serializedBlock;
+    private static final Server server = Bukkit.getServer();
 
+    private BlockSerialize() { /* Do nothing */ }
     /**
-     * Serializes blocks in the form of "world_name,x,y,z,id,data#"
+     * Serializes blocks in the form of "world_name,x,y,z,id,data,\n"
      *
      * @param block
+     * @return 
      */
-    public BlockSerialize(final Block block) {
+    public static String serialize(final Block block) {
         final StringBuilder temp = new StringBuilder();
-
+        
         temp.append(block.getWorld().getName());
         temp.append(',');
         temp.append(block.getX());
@@ -36,15 +40,23 @@ public class BlockSerialize {
         temp.append(block.getData());
         temp.append('\n');
 
-        serializedBlock = temp.toString();
+        return temp.toString();
     }
-
+    
     /**
-     * Returns the serialized block string.
-     *
-     * @return
+     * Deserializes the string and sets the block in the specified world.
+     * @param serializedString
      */
-    public String getSerialized() {
-        return serializedBlock;
+    public static void deserializeAndSet(final String serializedString) {
+        String[] parts = serializedString.split(",");
+        final String worldName = parts[0];
+        final Integer x = Integer.valueOf(parts[1]);
+        final Integer y = Integer.valueOf(parts[2]);
+        final Integer z = Integer.valueOf(parts[3]);
+        final Integer id = Integer.valueOf(parts[4]);
+        final Byte data = Byte.valueOf(parts[5]);
+
+        server.getWorld(worldName).getBlockAt(x, y, z).setTypeId(id);
+        server.getWorld(worldName).getBlockAt(x, y, z).setData(data);
     }
 }
