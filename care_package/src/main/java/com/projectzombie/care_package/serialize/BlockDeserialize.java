@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.projectzombie.care_package;
+package com.projectzombie.care_package.serialize;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -16,13 +16,13 @@ public class BlockDeserialize {
 
     private static final Server server = Bukkit.getServer();
 
-    public BlockDeserialize() { /* Do nothing */ }
+    private BlockDeserialize() { /* Do nothing */ }
 
     /**
-     *
+     * Deserializes the string and sets the block in the specified world.
      * @param serializedString
      */
-    public void deserialize(final String serializedString) {
+    public static void deserialize(final String serializedString) {
         String[] parts = serializedString.split(",");
         final String worldName = parts[0];
         final Integer x = Integer.valueOf(parts[1]);

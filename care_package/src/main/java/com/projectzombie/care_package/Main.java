@@ -13,11 +13,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Main extends JavaPlugin {
 
-    private StateChanger dropExec;
+    private StateControl dropExec;
 
     @Override
     public void onEnable() {
-        dropExec = new StateChanger(this);
+        dropExec = new StateControl(this);
         dropExec.onEnable();
 
         this.getCommand("cp").setExecutor(dropExec);

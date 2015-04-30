@@ -7,8 +7,11 @@ package com.projectzombie.care_package;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +25,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @author jbannon
  */
-public class StateChanger implements CommandExecutor {
+public class StateControl implements CommandExecutor {
 
     private final Plugin plugin;
     private File dropFile;
@@ -30,18 +33,22 @@ public class StateChanger implements CommandExecutor {
 
     private static AltState state;
     private static boolean stateChange;
+    private static Random rand;
 
+    private enum StateType { ALT, BASE };
+    
     /**
      * Initializes StateChanger variables.
      *
      * @param plugin
      */
-    public StateChanger(Plugin plugin) {
+    public StateControl(Plugin plugin) {
         this.plugin = plugin;
         this.dropFile = null;
         this.dropConfig = null;
-        this.state = null;
-        this.stateChange = false;
+        StateControl.state = null;
+        StateControl.stateChange = false;
+        StateControl.rand = new Random();
     }
 
     /**
@@ -67,31 +74,70 @@ public class StateChanger implements CommandExecutor {
 
         if (args.length == 0) {
             this.listCommands(player);
+            
         } else if (args[0].equalsIgnoreCase("list") && args.length == 2) {
             if (args[1].equalsIgnoreCase("alt")) {
-                this.listStates(player, dropConfig, true);
+                this.listStates(player, dropConfig, StateType.ALT);
             } else if (args[1].equalsIgnoreCase("base")) {
-                this.listStates(player, dropConfig, false);
+                this.listStates(player, dropConfig, StateType.BASE);
             } else {
                 this.listCommands(player);
             }
+            
         } else if (args[0].equalsIgnoreCase("setbase") && args.length == 2) {
-            createState(player, args[1], dropConfig, false);
+            createState(player, args[1], dropConfig, StateType.BASE);
+            
         } else if (args[0].equalsIgnoreCase("setalt") && args.length == 2) {
-            createState(player, args[1], dropConfig, true);
-        } else if (args[0].equalsIgnoreCase("remove") && args.length == 2) {
-            //remove state
+            createState(player, args[1], dropConfig, StateType.ALT);
+            
+        } else if (args[0].equalsIgnoreCase("remove") && args.length == 3) {
+            if (args[1].equalsIgnoreCase("base"))
+                this.removeState(player, args[2], StateType.BASE, dropConfig);
+            else if (args[1].equalsIgnoreCase("alt"))
+                this.removeState(player, args[2], StateType.ALT, dropConfig);
+            else
+                this.listCommands(player);
+                
         } else if (args[0].equalsIgnoreCase("basetoalt") && args.length == 3) {
             swapStates(args[1], args[2], dropConfig);
             player.sendMessage("attemping to swap states" + args[1] + " and " + args[2]);
+            
         } else if (args[0].equalsIgnoreCase("restore")) {
             restoreState();
+            
         } else {
 
         }
         return true;
     }
 
+    private void initiateDrop(final FileConfiguration file) {
+        final String basePath = "base_states";
+        final String altPath = "alt_states";
+        String baseName;
+        String altName;
+        
+        int i = 0, j = 0;
+        for (String key : file.getConfigurationSection(basePath).getKeys(false)) {
+            ++i;
+        }
+      
+        if (i == 0) {
+            Bukkit.getServer().getLogger().info("[CarePackage] No base states exist. Cannot initiate drop.");
+            return;
+        }
+        
+        j = rand.nextInt(i) + 1;
+        
+        for (String key : file.getConfigurationSection(basePath).getKeys(false)) {
+            if (j == i) {
+                baseName = key;
+            }
+            --i;
+        }
+        
+    }
+    
     /**
      * Creates a new state within the YAML configuration.
      *
@@ -103,14 +149,22 @@ public class StateChanger implements CommandExecutor {
     private void createState(final Player sender,
             final String stateName,
             final FileConfiguration file,
-            final boolean stateType) {
-        final String rootPath = stateType ? "alt_states" : "base_states";
+            final StateType stateType) {
+
+        final String rootPath 
+                = (stateType == StateType.ALT) ? "alt_states" : "base_states";
         final String statePath = rootPath + "." + stateName;
+        final Location senderLoc = sender.getLocation();
 
         file.set(rootPath, stateName);
         file.set(statePath + ".world", sender.getWorld().getName());
-        file.set(statePath + ".coords", sender.getLocation().toVector());
+        file.set(statePath + ".coords", senderLoc.toVector());
         file.set(statePath + ".desc", "fill in desc");
+        
+        if (stateType == StateType.BASE)
+            file.set(statePath + ".alts", null);
+        else 
+            file.set(statePath + ".chest", state.getChestRelative(senderLoc));
 
         sender.sendMessage(stateName + " created.");
         this.saveConfig();
@@ -126,12 +180,13 @@ public class StateChanger implements CommandExecutor {
     private void swapStates(final String baseName,
             final String altName,
             final FileConfiguration file) {
+        
         if (!stateChange) {
             try {
                 state = new AltState(altName, baseName, dropFile, file);
                 stateChange = true;
             } catch (IOException ex) {
-                Logger.getLogger(StateChanger.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StateControl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -145,8 +200,9 @@ public class StateChanger implements CommandExecutor {
      */
     private void listStates(final Player sender,
             final FileConfiguration file,
-            final boolean stateType) {
-        final String stateConfigSection = stateType ? "alt_states" : "base_states";
+            final StateType stateType) {
+        final String stateConfigSection 
+                = (stateType == StateType.ALT) ? "alt_states" : "base_states";
 
         sender.sendMessage("States: ");
         for (String key : file.getConfigurationSection(stateConfigSection).getKeys(false)) {
@@ -172,9 +228,52 @@ public class StateChanger implements CommandExecutor {
                 state.restoreState();
                 stateChange = false;
             } catch (IOException ex) {
-                Logger.getLogger(StateChanger.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StateControl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    private void linkState(final Player player,
+                           final String baseStateName,
+                           final String altStateName,
+                           final FileConfiguration file) {
+        final String basePath = "base_states." + baseStateName + ".alts";
+        final String altPath = "alt_states." + altStateName;
+        
+        if (!file.contains(basePath)) {
+            player.sendMessage(baseStateName + " does not exist.");
+            return;
+        } else if (!file.contains(altPath)) {
+            player.sendMessage(altStateName + " does not exist.");
+            return;
+        }
+        
+        file.set(basePath, altStateName);
+        player.sendMessage(baseStateName + " linked to " + altStateName);
+    
+    }
+    
+    /**
+     * Removes state of the given name.
+     * @param player
+     * @param stateName
+     * @param stateType
+     * @param file 
+     */
+    private void removeState(final Player player,
+                             final String stateName,
+                             final StateType stateType,
+                             final FileConfiguration file) {
+        
+        final String stateConfigSection 
+                = (stateType == StateType.ALT) ? "alt_states." : "base_states.";
+        final String path = stateConfigSection+stateName;
+        
+        if (file.contains(path)) {
+            file.set(path, null);
+            player.sendMessage(stateName + " deleted.");
+        } else
+            player.sendMessage(stateName + " does not exist.");       
     }
 
     /**
