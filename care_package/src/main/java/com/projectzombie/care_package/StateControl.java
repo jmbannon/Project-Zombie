@@ -183,7 +183,7 @@ public class StateControl implements CommandExecutor {
         
         if (!stateChange) {
             try {
-                state = new AltState(altName, baseName, dropFile, file);
+                state = new AltState(altName, baseName, dropFile, file, plugin);
                 stateChange = true;
             } catch (IOException ex) {
                 Logger.getLogger(StateControl.class.getName()).log(Level.SEVERE, null, ex);

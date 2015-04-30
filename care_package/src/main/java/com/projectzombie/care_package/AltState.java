@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 /**
@@ -29,7 +30,6 @@ public class AltState {
     private static final int ALT_STATE_LENGTH = 30;
     private static final int ALT_STATE_WIDTH = 30;
     private static final int ALT_STATE_HEIGHT = 8;
-    
     private Location altStateLoc;
     private Location baseStateLoc;
 
@@ -40,7 +40,9 @@ public class AltState {
     private String baseStateDesc;
 
     private final File stateFile;
+    private final Plugin plugin;
     
+    private final ChestContents contents;
     private Chest packageChest;
 
     /**
@@ -53,13 +55,16 @@ public class AltState {
      * @throws IOException
      */
     public AltState(final String altStateName,
-            final String baseStateName,
-            final File file,
-            final FileConfiguration stateConfig) throws IOException {
-        
-        stateFile = new File(file.getParentFile().getAbsolutePath(), "buffer.txt");
+                    final String baseStateName,
+                    final File file,
+                    final FileConfiguration stateConfig,
+                    final Plugin plugin) throws IOException 
+    {
+        this.plugin = plugin;
+        this.contents = new ChestContents(this.plugin);
+        this.stateFile = new File(file.getParentFile().getAbsolutePath(), "buffer.txt");
         final FileWriter stateWriter = new FileWriter(stateFile);
-
+        
         /* Initialize file paths */
         this.altStateName = altStateName;
         final String altPath = "alt_states." + this.altStateName;
@@ -109,6 +114,7 @@ public class AltState {
 
         final Block altInitBlock = altStateLoc.getBlock();
         final Block baseInitBlock = baseStateLoc.getBlock();
+        final Chest chest;
         Block temp;
 
         for (int i = 0; i < ALT_STATE_LENGTH; i++) {
@@ -123,6 +129,12 @@ public class AltState {
                 }
             }
         }
+        
+        chest = (Chest)baseInitBlock.getRelative((int)chestVector.getBlockX(),
+                                                 (int)chestVector.getBlockY(),
+                                                 (int)chestVector.getBlockZ());
+        
+        this.contents.setChest(chest);
         stateWriter.flush();
         stateWriter.close();
     }
@@ -133,7 +145,8 @@ public class AltState {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void restoreState() throws FileNotFoundException, IOException {
+    public void restoreState() throws FileNotFoundException, IOException 
+    {
         BufferedReader reader = new BufferedReader(new FileReader(stateFile));
         final String[] blocks = reader.readLine().split("\n");
 

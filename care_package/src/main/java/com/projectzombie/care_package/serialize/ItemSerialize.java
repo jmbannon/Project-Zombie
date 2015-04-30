@@ -21,17 +21,23 @@ public class ItemSerialize {
      */
     private ItemSerialize() { /* Do nothing */ }
     
-    public static String serialize(final ItemStack item) {
+    /**
+     * Serializes item in the form of itemType,amount,#
+     * @param item
+     * @return 
+     */
+    public static String serialize(final ItemStack item)
+    {
         final StringBuilder temp = new StringBuilder();
         if (item != null && item.getType() != Material.AIR) {
             temp.append(item.getType().toString());
             temp.append(",");
             temp.append(item.getAmount());
             temp.append(",");
-            temp.append("\n");
+            temp.append("#");
             return temp.toString();
         } else
-            return "0,0,\n";
+            return "0,0,#";
     }
     
     /**
@@ -39,7 +45,8 @@ public class ItemSerialize {
      * @param serializedString
      * @return 
      */
-    public static ItemStack deserialize(final String serializedString) {
+    public static ItemStack deserialize(final String serializedString)
+    {
         final String[] parts = serializedString.split(",");
         final Material type;
         final int amount;
