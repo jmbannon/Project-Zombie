@@ -1,8 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * CarePackage
+ *
+ * Version:     0.5
+ * MC Build:    1.8.3
+ * Date:        05-03-2015
+ *
+ * Authur:      Jesse Bannon
+ * Server:      Project Zombie
+ * Website:     www.projectzombie.net
+ * 
+ * Initiates random care package drops by combining an alternate state of the
+ * map with a base state on the actual player map. Stores the base state blocks
+ * within a text buffer and pastes the alt state to the location of the base
+ * state. Finds single chest within the pasted alt state and sets a randomly
+ * define set of items made by the administrator.  Restores the state on a
+ * timer.
+ *
  */
+
 package com.projectzombie.care_package;
 
 import java.io.File;
@@ -12,6 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,40 +36,48 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 /**
- * Controls the states being changed amongst each other.
+ * Handles all player controls for the states.
+ * - Create
+ * - Remove
+ * - List
+ * - LinkStates
+ * - SwitchStates
  *
- * @author jbannon
+ * @author Jesse Bannon
  */
-public class StateControl implements CommandExecutor {
+public class StateController implements CommandExecutor {
 
     private final Plugin plugin;
     private File dropFile;
     private FileConfiguration dropConfig;
 
-    private static AltState state;
+    private static StateSwitcher state;
+    private static PackageHandler chest;
     private static boolean stateChange;
     private static Random rand;
 
     private enum StateType { ALT, BASE };
     
     /**
-     * Initializes StateChanger variables.
+     * Initializes StateChanger configuration file, StateSwitcher, and 
+     * PackageHandler.
      *
      * @param plugin
      */
-    public StateControl(Plugin plugin) {
+    public StateController(Plugin plugin) {
         this.plugin = plugin;
-        this.dropFile = null;
-        this.dropConfig = null;
-        StateControl.state = null;
-        StateControl.stateChange = false;
-        StateControl.rand = new Random();
+        this.loadConfig();
+        state = new StateSwitcher(plugin, dropConfig);
+        stateChange = false;
+        rand = new Random();
+        chest = new PackageHandler(plugin);
     }
 
     /**
-     * Command input. WIP
+     * Command input. MOVE TO DIFFERENT CLASS!!!!
      *
      * @param cs
      * @param cmd
@@ -76,20 +101,24 @@ public class StateControl implements CommandExecutor {
             this.listCommands(player);
             
         } else if (args[0].equalsIgnoreCase("list") && args.length == 2) {
-            if (args[1].equalsIgnoreCase("alt")) {
-                this.listStates(player, dropConfig, StateType.ALT);
-            } else if (args[1].equalsIgnoreCase("base")) {
-                this.listStates(player, dropConfig, StateType.BASE);
-            } else {
+            if (args[1].equalsIgnoreCase("alt"))
+                this.listStates(player, StateType.ALT);
+            else if (args[1].equalsIgnoreCase("base"))
+                this.listStates(player, StateType.BASE);
+            else
                 this.listCommands(player);
-            }
             
-        } else if (args[0].equalsIgnoreCase("setbase") && args.length == 2) {
-            createState(player, args[1], dropConfig, StateType.BASE);
             
-        } else if (args[0].equalsIgnoreCase("setalt") && args.length == 2) {
-            createState(player, args[1], dropConfig, StateType.ALT);
-            
+        } else if (args[0].equalsIgnoreCase("create") && args.length == 3) {
+            if (args[1].equalsIgnoreCase("alt"))
+                createState(player, args[2], StateType.ALT);
+            else if (args[1].equalsIgnoreCase("base"))
+                createState(player, args[2], StateType.BASE);
+            else if (args[1].equalsIgnoreCase("chest"))
+                chest.createPackage(player, args[2]);
+            else
+                this.listCommands(player);
+  
         } else if (args[0].equalsIgnoreCase("remove") && args.length == 3) {
             if (args[1].equalsIgnoreCase("base"))
                 this.removeState(player, args[2], StateType.BASE, dropConfig);
@@ -99,19 +128,31 @@ public class StateControl implements CommandExecutor {
                 this.listCommands(player);
                 
         } else if (args[0].equalsIgnoreCase("basetoalt") && args.length == 3) {
-            swapStates(args[1], args[2], dropConfig);
+            setAltState(args[1], args[2]);
             player.sendMessage("attemping to swap states" + args[1] + " and " + args[2]);
             
+        } else if (args[0].equalsIgnoreCase("chest") && args.length == 3) {
+            if (args[1].equalsIgnoreCase("create"))
+                chest.createPackage(player, args[2]); 
+            else if (args[1].equalsIgnoreCase("remove"))
+                chest.removePackage(player, args[2]);
+            else
+                this.listCommands(player);
         } else if (args[0].equalsIgnoreCase("restore")) {
             restoreState();
             
         } else {
-
+            this.listCommands(player);
         }
         return true;
     }
 
-    private void initiateDrop(final FileConfiguration file) {
+    /**
+     * Initiates a random care package drop. //WIP!!!!!!
+     * @param file 
+     */
+    private void initiateDrop(final FileConfiguration file) 
+    {
         final String basePath = "base_states";
         final String altPath = "alt_states";
         String baseName;
@@ -139,84 +180,97 @@ public class StateControl implements CommandExecutor {
     }
     
     /**
-     * Creates a new state within the YAML configuration.
+     * Creates a new state within the configuration file.
      *
-     * @param sender
-     * @param stateName
-     * @param file
-     * @param stateType True - AltState. False - BaseState.
+     * @param sender Command sender.
+     * @param stateName State name.
+     * @param stateType Type of state (base/alt).
      */
     private void createState(final Player sender,
             final String stateName,
-            final FileConfiguration file,
-            final StateType stateType) {
-
+            final StateType stateType) 
+    {
         final String rootPath 
                 = (stateType == StateType.ALT) ? "alt_states" : "base_states";
         final String statePath = rootPath + "." + stateName;
         final Location senderLoc = sender.getLocation();
+        Vector chestSerialized = null;
 
-        file.set(rootPath, stateName);
-        file.set(statePath + ".world", sender.getWorld().getName());
-        file.set(statePath + ".coords", senderLoc.toVector());
-        file.set(statePath + ".desc", "fill in desc");
+        if (stateType == StateType.ALT) {
+            chestSerialized = this.getChestRelative(senderLoc);
+        
+            if (chestSerialized == null) {
+                sender.sendMessage("A chest error occured");
+                return;
+            }
+        }
+
+        dropConfig.set(rootPath, stateName);
+        dropConfig.set(statePath + ".world", sender.getWorld().getName());
+        dropConfig.set(statePath + ".coords", senderLoc.toVector());
+        dropConfig.set(statePath + ".desc", "fill in desc");
         
         if (stateType == StateType.BASE)
-            file.set(statePath + ".alts", null);
-        else 
-            file.set(statePath + ".chest", state.getChestRelative(senderLoc));
+            dropConfig.set(statePath + ".alts", null);
+        else
+            dropConfig.set(statePath + ".chest", chestSerialized);
 
         sender.sendMessage(stateName + " created.");
         this.saveConfig();
     }
 
     /**
-     * Swaps a base state with an alt state.
+     * Swaps an alternate state to a base state's location.
      *
-     * @param baseName
-     * @param altName
-     * @param file
+     * @param baseName Name of base state.
+     * @param altName Name of alternate state.
      */
-    private void swapStates(final String baseName,
-            final String altName,
-            final FileConfiguration file) {
-        
+    private void setAltState(final String baseName,
+                             final String altName) 
+    {
+        int rv;
         if (!stateChange) {
             try {
-                state = new AltState(altName, baseName, dropFile, file, plugin);
+                StateController.state = new StateSwitcher(plugin, dropConfig);
+                rv = state.setState(altName, baseName);
+                if (rv >= 0)
                 stateChange = true;
             } catch (IOException ex) {
-                Logger.getLogger(StateControl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StateController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     /**
-     * Lists all of the state type to the sender.
+     * Lists all states of the specified StateType to the command sender.
      *
      * @param sender
      * @param file
      * @param stateType True - AltState. False - BaseState.
      */
     private void listStates(final Player sender,
-            final FileConfiguration file,
-            final StateType stateType) {
+                            final StateType stateType) 
+    {
         final String stateConfigSection 
                 = (stateType == StateType.ALT) ? "alt_states" : "base_states";
 
-        sender.sendMessage("States: ");
-        for (String key : file.getConfigurationSection(stateConfigSection).getKeys(false)) {
+        sender.sendMessage(stateConfigSection);
+        for (String key : dropConfig.getConfigurationSection(stateConfigSection).getKeys(false)) {
             sender.sendMessage(" - " + key);
         }
     }
 
-    private void listCommands(final Player player) {
-        player.sendMessage("/cp setbase <base name>	 - creates basestate at current location (30x30x8)");
-        player.sendMessage("/cp setalt <alt name>	 - creates altstate at current location (30x30x8)");
-        player.sendMessage("/cp restore		     - Restores current state");
-        player.sendMessage("/cp remove <name>	 - removes drop");
-        player.sendMessage("/cp list <base/alt>	 - lists base and alt states");
-        player.sendMessage("/cp baseToAlt <base name> <alt name> - TEMP");
+    /**
+     * Lists all commands to the sender.
+     * @param sender Command sender.
+     */
+    private void listCommands(final Player sender) 
+    {
+        sender.sendMessage("/cp create <base/alt/chest> <name> ");
+        sender.sendMessage("/cp restore		     - Restores current state");
+        sender.sendMessage("/cp remove <name>	 - removes drop");
+        sender.sendMessage("/cp list <base/alt>	 - lists base and alt states");
+        sender.sendMessage("/cp baseToAlt <base name> <alt name> - TEMP");
     }
 
     /**
@@ -228,11 +282,18 @@ public class StateControl implements CommandExecutor {
                 state.restoreState();
                 stateChange = false;
             } catch (IOException ex) {
-                Logger.getLogger(StateControl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(StateController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
+    /**
+     * Links a state //WIP!!!!
+     * @param player
+     * @param baseStateName
+     * @param altStateName
+     * @param file 
+     */
     private void linkState(final Player player,
                            final String baseStateName,
                            final String altStateName,
@@ -274,6 +335,37 @@ public class StateControl implements CommandExecutor {
             player.sendMessage(stateName + " deleted.");
         } else
             player.sendMessage(stateName + " does not exist.");       
+    }
+    
+    /**
+     * Gets the vector of the alt state's single chest relative to the
+     * player's location.
+     * 
+     * @param playerLoc Location of the player.
+     * @return Vector of the offset relative to the player.
+     */
+    public Vector getChestRelative(final Location playerLoc) {
+        final Block loc = playerLoc.getBlock();
+        final int length = state.getStateLength();
+        final int width = state.getStateWidth();
+        final int height = state.getStateHeight();
+        
+        Vector chestRelative = null;
+        boolean hasChest = false;
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < height; k++) {
+                    if (loc.getRelative(i, k, j).getType() == Material.CHEST) {
+                        if (!hasChest) {
+                            chestRelative = new Vector(i, k, j);
+                            hasChest = true;
+                        }
+                    }
+                }
+            }
+        }
+        return chestRelative;
     }
 
     /**

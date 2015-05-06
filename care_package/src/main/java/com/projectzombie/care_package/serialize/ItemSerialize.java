@@ -22,7 +22,7 @@ public class ItemSerialize {
     private ItemSerialize() { /* Do nothing */ }
     
     /**
-     * Serializes item in the form of itemType,amount,#
+     * Serializes item in the form of itemType,amount,durability#
      * @param item
      * @return 
      */
@@ -33,6 +33,8 @@ public class ItemSerialize {
             temp.append(item.getType().toString());
             temp.append(",");
             temp.append(item.getAmount());
+            temp.append(",");
+            temp.append(item.getDurability());
             temp.append(",");
             temp.append("#");
             return temp.toString();
@@ -50,13 +52,14 @@ public class ItemSerialize {
         final String[] parts = serializedString.split(",");
         final Material type;
         final int amount;
+        final short durability;
         
         if (parts[0].equalsIgnoreCase("0"))
             return new ItemStack(Material.AIR, 0);
         
         type = Material.valueOf(parts[0]);
         amount = Integer.valueOf(parts[1]);
-
-        return new ItemStack(type, amount);
+        durability = Short.valueOf(parts[2]);
+        return new ItemStack(type, amount, durability);
     }
 }
