@@ -6,20 +6,26 @@
 package com.projectzombie.care_package.serialize;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  *
  * @author jbannon
  */
-public class BlockSerialize {
+public class BlockSerialize implements Listener {
 
     private static final Server server = Bukkit.getServer();
 
-    private BlockSerialize() { /* Do nothing */ }
+    public BlockSerialize() { /* Do nothing */ }
+    
     /**
-     * Serializes blocks in the form of "world_name,x,y,z,id,data,\n"
+     * Serializes blocks in the form of "world_name,x,y,z,type,data,\n"
      *
      * @param block
      * @return 
@@ -35,7 +41,7 @@ public class BlockSerialize {
         temp.append(',');
         temp.append(block.getZ());
         temp.append(',');
-        temp.append(block.getTypeId());
+        temp.append(block.getType().toString());
         temp.append(',');
         temp.append(block.getData());
         temp.append('#');
@@ -49,14 +55,22 @@ public class BlockSerialize {
      */
     public static void deserializeAndSet(final String serializedString) {
         String[] parts = serializedString.split(",");
-        final String worldName = parts[0];
-        final Integer x = Integer.valueOf(parts[1]);
-        final Integer y = Integer.valueOf(parts[2]);
-        final Integer z = Integer.valueOf(parts[3]);
-        final Integer id = Integer.valueOf(parts[4]);
-        final Byte data = Byte.valueOf(parts[5]);
-
-        server.getWorld(worldName).getBlockAt(x, y, z).setTypeId(id);
-        server.getWorld(worldName).getBlockAt(x, y, z).setData(data);
+        
+        final Block theBlock = server.getWorld(parts[0]).getBlockAt(
+                Integer.valueOf(parts[1]), 
+                Integer.valueOf(parts[2]), 
+                Integer.valueOf(parts[3]));
+        
+        BlockBreakEvent event = new BlockBreakEvent(theBlock, null);
+        theBlock.setType(Material.valueOf(parts[4]));
+        theBlock.setData(Byte.valueOf(parts[5]));
+    }
+    
+    @EventHandler (priority = EventPriority.NORMAL)
+    public static void onBreak(BlockBreakEvent evt) {
+        evt.setCancelled(true);
+        evt.getBlock().getDrops().clear();
+        evt.getBlock().getLocation();
+        evt.getBlock().setType(Material.AIR);
     }
 }

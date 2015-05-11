@@ -5,8 +5,11 @@
  */
 package com.projectzombie.care_package.serialize;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
@@ -14,32 +17,45 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ItemSerialize {
     
-    /**
-     * Serializes item in the form of "material,amount,#"
-     * If it is air then "0\n"
-     * @param item
-     */
     private ItemSerialize() { /* Do nothing */ }
     
     /**
-     * Serializes item in the form of itemType,amount,durability#
+     * Serializes item in the form of 
+     * hasDisplayName,hasLore,itemType,amount,durability,displayname,loreSize,loreLine1,...,##
      * @param item
      * @return 
      */
     public static String serialize(final ItemStack item)
     {
         final StringBuilder temp = new StringBuilder();
+        String hasDisplayName = "0&&";
+        String hasLore = "0&&";
+        
         if (item != null && item.getType() != Material.AIR) {
             temp.append(item.getType().toString());
-            temp.append(",");
+            temp.append("&&");
             temp.append(item.getAmount());
-            temp.append(",");
+            temp.append("&&");
             temp.append(item.getDurability());
-            temp.append(",");
-            temp.append("#");
-            return temp.toString();
+            temp.append("&&");
+            if (item.getItemMeta().hasDisplayName()) {
+                hasDisplayName = "1&&";
+                temp.append(item.getItemMeta().getDisplayName());
+                temp.append("&&");
+            }
+            if (item.getItemMeta().hasLore()) {
+                hasLore = "1&&";
+                temp.append(item.getItemMeta().getLore().size());
+                temp.append("&&");
+                for (int i = 0; i < item.getItemMeta().getLore().size(); i++) {
+                    temp.append(item.getItemMeta().getLore().get(i));
+                    temp.append("&&");
+                }
+            }
+            temp.append("##");
+            return hasDisplayName + hasLore + temp.toString();
         } else
-            return "0,0,#";
+            return "!&&##";
     }
     
     /**
@@ -49,17 +65,36 @@ public class ItemSerialize {
      */
     public static ItemStack deserialize(final String serializedString)
     {
-        final String[] parts = serializedString.split(",");
-        final Material type;
-        final int amount;
-        final short durability;
+        final String[] parts = serializedString.split("&&");
+        final boolean hasDisplayName, hasLore;
+        final ItemMeta meta;
         
-        if (parts[0].equalsIgnoreCase("0"))
+        if (parts[0].equalsIgnoreCase("!"))
             return new ItemStack(Material.AIR, 0);
         
-        type = Material.valueOf(parts[0]);
-        amount = Integer.valueOf(parts[1]);
-        durability = Short.valueOf(parts[2]);
-        return new ItemStack(type, amount, durability);
+        hasDisplayName = (parts[0].equals("1"));
+        hasLore = (parts[1].equals("1"));
+        
+        ItemStack item = new ItemStack(
+                Material.valueOf(parts[2]), 
+                Integer.valueOf(parts[3]), 
+                Short.valueOf(parts[4]));
+        
+        meta = item.getItemMeta();
+        
+        if (hasDisplayName)
+            meta.setDisplayName(parts[5]);
+        
+        if (hasLore) {
+            final int loreSize = Integer.valueOf(parts[6]);
+            List<String> loreList = new ArrayList<>();
+            for (int i = 0; i < loreSize; i++)
+                loreList.add(parts[7+i]);
+        
+            meta.setLore(loreList);
+        }
+        
+        item.setItemMeta(meta);
+        return item;
     }
 }
