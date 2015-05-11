@@ -96,26 +96,22 @@ public class StateSwitcher {
         final String altPath = "alt_states." + altStateName;
         final String altWorldPath = altPath + ".world";
         final String altCoordPath = altPath + ".coords";
-        final String altDescPath = altPath + ".desc";
         final String altChestPath = altPath + ".chest";
 
         final String baseStateName = baseName;
         final String basePath = "base_states." + baseStateName;
         final String baseWorldPath = basePath + ".world";
         final String baseCoordPath = basePath + ".coords";
-        final String baseDescPath = basePath + ".desc";
-        final String baseAltPath = basePath + ".alts";
+        final String baseAltDescPath = basePath + ".alts." + altStateName;
 
         /*
         if (!stateConfig.contains(altPath)
                 || !stateConfig.contains(altWorldPath)
                 || !stateConfig.contains(altCoordPath)
-                || !stateConfig.contains(altDescPath)
                 || !stateConfig.contains(altChestPath)
                 || !stateConfig.contains(basePath)
                 || !stateConfig.contains(baseWorldPath)
-                || !stateConfig.contains(baseCoordPath)
-                || !stateConfig.contains(baseDescPath)) {
+                || !stateConfig.contains(baseCoordPath) {
                 //|| !stateConfig.contains(baseAltPath)) {
             if (stateConfig == null)
                 plugin.getServer().broadcastMessage("file is null");
@@ -130,20 +126,18 @@ public class StateSwitcher {
         if (!stateConfig.contains(altPath)) temps = altPath;
         if (!stateConfig.contains(altWorldPath)) temps = altWorldPath;
         if ( !stateConfig.contains(altCoordPath)) temps =altCoordPath;
-        if ( !stateConfig.contains(altDescPath)) temps =altDescPath;
         if ( !stateConfig.contains(altChestPath)) temps =altChestPath;
         if ( !stateConfig.contains(basePath)) temps =basePath;
         if ( !stateConfig.contains(baseWorldPath)) temps =baseWorldPath;
         if ( !stateConfig.contains(baseCoordPath)) temps =baseCoordPath;
-        if ( !stateConfig.contains(baseDescPath)) temps =baseDescPath;
+        if ( !stateConfig.contains(baseAltDescPath)) temps = baseAltDescPath;
         if (temps != null) {
             plugin.getServer().broadcastMessage(temps);
             return -1;
         }
                 //|| !stateConfig.contains(baseAltPath)) {
 
-        final String altStateDesc = stateConfig.getString(altDescPath);
-        final String baseStateDesc = stateConfig.getString(baseDescPath);
+        final String desc = stateConfig.getString(baseAltDescPath);
 
         final Vector altVector = stateConfig.getVector(altCoordPath);
         final Vector baseVector = stateConfig.getVector(baseCoordPath);

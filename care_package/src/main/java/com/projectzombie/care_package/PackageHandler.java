@@ -23,7 +23,6 @@ import com.projectzombie.care_package.serialize.ItemSerialize;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
@@ -149,7 +148,7 @@ public class PackageHandler {
     /**
      * Loads configuration file from plugin data folder.
      */
-    public void loadConfig()
+    private void loadConfig()
     {
         if (chestFile == null) 
             chestFile = new File(plugin.getDataFolder(), CONFIG_FILE_NAME);
@@ -162,7 +161,7 @@ public class PackageHandler {
     /**
      * Saves all changes to file and file configuration.
      */
-    public void saveConfig()
+    private void saveConfig()
     {
         if (chestFile == null || chestConfig == null) 
             return;
@@ -172,5 +171,15 @@ public class PackageHandler {
             plugin.getLogger().log(Level.SEVERE, "Could not save config to "
                     + chestConfig, e);
         }
+    }
+    
+    public void onEnable()
+    {
+        this.loadConfig();
+    }
+    
+    public void onDisable()
+    {
+        this.saveConfig();
     }
 }

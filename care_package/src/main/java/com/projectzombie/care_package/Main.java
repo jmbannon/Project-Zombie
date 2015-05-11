@@ -31,12 +31,12 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Main extends JavaPlugin {
 
-    private StateController commandExecutor;
+    private CommandExec commandExecutor;
     private BlockSerialize blockBreakHandler;
 
     @Override
     public void onEnable() {
-        commandExecutor = new StateController(this);
+        commandExecutor = new CommandExec(this);
         blockBreakHandler = new BlockSerialize();
         commandExecutor.onEnable();
 
