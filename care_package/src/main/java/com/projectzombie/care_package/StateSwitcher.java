@@ -33,6 +33,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -52,6 +55,7 @@ public class StateSwitcher {
     private static final int ALT_STATE_WIDTH = 30;
     private static final int ALT_STATE_HEIGHT = 8;
     private static PackageHandler CONTENTS;
+    private static Block BASE_BLOCK;
 
     private File stateFile;
     private final Plugin plugin;
@@ -145,27 +149,25 @@ public class StateSwitcher {
         final Vector baseVector = stateConfig.getVector(baseCoordPath);
         final Vector chestVector = stateConfig.getVector(altChestPath);
 
-        final Location altStateLoc = new Location(
+        final Block altInitBlock = new Location(
                 Bukkit.getWorld(stateConfig.getString(altWorldPath)),
                 altVector.getX(),
                 altVector.getY(),
-                altVector.getZ());
+                altVector.getZ()).getBlock();
 
-        final Location baseStateLoc = new Location(
+        BASE_BLOCK = new Location(
                 Bukkit.getWorld(stateConfig.getString(baseWorldPath)),
                 baseVector.getX(),
                 baseVector.getY(),
-                baseVector.getZ());
+                baseVector.getZ()).getBlock();
 
-        final Block altInitBlock = altStateLoc.getBlock();
-        final Block baseInitBlock = baseStateLoc.getBlock();
         final Block chestBlock;
         Block temp;
 
         for (int i = 0; i < ALT_STATE_LENGTH; i++) {
             for (int j = 0; j < ALT_STATE_WIDTH; j++) {
                 for (int k = 0; k < ALT_STATE_HEIGHT; k++) {
-                    temp = baseInitBlock.getRelative(i, k, j);
+                    temp = BASE_BLOCK.getRelative(i, k, j);
                     if (temp.getType() == Material.AIR) {
                         stateWriter.write(BlockSerialize.serialize(temp));
                         temp.setType(altInitBlock.getRelative(i, k, j).getType());
@@ -175,9 +177,9 @@ public class StateSwitcher {
             }
         }
 
-        chestBlock = baseInitBlock.getRelative((int)chestVector.getBlockX(),
-                                               (int)chestVector.getBlockY(),
-                                               (int)chestVector.getBlockZ());
+        chestBlock = BASE_BLOCK.getRelative((int)chestVector.getBlockX(),
+                                            (int)chestVector.getBlockY(),
+                                            (int)chestVector.getBlockZ());
         
         if (chestBlock.getState() instanceof Chest) {
             final Chest chest = (Chest)chestBlock.getState();
@@ -207,10 +209,27 @@ public class StateSwitcher {
         plugin.getServer().broadcastMessage("" + blocks.length);
         for (String block : blocks) {
             BlockSerialize.deserializeAndSet(block);
-        }
-
-        reader.close();
+        }  
         stateFile.delete();
+        this.removeDroppedEntities(BASE_BLOCK);
+    }
+    
+    private void removeDroppedEntities(Block baseBlock) {
+        final Location centerLoc 
+                = baseBlock.getRelative(ALT_STATE_WIDTH/2, 
+                                        ALT_STATE_HEIGHT/2, 
+                                        ALT_STATE_WIDTH/2).getLocation();
+        
+        final Entity temp 
+                = centerLoc.getWorld().spawnEntity(centerLoc, EntityType.ARROW);
+        
+        for (Entity entity : temp.getNearbyEntities(ALT_STATE_WIDTH/2, 
+                                                    ALT_STATE_HEIGHT/2, 
+                                                    ALT_STATE_WIDTH/2)) {
+            if (entity.getType() == EntityType.DROPPED_ITEM)
+                entity.remove();            
+        }
+        temp.remove();
     }
     
     /**

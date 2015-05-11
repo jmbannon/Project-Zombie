@@ -20,6 +20,7 @@
 
 package com.projectzombie.care_package;
 
+import com.projectzombie.care_package.serialize.BlockSerialize;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -31,13 +32,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
     private StateController commandExecutor;
+    private BlockSerialize blockBreakHandler;
 
     @Override
     public void onEnable() {
         commandExecutor = new StateController(this);
+        blockBreakHandler = new BlockSerialize();
         commandExecutor.onEnable();
 
         this.getCommand("cp").setExecutor(commandExecutor);
+        this.getServer().getPluginManager().registerEvents(blockBreakHandler, this);
         this.getLogger().info("Care Package Enabled!");
     }
 

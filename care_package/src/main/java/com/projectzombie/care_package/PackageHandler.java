@@ -22,6 +22,8 @@ package com.projectzombie.care_package;
 import com.projectzombie.care_package.serialize.ItemSerialize;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
@@ -46,7 +48,8 @@ import org.bukkit.plugin.Plugin;
 public class PackageHandler {
     
     private static final Random RAND = new Random();
-    
+    private static final String CONFIG_FILE_NAME = "chest_configs.yml";
+    private static final String ROOT_PATH = "chest_configs";
     private File chestFile;
     private FileConfiguration chestConfig;
     private final Plugin plugin;
@@ -67,40 +70,32 @@ public class PackageHandler {
      */
     ItemStack[] getRandPackage()
     {   
-        final String path = "chest_configs";
         final String buffer;
-        String chestName = null;
+        final String chestName;
+        final String split[];
+        ArrayList<String> chestList = new ArrayList<>();
         
-        int i = 0, j = 0;
-        for (String key : chestConfig.getConfigurationSection(path).getKeys(false)) {
-            ++i;
+        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
+            chestList.add(key);
         }
       
-        if (i == 0) {
+        if (chestList.isEmpty()) {
             Bukkit.getServer().getLogger().info("[CarePackage] No chests exist. Cannot initate drop.");
             return null;
         }
         
-        j = RAND.nextInt(i) + 1;
+        chestName = chestList.get(RAND.nextInt(chestList.size()));
+        chestList.clear();
         
-        for (String key : chestConfig.getConfigurationSection(path).getKeys(false)) {
-            if (j == i) {
-                chestName = key;
-            }
-            --i;
-        }
-        if (chestName == null) {
-            plugin.getServer().broadcastMessage("no chest found");
-            return null;
-        }
-        buffer = chestConfig.getString(path + "." + chestName);
-        String split[] = buffer.split("#");
-        plugin.getServer().broadcastMessage(chestName + " " + split.length);
-        ItemStack items[] = new ItemStack[27];
+        buffer = chestConfig.getString(ROOT_PATH + "." + chestName);
+        split = buffer.split("##");
         
-        for (i = 0; i < 27; i++) {
+        //plugin.getServer().broadcastMessage(chestName + " " + split.length);
+        ItemStack items[] = new ItemStack[split.length];
+        
+        for (int i = 0; i < split.length; i++) {
             items[i] = ItemSerialize.deserialize(split[i]);
-            plugin.getServer().broadcastMessage(items[i].getType().toString() + " " + items[i].getAmount());
+            //plugin.getServer().broadcastMessage(items[i].getType().toString() + " " + items[i].getAmount());
         }
         return items;
     }
@@ -121,12 +116,12 @@ public class PackageHandler {
             return;
         }
  
-        chestConfig.set("chest_configs", packageName);
+        chestConfig.set(ROOT_PATH, packageName);
         
         for (int i = 9; i <= 35; i++)
             serialBuffer.append(ItemSerialize.serialize(sender.getInventory().getItem(i)));
 
-        chestConfig.set("chest_configs." + packageName, serialBuffer.toString());
+        chestConfig.set(ROOT_PATH + "." + packageName, serialBuffer.toString());
         this.saveConfig();
         sender.sendMessage("Your inventory has been saved as " + packageName);
     }
@@ -143,8 +138,8 @@ public class PackageHandler {
             sender.sendMessage("The file is null! Please contact the server administrator.");
             return;
         } 
-        if (chestConfig.contains("chest_configs." + packageName)) {
-            chestConfig.set("chest_configs." + packageName, null);
+        if (chestConfig.contains(ROOT_PATH + "."  + packageName)) {
+            chestConfig.set(ROOT_PATH + "."  + packageName, null);
             this.saveConfig();
             sender.sendMessage(packageName + " has been deleted.");
         } else
@@ -157,7 +152,7 @@ public class PackageHandler {
     public void loadConfig()
     {
         if (chestFile == null) 
-            chestFile = new File(plugin.getDataFolder(), "chest_configs.yml");
+            chestFile = new File(plugin.getDataFolder(), CONFIG_FILE_NAME);
 
         chestConfig = new YamlConfiguration();
         chestConfig = YamlConfiguration.loadConfiguration(chestFile);
