@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -67,7 +68,7 @@ public class PackageHandler {
      * Returns random package defined within the configuration file.
      * @return Random ItemStack from serialized string in config.
      */
-    ItemStack[] getRandPackage()
+    public ItemStack[] getRandPackage()
     {   
         final String buffer;
         final String chestName;
@@ -86,16 +87,20 @@ public class PackageHandler {
         chestName = chestList.get(RAND.nextInt(chestList.size()));
         chestList.clear();
         
-        buffer = chestConfig.getString(ROOT_PATH + "." + chestName);
-        split = buffer.split("##");
+        return this.getPackage(chestName);
+    }
+    
+    private ItemStack[] getPackage(final String packageName) {
+        if (!chestConfig.contains(ROOT_PATH + "." + packageName))
+            return new ItemStack[] { new ItemStack(Material.AIR) };
         
-        //plugin.getServer().broadcastMessage(chestName + " " + split.length);
-        ItemStack items[] = new ItemStack[split.length];
+        final String buffer = chestConfig.getString(ROOT_PATH + "." + packageName);
+        final String[] split = buffer.split("##");
+        final ItemStack[] items = new ItemStack[split.length];
         
-        for (int i = 0; i < split.length; i++) {
+        for (int i = 0; i < split.length; i++)
             items[i] = ItemSerialize.deserialize(split[i]);
-            //plugin.getServer().broadcastMessage(items[i].getType().toString() + " " + items[i].getAmount());
-        }
+        
         return items;
     }
     
@@ -143,6 +148,27 @@ public class PackageHandler {
             sender.sendMessage(packageName + " has been deleted.");
         } else
             sender.sendMessage(packageName + " does not exist");
+    }
+    
+    public void getPackage(final Player sender,
+                           final String packageName)
+    {
+        if (!chestConfig.contains(ROOT_PATH + "." + packageName)) {
+            sender.sendMessage("Chest does not exist.");
+            return;
+        }
+        ItemStack[] items = this.getPackage(packageName);
+        for (int i = 0; i < items.length; i++)
+            sender.getInventory().setItem(i+9, items[i]);
+        
+        sender.sendMessage("Package " + packageName + " recieved.");
+    }
+    
+    public void listPackages(final Player sender) {
+        sender.sendMessage("Packages:");
+        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
+            sender.sendMessage(" - " + key);
+        }
     }
     
     /**

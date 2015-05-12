@@ -185,6 +185,9 @@ public class StateSwitcher {
         }
         stateWriter.flush();
         stateWriter.close();
+        
+        plugin.getServer().broadcastMessage(desc);
+        
         return 1;
     }
 
@@ -200,7 +203,6 @@ public class StateSwitcher {
         BufferedReader reader = new BufferedReader(new FileReader(stateFile));
         final String[] blocks = reader.readLine().split("#");
 
-        plugin.getServer().broadcastMessage("" + blocks.length);
         for (String block : blocks) {
             BlockSerialize.deserializeAndSet(block);
         }  

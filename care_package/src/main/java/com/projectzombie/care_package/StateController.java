@@ -22,12 +22,14 @@ package com.projectzombie.care_package;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,6 +59,8 @@ public class StateController {
     private static Random rand;
 
     public enum StateType { ALT, BASE };
+    private static final String BASE_ROOT = "base_states";
+    private static final String ALT_ROOT = "alt_states";
     
     /**
      * Initializes StateChanger configuration file, StateSwitcher, and 
@@ -76,32 +80,35 @@ public class StateController {
      * Initiates a random care package drop. //WIP!!!!!!
      * @param file 
      */
-    public void initiateDrop(final FileConfiguration file) 
+    public void initiateDrop() 
     {
-        final String basePath = "base_states";
-        final String altPath = "alt_states";
-        String baseName;
-        String altName;
+        final String altState, baseState, baseAltsPath;
+        final ArrayList<String> baseStates = new ArrayList<>();
+        final ArrayList<String> altStates = new ArrayList<>();
         
-        int i = 0, j = 0;
-        for (String key : file.getConfigurationSection(basePath).getKeys(false)) {
-            ++i;
-        }
+        int randIndex;
+        for (String key : dropConfig.getConfigurationSection(BASE_ROOT).getKeys(false))
+            baseStates.add(key);
       
-        if (i == 0) {
+        if (baseStates.isEmpty()) {
             Bukkit.getServer().getLogger().info("[CarePackage] No base states exist. Cannot initiate drop.");
             return;
         }
+        randIndex = rand.nextInt(baseStates.size());
+        baseState = baseStates.get(randIndex);
+        baseAltsPath = BASE_ROOT + "." + baseState + ".alts";
         
-        j = rand.nextInt(i) + 1;
+        for (String key : dropConfig.getConfigurationSection(baseAltsPath).getKeys(false))
+            altStates.add(key);
         
-        for (String key : file.getConfigurationSection(basePath).getKeys(false)) {
-            if (j == i) {
-                baseName = key;
-            }
-            --i;
+        if (altStates.isEmpty()) {
+            Bukkit.getServer().getLogger().log(Level.INFO, "[CarePackage] No alt states exist for base {0}. Cannot initiate drop.", baseState);
+            return;
         }
+        randIndex = rand.nextInt(altStates.size());
+        altState = altStates.get(randIndex);
         
+        this.setAltState(baseState, altState);
     }
     
     /**
@@ -115,9 +122,7 @@ public class StateController {
             final String stateName,
             final StateType stateType) 
     {
-        final String rootPath 
-                = (stateType == StateType.ALT) ? "alt_states" : "base_states";
-        final String statePath = rootPath + "." + stateName;
+        final String statePath = getPath(stateName, stateType);
         final Location senderLoc = sender.getLocation();
         Vector chestSerialized = null;
 
@@ -148,7 +153,7 @@ public class StateController {
      * @param altName Name of alternate state.
      */
     public void setAltState(final String baseName,
-                             final String altName) 
+                            final String altName) 
     {
         int rv;
         if (!stateChange) {
@@ -225,6 +230,13 @@ public class StateController {
         player.sendMessage(baseStateName + " linked to " + altStateName);
     }
     
+    private String getPath(final String stateName,
+                         final StateType type)
+    {
+        return (type == StateType.ALT)
+                ? "alt_states."+stateName : "base_states."+stateName;
+    }
+    
     /**
      * Removes state of the given name.
      * @param player
@@ -236,10 +248,7 @@ public class StateController {
                             final String stateName,
                             final StateType stateType)
     {
-        
-        final String stateConfigSection 
-                = (stateType == StateType.ALT) ? "alt_states." : "base_states.";
-        final String path = stateConfigSection+stateName;
+        final String path = getPath(stateName, stateType);
         
         if (dropConfig.contains(path)) {
             dropConfig.set(path, null);
@@ -277,6 +286,35 @@ public class StateController {
             }
         }
         return chestRelative;
+    }
+    
+    public void teleportToState(final Player sender,
+                                final String stateName,
+                                final StateType type)
+    {
+        final String coordPath = this.getPath(stateName, type) + ".coords";
+        final String worldPath = this.getPath(stateName, type) + ".world";
+        
+        if (!dropConfig.contains(coordPath)
+                || !dropConfig.contains(worldPath)) {
+            sender.sendMessage(stateName + " does not exist.");
+            return;
+        }
+        final Vector vec = dropConfig.getVector(coordPath);
+        final World world = Bukkit.getWorld(dropConfig.getString(worldPath));       
+        final Location loc = new Location(world, vec.getBlockX(),
+                                                 vec.getBlockY(),
+                                                 vec.getBlockZ());
+        sender.teleport(loc);
+    }
+    
+    public void checkYaw(final Player sender)
+    {
+        final float yaw = sender.getLocation().getYaw();
+        if (yaw >= -67.5 && yaw < -22.5)
+            sender.sendMessage("Correct direction! States always point SE.");
+        else
+            sender.sendMessage("Wrong direction! States always point SE.");
     }
 
     /**
