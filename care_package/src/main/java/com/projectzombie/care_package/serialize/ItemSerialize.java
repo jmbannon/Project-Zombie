@@ -1,8 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * CarePackage
+ *
+ * Version:     0.5
+ * MC Build:    1.8.3
+ * Date:        05-03-2015
+ *
+ * Authur:      Jesse Bannon
+ * Server:      Project Zombie
+ * Website:     www.projectzombie.net
+ * 
+ * Initiates random care package drops by combining an alternate state of the
+ * map with a base state on the actual player map. Stores the base state blocks
+ * within a text buffer and pastes the alt state to the location of the base
+ * state. Finds single chest within the pasted alt state and sets a randomly
+ * define set of items made by the administrator.  Restores the state on a
+ * timer.
+ *
  */
+
 package com.projectzombie.care_package.serialize;
 
 import java.util.ArrayList;
