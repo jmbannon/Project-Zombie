@@ -21,6 +21,9 @@
 package com.projectzombie.care_package;
 
 import com.projectzombie.care_package.StateController.StateType;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -113,6 +116,22 @@ public class CommandExec implements CommandExecutor {
         else if (args[0].equalsIgnoreCase("set") && args.length == 3)
             controller.setAltState(args[1], args[2]);
             
+        else if (args[0].equalsIgnoreCase("paste") && args.length == 2)
+            try {
+                controller.pasteBaseState(player, args[1]);
+            } catch (IOException ex) {
+                Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
+                player.sendMessage("IOexception, report to administrator.");
+            }
+        
+        else if (args[0].equalsIgnoreCase("unpaste") && args.length == 1)
+            try {
+                controller.undoPaste(player);
+            } catch (IOException ex) {
+                Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
+                player.sendMessage("IOexception, report to administrator.");
+            }
+        
         else if (args[0].equalsIgnoreCase("tele") && args.length == 3) {
             if (args[1].equalsIgnoreCase("base"))
                 controller.teleportToState(player, args[2], StateType.BASE);
@@ -149,7 +168,9 @@ public class CommandExec implements CommandExecutor {
         sender.sendMessage("/cp link <base> <alt> <desc>");
         sender.sendMessage("/cp tele <base/alt> <name>");
         sender.sendMessage("/cp set <base name> <alt name>");
-        sender.sendMessage("/cp package <name>");
+        sender.sendMessage("/cp paste <base name>");
+        sender.sendMessage("/cp unpaste");
+        sender.sendMessage("/cp package <package name>");
         sender.sendMessage("/cp initiate");
         sender.sendMessage("/cp restore");
         sender.sendMessage("/cp check");

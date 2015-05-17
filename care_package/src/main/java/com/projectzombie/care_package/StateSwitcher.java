@@ -35,7 +35,6 @@ import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -68,7 +67,7 @@ public class StateSwitcher {
      * @param config drop_locations.yml config.
      */
     public StateSwitcher(final Plugin plugin,
-                    final FileConfiguration config)
+                         final FileConfiguration config)
     {
         this.plugin = plugin;
         this.stateConfig = config;

@@ -20,7 +20,11 @@
 
 package com.projectzombie.care_package;
 
+import com.projectzombie.care_package.serialize.BlockSerialize;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -50,12 +54,12 @@ import org.bukkit.util.Vector;
 public class StateController {
 
     private final Plugin plugin;
-    private File dropFile;
+    private File dropFile, copyFile;
     private FileConfiguration dropConfig;
 
     private static StateSwitcher state;
     
-    private static boolean stateChange;
+    private static boolean stateChange, stateCopy;
     private static Random rand;
 
     public enum StateType { ALT, BASE };
@@ -73,6 +77,7 @@ public class StateController {
         this.loadConfig();
         state = new StateSwitcher(plugin, dropConfig);
         stateChange = false;
+        stateCopy = false;
         rand = new Random();
     }
 
@@ -242,7 +247,6 @@ public class StateController {
      * @param player
      * @param stateName
      * @param stateType
-     * @param file 
      */
     public void removeState(final Player player,
                             final String stateName,
@@ -315,6 +319,64 @@ public class StateController {
             sender.sendMessage("Correct direction! States always point SE.");
         else
             sender.sendMessage("Wrong direction! States always point SE.");
+    }
+    
+    public void pasteBaseState(final Player sender,
+                               final String baseStateName) throws IOException
+    {
+        final String basePath = BASE_ROOT + "." + baseStateName;
+        final String baseWorldPath = basePath + ".world";
+        final String baseCoordPath = basePath + ".coords";
+        
+        if (!dropConfig.contains(basePath)) {
+            sender.sendMessage(baseStateName + " does not exist.");
+            return;
+        }
+        
+        this.copyFile = new File(plugin.getDataFolder(), "copy_buffer.txt");
+        final FileWriter stateWriter = new FileWriter(copyFile);
+        final Vector baseVector = dropConfig.getVector(baseCoordPath);
+        
+        final Block playerBlock = sender.getLocation().getBlock();
+        final Block baseBlock = new Location(
+                Bukkit.getWorld(dropConfig.getString(baseWorldPath)),
+                baseVector.getX(),
+                baseVector.getY(),
+                baseVector.getZ()).getBlock();
+        
+        Block temp;
+        for (int i = 0; i < state.getStateLength(); i++) {
+            for (int j = 0; j < state.getStateWidth(); j++) {
+                for (int k = 0; k < state.getStateHeight(); k++) {
+                    temp = playerBlock.getRelative(i, k, j);
+                    stateWriter.write(BlockSerialize.serialize(temp));
+                    temp.setType(baseBlock.getRelative(i, k, j).getType());
+                    temp.setData(baseBlock.getRelative(i, k, j).getData());
+                }
+            }
+        }
+        stateWriter.flush();
+        stateWriter.close();
+        StateController.stateCopy = true;
+        sender.sendMessage(baseStateName + " pasted.");
+    }
+    
+    public void undoPaste(Player sender) throws IOException
+    {
+        if (!StateController.stateCopy) {
+            sender.sendMessage("Nothing pasted.");
+            return;
+        }
+        
+        BufferedReader reader = new BufferedReader(new FileReader(copyFile));
+        final String[] blocks = reader.readLine().split("#");
+
+        for (String block : blocks) {
+            BlockSerialize.deserializeAndSet(block);
+        }  
+        copyFile.delete();
+        StateController.stateCopy = false;
+        sender.sendMessage("Undid paste.");
     }
 
     /**
