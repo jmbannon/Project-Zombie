@@ -161,11 +161,9 @@ public class StateSwitcher {
             for (int j = 0; j < ALT_STATE_WIDTH; j++) {
                 for (int k = 0; k < ALT_STATE_HEIGHT; k++) {
                     temp = BASE_BLOCK.getRelative(i, k, j);
-                    if (temp.getType() == Material.AIR) {
-                        stateWriter.write(BlockSerialize.serialize(temp));
-                        temp.setType(altInitBlock.getRelative(i, k, j).getType());
-                        temp.setData(altInitBlock.getRelative(i, k, j).getData());
-                    }
+                    stateWriter.write(BlockSerialize.serialize(temp));
+                    temp.setType(altInitBlock.getRelative(i, k, j).getType());
+                    temp.setData(altInitBlock.getRelative(i, k, j).getData());
                 }
             }
         }

@@ -82,8 +82,7 @@ public class StateController {
     }
 
     /**
-     * Initiates a random care package drop. //WIP!!!!!!
-     * @param file 
+     * Initiates a random care package drop.
      */
     public void initiateDrop() 
     {
@@ -253,12 +252,19 @@ public class StateController {
                             final StateType stateType)
     {
         final String path = getPath(stateName, stateType);
-        
+            
         if (dropConfig.contains(path)) {
             dropConfig.set(path, null);
+            
+            if (stateType == StateType.ALT)
+            for (String key : dropConfig.getConfigurationSection(BASE_ROOT).getKeys(false))
+                dropConfig.set(key + ".alts." + stateName, null);
+            
             player.sendMessage(stateName + " deleted.");
         } else
-            player.sendMessage(stateName + " does not exist.");       
+            player.sendMessage(stateName + " does not exist.");    
+        
+        
     }
     
     /**
@@ -377,6 +383,11 @@ public class StateController {
         copyFile.delete();
         StateController.stateCopy = false;
         sender.sendMessage("Undid paste.");
+    }
+    
+    public void reloadConfig(final Player sender) {
+        this.loadConfig();
+        sender.sendMessage("Care Package config reloaded.");
     }
 
     /**

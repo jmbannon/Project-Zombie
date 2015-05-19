@@ -149,6 +149,9 @@ public class CommandExec implements CommandExecutor {
         
         else if (args[0].equalsIgnoreCase("check"))
             controller.checkYaw(player);
+        
+        else if (args[0].equalsIgnoreCase("reload"))
+            controller.reloadConfig(player);
             
         else
             this.listCommands(player);
@@ -174,6 +177,7 @@ public class CommandExec implements CommandExecutor {
         sender.sendMessage("/cp initiate");
         sender.sendMessage("/cp restore");
         sender.sendMessage("/cp check");
+        sender.sendMessage("/cp reload");
     }
     
     public void onEnable() {
