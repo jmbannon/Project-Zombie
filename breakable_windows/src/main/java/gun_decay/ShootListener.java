@@ -21,7 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ShootListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
-	public void scopeEvent(WeaponShootEvent event) {
+	public void decayEvent(WeaponShootEvent event) {
         final ItemStack gun = event.getPlayer().getItemInHand();
         ItemMeta temp = gun.getItemMeta();
         
@@ -31,8 +31,11 @@ public class ShootListener implements Listener {
         List<String> lore = temp.getLore();
         if (isNumeric(lore.get(lore.size()-1))) {
             int decay = Integer.valueOf(lore.get(lore.size()-1)) - 1;
-            if (decay < 0)
-                gun.setType(Material.AIR);
+            if (decay < 0) {
+                event.getPlayer().getInventory().removeItem(gun);
+                event.getPlayer().sendMessage("Your gun has broke!");
+                return;
+            }
             else
                 lore.set(lore.size()-1, String.valueOf(decay));
         } else
@@ -45,7 +48,6 @@ public class ShootListener implements Listener {
     public static boolean isNumeric(final String str) {
         for (char c : str.toCharArray())
             if (!Character.isDigit(c)) return false;
-        
         return true;
     }
 }
