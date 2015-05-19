@@ -1,0 +1,8 @@
+name: BreakableWindows
+main: breakable_windows.StartUp
+version: 1.0
+depend: [CrackShot]
+commands:
+  bw:
+    description: Memory used storing blocks.
+    usage: "Usage: /bw entries"
