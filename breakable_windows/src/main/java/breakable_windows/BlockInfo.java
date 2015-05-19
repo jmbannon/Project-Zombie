@@ -5,9 +5,9 @@ import org.bukkit.Material;
 
 public class BlockInfo {
 	
-	private Location location;
-	private Material material;
-	private Byte data;
+	private final Location location;
+	private final Material material;
+	private final Byte data;
 	
 	public BlockInfo(Location location, Material type, Byte data) {
 		this.location = location;

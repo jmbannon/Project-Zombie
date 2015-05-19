@@ -1,4 +1,4 @@
-package breakable_windows;
+package scope;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -14,7 +14,7 @@ import com.shampaggon.crackshot.events.WeaponScopeEvent;
 
 public class ScopeZoomListener implements Listener {
 
-	private HashMap<Player, ItemStack> helmetList = new HashMap<>();
+	private final HashMap<Player, ItemStack> helmetList = new HashMap<>();
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void scopeEvent(WeaponScopeEvent event) {

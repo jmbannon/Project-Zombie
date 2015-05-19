@@ -1,5 +1,5 @@
-name: BreakableWindows
-main: breakable_windows.StartUp
+name: Enhanced_Crackshot_Guns
+main: main.Main
 version: 1.0
 depend: [CrackShot]
 commands:

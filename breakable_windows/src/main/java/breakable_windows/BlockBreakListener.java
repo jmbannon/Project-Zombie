@@ -18,16 +18,14 @@ import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 
 public class BlockBreakListener implements Listener {
 	
-	private Plugin plugin;
-	//private static HashMap<Location, Material> blockList;
+	private final Plugin plugin;
 	private static LinkedList<BlockInfo> blockList;
 	private static boolean overFlow;
 	
 	public BlockBreakListener(Plugin plugin) {
 		this.plugin = plugin;
-		//blockList = new HashMap<>();
-		blockList = new LinkedList<>();
-		overFlow = false;
+		BlockBreakListener.blockList = new LinkedList<>();
+		BlockBreakListener.overFlow = false;
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -109,8 +107,7 @@ public class BlockBreakListener implements Listener {
 	}
 	
 	public void storeAndBreakBlock(final Block theBlock) {	
-		//blockList.put(theBlock.getLocation(), theBlock.getType());
-		blockList.add(new BlockInfo(theBlock.getLocation(), theBlock.getType(), theBlock.getData()));
+		blockList.addLast(new BlockInfo(theBlock.getLocation(), theBlock.getType(), theBlock.getData()));
 		theBlock.setType(Material.AIR);				
 	}
 	
@@ -241,30 +238,8 @@ public class BlockBreakListener implements Listener {
 	}
 	
 	public void restoreBlocks() {
-		/*
-		Block tempBlock;
-		for (Entry<Location, Material> entry : blockList.entrySet()) {
-		
-			tempBlock = entry.getKey().getBlock();
-			tempBlock.setType(entry.getValue());
-			//entry.getKey().setType(entry.getValue());
-		}
-		
-		blockList.clear();
-		blockList = null;
-		System.gc();
-		blockList = new HashMap<>();
-		*/
 		Block tempBlock;
 		BlockInfo tempBlockInfo;
-		
-		/*
-		for (BlockInfo blockInfo : blockList) {
-			tempBlock = blockInfo.getLocation().getBlock();
-			tempBlock.setType(blockInfo.getMaterial());
-			tempBlock.setData(blockInfo.getData());
-		}
-		*/
 		
 		while (!blockList.isEmpty()) {
 			tempBlockInfo = blockList.removeFirst();

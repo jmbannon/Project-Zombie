@@ -1,5 +1,6 @@
-package breakable_windows;
+package main;
 
+import breakable_windows.BlockBreakListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
