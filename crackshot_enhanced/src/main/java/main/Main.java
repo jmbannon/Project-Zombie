@@ -2,6 +2,9 @@ package main;
 
 import breakable_windows.BlockBreakListener;
 import gun_decay.ShootListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import scope.ScopeZoomListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,9 +18,14 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		this.window = new BlockBreakListener(this);
+        try {
+            this.window = new BlockBreakListener(this);
+            this.exec = new CommandExec(this);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
 		this.scope = new ScopeZoomListener();
-		this.exec = new CommandExec(this);
         this.decay = new ShootListener();
 		
 		this.getCommand("bw").setExecutor(exec);
@@ -33,7 +41,11 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		this.getLogger().info("Restoring blocks...");
-		this.window.restoreBlocks();
+        try {
+            this.window.restoreBlocks();
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
 		this.scope.disable();
 		this.getLogger().info("Restored blocks! Breakable Windows disabled.");
 	}	

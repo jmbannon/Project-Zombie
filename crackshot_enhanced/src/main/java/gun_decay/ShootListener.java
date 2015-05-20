@@ -8,7 +8,6 @@ package gun_decay;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
 import java.util.Random;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,17 +27,20 @@ public class ShootListener implements Listener {
     private static final int LOWER_BOUND = 650;
     
     private static final String LORE_VERIFY = "PZ";
+    private static final String SEPERATOR = "&&";
     private static final int TIERS = 5;
     
     public ShootListener() {
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
-	public void decayEvent(WeaponPreShootEvent event) {
+    @EventHandler(priority = EventPriority.HIGH)
+	public void preDecayEvent(WeaponPreShootEvent event) {
         final Player shooter = event.getPlayer();
         final ItemStack gunItem = shooter.getItemInHand();
         final ItemMeta gunMeta = gunItem.getItemMeta();
-
+        final double bulletSpread = event.getBulletSpread();
+        final int gunTier;
+        
         if (!gunMeta.hasLore())
             return;
         
@@ -46,41 +48,46 @@ public class ShootListener implements Listener {
         final String lastElement = lore.get(lore.size() - 1);
         
         if (hasSpecLore(lastElement)) {
-            lore = decrementDurability(lore);
-            if (lore == null) {
-                shooter.getInventory().remove(gunItem);
+            gunTier = decrementDurability(lore, bulletSpread);
+            if (gunTier <= 0) {
                 shooter.sendMessage(ChatColor.GOLD + "Your gun is jammed.");
                 event.setCancelled(true);
                 return;
             }
         } else
-            lore = initializeSpecLore(lore, event.getBulletSpread());
+            gunTier = initializeSpecLore(lore, event.getBulletSpread());
         
+        event.setBulletSpread(getTrueBulletSpread(bulletSpread, gunTier));
         gunMeta.setLore(lore);
-        gunItem.setItemMeta(gunMeta);   
+        gunItem.setItemMeta(gunMeta);
     }
     
-    private List<String> initializeSpecLore(final List<String> lore,
-                                            final double accuracy)
+    private static double getTrueBulletSpread(final double spread,
+                                              final int tier)
+    {
+        return spread + (double)(spread/(double)tier);
+    }
+    
+    private static int initializeSpecLore(final List<String> lore,
+                                          final double bulletSpread)
     {
         final StringBuilder stb = new StringBuilder();
-        final int initialDurability = getInitialDurability(accuracy);
-        final int maxDurability = getMaxDurability(accuracy);
+        final int initialDurability = getInitialDurability(bulletSpread);
+        final int maxDurability = getMaxDurability(bulletSpread);
         final int gunTier = getGunTier(initialDurability, maxDurability);
-        
+        lore.set(1, getAccuracyLore(getTrueBulletSpread(bulletSpread, gunTier)));
         lore.add(getConditionLore(gunTier));
         
         stb.append(LORE_VERIFY);
-        stb.append(ChatColor.COLOR_CHAR);
+        stb.append(SEPERATOR);
         stb.append(initialDurability);
-        stb.append(ChatColor.COLOR_CHAR);
+        stb.append(SEPERATOR);
         stb.append(maxDurability);
-        stb.append(ChatColor.COLOR_CHAR);
+        stb.append(SEPERATOR);
         stb.append(gunTier);
         
         lore.add(stb.toString());
-        
-        return lore;
+        return gunTier;
     }
     
     /**
@@ -88,17 +95,18 @@ public class ShootListener implements Listener {
      * @param specLore String of the specifications from the gun lore.
      * @return Returns the gun tier.
      */
-    private static List<String> decrementDurability(final List<String> lore)
+    private static int decrementDurability(final List<String> lore,
+                                           final double bulletSpread)
     {
         final String specLore = lore.get(lore.size() - 1);
-        final String[] split = specLore.split(String.valueOf(ChatColor.COLOR_CHAR));
+        final String[] split = specLore.split(SEPERATOR);
         if (split.length != 4)
-            return null;
+            return -1;
         
         final int initialDurability = Integer.valueOf(split[2]);
         final int durability = Integer.valueOf(split[1]) - 1;
         if (durability == 0)
-            return null;
+            return 0;
         
         final int gunTier = getGunTier(durability, initialDurability);
         final StringBuilder stb = new StringBuilder();
@@ -106,20 +114,29 @@ public class ShootListener implements Listener {
         if (gunTier != Integer.valueOf(split[3])) {
             split[3] = String.valueOf(gunTier);
             lore.set(lore.size() - 2, getConditionLore(gunTier));
+            lore.set(1, getAccuracyLore(getTrueBulletSpread(bulletSpread, gunTier)));
         }
         
         split[1] = String.valueOf(durability);
         for (int i = 0; i < 4; i++) {
             stb.append(split[i]);
-            stb.append(ChatColor.COLOR_CHAR);
+            stb.append(SEPERATOR);
         }
         lore.set(lore.size()-1, stb.toString());
-        return lore;
+        return gunTier;
+    }
+    
+    private static String getAccuracyLore(final double trueBulletSpread)
+    {
+        return ChatColor.DARK_GREEN + "Accuracy: "
+                + ChatColor.GREEN
+                + String.format("%.2f", (double)(100 - (trueBulletSpread * 16.1337))) 
+                + "%";
     }
     
     private static String getConditionLore(final int tier)
     {
-        return ChatColor.GOLD + "Condition: " + getCondition(tier);
+        return ChatColor.DARK_GREEN + "Condition: " + getCondition(tier);
     }
     
     private static String getCondition(final int tier)
@@ -155,17 +172,17 @@ public class ShootListener implements Listener {
      * accuracy. Calculates this with the following algorithm:
      * ACCURACY * (1000 ~ 1400)
      * 
-     * @param accuracy Accuracy of the gun.
+     * @param bulletSpread Accuracy of the gun.
      * @return Initial amount of shots.
      */
-    private static int getInitialDurability(final double accuracy)
+    private static int getInitialDurability(final double bulletSpread)
     {
-        return (int)(accuracy * (LOWER_BOUND + RAND.nextInt(UPPER_BOUND - LOWER_BOUND + 1)));
+        return (int)(bulletSpread * (LOWER_BOUND + RAND.nextInt(UPPER_BOUND - LOWER_BOUND + 1)));
     }
     
-    private static int getMaxDurability(final double accuracy)
+    private static int getMaxDurability(final double bulletSpread)
     {
-        return (int)(accuracy * UPPER_BOUND);
+        return (int)(bulletSpread * UPPER_BOUND);
     }
             
 }
