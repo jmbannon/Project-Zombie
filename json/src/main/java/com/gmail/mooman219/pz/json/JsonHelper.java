@@ -285,7 +285,10 @@ public final class JsonHelper {
      * given ConfigurationSerializable.
      */
     public static JsonBuilder serializeConfigurationSerializable(ConfigurationSerializable cs) {
-        JsonBuilder b = new JsonBuilder();
+        return serializeConfigurationSerializable(cs, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeConfigurationSerializable(ConfigurationSerializable cs, JsonBuilder b) {
         serializeSC(cs, b);
         return b;
     }
