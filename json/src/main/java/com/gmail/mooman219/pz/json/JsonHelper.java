@@ -12,6 +12,7 @@ import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.value.LazyValueMap;
 import org.boon.core.value.ValueContainer;
+import org.boon.core.value.ValueList;
 import org.boon.json.implementation.JsonFastParser;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
@@ -38,12 +39,16 @@ public final class JsonHelper {
         ITEMMETA_CLASS = ConfigurationSerialization.getClassByAlias("ItemMeta");
     }
 
-    public static LazyValueMap deserialize(String json) {
+    public static ValueList deserializeArray(String json) {
+        return ((ValueList) PARSER_LOCAL.get().parse(json));
+    }
+
+    public static LazyValueMap deserializeObject(String json) {
         return ((LazyValueMap) PARSER_LOCAL.get().parse(json));
     }
 
     public static JsonChunkLocation deserializeChunkLocation(String json) {
-        return deserializeChunkLocation(JsonHelper.deserialize(json));
+        return deserializeChunkLocation(JsonHelper.deserializeObject(json));
     }
 
     public static JsonChunkLocation deserializeChunkLocation(LazyValueMap raw) {
@@ -69,7 +74,7 @@ public final class JsonHelper {
     }
 
     public static Color deserializeColor(String json) {
-        return deserializeColor(JsonHelper.deserialize(json));
+        return deserializeColor(JsonHelper.deserializeObject(json));
     }
 
     public static Color deserializeColor(LazyValueMap raw) {
@@ -95,7 +100,7 @@ public final class JsonHelper {
     }
 
     public static ItemStack deserializeItemStack(String json) {
-        return deserializeItemStack(JsonHelper.deserialize(json));
+        return deserializeItemStack(JsonHelper.deserializeObject(json));
     }
 
     public static ItemStack deserializeItemStack(LazyValueMap raw) {
@@ -117,7 +122,7 @@ public final class JsonHelper {
     }
 
     public static JsonLocation deserializeLocation(String json) {
-        return deserializeLocation(JsonHelper.deserialize(json));
+        return deserializeLocation(JsonHelper.deserializeObject(json));
     }
 
     public static JsonLocation deserializeLocation(LazyValueMap raw) {
@@ -147,7 +152,7 @@ public final class JsonHelper {
     }
 
     public static JsonRichLocation deserializeRichLocation(String json) {
-        return deserializeRichLocation(JsonHelper.deserialize(json));
+        return deserializeRichLocation(JsonHelper.deserializeObject(json));
     }
 
     public static JsonRichLocation deserializeRichLocation(LazyValueMap raw) {
@@ -185,7 +190,7 @@ public final class JsonHelper {
     }
 
     public static JsonWorld deserializeWorld(String json) {
-        return deserializeWorld(JsonHelper.deserialize(json));
+        return deserializeWorld(JsonHelper.deserializeObject(json));
     }
 
     public static JsonWorld deserializeWorld(LazyValueMap raw) {
