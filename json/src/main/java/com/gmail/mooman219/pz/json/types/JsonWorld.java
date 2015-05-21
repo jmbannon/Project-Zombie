@@ -1,14 +1,10 @@
 package com.gmail.mooman219.pz.json.types;
 
 import com.gmail.mooman219.pz.json.JsonBuilder;
-import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.boon.core.Value;
-import org.boon.core.value.LazyValueMap;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -91,40 +87,6 @@ public final class JsonWorld extends JsonProxy<World> {
         b.appendStringField("w", w);
         b.appendStringField("u", u.toString());
         b.appendEndObject();
-    }
-
-    public static JsonWorld deserializeWorld(String json) {
-        return deserializeWorld(JsonHelper.deserializeJson(json));
-    }
-
-    public static JsonWorld deserializeWorld(LazyValueMap raw) {
-        String world = null;
-        UUID uuid = null;
-        Map.Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            Value v = items[i].getValue();
-            switch (items[i].getKey()) {
-                case "w":
-                    world = v.stringValue();
-                    break;
-                case "u":
-                    uuid = UUID.fromString(v.stringValue());
-                    break;
-            }
-        }
-        return new JsonWorld(world, uuid);
-    }
-
-    public static JsonBuilder serializeWorld(World world) {
-        return serializeWorld(world, new JsonBuilder());
-    }
-
-    public static JsonBuilder serializeWorld(World world, JsonBuilder b) {
-        b.appendStartObject();
-        b.appendStringField("w", world.getName());
-        b.appendStringField("u", world.getUID().toString());
-        b.appendEndObject();
-        return b;
     }
 
     /**

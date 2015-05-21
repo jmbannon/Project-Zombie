@@ -21,7 +21,7 @@ public abstract class JsonConfiguration {
         System.out.println("[Config] Init " + file.getName());
         try {
             if (file.exists()) {
-                deserialize(JsonHelper.deserializeJson(FileUtils.readFileToString(file)));
+                deserialize(JsonHelper.deserialize(FileUtils.readFileToString(file)));
             }
             JsonBuilder b = new JsonBuilder();
             serialize(b);
@@ -36,7 +36,7 @@ public abstract class JsonConfiguration {
         System.out.println("[Config] Load " + file.getName());
         try {
             if (file.exists()) {
-                deserialize(JsonHelper.deserializeJson(FileUtils.readFileToString(file)));
+                deserialize(JsonHelper.deserialize(FileUtils.readFileToString(file)));
             }
         } catch (IOException e) {
             System.out.println("[Config] Unable to load " + file.getName());

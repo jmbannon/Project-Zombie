@@ -1,14 +1,10 @@
 package com.gmail.mooman219.pz.json.types;
 
 import com.gmail.mooman219.pz.json.JsonBuilder;
-import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.boon.core.Value;
-import org.boon.core.value.LazyValueMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -135,51 +131,6 @@ public final class JsonLocation extends JsonProxy<Location> {
         b.appendNumberField("y", this.y);
         b.appendNumberField("z", this.z);
         b.appendEndObject();
-    }
-
-    public static JsonLocation deserializeLocation(String json) {
-        return deserializeLocation(JsonHelper.deserializeJson(json));
-    }
-
-    public static JsonLocation deserializeLocation(LazyValueMap raw) {
-        JsonWorld world = null;
-        int x = 0;
-        int y = 0;
-        int z = 0;
-        Map.Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            Value v = items[i].getValue();
-            switch (items[i].getKey()) {
-                case "w":
-                    world = JsonWorld.deserializeWorld((LazyValueMap) v.toValue());
-                    break;
-                case "x":
-                    x = v.intValue();
-                    break;
-                case "y":
-                    y = v.intValue();
-                    break;
-                case "z":
-                    z = v.intValue();
-                    break;
-            }
-        }
-        return new JsonLocation(world, x, y, z);
-    }
-
-    public static JsonBuilder serializeLocation(Location location) {
-        return serializeLocation(location, new JsonBuilder());
-    }
-
-    public static JsonBuilder serializeLocation(Location location, JsonBuilder b) {
-        b.appendStartObject();
-        b.appendField("w");
-        JsonWorld.serializeWorld(location.getWorld(), b);
-        b.appendNumberField("x", location.getBlockX());
-        b.appendNumberField("y", location.getBlockY());
-        b.appendNumberField("z", location.getBlockZ());
-        b.appendEndObject();
-        return b;
     }
 
     /**

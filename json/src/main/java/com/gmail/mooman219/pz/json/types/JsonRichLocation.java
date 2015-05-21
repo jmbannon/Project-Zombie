@@ -1,14 +1,10 @@
 package com.gmail.mooman219.pz.json.types;
 
 import com.gmail.mooman219.pz.json.JsonBuilder;
-import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.boon.core.Value;
-import org.boon.core.value.LazyValueMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -142,59 +138,6 @@ public final class JsonRichLocation extends JsonProxy<Location> {
         b.appendNumberField("ya", this.yaw);
         b.appendNumberField("pi", this.pitch);
         b.appendEndObject();
-    }
-
-    public static JsonRichLocation deserializeRichLocation(String json) {
-        return deserializeRichLocation(JsonHelper.deserializeJson(json));
-    }
-
-    public static JsonRichLocation deserializeRichLocation(LazyValueMap raw) {
-        JsonWorld world = null;
-        double x = 0;
-        double y = 0;
-        double z = 0;
-        float yaw = 0;
-        float pitch = 0;
-        Map.Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            Value v = items[i].getValue();
-            switch (items[i].getKey()) {
-                case "w":
-                    world = JsonWorld.deserializeWorld((LazyValueMap) v.toValue());
-                    break;
-                case "x":
-                    x = v.doubleValue();
-                    break;
-                case "y":
-                    y = v.doubleValue();
-                    break;
-                case "z":
-                    z = v.doubleValue();
-                    break;
-                case "ya":
-                    yaw = v.floatValue();
-                    break;
-                case "pi":
-                    pitch = v.floatValue();
-                    break;
-            }
-        }
-        return new JsonRichLocation(world, x, y, z, yaw, pitch);
-    }
-
-    public static JsonBuilder serializeRichLocation(Location location) {
-        return serializeRichLocation(location, new JsonBuilder());
-    }
-
-    public static JsonBuilder serializeRichLocation(Location location, JsonBuilder b) {
-        b.appendStartObject();
-        b.appendField("w");
-        JsonWorld.serializeWorld(location.getWorld(), b);
-        b.appendNumberField("x", location.getX());
-        b.appendNumberField("y", location.getY());
-        b.appendNumberField("z", location.getZ());
-        b.appendEndObject();
-        return b;
     }
 
     /**

@@ -1,14 +1,22 @@
 package com.gmail.mooman219.pz.json;
 
+import com.gmail.mooman219.pz.json.types.JsonChunkLocation;
+import com.gmail.mooman219.pz.json.types.JsonLocation;
+import com.gmail.mooman219.pz.json.types.JsonRichLocation;
+import com.gmail.mooman219.pz.json.types.JsonWorld;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 import org.boon.core.TypeType;
 import org.boon.core.Value;
 import org.boon.core.value.LazyValueMap;
 import org.boon.core.value.ValueContainer;
 import org.boon.json.implementation.JsonFastParser;
+import org.bukkit.Chunk;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +39,7 @@ public final class JsonHelper {
     }
 
     public static Color deserializeColor(String json) {
-        return deserializeColor(JsonHelper.deserializeJson(json));
+        return deserializeColor(JsonHelper.deserialize(json));
     }
 
     public static Color deserializeColor(LazyValueMap raw) {
@@ -57,7 +65,7 @@ public final class JsonHelper {
     }
 
     public static ItemStack deserializeItemStack(String json) {
-        LazyValueMap raw = deserializeJson(json);
+        LazyValueMap raw = deserialize(json);
         Entry<String, Value>[] items = raw.items();
         for (int i = 0; i < raw.len(); i++) {
             if (items[i].getKey().equals("meta")) {
@@ -75,8 +83,124 @@ public final class JsonHelper {
         return ItemStack.deserialize(raw);
     }
 
-    public static LazyValueMap deserializeJson(String json) {
+    public static LazyValueMap deserialize(String json) {
         return ((LazyValueMap) PARSER_LOCAL.get().parse(json));
+    }
+
+    public static JsonChunkLocation deserializeChunkLocation(String json) {
+        return deserializeChunkLocation(JsonHelper.deserialize(json));
+    }
+
+    public static JsonChunkLocation deserializeChunkLocation(LazyValueMap raw) {
+        JsonWorld world = null;
+        int x = 0;
+        int z = 0;
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
+                case "w":
+                    world = JsonHelper.deserializeWorld((LazyValueMap) v.toValue());
+                    break;
+                case "x":
+                    x = v.intValue();
+                    break;
+                case "z":
+                    z = v.intValue();
+                    break;
+            }
+        }
+        return new JsonChunkLocation(world, x, z);
+    }
+
+    public static JsonLocation deserializeLocation(String json) {
+        return deserializeLocation(JsonHelper.deserialize(json));
+    }
+
+    public static JsonLocation deserializeLocation(LazyValueMap raw) {
+        JsonWorld world = null;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
+                case "w":
+                    world = JsonHelper.deserializeWorld((LazyValueMap) v.toValue());
+                    break;
+                case "x":
+                    x = v.intValue();
+                    break;
+                case "y":
+                    y = v.intValue();
+                    break;
+                case "z":
+                    z = v.intValue();
+                    break;
+            }
+        }
+        return new JsonLocation(world, x, y, z);
+    }
+
+    public static JsonRichLocation deserializeRichLocation(String json) {
+        return deserializeRichLocation(JsonHelper.deserialize(json));
+    }
+
+    public static JsonRichLocation deserializeRichLocation(LazyValueMap raw) {
+        JsonWorld world = null;
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        float yaw = 0;
+        float pitch = 0;
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
+                case "w":
+                    world = JsonHelper.deserializeWorld((LazyValueMap) v.toValue());
+                    break;
+                case "x":
+                    x = v.doubleValue();
+                    break;
+                case "y":
+                    y = v.doubleValue();
+                    break;
+                case "z":
+                    z = v.doubleValue();
+                    break;
+                case "ya":
+                    yaw = v.floatValue();
+                    break;
+                case "pi":
+                    pitch = v.floatValue();
+                    break;
+            }
+        }
+        return new JsonRichLocation(world, x, y, z, yaw, pitch);
+    }
+
+    public static JsonWorld deserializeWorld(String json) {
+        return deserializeWorld(JsonHelper.deserialize(json));
+    }
+
+    public static JsonWorld deserializeWorld(LazyValueMap raw) {
+        String world = null;
+        UUID uuid = null;
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
+                case "w":
+                    world = v.stringValue();
+                    break;
+                case "u":
+                    uuid = UUID.fromString(v.stringValue());
+                    break;
+            }
+        }
+        return new JsonWorld(world, uuid);
     }
 
     public static JsonBuilder serializeColor(Color color) {
@@ -88,6 +212,62 @@ public final class JsonHelper {
         b.appendNumberField("r", color.getRed());
         b.appendNumberField("g", color.getGreen());
         b.appendNumberField("b", color.getBlue());
+        b.appendEndObject();
+        return b;
+    }
+
+    public static JsonBuilder serializeChunkLocation(Chunk chunk) {
+        return serializeChunkLocation(chunk, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeChunkLocation(Chunk chunk, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        JsonHelper.serializeWorld(chunk.getWorld(), b);
+        b.appendNumberField("x", chunk.getX());
+        b.appendNumberField("z", chunk.getZ());
+        b.appendEndObject();
+        return b;
+    }
+
+    public static JsonBuilder serializeLocation(Location location) {
+        return serializeLocation(location, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeLocation(Location location, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        JsonHelper.serializeWorld(location.getWorld(), b);
+        b.appendNumberField("x", location.getBlockX());
+        b.appendNumberField("y", location.getBlockY());
+        b.appendNumberField("z", location.getBlockZ());
+        b.appendEndObject();
+        return b;
+    }
+
+    public static JsonBuilder serializeRichLocation(Location location) {
+        return serializeRichLocation(location, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeRichLocation(Location location, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        JsonHelper.serializeWorld(location.getWorld(), b);
+        b.appendNumberField("x", location.getX());
+        b.appendNumberField("y", location.getY());
+        b.appendNumberField("z", location.getZ());
+        b.appendEndObject();
+        return b;
+    }
+
+    public static JsonBuilder serializeWorld(World world) {
+        return serializeWorld(world, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeWorld(World world, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendStringField("w", world.getName());
+        b.appendStringField("u", world.getUID().toString());
         b.appendEndObject();
         return b;
     }

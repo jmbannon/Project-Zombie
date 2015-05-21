@@ -1,14 +1,10 @@
 package com.gmail.mooman219.pz.json.types;
 
 import com.gmail.mooman219.pz.json.JsonBuilder;
-import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.boon.core.Value;
-import org.boon.core.value.LazyValueMap;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -119,46 +115,6 @@ public final class JsonChunkLocation extends JsonProxy<Chunk> {
         b.appendNumberField("x", this.x);
         b.appendNumberField("z", this.z);
         b.appendEndObject();
-    }
-
-    public static JsonChunkLocation deserializeChunkLocation(String json) {
-        return deserializeChunkLocation(JsonHelper.deserializeJson(json));
-    }
-
-    public static JsonChunkLocation deserializeChunkLocation(LazyValueMap raw) {
-        JsonWorld world = null;
-        int x = 0;
-        int z = 0;
-        Map.Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            Value v = items[i].getValue();
-            switch (items[i].getKey()) {
-                case "w":
-                    world = JsonWorld.deserializeWorld((LazyValueMap) v.toValue());
-                    break;
-                case "x":
-                    x = v.intValue();
-                    break;
-                case "z":
-                    z = v.intValue();
-                    break;
-            }
-        }
-        return new JsonChunkLocation(world, x, z);
-    }
-
-    public static JsonBuilder serializeChunkLocation(Chunk chunk) {
-        return serializeChunkLocation(chunk, new JsonBuilder());
-    }
-
-    public static JsonBuilder serializeChunkLocation(Chunk chunk, JsonBuilder b) {
-        b.appendStartObject();
-        b.appendField("w");
-        JsonWorld.serializeWorld(chunk.getWorld(), b);
-        b.appendNumberField("x", chunk.getX());
-        b.appendNumberField("z", chunk.getZ());
-        b.appendEndObject();
-        return b;
     }
 
     /**
