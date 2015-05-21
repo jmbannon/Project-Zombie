@@ -38,51 +38,6 @@ public final class JsonHelper {
         ITEMMETA_CLASS = ConfigurationSerialization.getClassByAlias("ItemMeta");
     }
 
-    public static Color deserializeColor(String json) {
-        return deserializeColor(JsonHelper.deserialize(json));
-    }
-
-    public static Color deserializeColor(LazyValueMap raw) {
-        int red = 0;
-        int green = 0;
-        int blue = 0;
-        Map.Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            Value v = items[i].getValue();
-            switch (items[i].getKey()) {
-                case "t":
-                    red = v.intValue();
-                    break;
-                case "g":
-                    green = v.intValue();
-                    break;
-                case "b":
-                    blue = v.intValue();
-                    break;
-            }
-        }
-        return Color.fromRGB(red, green, blue);
-    }
-
-    public static ItemStack deserializeItemStack(String json) {
-        LazyValueMap raw = deserialize(json);
-        Entry<String, Value>[] items = raw.items();
-        for (int i = 0; i < raw.len(); i++) {
-            if (items[i].getKey().equals("meta")) {
-                items[i] = new SimpleEntry(
-                        items[i].getKey(),
-                        new ValueContainer(
-                                ConfigurationSerialization.deserializeObject((LazyValueMap) items[i].getValue().toValue(), ITEMMETA_CLASS),
-                                TypeType.OBJECT,
-                                false
-                        )
-                );
-                break;
-            }
-        }
-        return ItemStack.deserialize(raw);
-    }
-
     public static LazyValueMap deserialize(String json) {
         return ((LazyValueMap) PARSER_LOCAL.get().parse(json));
     }
@@ -111,6 +66,54 @@ public final class JsonHelper {
             }
         }
         return new JsonChunkLocation(world, x, z);
+    }
+
+    public static Color deserializeColor(String json) {
+        return deserializeColor(JsonHelper.deserialize(json));
+    }
+
+    public static Color deserializeColor(LazyValueMap raw) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
+                case "t":
+                    red = v.intValue();
+                    break;
+                case "g":
+                    green = v.intValue();
+                    break;
+                case "b":
+                    blue = v.intValue();
+                    break;
+            }
+        }
+        return Color.fromRGB(red, green, blue);
+    }
+
+    public static ItemStack deserializeItemStack(String json) {
+        return deserializeItemStack(JsonHelper.deserialize(json));
+    }
+
+    public static ItemStack deserializeItemStack(LazyValueMap raw) {
+        Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            if (items[i].getKey().equals("meta")) {
+                items[i] = new SimpleEntry(
+                        items[i].getKey(),
+                        new ValueContainer(
+                                ConfigurationSerialization.deserializeObject((LazyValueMap) items[i].getValue().toValue(), ITEMMETA_CLASS),
+                                TypeType.OBJECT,
+                                false
+                        )
+                );
+                break;
+            }
+        }
+        return ItemStack.deserialize(raw);
     }
 
     public static JsonLocation deserializeLocation(String json) {
@@ -203,19 +206,6 @@ public final class JsonHelper {
         return new JsonWorld(world, uuid);
     }
 
-    public static JsonBuilder serializeColor(Color color) {
-        return serializeColor(color, new JsonBuilder());
-    }
-
-    public static JsonBuilder serializeColor(Color color, JsonBuilder b) {
-        b.appendStartObject();
-        b.appendNumberField("r", color.getRed());
-        b.appendNumberField("g", color.getGreen());
-        b.appendNumberField("b", color.getBlue());
-        b.appendEndObject();
-        return b;
-    }
-
     public static JsonBuilder serializeChunkLocation(Chunk chunk) {
         return serializeChunkLocation(chunk, new JsonBuilder());
     }
@@ -226,6 +216,19 @@ public final class JsonHelper {
         JsonHelper.serializeWorld(chunk.getWorld(), b);
         b.appendNumberField("x", chunk.getX());
         b.appendNumberField("z", chunk.getZ());
+        b.appendEndObject();
+        return b;
+    }
+
+    public static JsonBuilder serializeColor(Color color) {
+        return serializeColor(color, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeColor(Color color, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendNumberField("r", color.getRed());
+        b.appendNumberField("g", color.getGreen());
+        b.appendNumberField("b", color.getBlue());
         b.appendEndObject();
         return b;
     }
