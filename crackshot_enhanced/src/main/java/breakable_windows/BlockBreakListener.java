@@ -4,7 +4,6 @@ import breakable_windows.GlassFormations.GlassOffset;
 import org.bukkit.event.Listener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.bukkit.Effect;
 import org.bukkit.entity.Player;
 
 public class BlockBreakListener implements Listener
@@ -25,7 +25,7 @@ public class BlockBreakListener implements Listener
     private static GlassFormations formations;
     
     private final File blockBuffer;
-	
+    
 	public BlockBreakListener(final Plugin plugin) throws IOException
     {
 		this.plugin = plugin;
@@ -42,7 +42,7 @@ public class BlockBreakListener implements Listener
     {
         final Player player = event.getPlayer();
         final Block block = event.getBlock();
-        
+
 		if (player.getGameMode() == GameMode.SURVIVAL) {
 			if (isGlass(block)) {
 				chunckBreak(block);
@@ -50,8 +50,10 @@ public class BlockBreakListener implements Listener
 					player.damage(0.5);
 			}
 			else if (isLight(block)) {
-				block.getWorld().playSound(block.getLocation(), Sound.GLASS, 1, 1);
-				storeAndBreakBlock(block);				
+				storeAndBreakBlock(block);
+                if (block.getType() != Material.TORCH &&
+                        player.getItemInHand().getType() == Material.AIR)
+					player.damage(0.5);
 			}
 		}
 	}
@@ -60,15 +62,10 @@ public class BlockBreakListener implements Listener
 	public void projectileBlockBreakEvent(WeaponHitBlockEvent event) throws IOException
     {
         final Block block = event.getBlock();
-        
-		if (isGlass(block)) {
+		if (isGlass(block))
 			chunckBreak(block);
-			block.getWorld().playSound(block.getLocation(), Sound.GLASS, 1, 1);
-		}
-		else if (isLight(block)) {
-			storeAndBreakBlock(block);
-			block.getWorld().playSound(block.getLocation(), Sound.GLASS, 1, 1);
-		}
+		else if (isLight(block))
+			storeAndBreakBlock(block);	
 	}
 
 	public void storeAndBreakBlock(final Block theBlock) throws IOException
@@ -76,39 +73,40 @@ public class BlockBreakListener implements Listener
         final FileWriter blockWriter = new FileWriter(blockBuffer, true);
         blockWriter.append(BlockSerialize.serialize(theBlock));
         blockWriter.close();
+        theBlock.getWorld().playEffect(theBlock.getLocation(), Effect.STEP_SOUND, Material.GLASS.getId());
 		theBlock.setType(Material.AIR); 
 	}
 	
-	public boolean isGlass(final Block glassBlock)
+	public boolean isGlass(final Block block)
     {
-		return (glassBlock.getType() == Material.GLASS
-				|| glassBlock.getType() == Material.THIN_GLASS
-				|| glassBlock.getType() == Material.STAINED_GLASS
-				|| glassBlock.getType() == Material.STAINED_GLASS_PANE);
+        final Material blockMaterial = block.getType();
+		return (blockMaterial == Material.GLASS
+				|| blockMaterial == Material.THIN_GLASS
+				|| blockMaterial == Material.STAINED_GLASS
+				|| blockMaterial == Material.STAINED_GLASS_PANE);
 	}
 	
-	public boolean isLight(final Block lightBlock)
+	public boolean isLight(final Block block)
     {
-		return (lightBlock.getType() == Material.GLOWSTONE
-				|| lightBlock.getType() == Material.REDSTONE_LAMP_ON
-				|| lightBlock.getType() == Material.REDSTONE_LAMP_OFF
-				|| lightBlock.getType() == Material.BEACON
-				|| lightBlock.getType() == Material.TORCH);
-	}
-	
-	public void checkToStoreGlass(final Block glassBlock) throws IOException
-    {
-		if (this.isGlass(glassBlock)) 
-			this.storeAndBreakBlock(glassBlock);
+        final Material blockMaterial = block.getType();
+		return (blockMaterial == Material.GLOWSTONE
+				|| blockMaterial == Material.REDSTONE_LAMP_ON
+				|| blockMaterial == Material.REDSTONE_LAMP_OFF
+				|| blockMaterial == Material.BEACON
+				|| blockMaterial == Material.TORCH);
 	}
 	
     public void checkBlocks(final Block glassBlock,
                             final GlassOffset[] offsets) throws IOException
     {
-        for (GlassOffset offset : offsets)
-            this.checkToStoreGlass(glassBlock.getRelative(offset.getX(),
-                                                          offset.getY(),
-                                                          offset.getZ()));
+        Block glassBlockOffset;
+        for (GlassOffset offset : offsets) {
+            glassBlockOffset = glassBlock.getRelative(offset.getX(),
+                                                      offset.getY(),
+                                                      offset.getZ());
+            if (isGlass(glassBlockOffset))
+                storeAndBreakBlock(glassBlockOffset);
+        }
     }
 	
 	public void chunckBreak(final Block glassBlock) throws IOException

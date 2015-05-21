@@ -8,6 +8,7 @@ package gun_decay;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
 import java.util.Random;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,63 +21,77 @@ import org.bukkit.inventory.meta.ItemMeta;
  *
  * @author jbannon
  */
-public class ShootListener implements Listener {
+public class ShootListener implements Listener
+{
     
     private static final Random RAND = new Random();
     private static final int UPPER_BOUND = 1200;
     private static final int LOWER_BOUND = 650;
     
     private static final String LORE_VERIFY = "PZ";
-    private static final String SEPERATOR = "&&";
+    private static final String SEPERATOR = "==";
     private static final int TIERS = 5;
+    
+    private static final int ACCURACY_IDX = 1;
+    private static final int CONDITION_IDX = 2;
+    private static final int SPEC_IDX = 3;
+    private static final int INIT_ACC_IDX = 2;
+    private static final int POST_ACC_IDX = 4;
     
     public ShootListener() {
     }
     
     @EventHandler(priority = EventPriority.HIGH)
-	public void preDecayEvent(WeaponPreShootEvent event) {
+	public void preDecayEvent(WeaponPreShootEvent event)
+    {
         final Player shooter = event.getPlayer();
         final ItemStack gunItem = shooter.getItemInHand();
         final ItemMeta gunMeta = gunItem.getItemMeta();
-        final double bulletSpread = event.getBulletSpread();
+        final double loreBulletSpread;
         final int gunTier;
         
         if (!gunMeta.hasLore())
             return;
         
         List<String> lore = gunMeta.getLore();
-        final String lastElement = lore.get(lore.size() - 1);
         
-        if (hasSpecLore(lastElement)) {
-            gunTier = decrementDurability(lore, bulletSpread);
+        if (lore.size() > POST_ACC_IDX) {
+            Bukkit.broadcastMessage(HiddenStringUtils.extractHiddenString(lore.get(SPEC_IDX)));
+            loreBulletSpread = getTrueBulletSpread(HiddenStringUtils.extractHiddenString(lore.get(POST_ACC_IDX)));
+            gunTier = decrementDurability(lore, loreBulletSpread);
             if (gunTier <= 0) {
                 shooter.sendMessage(ChatColor.GOLD + "Your gun is jammed.");
                 event.setCancelled(true);
                 return;
             }
-        } else
-            gunTier = initializeSpecLore(lore, event.getBulletSpread());
+        } else {
+            loreBulletSpread = getTrueBulletSpread(HiddenStringUtils.extractHiddenString(lore.get(INIT_ACC_IDX)));
+            gunTier = initializeSpecLore(lore, loreBulletSpread);
+        }
         
-        event.setBulletSpread(getTrueBulletSpread(bulletSpread, gunTier));
+        event.setBulletSpread(setCurrentBulletSpread(event.getBulletSpread(), gunTier));
         gunMeta.setLore(lore);
         gunItem.setItemMeta(gunMeta);
     }
     
-    private static double getTrueBulletSpread(final double spread,
-                                              final int tier)
+    private static double setCurrentBulletSpread(final double eventBulletSpread,
+                                                 final int tier)
     {
-        return spread + (double)(spread/(double)tier);
+        return eventBulletSpread + (double)(eventBulletSpread/(double)tier);
     }
     
     private static int initializeSpecLore(final List<String> lore,
-                                          final double bulletSpread)
+                                          final double loreBulletSpread)
     {
         final StringBuilder stb = new StringBuilder();
-        final int initialDurability = getInitialDurability(bulletSpread);
-        final int maxDurability = getMaxDurability(bulletSpread);
+        if (loreBulletSpread < 0)
+            return 0;
+        
+        final int initialDurability = getInitialDurability(loreBulletSpread);
+        final int maxDurability = getMaxDurability(loreBulletSpread);
         final int gunTier = getGunTier(initialDurability, maxDurability);
-        lore.set(1, getAccuracyLore(getTrueBulletSpread(bulletSpread, gunTier)));
-        lore.add(getConditionLore(gunTier));
+        lore.set(ACCURACY_IDX, getAccuracyLore(loreBulletSpread));
+        lore.add(CONDITION_IDX, getConditionLore(gunTier));
         
         stb.append(LORE_VERIFY);
         stb.append(SEPERATOR);
@@ -86,8 +101,21 @@ public class ShootListener implements Listener {
         stb.append(SEPERATOR);
         stb.append(gunTier);
         
-        lore.add(stb.toString());
+        lore.add(SPEC_IDX, HiddenStringUtils.encodeString(stb.toString()));
         return gunTier;
+    }
+    
+    private static double getTrueBulletSpread(final String accuracyIndex)
+    {
+        final String line = accuracyIndex.replaceAll("§", "");
+        if (!hasSpecLore(line))
+            return -1.0;
+        
+        String[] split = line.split(SEPERATOR);
+        if (split.length != 2)
+            return -1.0;
+
+        return Double.valueOf(split[1]);
     }
     
     /**
@@ -98,7 +126,7 @@ public class ShootListener implements Listener {
     private static int decrementDurability(final List<String> lore,
                                            final double bulletSpread)
     {
-        final String specLore = lore.get(lore.size() - 1);
+        final String specLore = HiddenStringUtils.extractHiddenString(lore.get(SPEC_IDX));
         final String[] split = specLore.split(SEPERATOR);
         if (split.length != 4)
             return -1;
@@ -112,25 +140,27 @@ public class ShootListener implements Listener {
         final StringBuilder stb = new StringBuilder();
         
         if (gunTier != Integer.valueOf(split[3])) {
-            split[3] = String.valueOf(gunTier);
-            lore.set(lore.size() - 2, getConditionLore(gunTier));
-            lore.set(1, getAccuracyLore(getTrueBulletSpread(bulletSpread, gunTier)));
+            split[3] = String.valueOf(gunTier);           
+            lore.set(ACCURACY_IDX, getAccuracyLore(setCurrentBulletSpread(bulletSpread, gunTier)));
+            lore.set(CONDITION_IDX, getConditionLore(gunTier));
         }
         
         split[1] = String.valueOf(durability);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < split.length - 1; i++) {
             stb.append(split[i]);
             stb.append(SEPERATOR);
-        }
-        lore.set(lore.size()-1, stb.toString());
+        } 
+        stb.append(split[split.length - 1]);
+        
+        lore.set(SPEC_IDX, HiddenStringUtils.encodeString(stb.toString()));
         return gunTier;
     }
     
-    private static String getAccuracyLore(final double trueBulletSpread)
+    private static String getAccuracyLore(final double loreBulletSpread)
     {
         return ChatColor.DARK_GREEN + "Accuracy: "
                 + ChatColor.GREEN
-                + String.format("%.2f", (double)(100 - (trueBulletSpread * 16.1337))) 
+                + String.format("%.2f", (double)(100 - (loreBulletSpread * 16.1337))) 
                 + "%";
     }
     
