@@ -1,15 +1,14 @@
 package com.gmail.mooman219.pz.json.types;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.gmail.mooman219.pz.json.JsonBuilder;
 import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import org.boon.core.Value;
+import org.boon.core.value.LazyValueMap;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -128,70 +127,59 @@ public final class JsonLocation extends JsonProxy<Location> {
      * {@inheritDoc}
      */
     @Override
-    protected void write(JsonGenerator g) throws IOException {
-        g.writeObjectFieldStart("w");
-        this.world.write(g);
-        g.writeNumberField("x", this.x);
-        g.writeNumberField("y", this.y);
-        g.writeNumberField("z", this.z);
-        g.writeEndObject();
+    public void write(JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        this.world.write(b);
+        b.appendNumberField("x", this.x);
+        b.appendNumberField("y", this.y);
+        b.appendNumberField("z", this.z);
+        b.appendEndObject();
     }
 
-    /**
-     * Attempts to deserialize the data on the given parser as a JsonLocation
-     * object. If the parser is missing data, default values will be used.
-     *
-     * @param p the parser with the serialized JsonLocation on it
-     * @return a new JsonLocation object representing the data on the given
-     * parser
-     * @throws IOException if an error occurred with the parser
-     */
-    public static JsonLocation deserialize(JsonParser p) throws IOException {
+    public static JsonLocation deserializeLocation(String json) {
+        return deserializeLocation(JsonHelper.deserializeJson(json));
+    }
+
+    public static JsonLocation deserializeLocation(LazyValueMap raw) {
         JsonWorld world = null;
         int x = 0;
         int y = 0;
         int z = 0;
-        while (p.nextToken() != JsonToken.END_OBJECT) {
-            String field = p.getCurrentName();
-            p.nextToken();
-            switch (field) {
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
                 case "w":
-                    world = JsonWorld.deserialize(p);
+                    world = JsonWorld.deserializeWorld((LazyValueMap) v.toValue());
                     break;
                 case "x":
-                    x = p.getIntValue();
+                    x = v.intValue();
                     break;
                 case "y":
-                    y = p.getIntValue();
+                    y = v.intValue();
                     break;
                 case "z":
-                    z = p.getIntValue();
+                    z = v.intValue();
                     break;
             }
         }
         return new JsonLocation(world, x, y, z);
     }
 
-    /**
-     * Attempts to deserialize the data as a JsonLocation. If there is an
-     * exception in the process, null is returned. If the parser is missing
-     * data, default values will be used.
-     *
-     * @param data the string containing a serialized JsonLocation on it
-     * @return a new JsonLocation object representing the given data
-     */
-    public static JsonLocation deserialize(String data) {
-        JsonFactory factory = JsonHelper.getFactory();
-        JsonLocation o = null;
-        try {
-            JsonParser p = factory.createParser(data);
-            p.nextToken();
-            o = deserialize(p);
-            p.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return o;
+    public static JsonBuilder serializeLocation(Location location) {
+        return serializeLocation(location, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeLocation(Location location, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        JsonWorld.serializeWorld(location.getWorld(), b);
+        b.appendNumberField("x", location.getBlockX());
+        b.appendNumberField("y", location.getBlockY());
+        b.appendNumberField("z", location.getBlockZ());
+        b.appendEndObject();
+        return b;
     }
 
     /**

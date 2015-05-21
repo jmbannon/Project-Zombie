@@ -2,62 +2,57 @@ package com.gmail.mooman219.pz.json;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.boon.core.value.LazyValueMap;
 
-public abstract class JsonConfiguration<T> {
+public abstract class JsonConfiguration {
 
-    private transient final Class<T> type;
-    private transient final File file;
-    private T settings;
+    private final File file;
 
-    public JsonConfiguration(T settings, String directory, String name) {
-        this.settings = settings;
-        this.type = (Class<T>) settings.getClass();
-        new File("plugins/" + directory + "/").mkdirs();
+    public JsonConfiguration(String directory, String name) {
         this.file = new File("plugins/" + directory + "/" + name);
     }
 
-    /**
-     * Reads the file defined in the constructor and assigns the read data to
-     * the settings object.
-     */
-    public final void load() {
-        System.out.println("[Config] Loading " + file.getName() + " (" + settings.getClass().getSimpleName() + ")");
-        if (file.exists()) {
-            setSettings(JsonHelper.fromJson(file, type));
+    protected abstract void serialize(JsonBuilder b);
+
+    protected abstract void deserialize(LazyValueMap map);
+
+    public final void init() {
+        System.out.println("[Config] Init " + file.getName());
+        try {
+            if (file.exists()) {
+                deserialize(JsonHelper.deserializeJson(FileUtils.readFileToString(file)));
+            }
+            JsonBuilder b = new JsonBuilder();
+            serialize(b);
+            FileUtils.write(file, b.toPrettyString());
+        } catch (IOException e) {
+            System.out.println("[Config] Unable to init " + file.getName());
+            e.printStackTrace();
         }
     }
 
-    /**
-     * Overwrites the file defined in the constructor with the data in the
-     * settings object.
-     */
-    public final void save() {
-        System.out.println("[Config] Saving " + file.getName() + " (" + settings.getClass().getSimpleName() + ")");
+    public final void load() {
+        System.out.println("[Config] Load " + file.getName());
         try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.exists()) {
+                deserialize(JsonHelper.deserializeJson(FileUtils.readFileToString(file)));
             }
-            JsonHelper.getFancyMapper().writeValue(file, getSettings());
+        } catch (IOException e) {
+            System.out.println("[Config] Unable to load " + file.getName());
+            e.printStackTrace();
+        }
+    }
+
+    public final void save() {
+        System.out.println("[Config] Save " + file.getName());
+        try {
+            JsonBuilder b = new JsonBuilder();
+            serialize(b);
+            FileUtils.write(file, b.toPrettyString());
         } catch (IOException ex) {
+            System.out.println("[Config] Unable to save " + file.getName());
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * Gets the settings object this class wraps.
-     *
-     * @return the settings object
-     */
-    public T getSettings() {
-        return settings;
-    }
-
-    /**
-     * Sets the settings object this class wraps.
-     *
-     * @param data the settings object
-     */
-    public void setSettings(T settings) {
-        this.settings = settings;
     }
 }

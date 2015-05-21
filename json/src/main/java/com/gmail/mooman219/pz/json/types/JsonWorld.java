@@ -1,15 +1,14 @@
 package com.gmail.mooman219.pz.json.types;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.gmail.mooman219.pz.json.JsonBuilder;
 import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import org.boon.core.Value;
+import org.boon.core.value.LazyValueMap;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -87,58 +86,45 @@ public final class JsonWorld extends JsonProxy<World> {
      * {@inheritDoc}
      */
     @Override
-    protected void write(JsonGenerator g) throws IOException {
-        g.writeStringField("w", w);
-        g.writeStringField("u", u.toString());
-        g.writeEndObject();
+    public void write(JsonBuilder b) {
+        b.appendStartObject();
+        b.appendStringField("w", w);
+        b.appendStringField("u", u.toString());
+        b.appendEndObject();
     }
 
-    /**
-     * Attempts to deserialize the data on the given parser as a JsonWorld
-     * object. If the parser is missing data, default values will be used.
-     *
-     * @param p the parser with the serialized JsonWorld on it
-     * @return a new JsonWorld object representing the data on the given parser
-     * @throws IOException if an error occurred with the parser
-     */
-    public static JsonWorld deserialize(JsonParser p) throws IOException {
+    public static JsonWorld deserializeWorld(String json) {
+        return deserializeWorld(JsonHelper.deserializeJson(json));
+    }
+
+    public static JsonWorld deserializeWorld(LazyValueMap raw) {
         String world = null;
         UUID uuid = null;
-        while (p.nextToken() != JsonToken.END_OBJECT) {
-            String field = p.getCurrentName();
-            p.nextToken();
-            switch (field) {
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
                 case "w":
-                    world = p.getText();
+                    world = v.stringValue();
                     break;
                 case "u":
-                    uuid = UUID.fromString(p.getText());
+                    uuid = UUID.fromString(v.stringValue());
                     break;
             }
         }
         return new JsonWorld(world, uuid);
     }
 
-    /**
-     * Attempts to deserialize the data as a JsonWorld. If there is an exception
-     * in the process, null is returned. If the parser is missing data, default
-     * values will be used.
-     *
-     * @param data the string containing a serialized JsonWorld on it
-     * @return a new JsonWorld object representing the given data
-     */
-    public static JsonWorld deserialize(String data) {
-        JsonFactory factory = JsonHelper.getFactory();
-        JsonWorld o = null;
-        try {
-            JsonParser p = factory.createParser(data);
-            p.nextToken();
-            o = deserialize(p);
-            p.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return o;
+    public static JsonBuilder serializeWorld(World world) {
+        return serializeWorld(world, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeWorld(World world, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendStringField("w", world.getName());
+        b.appendStringField("u", world.getUID().toString());
+        b.appendEndObject();
+        return b;
     }
 
     /**

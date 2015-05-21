@@ -1,15 +1,14 @@
 package com.gmail.mooman219.pz.json.types;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import com.gmail.mooman219.pz.json.JsonBuilder;
 import com.gmail.mooman219.pz.json.JsonHelper;
 import com.gmail.mooman219.pz.json.JsonProxy;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import org.boon.core.Value;
+import org.boon.core.value.LazyValueMap;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
@@ -113,66 +112,53 @@ public final class JsonChunkLocation extends JsonProxy<Chunk> {
      * {@inheritDoc}
      */
     @Override
-    protected void write(JsonGenerator g) throws IOException {
-        g.writeObjectFieldStart("w");
-        this.world.write(g);
-        g.writeNumberField("x", this.x);
-        g.writeNumberField("z", this.z);
-        g.writeEndObject();
+    public void write(JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        this.world.write(b);
+        b.appendNumberField("x", this.x);
+        b.appendNumberField("z", this.z);
+        b.appendEndObject();
     }
 
-    /**
-     * Attempts to deserialize the data on the given parser as a
-     * JsonChunkLocation object. If the parser is missing data, default values
-     * will be used.
-     *
-     * @param p the parser with the serialized JsonChunkLocation on it
-     * @return a new JsonChunkLocation object representing the data on the given
-     * parser
-     * @throws IOException if an error occurred with the parser
-     */
-    public static JsonChunkLocation deserialize(JsonParser p) throws IOException {
+    public static JsonChunkLocation deserializeChunkLocation(String json) {
+        return deserializeChunkLocation(JsonHelper.deserializeJson(json));
+    }
+
+    public static JsonChunkLocation deserializeChunkLocation(LazyValueMap raw) {
         JsonWorld world = null;
         int x = 0;
         int z = 0;
-        while (p.nextToken() != JsonToken.END_OBJECT) {
-            String field = p.getCurrentName();
-            p.nextToken();
-            switch (field) {
+        Map.Entry<String, Value>[] items = raw.items();
+        for (int i = 0; i < raw.len(); i++) {
+            Value v = items[i].getValue();
+            switch (items[i].getKey()) {
                 case "w":
-                    world = JsonWorld.deserialize(p);
+                    world = JsonWorld.deserializeWorld((LazyValueMap) v.toValue());
                     break;
                 case "x":
-                    x = p.getIntValue();
+                    x = v.intValue();
                     break;
                 case "z":
-                    z = p.getIntValue();
+                    z = v.intValue();
                     break;
             }
         }
         return new JsonChunkLocation(world, x, z);
     }
 
-    /**
-     * Attempts to deserialize the data as a JsonChunkLocation. If there is an
-     * exception in the process, null is returned. If the parser is missing
-     * data, default values will be used.
-     *
-     * @param data the string containing a serialized JsonChunkLocation on it
-     * @return a new JsonChunkLocation object representing the given data
-     */
-    public static JsonChunkLocation deserialize(String data) {
-        JsonFactory factory = JsonHelper.getFactory();
-        JsonChunkLocation o = null;
-        try {
-            JsonParser p = factory.createParser(data);
-            p.nextToken();
-            o = deserialize(p);
-            p.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return o;
+    public static JsonBuilder serializeChunkLocation(Chunk chunk) {
+        return serializeChunkLocation(chunk, new JsonBuilder());
+    }
+
+    public static JsonBuilder serializeChunkLocation(Chunk chunk, JsonBuilder b) {
+        b.appendStartObject();
+        b.appendField("w");
+        JsonWorld.serializeWorld(chunk.getWorld(), b);
+        b.appendNumberField("x", chunk.getX());
+        b.appendNumberField("z", chunk.getZ());
+        b.appendEndObject();
+        return b;
     }
 
     /**

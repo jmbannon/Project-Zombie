@@ -1,43 +1,21 @@
 package com.gmail.mooman219.pz.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import java.io.IOException;
-import java.io.StringWriter;
-
 public abstract class JsonData {
 
-    private final boolean isObject;
-
-    /**
-     * Constructor used to define if this is a JSON object or JSON array.
-     *
-     * @param isObject true, this is an object and will be wrapped by "{}",
-     * false this is an array and will be wrapped by "[]"
-     */
-    public JsonData(boolean isObject) {
-        this.isObject = isObject;
-    }
-
-    /**
-     * Constructor used to define this an JSON object
-     */
     public JsonData() {
-        this.isObject = true;
     }
 
     /**
-     * Writes the contents of the class to the generator.
+     * Writes the contents of the class to the builder.
      *
-     * @param g the generator
-     * @throws IOException this should never be thrown
+     * @param b the builder
      */
-    protected abstract void write(JsonGenerator g) throws IOException;
+    public abstract void write(JsonBuilder b);
 
     /**
-     * Produces a pretty string representation of this class.
+     * Produces a compact string representation of this class.
      *
-     * @return the JSON representing this class
+     * @return The json string representing this class
      */
     public String serialize() {
         return serialize(false);
@@ -46,32 +24,13 @@ public abstract class JsonData {
     /**
      * Produces a string representation of this class.
      *
-     * @param fancy if true the pretty printing will be use, else the standard
-     * formatting will be used. Pretty printing makes the resulting string more
-     * human readable adding indentation
-     * @return the JSON representing this class
+     * @param pretty true, a pretty string representation will be generated,
+     * else a compact version of the json is generated.
      */
-    public String serialize(boolean fancy) {
-        JsonFactory factory = JsonHelper.getFactory();
-        StringWriter writer = new StringWriter();
-        try {
-            JsonGenerator g = factory.createGenerator(writer);
-            if (fancy) {
-                g.useDefaultPrettyPrinter();
-            }
-            if (isObject) {
-                g.writeStartObject();
-            } else {
-                g.writeStartArray();
-            }
-            write(g);
-            g.close();
-            return writer.toString();
-        } catch (IOException ex) {
-            System.err.println("Unable to serialize " + this.getClass().getSimpleName() + ".");
-            ex.printStackTrace();
-            return "{}";
-        }
+    public String serialize(boolean pretty) {
+        JsonBuilder b = new JsonBuilder();
+        write(b);
+        return pretty ? b.toPrettyString() : b.toString();
     }
 
     /**

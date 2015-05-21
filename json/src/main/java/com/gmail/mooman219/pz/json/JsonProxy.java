@@ -10,18 +10,17 @@ package com.gmail.mooman219.pz.json;
 public abstract class JsonProxy<T> extends JsonData {
 
     /**
-     * Fetches the data that is being proxied.
+     * Fetches the data that is being wrapped.
      *
-     * @return the data that is being proxied
+     * @return The data that is being wrapped
      */
     public abstract T fetch();
 
     /**
-     * Compares the given data against the contents of the proxy.
+     * Compares {@code data} against the contents of the wrapper.
      *
-     * @param data an object of the proxied type
-     * @return true if the contents of the proxy match the given data object,
-     * false otherwise
+     * @param data an object of the wrapped type
+     * @return true if the contents of the wrapper match the {@code data} object
      */
     public abstract boolean match(T data);
 }
