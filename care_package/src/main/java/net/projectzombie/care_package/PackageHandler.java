@@ -17,9 +17,10 @@
  * timer.
  *
  */
-package com.projectzombie.care_package;
+package net.projectzombie.care_package;
 
-import com.projectzombie.care_package.serialize.ItemSerialize;
+import net.projectzombie.care_package.serialize.ItemSerialize;
+import com.gmail.mooman219.pz.json.JsonHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -95,13 +97,7 @@ public class PackageHandler {
             return new ItemStack[] { new ItemStack(Material.AIR) };
         
         final String buffer = chestConfig.getString(ROOT_PATH + "." + packageName);
-        final String[] split = buffer.split("##");
-        final ItemStack[] items = new ItemStack[split.length];
-        
-        for (int i = 0; i < split.length; i++)
-            items[i] = ItemSerialize.deserialize(split[i]);
-        
-        return items;
+        return (ItemStack[])JsonHelper.deserializeItemStackList(buffer).toArray();
     }
     
     /**
@@ -120,12 +116,16 @@ public class PackageHandler {
             return;
         }
  
+        final ArrayList<ItemStack> inventoryItems = new ArrayList<>();
+        PlayerInventory inventory = sender.getInventory();
         chestConfig.set(ROOT_PATH, packageName);
         
         for (int i = 9; i <= 35; i++)
-            serialBuffer.append(ItemSerialize.serialize(sender.getInventory().getItem(i)));
+            inventoryItems.add(inventory.getItem(i));
 
-        chestConfig.set(ROOT_PATH + "." + packageName, serialBuffer.toString());
+        chestConfig.set(ROOT_PATH + "." + packageName, 
+                JsonHelper.serializeConfigurationSerializableList(inventoryItems).toString());
+        
         this.saveConfig();
         sender.sendMessage("Your inventory has been saved as " + packageName);
     }

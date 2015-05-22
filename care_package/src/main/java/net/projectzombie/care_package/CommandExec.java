@@ -18,9 +18,9 @@
  *
  */
 
-package com.projectzombie.care_package;
+package net.projectzombie.care_package;
 
-import com.projectzombie.care_package.StateController.StateType;
+import net.projectzombie.care_package.StateController.StateType;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

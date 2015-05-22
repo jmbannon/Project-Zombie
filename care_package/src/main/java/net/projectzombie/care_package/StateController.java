@@ -18,9 +18,9 @@
  *
  */
 
-package com.projectzombie.care_package;
+package net.projectzombie.care_package;
 
-import com.projectzombie.care_package.serialize.BlockSerialize;
+import net.projectzombie.care_package.serialize.BlockSerialize;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

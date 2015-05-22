@@ -18,9 +18,9 @@
  *
  */
 
-package com.projectzombie.care_package;
+package net.projectzombie.care_package;
 
-import com.projectzombie.care_package.serialize.BlockSerialize;
+import net.projectzombie.care_package.serialize.BlockSerialize;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +29,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;

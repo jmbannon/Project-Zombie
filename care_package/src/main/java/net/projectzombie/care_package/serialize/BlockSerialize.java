@@ -18,7 +18,7 @@
  *
  */
 
-package com.projectzombie.care_package.serialize;
+package net.projectzombie.care_package.serialize;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
