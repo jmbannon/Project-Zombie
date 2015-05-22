@@ -4,6 +4,7 @@ import com.gmail.mooman219.pz.json.types.JsonChunkLocation;
 import com.gmail.mooman219.pz.json.types.JsonLocation;
 import com.gmail.mooman219.pz.json.types.JsonRichLocation;
 import com.gmail.mooman219.pz.json.types.JsonWorld;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,6 +120,18 @@ public final class JsonHelper {
             }
         }
         return ItemStack.deserialize(raw);
+    }
+
+    public static List<ItemStack> deserializeItemStackList(String json) {
+        return deserializeItemStackList(JsonHelper.deserializeArray(json));
+    }
+
+    public static List<ItemStack> deserializeItemStackList(ValueList raw) {
+        List<ItemStack> list = new ArrayList<>();
+        for (Object item : raw) {
+            list.add(JsonHelper.deserializeItemStack((LazyValueMap) item));
+        }
+        return list;
     }
 
     public static JsonLocation deserializeLocation(String json) {
@@ -289,12 +302,25 @@ public final class JsonHelper {
      * @return a JsonBuilder with data representing that which was stored in the
      * given ConfigurationSerializable.
      */
-    public static JsonBuilder serializeConfigurationSerializable(ConfigurationSerializable cs) {
+    public static <T extends ConfigurationSerializable> JsonBuilder serializeConfigurationSerializable(T cs) {
         return serializeConfigurationSerializable(cs, new JsonBuilder());
     }
 
-    public static JsonBuilder serializeConfigurationSerializable(ConfigurationSerializable cs, JsonBuilder b) {
+    public static <T extends ConfigurationSerializable> JsonBuilder serializeConfigurationSerializable(T cs, JsonBuilder b) {
         serializeSC(cs, b);
+        return b;
+    }
+
+    public static <T extends ConfigurationSerializable> JsonBuilder serializeConfigurationSerializableList(List<T> list) {
+        return serializeConfigurationSerializableList(list, new JsonBuilder());
+    }
+
+    public static <T extends ConfigurationSerializable> JsonBuilder serializeConfigurationSerializableList(List<T> list, JsonBuilder b) {
+        b.appendStartArray();
+        for (ConfigurationSerializable item : list) {
+            JsonHelper.serializeConfigurationSerializable(item, b);
+        }
+        b.appendEndArray();
         return b;
     }
 
