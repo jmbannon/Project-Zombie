@@ -49,9 +49,9 @@ public final class JsonWorld extends JsonProxy<World> {
     @Override
     public World fetch() {
         if (weakWorld == null || weakWorld.get() == null) {
-            World world = Bukkit.getWorld(this.u);
+            World world = Bukkit.getWorld(this.w);
             if (world == null) {
-                world = Bukkit.getWorld(this.w);
+                world = Bukkit.getWorld(this.u);
                 if (world == null) {
                     throw new IllegalStateException("Cannot find world (" + this.w + ", " + this.u + ").");
                 }

@@ -10,7 +10,7 @@ import org.bukkit.World;
 
 public final class JsonRichLocation extends JsonProxy<Location> {
 
-    private final double EPSILON = 0.01;
+    private static final double EPSILON = 0.01;
     private final JsonWorld world;
     private final double x;
     private final double y;
