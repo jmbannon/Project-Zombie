@@ -347,8 +347,6 @@ public final class JsonHelper {
             b.appendEndArray();
         } else if (obj instanceof ConfigurationSerializable) {
             serializeSC(((ConfigurationSerializable) obj).serialize(), b);
-        } else if (obj instanceof String) {
-            b.appendString((String) obj);
         } else {
             b.appendObject(obj);
         }
