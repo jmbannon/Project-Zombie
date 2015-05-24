@@ -111,7 +111,7 @@ public class CommandExec implements CommandExecutor {
             controller.linkState(player, args[1], args[2], temp.toString());
             
         } else if (args[0].equalsIgnoreCase("package") && args.length == 2)
-            chest.getPackage(player, args[1]);
+            chest.getPlayerPackage(player, args[1]);
         
         else if (args[0].equalsIgnoreCase("set") && args.length == 3)
             controller.setAltState(args[1], args[2]);

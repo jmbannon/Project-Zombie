@@ -27,8 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -166,24 +169,27 @@ public class StateSwitcher {
                 }
             }
         }
-
+        stateWriter.flush();
+        stateWriter.close();
         chestBlock = BASE_BLOCK.getRelative((int)chestVector.getBlockX(),
                                             (int)chestVector.getBlockY(),
                                             (int)chestVector.getBlockZ());
         
         if (chestBlock.getState() instanceof Chest) {
             final Chest chest = (Chest)chestBlock.getState();
-            final ItemStack[] items = CONTENTS.getRandPackage();
+            final ArrayList<ItemStack> items = CONTENTS.getRandPackage();
+            final ItemStack[] chestItems = new ItemStack[27];
             if (items != null) {
-                chest.getInventory().setContents(items);
+                while (items.size() < 27)
+                    items.add(new ItemStack(Material.AIR));
+                Collections.shuffle(items);
+                for (int i = 0; i < items.size(); i++)
+                    chestItems[i] = items.get(i);
+                chest.getInventory().setContents(chestItems);
                 chest.update(true);
             }
         }
-        stateWriter.flush();
-        stateWriter.close();
-        
         plugin.getServer().broadcastMessage(desc);
-        
         return 1;
     }
 

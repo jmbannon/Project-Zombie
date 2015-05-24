@@ -19,8 +19,6 @@
  */
 package net.projectzombie.care_package;
 
-import net.projectzombie.care_package.serialize.ItemSerialize;
-import com.gmail.mooman219.pz.json.JsonHelper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +39,6 @@ import org.bukkit.plugin.Plugin;
  * This class is to handle everything related to chest configurations
  * within the care package drop.
  * 
- * Creates
- * Removes
- * Lists   *** TODO
- * getRandomPackage
- * getChest *** TODO
  */
 public class PackageHandler {
     
@@ -70,11 +63,9 @@ public class PackageHandler {
      * Returns random package defined within the configuration file.
      * @return Random ItemStack from serialized string in config.
      */
-    public ItemStack[] getRandPackage()
+    public ArrayList<ItemStack> getRandPackage()
     {   
-        final String buffer;
         final String chestName;
-        final String split[];
         ArrayList<String> chestList = new ArrayList<>();
         
         for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
@@ -92,12 +83,11 @@ public class PackageHandler {
         return this.getPackage(chestName);
     }
     
-    private ItemStack[] getPackage(final String packageName) {
+    private ArrayList<ItemStack> getPackage(final String packageName) {
         if (!chestConfig.contains(ROOT_PATH + "." + packageName))
-            return new ItemStack[] { new ItemStack(Material.AIR) };
+            return null;
         
-        final String buffer = chestConfig.getString(ROOT_PATH + "." + packageName);
-        return (ItemStack[])JsonHelper.deserializeItemStackList(buffer).toArray();
+        return (ArrayList<ItemStack>)chestConfig.getList(ROOT_PATH + "." + packageName);
     }
     
     /**
@@ -109,22 +99,20 @@ public class PackageHandler {
     public void createPackage(final Player sender,
                               final String packageName) 
     {
-        final StringBuilder serialBuffer = new StringBuilder();
-        
         if (chestConfig == null) {
             sender.sendMessage("The file is null! Please contact the server administrator.");
             return;
         }
- 
         final ArrayList<ItemStack> inventoryItems = new ArrayList<>();
-        PlayerInventory inventory = sender.getInventory();
-        chestConfig.set(ROOT_PATH, packageName);
-        
-        for (int i = 9; i <= 35; i++)
-            inventoryItems.add(inventory.getItem(i));
+        final PlayerInventory inventory = sender.getInventory();
+        ItemStack tempItem;
+        for (int i = 9; i <= 35; i++) {
+            tempItem = inventory.getItem(i);
+            if (tempItem != null && tempItem.getType() != Material.AIR)
+                inventoryItems.add(inventory.getItem(i));
+        }
 
-        chestConfig.set(ROOT_PATH + "." + packageName, 
-                JsonHelper.serializeConfigurationSerializableList(inventoryItems).toString());
+        chestConfig.set(ROOT_PATH + "." + packageName, inventoryItems);
         
         this.saveConfig();
         sender.sendMessage("Your inventory has been saved as " + packageName);
@@ -150,16 +138,21 @@ public class PackageHandler {
             sender.sendMessage(packageName + " does not exist");
     }
     
-    public void getPackage(final Player sender,
-                           final String packageName)
+    public void getPlayerPackage(final Player sender,
+                                 final String packageName)
     {
         if (!chestConfig.contains(ROOT_PATH + "." + packageName)) {
             sender.sendMessage("Chest does not exist.");
             return;
         }
-        ItemStack[] items = this.getPackage(packageName);
-        for (int i = 0; i < items.length; i++)
-            sender.getInventory().setItem(i+9, items[i]);
+        ArrayList<ItemStack> items = this.getPackage(packageName);
+        if (items == null) {
+            sender.sendMessage("An error has occured.");
+            return;
+        }
+            
+        for (int i = 0; i < items.size(); i++)
+            sender.getInventory().setItem(i+9, items.get(i));
         
         sender.sendMessage("Package " + packageName + " recieved.");
     }
