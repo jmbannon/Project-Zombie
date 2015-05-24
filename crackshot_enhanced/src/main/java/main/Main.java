@@ -1,7 +1,7 @@
 package main;
 
 import breakable_windows.BlockBreakListener;
-import gun_decay.ShootListener;
+import weapon_decay.ShootListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
