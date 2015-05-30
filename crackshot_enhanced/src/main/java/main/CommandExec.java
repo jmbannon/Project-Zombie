@@ -15,33 +15,50 @@ public class CommandExec implements CommandExecutor {
     final Plugin plugin;
     final BlockBreakListener blockBreak;
     
-	public CommandExec(final Plugin plugin) throws IOException
+	public CommandExec(final Plugin plugin) throws IOException, Exception
     {
         this.plugin = plugin;
         this.blockBreak = new BlockBreakListener(plugin);
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		final Player playerOne = (Player) sender;
-		
-		if (!playerOne.isOp())
+	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
+		if (!(cs instanceof Player) || !cs.isOp())
 			return true;
 		
-		if (cmd.getName().equalsIgnoreCase("bw")) {
-			if (args[0].equalsIgnoreCase("restore")) {
+        final Player sender = (Player)cs;
+        
+		if (cmd.getName().equalsIgnoreCase("bw") && args.length > 0) {
+			if (args[0].equalsIgnoreCase("restore") && args.length == 2) {
                 int blockCount = -1;
-                try {
-                    blockCount = blockBreak.restoreBlocks();
-                } catch (Exception ex) {
-                    Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
+                if (args[1].equalsIgnoreCase("glass")) 
+                {
+                    try {
+                        blockCount = blockBreak.restoreGlass();
+                    } catch (Exception ex) {
+                        Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    sender.sendMessage("Restored " + blockCount + " glass blocks.");
+                } else if (args[1].equalsIgnoreCase("lights")) {
+                    try {
+                        blockCount = blockBreak.restoreLights(sender);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    sender.sendMessage("Restored " + blockCount + " light blocks.");
                 }
-                playerOne.sendMessage("Restored " + blockCount + " blocks.");
-			}
+			} 
 			else
-				playerOne.sendMessage("/bw restore");		
-		}
+				this.commandList(sender);
+		} else
+            this.commandList(sender);
 		
 		return true;
 	}
+    
+    public void commandList(Player sender)
+    {
+        sender.sendMessage("/bw restore glass");
+        sender.sendMessage("/bw restore lights");
+    }
 }

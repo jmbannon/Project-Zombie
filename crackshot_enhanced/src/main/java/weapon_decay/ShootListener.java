@@ -7,8 +7,6 @@ package weapon_decay;
 
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -83,8 +81,6 @@ public class ShootListener implements Listener
         final String[] statParts = lore.get(HIDDEN_PRE_STAT_IDX).split(SEPERATOR);
         assert(statParts.length == 3 && verifyLore(statParts[0]));
         
-        for (int i=0;i<statParts.length;i++) Bukkit.broadcastMessage(statParts[i]);
-        
         /* Stat lore string */
         final WeaponType weaponType = WeaponType.getType(statParts[1]);
         final double CSBulletSpread = Double.valueOf(statParts[2]);
@@ -94,8 +90,6 @@ public class ShootListener implements Listener
         final int gunTier = weaponType.getTierInt(CSBulletSpread, initialDurability);
         final String accuracyDisplay = weaponType.getAccuracy(CSBulletSpread, gunTier);
         final String conditionDisplay = weaponType.getCondition(gunTier);
-        
-        Bukkit.broadcastMessage("" + initialDurability + " " + maxDurability + " " + gunTier);
         
         assert(initialDurability > 0);
         assert(maxDurability > 0);

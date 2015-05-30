@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import com.shampaggon.crackshot.events.WeaponScopeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.PlayerInventory;
 
 public class ScopeZoomListener implements Listener {
 
@@ -34,8 +36,19 @@ public class ScopeZoomListener implements Listener {
 			}
 		}
 	}
+    
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void RemoveScopeOnClick(InventoryClickEvent event)
+    {
+        final int slot = event.getSlot();
+        final PlayerInventory inv = event.getWhoClicked().getInventory();
+        final ItemStack clickedItem = inv.getItem(slot);
+        if (clickedItem.getType() == Material.PUMPKIN)
+            inv.remove(clickedItem);
+    }
 	
-	public void disable() {
+	public void disable()
+    {
 		for (Entry<Player, ItemStack> entry : helmetList.entrySet()) {
 				entry.getKey().getInventory().setHelmet(entry.getValue());
 				helmetList.remove(entry.getKey());

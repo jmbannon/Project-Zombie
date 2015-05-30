@@ -14,14 +14,14 @@ import org.bukkit.ChatColor;
  */
 public enum WeaponType
 {
-    PISTOL          (0, 130, 185,  0.180),
-    REVOLVER        (1, 195, 260,  0.538),
-    HUNTING_RIFLE   (2, 370, 530,  0.852),
-    SHOTGUN         (3, 50,  110,  0.165),
-    SMG             (4, 255, 440,  0.191),
-    ASSAULT_RIFLE   (5, 580, 850,  0.423),
-    AUTO_SNIPER     (6, 480, 700,  0.562),
-    SNIPER          (7, 600, 1000, 1.871);
+    PISTOL          (0, 130, 185,  0.450),
+    REVOLVER        (1, 195, 260,  1.376),
+    HUNTING_RIFLE   (2, 370, 530,  2.105),
+    SHOTGUN         (3, 50,  110,  0.333),
+    SMG             (4, 255, 440,  0.521),
+    ASSAULT_RIFLE   (5, 580, 850,  0.846),
+    AUTO_SNIPER     (6, 480, 700,  1.124),
+    SNIPER          (7, 600, 1000, 2.105);
     
     private final int value, lowerBound, upperBound;
     private final double weight;
@@ -104,16 +104,15 @@ public enum WeaponType
         
         if (this == SHOTGUN) {
             accuracyType = "BB Spread: ";
-            accuracyValue = String.format("%.1f", CSBulletSpread); 
+            accuracyValue = String.format("%.1f", getAccuracyPercentage(CSBulletSpread, tier)/2); 
         } else {
             accuracyType = "Accuracy: ";
-            accuracyValue = String.format("%.2f", getAccuracyPercentage(CSBulletSpread, tier));
+            accuracyValue = String.format("%.2f%%", getAccuracyPercentage(CSBulletSpread, tier));
         }
         stb.append(STAT_COLOR);
         stb.append(accuracyType);
         stb.append(VALUE_COLOR);
         stb.append(accuracyValue);
-        stb.append('%');
         return stb.toString();
     }
    

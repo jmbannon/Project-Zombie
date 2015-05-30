@@ -21,13 +21,14 @@
 package breakable_windows;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -36,8 +37,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 public class BlockSerialize implements Listener {
 
     private static final Server server = Bukkit.getServer();
+    
+    public BlockSerialize(final Plugin plugin)
+    { 
 
-    public BlockSerialize() { /* Do nothing */ }
+    }
     
     /**
      * Serializes blocks in the form of "world_name,x,y,z,type,data,\n"
@@ -45,9 +49,9 @@ public class BlockSerialize implements Listener {
      * @param block
      * @return 
      */
-    public static String serialize(final Block block) {
+    public String blockSerialize(final Block block)
+    {
         final StringBuilder temp = new StringBuilder();
-        
         temp.append(block.getWorld().getName());
         temp.append(',');
         temp.append(block.getX());
@@ -68,24 +72,23 @@ public class BlockSerialize implements Listener {
      * Deserializes the string and sets the block in the specified world.
      * @param serializedString
      */
-    public static void deserializeAndSet(final String serializedString) {
-        String[] parts = serializedString.split(",");
-        
+    public void deserializeSet(final String serializedString) {
+        final String[] parts = serializedString.split(",");
         final Block theBlock = server.getWorld(parts[0]).getBlockAt(
                 Integer.valueOf(parts[1]), 
                 Integer.valueOf(parts[2]), 
                 Integer.valueOf(parts[3]));
         
-        BlockBreakEvent event = new BlockBreakEvent(theBlock, null);
         theBlock.setType(Material.valueOf(parts[4]));
         theBlock.setData(Byte.valueOf(parts[5]));
     }
     
-    @EventHandler (priority = EventPriority.NORMAL)
-    public static void onBreak(BlockBreakEvent evt) {
-        evt.setCancelled(true);
-        evt.getBlock().getDrops().clear();
-        evt.getBlock().getLocation();
-        evt.getBlock().setType(Material.AIR);
+    public Chunk deserializeGetChunk(final String serializedString)
+    {
+        final String[] parts = serializedString.split(",");
+        return server.getWorld(parts[0]).getBlockAt(Integer.valueOf(parts[1]), 
+                                                    Integer.valueOf(parts[2]), 
+                                                    Integer.valueOf(parts[3]))
+                                                    .getChunk();
     }
 }

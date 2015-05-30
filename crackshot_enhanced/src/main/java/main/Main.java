@@ -23,6 +23,8 @@ public class Main extends JavaPlugin {
             this.exec = new CommandExec(this);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         
 		this.scope = new ScopeZoomListener();
@@ -42,8 +44,10 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		this.getLogger().info("Restoring blocks...");
         try {
-            this.window.restoreBlocks();
+            this.window.restoreGlass();
         } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 		this.scope.disable();
