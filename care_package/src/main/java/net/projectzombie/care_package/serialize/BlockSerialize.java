@@ -80,12 +80,4 @@ public class BlockSerialize implements Listener {
         theBlock.setType(Material.valueOf(parts[4]));
         theBlock.setData(Byte.valueOf(parts[5]));
     }
-    
-    @EventHandler (priority = EventPriority.NORMAL)
-    public static void onBreak(BlockBreakEvent evt) {
-        evt.setCancelled(true);
-        evt.getBlock().getDrops().clear();
-        evt.getBlock().getLocation();
-        evt.getBlock().setType(Material.AIR);
-    }
 }
