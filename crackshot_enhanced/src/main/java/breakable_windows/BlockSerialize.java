@@ -22,11 +22,9 @@ package breakable_windows;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -54,11 +52,11 @@ public class BlockSerialize implements Listener {
         final StringBuilder temp = new StringBuilder();
         temp.append(block.getWorld().getName());
         temp.append(',');
-        temp.append(block.getX());
+        temp.append((int)block.getX());
         temp.append(',');
-        temp.append(block.getY());
+        temp.append((int)block.getY());
         temp.append(',');
-        temp.append(block.getZ());
+        temp.append((int)block.getZ());
         temp.append(',');
         temp.append(block.getType().toString());
         temp.append(',');

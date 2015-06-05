@@ -42,8 +42,11 @@ public class ScopeZoomListener implements Listener {
     {
         final int slot = event.getSlot();
         final PlayerInventory inv = event.getWhoClicked().getInventory();
+        if (slot < 0 || slot >= inv.getSize())
+            return;
+        
         final ItemStack clickedItem = inv.getItem(slot);
-        if (clickedItem.getType() == Material.PUMPKIN)
+        if (clickedItem != null && clickedItem.getType().equals(Material.PUMPKIN))
             inv.remove(clickedItem);
     }
 	
