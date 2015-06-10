@@ -1,0 +1,8 @@
+name: BlockPlacer
+main: net.projectzombie.block_place.Main
+depend: [WorldEdit,WorldGuard]
+version: 1.0
+commands:
+  bp:
+    description: Nope.
+    usage: "WIP"

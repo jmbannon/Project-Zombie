@@ -1,26 +1,25 @@
 /*
- * CarePackage
+ * BlockPlacer
  *
  * Version:     0.5
  * MC Build:    1.8.3
- * Date:        05-03-2015
+ * Date:        06-10-2015
  *
  * Authur:      Jesse Bannon
  * Server:      Project Zombie
  * Website:     www.projectzombie.net
  * 
- * Initiates random care package drops by combining an alternate state of the
- * map with a base state on the actual player map. Stores the base state blocks
- * within a text buffer and pastes the alt state to the location of the base
- * state. Finds single chest within the pasted alt state and sets a randomly
- * define set of items made by the administrator.  Restores the state on a
- * timer.
+ * Allows players to place and break particular blocks within a WorldGuard
+ * region whos build flag is set to allowed. Stores these blocks within two
+ * buffers: blocks and lights. Restores all blocks by iterating through the
+ * buffer and setting the blocks to air.  For light blocks, a player must
+ * send the command to be able to teleport to each light block location to
+ * remove it allowing light to update correctly.
  *
  */
 
 package net.projectzombie.block_place;
 
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

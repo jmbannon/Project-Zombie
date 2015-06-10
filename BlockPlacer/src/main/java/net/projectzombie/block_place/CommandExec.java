@@ -1,20 +1,20 @@
 /*
- * CarePackage
+ * BlockPlacer
  *
  * Version:     0.5
  * MC Build:    1.8.3
- * Date:        05-03-2015
+ * Date:        06-10-2015
  *
  * Authur:      Jesse Bannon
  * Server:      Project Zombie
  * Website:     www.projectzombie.net
  * 
- * Initiates random care package drops by combining an alternate state of the
- * map with a base state on the actual player map. Stores the base state blocks
- * within a text buffer and pastes the alt state to the location of the base
- * state. Finds single chest within the pasted alt state and sets a randomly
- * define set of items made by the administrator.  Restores the state on a
- * timer.
+ * Allows players to place and break particular blocks within a WorldGuard
+ * region whos build flag is set to allowed. Stores these blocks within two
+ * buffers: blocks and lights. Restores all blocks by iterating through the
+ * buffer and setting the blocks to air.  For light blocks, a player must
+ * send the command to be able to teleport to each light block location to
+ * remove it allowing light to update correctly.
  *
  */
 
@@ -33,13 +33,27 @@ import org.bukkit.plugin.Plugin;
 public class CommandExec implements CommandExecutor {
 
     private final BlockPlaceListener blockPlace;
-    private final Plugin plugin;
     
-    public CommandExec(final Plugin plugin) {
-        this.plugin = plugin;
+    /**
+     * Initializes blockPlace listener methods.
+     * 
+     * @param plugin This plugin
+     */
+    public CommandExec(final Plugin plugin)
+    {
         blockPlace = new BlockPlaceListener(plugin);
     }
 
+    /**
+     * Commands the plugin has. Can only execute if the command sender is
+     * an actual player and is OP. List of commands in listCommands;
+     * 
+     * @param cs
+     * @param cmd
+     * @param label
+     * @param args
+     * @return 
+     */
     @Override
     public boolean onCommand(CommandSender cs,
                              Command cmd,
@@ -53,10 +67,20 @@ public class CommandExec implements CommandExecutor {
         
 		if (cmd.getName().equalsIgnoreCase("bp") && args.length > 0)
         {
-            if (args.length == 1 & args[0].equalsIgnoreCase("restore")) {
-                int restoredCount = blockPlace.removePlacedBlocks();
+            if (args.length == 2 & args[0].equalsIgnoreCase("remove"))
+            {
+                int restoredCount;
+                if (args[1].equalsIgnoreCase("blocks"))
+                    restoredCount = blockPlace.removePlacedBlocks();
+                else if (args[1].equalsIgnoreCase("lights"))
+                    restoredCount = blockPlace.removePlacedLights(sender);
+                else
+                    restoredCount = -64;
+                
                 if (restoredCount >= 0)
                     sender.sendMessage("Removed " + restoredCount + " placed blocks.");
+                else if (restoredCount == -64)
+                    this.listCommands(sender);
                 else
                     sender.sendMessage("An error has occured. Please consult an admin.");
             }
@@ -66,8 +90,14 @@ public class CommandExec implements CommandExecutor {
         return true;
     }
     
+    /**
+     * Lists all available commands for this plugin.
+     * 
+     * @param player Command list sent to this player. 
+     */
     public void listCommands(final Player player)
     {
-        player.sendMessage("/bp restore");
+        player.sendMessage("/bp remove blocks");
+        player.sendMessage("/bp remove lights");
     }
 }
