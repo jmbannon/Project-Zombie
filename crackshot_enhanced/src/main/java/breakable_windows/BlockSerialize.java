@@ -22,6 +22,7 @@ package breakable_windows;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -88,5 +89,15 @@ public class BlockSerialize implements Listener {
                                                     Integer.valueOf(parts[2]), 
                                                     Integer.valueOf(parts[3]))
                                                     .getChunk();
+    }
+    
+    public Location deserializeGetLocation(final String serializedString)
+    {
+        final String[] parts = serializedString.split(",");
+        return server.getWorld(parts[0]).getBlockAt(Integer.valueOf(parts[1]), 
+                                                    Integer.valueOf(parts[2]), 
+                                                    Integer.valueOf(parts[3]))
+                                                    .getRelative(0, -2, 0)
+                                                    .getLocation();
     }
 }

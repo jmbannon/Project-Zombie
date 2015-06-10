@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Effect;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class BlockBreakListener implements Listener
@@ -155,10 +155,11 @@ public class BlockBreakListener implements Listener
         return blockCount;
     }
     
-    public int restoreLights(final Player cs) throws FileNotFoundException, IOException
+    public int restoreLights(final Player sender) throws FileNotFoundException, IOException
     {
         final HashMap<Chunk, LinkedList<String>> hash = new HashMap<>();
         final String[] serializedBlocks;
+        final Location originalLocation = sender.getLocation();
         final BufferedReader reader = new BufferedReader(new FileReader(lightBuffer));
         final String buffer = reader.readLine();
         reader.close();
@@ -180,28 +181,49 @@ public class BlockBreakListener implements Listener
             ++blockCount;
         }
         
-        for (final Map.Entry<Chunk, LinkedList<String>> entry: hash.entrySet()) {
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        for (final Map.Entry<Chunk, LinkedList<String>> entry: hash.entrySet())
+        {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+            {
                 @Override
                 public void run()
                 {
-                    cs.teleport(entry.getKey().getBlock(8, 30, 8).getLocation());
-                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                    // Make sure sender is online to actually teleport and restore
+                    if (!sender.isOnline())
+                        return;
+                    
+                    sender.teleport(serialize.deserializeGetLocation(entry.getValue().getFirst()));
+                    plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+                    {
                         @Override
                         public void run()
                         {
                             while (!entry.getValue().isEmpty())
                                 serialize.deserializeSet(entry.getValue().removeFirst());
                         }
-                        
                     }, 20);
                 }
-            }, tickDelay+=40);
+            }, tickDelay);
+            tickDelay+=40;
         }
         
-        final FileWriter blockWriter = new FileWriter(lightBuffer);
-        blockWriter.write("");
-        blockWriter.close();
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                sender.teleport(originalLocation);
+            }
+        }, tickDelay);
+        
+        // Make sure sender is online to remove buffer to assure blocks have
+        // been properly restored.
+        if (sender.isOnline())
+        {
+            final FileWriter blockWriter = new FileWriter(lightBuffer);
+            blockWriter.write("");
+            blockWriter.close();
+        }
         return blockCount;
     }
 }
