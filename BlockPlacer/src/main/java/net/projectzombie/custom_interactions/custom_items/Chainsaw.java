@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.custom_items;
+package net.projectzombie.custom_interactions.custom_items;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,16 +14,17 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author jbannon
  */
-public class SledgeHammer extends CustomItem implements InteractableItem
+public class Chainsaw extends CustomItem implements InteractableItem
 {
-    public SledgeHammer()
+
+    public Chainsaw()
     {
-        super(Material.STONE_AXE,
-              Material.COAL_BLOCK,
-              Material.EMERALD_BLOCK,
-              275,
+        super(Material.DIAMOND_SWORD,
+              Material.HARD_CLAY,
+              null,
+              1562,
               5,
-              1,
+              10,
               8.5);
     }
     
@@ -32,7 +33,7 @@ public class SledgeHammer extends CustomItem implements InteractableItem
                             ItemStack itemInHand,
                             Block clickedBlock)
     {
-        if (super.canUse(clickedBlock) > 0)
+        if (super.canUse(clickedBlock) == 1)
         {
             super.breakWithTool(player, itemInHand, clickedBlock);
             return true;
@@ -40,4 +41,5 @@ public class SledgeHammer extends CustomItem implements InteractableItem
         else
             return false;
     }
+    
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.listeners;
+package net.projectzombie.custom_interactions.listeners;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.projectzombie.serialize.LocationSerialize;
+import net.projectzombie.custom_interactions.serialize.Serialize;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
@@ -41,7 +41,7 @@ public class Utilities
             final FileWriter blockWriter 
                     = new FileWriter(isLight(theBlock) ? lightBuffer : blockBuffer, true);
             
-            blockWriter.append(LocationSerialize.serialize(theBlock));
+            blockWriter.append(Serialize.serialize(theBlock));
             blockWriter.close();
             return true;
         } catch (Exception ex) {

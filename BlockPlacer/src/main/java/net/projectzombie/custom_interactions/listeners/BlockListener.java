@@ -18,7 +18,7 @@
  *
  */
 
-package net.projectzombie.listeners;
+package net.projectzombie.custom_interactions.listeners;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

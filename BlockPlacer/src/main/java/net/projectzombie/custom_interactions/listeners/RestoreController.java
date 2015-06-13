@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.listeners;
+package net.projectzombie.custom_interactions.listeners;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import net.projectzombie.serialize.LocationSerialize;
+import net.projectzombie.custom_interactions.serialize.Serialize;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class RestoreController
             return 0;
 
         for (int i = locations.length - 1; i >= 0; i--)
-            LocationSerialize.deserializeAndSet(locations[i]);
+            Serialize.deserializeAndSet(locations[i]);
 
         Utilities.clearBlockBuffer();
 
@@ -81,7 +81,7 @@ public class RestoreController
 
         for (String block : serializedBlocks)
         {
-            tempChunk = LocationSerialize.deserializeGetChunk(block);
+            tempChunk = Serialize.deserializeGetChunk(block);
             if (hash.get(tempChunk) == null)
                 hash.put(tempChunk, new LinkedList<String>());
 
@@ -106,7 +106,7 @@ public class RestoreController
                         public void run()
                         {
                             while (!entry.getValue().isEmpty())
-                                LocationSerialize.deserializeAndSet(entry.getValue().removeFirst());
+                                Serialize.deserializeAndSet(entry.getValue().removeFirst());
                         }
 
                     }, 20);

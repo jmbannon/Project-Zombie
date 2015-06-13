@@ -18,11 +18,11 @@
  *
  */
 
-package net.projectzombie.block_place;
+package net.projectzombie.custom_interactions.main;
 
-import net.projectzombie.custom_items.Engraver;
-import net.projectzombie.listeners.BlockListener;
-import net.projectzombie.listeners.RestoreController;
+import net.projectzombie.custom_interactions.custom_items.Engraver;
+import net.projectzombie.custom_interactions.listeners.BlockListener;
+import net.projectzombie.custom_interactions.listeners.RestoreController;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

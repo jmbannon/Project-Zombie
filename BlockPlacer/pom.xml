@@ -45,5 +45,5 @@
 	    <version>6.1.1-SNAPSHOT</version>
 	</dependency>
     </dependencies>
-    <name>net.projectzombie.custom_interaction</name>
+    <name>net.projectzombie.custom_interactions</name>
 </project>

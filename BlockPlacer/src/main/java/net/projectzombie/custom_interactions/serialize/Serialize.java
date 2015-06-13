@@ -18,7 +18,7 @@
  *
  */
 
-package net.projectzombie.serialize;
+package net.projectzombie.custom_interactions.serialize;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -32,11 +32,11 @@ import org.bukkit.event.block.BlockBreakEvent;
  *
  * @author jbannon
  */
-public class LocationSerialize implements Listener {
+public class Serialize implements Listener {
 
     private static final Server server = Bukkit.getServer();
 
-    private LocationSerialize() { /* Do nothing */ }
+    private Serialize() { /* Do nothing */ }
     
     /**
      * Serializes blocks in the form of "world_name,x,y,z,type,data,\n"

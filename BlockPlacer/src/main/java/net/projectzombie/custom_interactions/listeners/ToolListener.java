@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.listeners;
+package net.projectzombie.custom_interactions.listeners;
 
-import net.projectzombie.custom_items.CustomItem;
+import net.projectzombie.custom_interactions.custom_items.CustomItem;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import static net.projectzombie.custom_items.CustomItem.*;
-import net.projectzombie.custom_items.CustomItemType;
-import net.projectzombie.custom_items.InteractableItem;
+import static net.projectzombie.custom_interactions.custom_items.CustomItem.*;
+import net.projectzombie.custom_interactions.custom_items.CustomItemType;
+import net.projectzombie.custom_interactions.custom_items.InteractableItem;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

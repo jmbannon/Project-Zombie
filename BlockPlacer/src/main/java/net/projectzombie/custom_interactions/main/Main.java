@@ -18,11 +18,11 @@
  *
  */
 
-package net.projectzombie.block_place;
+package net.projectzombie.custom_interactions.main;
 
-import net.projectzombie.listeners.BlockListener;
-import net.projectzombie.listeners.Utilities;
-import net.projectzombie.listeners.ToolListener;
+import net.projectzombie.custom_interactions.listeners.BlockListener;
+import net.projectzombie.custom_interactions.listeners.Utilities;
+import net.projectzombie.custom_interactions.listeners.ToolListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
