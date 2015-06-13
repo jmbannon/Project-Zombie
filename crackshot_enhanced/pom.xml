@@ -45,6 +45,5 @@
       <version>0.01</version>
     </dependency>
 </dependencies>
-   
-  
+    <name>net.projectzombie.crackshot_enhanced</name>
 </project>

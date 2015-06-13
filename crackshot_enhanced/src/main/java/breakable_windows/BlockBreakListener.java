@@ -75,7 +75,12 @@ public class BlockBreakListener implements Listener
 		if (isBreakableBlock(block))
 			chunckBreak(block);
 		else if (isBreakableLight(block))
-			storeAndBreakBlock(block, true);	
+			storeAndBreakBlock(block, true);
+        else if (isTorch(block))
+        {
+            block.setType(Material.AIR);
+            block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, Material.GLASS.getId());
+        }
 	}
 
 	public void storeAndBreakBlock(final Block theBlock,
@@ -94,22 +99,25 @@ public class BlockBreakListener implements Listener
 		theBlock.setType(Material.AIR); 
 	}
 	
+    public boolean isTorch(final Block block)
+    {
+        return block.getType().equals(Material.TORCH);
+    }
+    
 	public boolean isBreakableBlock(final Block block)
     {
         final Material blockMaterial = block.getType();
-		return (blockMaterial == Material.GLASS
-				|| blockMaterial == Material.THIN_GLASS
-				|| blockMaterial == Material.STAINED_GLASS
-				|| blockMaterial == Material.STAINED_GLASS_PANE);
+		return (blockMaterial.equals(Material.GLASS)
+				|| blockMaterial.equals(Material.THIN_GLASS));
 	}
 	
 	public boolean isBreakableLight(final Block block)
     {
         final Material blockMaterial = block.getType();
-		return (blockMaterial == Material.GLOWSTONE
-				|| blockMaterial == Material.REDSTONE_LAMP_ON	
-				|| blockMaterial == Material.BEACON
-                || blockMaterial == Material.REDSTONE_LAMP_OFF);
+		return (blockMaterial.equals(Material.GLOWSTONE)
+				|| blockMaterial.equals(Material.REDSTONE_LAMP_ON)	
+				|| blockMaterial.equals(Material.BEACON)
+                || blockMaterial.equals(Material.REDSTONE_LAMP_OFF));
 	}
 	
     public void checkFormation(final Block glassBlock,
