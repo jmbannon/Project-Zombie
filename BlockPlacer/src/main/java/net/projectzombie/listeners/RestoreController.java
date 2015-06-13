@@ -17,8 +17,8 @@ import org.bukkit.entity.Player;
  *
  * @author jbannon
  */
-public class RestoreController {
-    
+public class RestoreController
+{    
     private static int tickDelay;
     
     public int restoreAll(final Player sender)

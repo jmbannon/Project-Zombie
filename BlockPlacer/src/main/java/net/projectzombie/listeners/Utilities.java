@@ -24,7 +24,7 @@ public class Utilities
 {
     protected static File blockBuffer;
     protected static File lightBuffer;
-    protected static Plugin plugin;
+    public static Plugin plugin;
     
     private Utilities() { /* Do nothing */ }
     
@@ -35,7 +35,7 @@ public class Utilities
         Utilities.lightBuffer = new File(Utilities.plugin.getDataFolder(), "light_buffer");
     }
     
-    static boolean writeToBuffer(final Block theBlock)
+    public static boolean writeToBuffer(final Block theBlock)
     {
         try {
             final FileWriter blockWriter 

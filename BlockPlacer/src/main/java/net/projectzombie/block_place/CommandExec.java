@@ -20,6 +20,7 @@
 
 package net.projectzombie.block_place;
 
+import net.projectzombie.custom_items.Engraver;
 import net.projectzombie.listeners.BlockListener;
 import net.projectzombie.listeners.RestoreController;
 import net.projectzombie.listeners.ToolListener;
@@ -27,7 +28,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -73,7 +73,7 @@ public class CommandExec implements CommandExecutor {
             if (args[0].equalsIgnoreCase("restore"))
                 restoreController.restoreAll(sender);
             else if (args.length == 2 && args[0].equalsIgnoreCase("engrave"))
-                ToolListener.engraveItem(sender, args[2]);
+                Engraver.engraveItem(sender, args[2]);
         } else
             this.listCommands(sender);
         
