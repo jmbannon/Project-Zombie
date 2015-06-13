@@ -1,11 +1,11 @@
-package main;
+package net.projectzombie.crackshot_enhanced.main;
 
-import breakable_windows.BlockBreakListener;
-import weapon_decay.ShootListener;
+import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
+import net.projectzombie.crackshot_enhanced.custom_weapons.ShootListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import scope.ScopeZoomListener;
+import net.projectzombie.crackshot_enhanced.custom_weapons.ScopeZoomListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 

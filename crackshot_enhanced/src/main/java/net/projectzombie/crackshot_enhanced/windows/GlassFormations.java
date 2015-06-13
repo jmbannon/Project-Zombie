@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package breakable_windows;
+package net.projectzombie.crackshot_enhanced.windows;
 
 import java.util.Random;
 

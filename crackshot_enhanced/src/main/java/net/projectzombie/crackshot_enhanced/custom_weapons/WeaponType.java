@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weapon_decay;
+package net.projectzombie.crackshot_enhanced.custom_weapons;
 
 import java.util.Random;
 import org.bukkit.ChatColor;
@@ -129,7 +129,7 @@ public enum WeaponType
      */
     public String getCondition(final int tier)
     {
-        return STAT_COLOR + "Condition: " + WeaponTiers.getCondition(tier);
+        return STAT_COLOR + "Condition: " + WeaponConditionTiers.getCondition(tier);
     }
     
     /**
@@ -154,10 +154,10 @@ public enum WeaponType
                           final int durability)
     {
         final double ratio = (double)durability / (double)getMaxDurability(CSBulletSpread);
-        for (int i = 0; i <= WeaponTiers.TIERS; i++)
-            if (Double.compare(ratio, (double)i/(double)WeaponTiers.TIERS) <= 0) return i;
+        for (int i = 0; i <= WeaponConditionTiers.TIERS; i++)
+            if (Double.compare(ratio, (double)i/(double)WeaponConditionTiers.TIERS) <= 0) return i;
         
-        return WeaponTiers.TIERS;
+        return WeaponConditionTiers.TIERS;
     }
     
     /**

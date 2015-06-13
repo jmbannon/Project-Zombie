@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package weapon_decay;
+package net.projectzombie.crackshot_enhanced.custom_weapons;
 
 import org.bukkit.ChatColor;
 
@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
  *
  * @author jbannon
  */
-public enum WeaponTiers
+public enum WeaponConditionTiers
 {
     NEW     (5, ChatColor.RED,        "Factory New"),
     MINT    (4, ChatColor.AQUA,       "Mint"),
@@ -26,7 +26,7 @@ public enum WeaponTiers
     private final int value;
     private final String condition;
 
-    private WeaponTiers(final int value,
+    private WeaponConditionTiers(final int value,
                         final ChatColor color,
                         final String condition)
     {

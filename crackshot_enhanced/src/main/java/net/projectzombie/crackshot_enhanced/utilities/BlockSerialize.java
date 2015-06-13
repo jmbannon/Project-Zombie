@@ -18,7 +18,7 @@
  *
  */
 
-package breakable_windows;
+package net.projectzombie.crackshot_enhanced.utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

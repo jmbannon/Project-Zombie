@@ -1,6 +1,6 @@
-package breakable_windows;
+package net.projectzombie.crackshot_enhanced.windows;
 
-import breakable_windows.GlassFormations.GlassOffset;
+import net.projectzombie.crackshot_enhanced.windows.GlassFormations.GlassOffset;
 import org.bukkit.event.Listener;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import net.projectzombie.crackshot_enhanced.utilities.BlockSerialize;
 import org.bukkit.Chunk;
 import org.bukkit.Effect;
 import org.bukkit.Location;

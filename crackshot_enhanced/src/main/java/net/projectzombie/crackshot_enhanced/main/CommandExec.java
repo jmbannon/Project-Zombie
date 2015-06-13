@@ -1,6 +1,6 @@
-package main;
+package net.projectzombie.crackshot_enhanced.main;
 
-import breakable_windows.BlockBreakListener;
+import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

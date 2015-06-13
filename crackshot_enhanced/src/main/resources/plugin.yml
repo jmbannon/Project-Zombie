@@ -1,5 +1,5 @@
-name: Enhanced_Crackshot_Guns
-main: main.Main
+name: CrackShotEnhanced
+main: net.projectzombie.crackshot_enhanced.main.Main
 version: 1.0
 depend: [CrackShot]
 commands:

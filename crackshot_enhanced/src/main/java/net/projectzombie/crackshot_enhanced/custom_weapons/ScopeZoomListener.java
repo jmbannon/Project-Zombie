@@ -1,4 +1,4 @@
-package scope;
+package net.projectzombie.crackshot_enhanced.custom_weapons;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
