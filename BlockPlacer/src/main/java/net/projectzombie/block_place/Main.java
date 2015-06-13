@@ -47,6 +47,7 @@ public class Main extends JavaPlugin {
         toolListener = new ToolListener();
         
         this.getCommand("bp").setExecutor(commandExecutor);
+        this.getCommand("engrave").setExecutor(commandExecutor);
         this.getServer().getPluginManager().registerEvents(blockListener, this);
         this.getServer().getPluginManager().registerEvents(toolListener, this);
         this.getLogger().info("Placable Blocks enabled!");

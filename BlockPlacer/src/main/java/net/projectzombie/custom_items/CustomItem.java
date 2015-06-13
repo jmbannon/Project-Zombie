@@ -6,6 +6,8 @@
 package net.projectzombie.custom_items;
 
 import net.projectzombie.listeners.Utilities;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -56,8 +58,8 @@ public abstract class CustomItem {
             return false;
     }
     
-    protected boolean isInteractable(final ItemStack tool,
-                                     final Block clickedBlock)
+    public boolean isInteractable(final ItemStack tool,
+                                  final Block clickedBlock)
     {
         return isTool(tool) && canUse(clickedBlock) > 0;
     }
@@ -83,12 +85,15 @@ public abstract class CustomItem {
      * @param clickedBlock Event clicked block
      * @return True if it tool should be removed.
      */
-    protected boolean breakBlock(final ItemStack tool,
-                                 final Block clickedBlock)
+    private boolean breakBlock(final ItemStack tool,
+                               final Block clickedBlock)
     {
         if (canUse(clickedBlock) != 0)
         {
-            clickedBlock.breakNaturally();
+            clickedBlock.getWorld().playEffect(clickedBlock.getLocation(),
+                                               Effect.STEP_SOUND,
+                                               clickedBlock.getType().getId());
+            clickedBlock.setType(Material.AIR);
             return blockWear(tool);
         }
         return false;
@@ -124,7 +129,7 @@ public abstract class CustomItem {
             return 0;
     }
     
-    protected Material getMaterial()
+    public Material getMaterial()
     {
         return this.itemType;
     }

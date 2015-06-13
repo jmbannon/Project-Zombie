@@ -6,3 +6,6 @@ commands:
   bp:
     description: Nope.
     usage: "WIP"
+  engrave:
+    description: Nope.
+    usage: "WIP"

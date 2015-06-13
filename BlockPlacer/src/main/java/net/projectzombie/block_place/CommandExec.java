@@ -23,7 +23,6 @@ package net.projectzombie.block_place;
 import net.projectzombie.custom_items.Engraver;
 import net.projectzombie.listeners.BlockListener;
 import net.projectzombie.listeners.RestoreController;
-import net.projectzombie.listeners.ToolListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -63,30 +62,47 @@ public class CommandExec implements CommandExecutor {
                              String label,
                              String[] args)
     {
-        if (!(cs instanceof Player) || !cs.isOp())
+        if (!(cs instanceof Player))
 			return true;
 		
         final Player sender = (Player)cs;
         
-		if (cmd.getName().equalsIgnoreCase("bp") && args.length > 0)
+		if (cs.isOp() && label.equalsIgnoreCase("bp"))
         {
-            if (args[0].equalsIgnoreCase("restore"))
+            if (args.length == 1 && args[0].equalsIgnoreCase("restore"))
                 restoreController.restoreAll(sender);
-            else if (args.length == 2 && args[0].equalsIgnoreCase("engrave"))
-                Engraver.engraveItem(sender, args[2]);
-        } else
-            this.listCommands(sender);
-        
+            else
+                this.listAdminCommands(sender);
+        }
+        else if (label.equalsIgnoreCase("engrave"))
+        {
+            if (args.length == 1)
+                Engraver.engraveItem(sender, args[0]);
+            else
+                this.listPlayerCommands(sender);
+        }
         return true;
     }
     
     /**
-     * Lists all available commands for this plugin.
+     * Lists all available admin commands for block place.
      * 
      * @param player Command list sent to this player. 
      */
-    public void listCommands(final Player player)
+    public void listAdminCommands(final Player player)
     {
         player.sendMessage("/bp restore");
     }
+    
+    /**
+     * Lists all available commands for players.
+     * 
+     * @param player Command list sent to this player. 
+     */
+    public void listPlayerCommands(final Player player)
+    {
+        player.sendMessage("/engrave <name>");
+        player.sendMessage(" - Renames the current item in your hand. Must have an engraver.");
+    }
+    
 }

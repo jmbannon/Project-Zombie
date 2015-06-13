@@ -6,6 +6,7 @@
 package net.projectzombie.custom_items;
 
 import net.projectzombie.listeners.Utilities;
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -66,6 +67,8 @@ public class WireCutter extends CustomItem implements InteractableItem
         opn.setOpen(true);
         doorState.setData(doorData);
         doorState.update();
+        clickedBlock.getWorld().spigot().playEffect(clickedBlock.getLocation(),
+                                                    Effect.DOOR_TOGGLE);
 
         Utilities.plugin.getServer().getScheduler().scheduleSyncDelayedTask(Utilities.plugin, new Runnable()
         {
@@ -75,6 +78,8 @@ public class WireCutter extends CustomItem implements InteractableItem
                 opn.setOpen(false);
                 doorState.setData(doorData);
                 doorState.update();
+                clickedBlock.getWorld().spigot().playEffect(clickedBlock.getLocation(),
+                                                            Effect.DOOR_TOGGLE);
             }
         }, 120);
     }
