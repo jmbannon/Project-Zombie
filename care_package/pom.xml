@@ -33,5 +33,5 @@
 	<version>0.01</version>
     </dependency>
     </dependencies>
-
+    <name>net.projectzombie.care_package_drops</name>
 </project>
