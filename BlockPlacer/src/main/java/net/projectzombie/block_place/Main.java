@@ -20,6 +20,9 @@
 
 package net.projectzombie.block_place;
 
+import net.projectzombie.listeners.BlockListener;
+import net.projectzombie.listeners.Utilities;
+import net.projectzombie.listeners.ToolListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -31,17 +34,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
     private CommandExec commandExecutor;
-    private BlockPlaceListener blockListener;
+    private BlockListener blockListener;
+    private ToolListener toolListener;
     
     @Override
     public void onEnable()
     {
         this.getDataFolder().mkdir();
-        commandExecutor = new CommandExec(this);
-        blockListener = new BlockPlaceListener(this);
+        Utilities.initialize(this);
+        commandExecutor = new CommandExec();
+        blockListener = new BlockListener();
+        toolListener = new ToolListener();
         
         this.getCommand("bp").setExecutor(commandExecutor);
         this.getServer().getPluginManager().registerEvents(blockListener, this);
+        this.getServer().getPluginManager().registerEvents(toolListener, this);
         this.getLogger().info("Placable Blocks enabled!");
     }
 

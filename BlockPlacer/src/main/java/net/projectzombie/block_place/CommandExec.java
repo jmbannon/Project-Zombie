@@ -20,6 +20,9 @@
 
 package net.projectzombie.block_place;
 
+import net.projectzombie.listeners.BlockListener;
+import net.projectzombie.listeners.RestoreController;
+import net.projectzombie.listeners.ToolListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,16 +35,16 @@ import org.bukkit.plugin.Plugin;
  */
 public class CommandExec implements CommandExecutor {
 
-    private final BlockPlaceListener blockPlace;
+    private final BlockListener blockPlace;
+    private final RestoreController restoreController;
     
     /**
      * Initializes blockPlace listener methods.
-     * 
-     * @param plugin This plugin
      */
-    public CommandExec(final Plugin plugin)
+    public CommandExec()
     {
-        blockPlace = new BlockPlaceListener(plugin);
+        blockPlace = new BlockListener();
+        restoreController = new RestoreController();
     }
 
     /**
@@ -67,23 +70,10 @@ public class CommandExec implements CommandExecutor {
         
 		if (cmd.getName().equalsIgnoreCase("bp") && args.length > 0)
         {
-            if (args.length == 2 & args[0].equalsIgnoreCase("remove"))
-            {
-                int restoredCount;
-                if (args[1].equalsIgnoreCase("blocks"))
-                    restoredCount = blockPlace.removePlacedBlocks();
-                else if (args[1].equalsIgnoreCase("lights"))
-                    restoredCount = blockPlace.removePlacedLights(sender);
-                else
-                    restoredCount = -64;
-                
-                if (restoredCount >= 0)
-                    sender.sendMessage("Removed " + restoredCount + " placed blocks.");
-                else if (restoredCount == -64)
-                    this.listCommands(sender);
-                else
-                    sender.sendMessage("An error has occured. Please consult an admin.");
-            }
+            if (args[0].equalsIgnoreCase("restore"))
+                restoreController.restoreAll(sender);
+            else if (args.length == 2 && args[0].equalsIgnoreCase("engrave"))
+                ToolListener.engraveItem(sender, args[2]);
         } else
             this.listCommands(sender);
         
@@ -97,7 +87,6 @@ public class CommandExec implements CommandExecutor {
      */
     public void listCommands(final Player player)
     {
-        player.sendMessage("/bp remove blocks");
-        player.sendMessage("/bp remove lights");
+        player.sendMessage("/bp restore");
     }
 }

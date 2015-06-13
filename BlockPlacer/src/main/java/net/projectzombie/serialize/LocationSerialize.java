@@ -18,7 +18,7 @@
  *
  */
 
-package net.projectzombie.block_placer.serialize;
+package net.projectzombie.serialize;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  *
@@ -38,29 +39,32 @@ public class LocationSerialize implements Listener {
     private LocationSerialize() { /* Do nothing */ }
     
     /**
-     * Serializes blocks in the form of "world_name,x,y,z#"
+     * Serializes blocks in the form of "world_name,x,y,z,type,data,\n"
      *
      * @param block
      * @return 
      */
-    public static String serialize(final Block block)
-    {
+    public static String serialize(final Block block) {
         final StringBuilder temp = new StringBuilder();
         
         temp.append(block.getWorld().getName());
         temp.append(',');
-        temp.append((int)block.getX());
+        temp.append(block.getX());
         temp.append(',');
-        temp.append((int)block.getY());
+        temp.append(block.getY());
         temp.append(',');
-        temp.append((int)block.getZ());
+        temp.append(block.getZ());
+        temp.append(',');
+        temp.append(block.getType().toString());
+        temp.append(',');
+        temp.append(block.getData());
         temp.append('#');
 
         return temp.toString();
     }
     
     /**
-     * Deserializes the location and sets the block in the specified world to air.
+     * Deserializes the string and sets the block in the specified world.
      * @param serializedString
      */
     public static void deserializeAndSet(final String serializedString) {
@@ -71,7 +75,9 @@ public class LocationSerialize implements Listener {
                 Integer.valueOf(parts[2]), 
                 Integer.valueOf(parts[3]));
         
-        theBlock.setType(Material.AIR);
+        BlockBreakEvent event = new BlockBreakEvent(theBlock, null);
+        theBlock.setType(Material.valueOf(parts[4]));
+        theBlock.setData(Byte.valueOf(parts[5]));
     }
     
     /**
