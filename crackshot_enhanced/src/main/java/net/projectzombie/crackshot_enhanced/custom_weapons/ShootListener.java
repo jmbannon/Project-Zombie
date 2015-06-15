@@ -33,9 +33,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  * Stat lore string:
  * PZ==gunType==CSBulletSpread==scope==triggerType
  * 
- * 
- * 
- * 
  */
 public class ShootListener implements Listener
 {
@@ -59,8 +56,15 @@ public class ShootListener implements Listener
     
     public ShootListener() { /* Do nothing */ }
     
+    /**
+     * Right before the weapon fires, method will check to see if custom 
+     * durability has been initialized within the lore. Initializes it if it
+     * has not, then decrements the durability by one.
+     * 
+     * @param event Event before the weapon fires. 
+     */
     @EventHandler(priority = EventPriority.HIGH)
-	public void preDecayEvent(WeaponPreShootEvent event)
+    public void preDecayEvent(WeaponPreShootEvent event)
     {
         final Player shooter = event.getPlayer();
         final ItemStack gunItem = shooter.getItemInHand();
@@ -83,6 +87,14 @@ public class ShootListener implements Listener
         gunItem.setItemMeta(gunMeta);
     }
     
+    /**
+     * Initializes the weapon's lore with custom durability and condition, 
+     * calculates its bullet spread based on condition, and returns it.
+     * 
+     * @param lore Weapon lore.
+     * @param eventBulletSpread Bullet spread from the fire event.
+     * @return Bullet spread based on the condition.
+     */
     private static double initializeSpecLore(final List<String> lore,
                                              final double eventBulletSpread)
     {
@@ -131,10 +143,12 @@ public class ShootListener implements Listener
     }
     
     /**
+     * Decrements the durability of the weapon and updates the lore for the
+     * weapon. Durability calculates the condition and accuracy.
      * 
      * @param lore Lore of the gun from the item meta.
      * @param eventBulletSpread Bullet spread from event.
-     * @return 
+     * @return Bullet spread based on the condition.
      */
     private double decrementDurability(final List<String> lore,
                                        final double eventBulletSpread)
@@ -178,16 +192,34 @@ public class ShootListener implements Listener
         return weaponType.getBulletSpread(eventBulletSpread, updatedGunTier);
     } 
     
+    /**
+     * Verifies the string starts with the 'magic string'.
+     * @param loreString String to verify (within the lore).
+     * @return True if it verifies.
+     */
     private static Boolean verifyLore(final String loreString)
     {
         return loreString.startsWith(LORE_VERIFY);
     }
     
+    /**
+     * Returns whether the weapon lore has been initialized with custom
+     * durability and condition.
+     * 
+     * @param lore Lore of the weapon.
+     * @return True if it has been initialized.
+     */
     private boolean isInitialized(List<String> lore)
     {
         return lore.size() > HIDDEN_POST_STAT_IDX;
     }
     
+    /**
+     * Returns the string to display based on the weapon lore's fire mode.
+     * 
+     * @param fireMode Integer set in Crackshot lore for fire mode.
+     * @return String to display for fire mode.
+     */
     private static String getFireModeDisplay(final int fireMode)
     {
         final StringBuilder stb = new StringBuilder();
@@ -204,6 +236,12 @@ public class ShootListener implements Listener
         return stb.toString();
     }
     
+    /**
+     * Returns the string to display based on the weapon lore's scope type.
+     * 
+     * @param scopeInt Integer set in Crackshot lore for scope type.
+     * @return String to display for fire mode.
+     */
     private static String getScopeDisplay(final int scopeInt)
     {
         final StringBuilder stb = new StringBuilder();

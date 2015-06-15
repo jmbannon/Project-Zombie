@@ -8,8 +8,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons;
 import org.bukkit.ChatColor;
 
 /**
- *
- * @author jbannon
+ * @author Jesse Bannon (jmbannon@uw.edu)
+ * 
+ * Types of tiers for weapons. Contains display information for the weapon lore.
  */
 public enum WeaponConditionTiers
 {
@@ -26,26 +27,36 @@ public enum WeaponConditionTiers
     private final int value;
     private final String condition;
 
+    /**
+     * Creates a weapon tier of the value (higher -> better) and the display
+     * information for the weapon lore.
+     * 
+     * @param value Value of the tier (higher is better).
+     * @param color Color of the condition string in the lore.
+     * @param condition Condition of the weapon to display in the lore.
+     */
     private WeaponConditionTiers(final int value,
-                        final ChatColor color,
-                        final String condition)
+                                 final ChatColor color,
+                                 final String condition)
     {
         this.value = value;
         this.condition = color + condition;
     }
     
+    /**
+     * Returns the condition string based on the tier.  Returns null if tier 
+     * does not match a condition.
+     * 
+     * @param tier Tier of the condition to get.
+     * @return Returns the 
+     */
     public static String getCondition(final int tier)
     {
-        switch(tier)
-        {
-        case 5: return NEW.getCondition();
-        case 4: return MINT.getCondition();
-        case 3: return FINE.getCondition();
-        case 2: return WORN.getCondition();
-        case 1: return RUSTY.getCondition();
-        case 0: return BROKEN.getCondition();
-        default: return null;
-        }
+        for (WeaponConditionTiers condition : WeaponConditionTiers.values())
+            if (tier == condition.value)
+                return condition.getCondition();
+        
+        return null;
     }
     
     public String getCondition()

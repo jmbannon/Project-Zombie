@@ -10,7 +10,9 @@ import org.bukkit.ChatColor;
 
 /**
  *
- * @author jbannon
+ * @author Jesse Bannon (jmbannon@uw.edu)
+ * 
+ * 
  */
 public enum WeaponType
 {
