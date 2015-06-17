@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons;
+package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
 import org.bukkit.ChatColor;
 
@@ -12,7 +12,7 @@ import org.bukkit.ChatColor;
  * 
  * Types of tiers for weapons. Contains display information for the weapon lore.
  */
-public enum WeaponConditionTiers
+public enum ConditionTypes
 {
     NEW     (5, ChatColor.RED,        "Factory New"),
     MINT    (4, ChatColor.AQUA,       "Mint"),
@@ -35,7 +35,7 @@ public enum WeaponConditionTiers
      * @param color Color of the condition string in the lore.
      * @param condition Condition of the weapon to display in the lore.
      */
-    private WeaponConditionTiers(final int value,
+    private ConditionTypes(final int value,
                                  final ChatColor color,
                                  final String condition)
     {
@@ -52,7 +52,7 @@ public enum WeaponConditionTiers
      */
     public static String getCondition(final int tier)
     {
-        for (WeaponConditionTiers condition : WeaponConditionTiers.values())
+        for (ConditionTypes condition : ConditionTypes.values())
             if (tier == condition.value)
                 return condition.getCondition();
         

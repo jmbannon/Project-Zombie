@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons;
+package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
 import java.util.Random;
 import org.bukkit.ChatColor;
@@ -25,14 +25,14 @@ public enum WeaponType
     AUTO_SNIPER     (6, 480, 700,  1.124),
     SNIPER          (7, 600, 1000, 2.105);
     
+    protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
+    protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
+    
     private final int value, lowerBound, upperBound;
     private final double weight;
     
     /* Random initial durability */
     private static final Random RAND = new Random();
-    private static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
-    private static final ChatColor VALUE_COLOR = ChatColor.GOLD;
-    
     private static final Double ACCURACY_WEIGHT = 25.3487;
     
     /**
@@ -126,12 +126,40 @@ public enum WeaponType
     
     /**
      * Returns the condition to be displayed in the lore.
+     * 
      * @param tier Current tier of the weapon.
      * @return Condition to be displayed in the lore.
      */
     public String getCondition(final int tier)
     {
-        return STAT_COLOR + "Condition: " + WeaponConditionTiers.getCondition(tier);
+        return STAT_COLOR + "Condition: " + ConditionTypes.getCondition(tier);
+    }
+    
+    public String getBuildDisplay(final int buildType)
+    {
+        return STAT_COLOR + "Build: " + BuildTypes.getBuildType(buildType);
+    }
+    
+    /**
+     * Returns the string to display based on the weapon lore's fire mode.
+     * 
+     * @param fireModeType Integer set in Crackshot lore for fire mode.
+     * @return String to display for fire mode.
+     */
+    public String getFireModeDisplay(final int fireModeType)
+    {
+        return STAT_COLOR + "Fire Mode: " + VALUE_COLOR + FireModeTypes.getFireMode(this, fireModeType);
+    }
+    
+    /**
+     * Returns the string to display based on the weapon lore's fire mode.
+     * 
+     * @param fireMode Integer set in Crackshot lore for fire mode.
+     * @return String to display for fire mode.
+     */
+    public String getScopeDisplay(final int scopeType)
+    {
+        return ScopeTypes.getScopeDisplay(scopeType);
     }
     
     /**
@@ -156,10 +184,10 @@ public enum WeaponType
                           final int durability)
     {
         final double ratio = (double)durability / (double)getMaxDurability(CSBulletSpread);
-        for (int i = 0; i <= WeaponConditionTiers.TIERS; i++)
-            if (Double.compare(ratio, (double)i/(double)WeaponConditionTiers.TIERS) <= 0) return i;
+        for (int i = 0; i <= ConditionTypes.TIERS; i++)
+            if (Double.compare(ratio, (double)i/(double)ConditionTypes.TIERS) <= 0) return i;
         
-        return WeaponConditionTiers.TIERS;
+        return ConditionTypes.TIERS;
     }
     
     /**
@@ -180,11 +208,54 @@ public enum WeaponType
         return String.valueOf(value);
     }
     
+    /**
+     * Returns the upgrade price based on the current tier of the weapon.
+     * 
+     * @param currentTier Current tier of the weapon.
+     * @return Price of the upgrade. -1 if not applicable.
+     */
+    public int getUpgradePrice(final int currentTier)
+    {
+        switch(currentTier)
+        {
+        case 0: return upperBound/3;
+        case 1: return upperBound/2;
+        case 2: return upperBound;
+        default: return -1;
+        }
+    }
+    
+    /**
+     * Returns the repair price to fully repair a weapon based on its current
+     * and max durability.
+     * 
+     * @param currentDurability Current durability of the weapon.
+     * @param maxDurability Max durability of the weapon.
+     * @return 
+     */
+    public int getRepairPrice(final int currentDurability,
+                              final int maxDurability)
+    {
+        return (int)((double)currentDurability * (double)upperBound/(double)maxDurability);
+    }
+    
+    /**
+     * Returns the WeaponType based on a string that is an integer.
+     * 
+     * @param typeEnum Enum integer of the WeaponType as a string.
+     * @return WeaponType associated with the integer.
+     */
     public static WeaponType getType(final String typeEnum)
     {
         return getType(Integer.valueOf(typeEnum));
     }
     
+    /**
+     * Returns the WeaponType based on the type integer.
+     * 
+     * @param typeEnum Enum integer of the WeaponType.
+     * @return WeaponType associated with the integer.
+     */
     public static WeaponType getType(final int typeEnum)
     {
         switch(typeEnum)

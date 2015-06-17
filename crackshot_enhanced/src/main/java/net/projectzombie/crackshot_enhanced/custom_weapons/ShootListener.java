@@ -5,6 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.BuildTypes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -28,29 +30,31 @@ import org.bukkit.inventory.meta.ItemMeta;
  * through the HiddenStringUtils class.
  * 
  * Durability lore string:
- * PZ==durability==maxDurability==conditionTier==hasSight==hasBarrel==hasGrip
+ * PZ==durability==maxDurability==ConditionType==BuildType
  * 
  * Stat lore string:
- * PZ==gunType==CSBulletSpread==scope==triggerType
+ * PZ==gunType==CSBulletSpread==ScopeType==FireModeType
  * 
  */
 public class ShootListener implements Listener
 {
-    private static final String LORE_VERIFY = "PZ";
-    private static final String SEPERATOR = "==";
+    protected static final String LORE_VERIFY = "PZ";
+    protected static final String SEPERATOR = "==";
     
     //private static final int DURABILITY_PARTS = 7;
-    private static final int STAT_PARTS = 5;
+    protected static final int STAT_PARTS = 5;
+    protected static final int LORE_SIZE = 8;
     
     /* Indexes within the weapon lore */
     private static final int ACCURACY_IDX = 1;
-    private static final int SCOPE_IDX = 3;
     private static final int FIRE_MODE_IDX = 2;
+    private static final int SCOPE_IDX = 3;
     private static final int CONDITION_IDX = 4;
-    private static final int HIDDEN_DURABILITY_IDX = 5;
+    private static final int BUILD_IDX = 5;
+    private static final int HIDDEN_DURABILITY_IDX = 6;
     
     private static final int HIDDEN_PRE_STAT_IDX = 2;
-    private static final int HIDDEN_POST_STAT_IDX = 6;
+    private static final int HIDDEN_POST_STAT_IDX = 7;
     
     
     
@@ -112,8 +116,8 @@ public class ShootListener implements Listener
         final int maxDurability = weaponType.getMaxDurability(CSBulletSpread);
         final int gunTier = weaponType.getTierInt(CSBulletSpread, initialDurability);
         final String accuracyDisplay = weaponType.getAccuracy(CSBulletSpread, gunTier);
-        final String scopeTypeDisplay = getScopeDisplay(scopeType);
-        final String fireModeDisplay = getFireModeDisplay(fireMode);
+        final String scopeTypeDisplay = weaponType.getScopeDisplay(scopeType);
+        final String fireModeDisplay = weaponType.getFireModeDisplay(fireMode);
         final String conditionDisplay = weaponType.getCondition(gunTier);
         
         assert(initialDurability > 0);
@@ -128,6 +132,7 @@ public class ShootListener implements Listener
         lore.add(FIRE_MODE_IDX, fireModeDisplay);
         lore.add(SCOPE_IDX, scopeTypeDisplay);
         lore.add(CONDITION_IDX, conditionDisplay);
+        lore.add(BUILD_IDX, BuildTypes.getBuildType(0));
         
         final StringBuilder stb = new StringBuilder(LORE_VERIFY);
         stb.append(SEPERATOR);
@@ -214,48 +219,5 @@ public class ShootListener implements Listener
         return lore.size() > HIDDEN_POST_STAT_IDX;
     }
     
-    /**
-     * Returns the string to display based on the weapon lore's fire mode.
-     * 
-     * @param fireMode Integer set in Crackshot lore for fire mode.
-     * @return String to display for fire mode.
-     */
-    private static String getFireModeDisplay(final int fireMode)
-    {
-        final StringBuilder stb = new StringBuilder();
-        stb.append(String.valueOf(ChatColor.DARK_RED));
-        stb.append("Fire Mode: ");
-        stb.append(String.valueOf(ChatColor.GOLD));
-        switch(fireMode)
-        {
-        case 0: stb.append("Single Shot"); break;
-        case 1: stb.append("Burst"); break;
-        case 2: stb.append("Fully Auto"); break;
-        default: return null;
-        }
-        return stb.toString();
-    }
     
-    /**
-     * Returns the string to display based on the weapon lore's scope type.
-     * 
-     * @param scopeInt Integer set in Crackshot lore for scope type.
-     * @return String to display for fire mode.
-     */
-    private static String getScopeDisplay(final int scopeInt)
-    {
-        final StringBuilder stb = new StringBuilder();
-        stb.append(String.valueOf(ChatColor.DARK_RED));
-        stb.append("Scope: ");
-        stb.append(String.valueOf(ChatColor.GOLD));
-        switch(scopeInt)
-        {
-        case 0: stb.append("n/a"); break;
-        case 1: stb.append("ACOG"); break;
-        case 2: stb.append("Tactical"); break;
-        case 3: stb.append("Long-Range"); break;
-        default: return null;
-        }
-        return stb.toString();
-    }
 }
