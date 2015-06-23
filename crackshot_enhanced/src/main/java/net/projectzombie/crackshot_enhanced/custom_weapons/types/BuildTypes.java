@@ -11,35 +11,43 @@ import org.bukkit.ChatColor;
  *
  * @author jbannon
  */
-public enum BuildTypes {
+public enum BuildTypes implements Type
+{
     
     Stock    (0, ChatColor.YELLOW, "Stock"),
     Tempered (1, ChatColor.GREEN,  "Tempered"),
     Modified (2, ChatColor.GOLD,   "Modified"),
     Enhanced (3, ChatColor.RED,    "Enhanced");
     
-    private final int value;
-    private final String title;
+    private static final String title = "Build: ";
+    
+    private final int enumValue;
+    private final String value;
     
     private BuildTypes(final int value,
                        final ChatColor color,
                        final String title)
     {
-        this.value = value;
-        this.title = color + title;
+        this.enumValue = value;
+        this.value = color + title;
     }
     
-    private String getTitle()
+    public static String getTitle()
     {
         return title;
     }
     
-    public static String getBuildType(final int value)
+    @Override
+    public String getValue()
     {
-        for (BuildTypes type : BuildTypes.values())
-            if (type.value == value)
-                return type.getTitle();
-        return null;
+        return value;
     }
     
+    public static String getValue(final int value)
+    {
+        for (BuildTypes type : BuildTypes.values())
+            if (type.enumValue == value)
+                return type.value;
+        return null;
+    }
 }

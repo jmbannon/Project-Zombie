@@ -46,11 +46,12 @@ public class ShootListener implements Listener
     protected static final int LORE_SIZE = 8;
     
     /* Indexes within the weapon lore */
+    private static final int AMMO_IDX = 0;
     private static final int ACCURACY_IDX = 1;
-    private static final int FIRE_MODE_IDX = 2;
-    private static final int SCOPE_IDX = 3;
-    private static final int CONDITION_IDX = 4;
-    private static final int BUILD_IDX = 5;
+    private static final int CONDITION_IDX = 2;
+    private static final int BUILD_IDX = 3;
+    private static final int FIRE_MODE_IDX = 4;
+    private static final int SCOPE_IDX = 5;
     private static final int HIDDEN_DURABILITY_IDX = 6;
     
     private static final int HIDDEN_PRE_STAT_IDX = 2;
@@ -128,11 +129,12 @@ public class ShootListener implements Listener
         assert(fireModeDisplay != null);
         assert(conditionDisplay != null);
         
+        lore.set(AMMO_IDX, SEPERATOR);
         lore.set(ACCURACY_IDX, accuracyDisplay);
         lore.add(FIRE_MODE_IDX, fireModeDisplay);
         lore.add(SCOPE_IDX, scopeTypeDisplay);
         lore.add(CONDITION_IDX, conditionDisplay);
-        lore.add(BUILD_IDX, BuildTypes.getBuildType(0));
+        lore.add(BUILD_IDX, BuildTypes.getValue(0));
         
         final StringBuilder stb = new StringBuilder(LORE_VERIFY);
         stb.append(SEPERATOR);

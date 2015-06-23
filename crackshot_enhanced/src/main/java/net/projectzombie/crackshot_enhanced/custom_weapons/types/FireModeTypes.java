@@ -5,62 +5,49 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType.STAT_COLOR;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType.VALUE_COLOR;
-
 /**
  *
  * @author jbannon
  */
-public class FireModeTypes
+public enum FireModeTypes implements Type
 {
-    private FireModeTypes() { /* Do nothing */ }
+    SemiAuto    (0, "Semi-Auto"),
+    Burst       (1, "Burst"),
+    Automatic   (2, "Automatic"),
+    SingleShot  (3, "Single Shot"),
+    BoltAction  (4, "Bolt-Action"),
+    PumpAction  (5, "Pump-Action"),
+    OverUnder   (6, "Over/Under");
     
-    public static String getFireMode(final WeaponType weaponType,
-                                     final int fireType)
+    private static final String title = "Fire Mode: ";
+    
+    private final int enumValue;
+    private final String value;
+    
+    private FireModeTypes(final int enumValue,
+                          final String value) 
     {
-        switch(weaponType)
-        {
-        case HUNTING_RIFLE:
-        case SNIPER:
-            return getSniperFireMode(fireType);
-        case SHOTGUN:
-            return getShotgunFireMode(fireType);
-        default:
-            return getGenericFireMode(fireType);
-        }
+        this.enumValue = enumValue;
+        this.value = value;
     }
     
-    private static String getGenericFireMode(final int fireType)
+    public static String getValue(final int enumValue)
     {
-        switch(fireType)
-        {
-        case 0: return "Semi-Auto";
-        case 1: return "Burst";
-        case 2: return "Automatic";
-        default: return "Single ShotXXX";
-        }
+        for (FireModeTypes type : FireModeTypes.values())
+            if (type.enumValue == enumValue)
+                return type.value;
+        
+        return SemiAuto.value;
     }
-    
-    private static String getSniperFireMode(final int fireType)
+
+    public static String getTitle()
     {
-        switch(fireType)
-        {
-        case 0: return "Bolt-Action";
-        case 1: return "Semi-Auto";
-        default: return "Bolt-ActionXXX";
-        }
+        return title;
     }
-    
-    private static String getShotgunFireMode(final int fireType)
+
+    @Override
+    public String getValue()
     {
-        switch(fireType)
-        {
-        case 0: return "Pump-Action";
-        case 1: return "Semi-Auto";
-        case 2: return "Over-Under";
-        default: return "Pump-ActionXXX";
-        }
+        return this.value;
     }
 }

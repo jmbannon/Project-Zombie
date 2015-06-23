@@ -5,32 +5,52 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType.STAT_COLOR;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType.VALUE_COLOR;
-
 /**
  *
  * @author jbannon
  */
-public class ScopeTypes
+public enum ScopeTypes implements Type
 {
-    private ScopeTypes() { /* Do nothing */ }
+    
+    na          (0, "n/a"),
+    acog        (1, "ACOG"),
+    tactical    (2, "Tactical"),
+    longrange   (3, "Long-Range");
+    
+    private static final String title = "Scope: ";
+    
+    private final int enumValue;
+    private final String value;
+    
+    private ScopeTypes(final int enumValue,
+                       final String value)
+    {
+        this.enumValue = enumValue;
+        this.value = value;
+    }
     
     /**
      * Returns the string to display based on the weapon lore's scope type.
      * 
-     * @param scopeInt Integer set in Crackshot lore for scope type.
+     * @param enumValue Integer set in Crackshot lore for scope type.
      * @return String to display for fire mode.
      */
-    public static String getScopeDisplay(final int scopeInt)
+    public static String getScopeDisplay(final int enumValue)
     {
-        switch(scopeInt)
-        {
-        case 0: return "n/a";
-        case 1: return "ACOG";
-        case 2: return "Tactical";
-        case 3: return "Long-Range";
-        default: return null;
-        }
+        for (ScopeTypes type : ScopeTypes.values())
+            if (type.enumValue == enumValue)
+                return type.value;
+        
+        return na.value;
+    }
+    
+    public static String getTitle()
+    {
+        return title;
+    }
+
+    @Override
+    public String getValue() {
+        return value;
     }
 }

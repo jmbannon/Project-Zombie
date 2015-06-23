@@ -14,22 +14,25 @@ import org.bukkit.ChatColor;
  * 
  * 
  */
-public enum WeaponType
+public enum WeaponType implements Type
 {
-    PISTOL          (0, 130, 185,  0.450),
-    REVOLVER        (1, 195, 260,  1.376),
-    HUNTING_RIFLE   (2, 370, 530,  2.105),
-    SHOTGUN         (3, 50,  110,  0.333),
-    SMG             (4, 255, 440,  0.521),
-    ASSAULT_RIFLE   (5, 580, 850,  0.846),
-    AUTO_SNIPER     (6, 480, 700,  1.124),
-    SNIPER          (7, 600, 1000, 2.105);
+    PISTOL          (0, 130, 185,  0.450, "Pistol Bullets"),
+    REVOLVER        (1, 195, 260,  1.376, "Revolver Rounds"),
+    HUNTING_RIFLE   (2, 370, 530,  2.105, "Hunting Rifle Bullets"),
+    SHOTGUN         (3, 50,  110,  0.333, "Shotgun Shells"),
+    SMG             (4, 255, 440,  0.521, "SMG Rounds"),
+    ASSAULT_RIFLE   (5, 580, 850,  0.846, "Assault Rifle Bullets"),
+    AUTO_SNIPER     (6, 480, 700,  1.124, "Auto-Sniper Rounds"),
+    SNIPER          (7, 600, 1000, 2.105, "Sniper Bullets");
+    
+    private static final String title = "Ammo: ";
     
     protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
     protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
     
-    private final int value, lowerBound, upperBound;
+    private final int enumValue, lowerBound, upperBound;
     private final double weight;
+    private final String ammoValue;
     
     /* Random initial durability */
     private static final Random RAND = new Random();
@@ -39,20 +42,22 @@ public enum WeaponType
      * Initializes the weapon type and numbers needed for bullet spread
      * and durability algorithms.
      * 
-     * @param value Enum integer value of the weapon.
+     * @param enumValue Enum integer value of the weapon.
      * @param lowerBound Lower bound for durability algorithm.
      * @param upperBound Upper bound for durability algorithm.
      * @param weight Weight for calculating current bullet spread based on tier.
      */
-    private WeaponType(final int value,
+    private WeaponType(final int enumValue,
                        final int lowerBound,
                        final int upperBound,
-                       final double weight)
+                       final double weight,
+                       final String ammoType)
     {
-        this.value = value;
+        this.enumValue = enumValue;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         this.weight = weight;
+        this.ammoValue = ammoType;
     }
     
     /**
@@ -132,12 +137,12 @@ public enum WeaponType
      */
     public String getCondition(final int tier)
     {
-        return STAT_COLOR + "Condition: " + ConditionTypes.getCondition(tier);
+        return STAT_COLOR + ConditionTypes.getTitle() + ConditionTypes.getValue(tier);
     }
     
     public String getBuildDisplay(final int buildType)
     {
-        return STAT_COLOR + "Build: " + BuildTypes.getBuildType(buildType);
+        return STAT_COLOR + BuildTypes.getTitle() + BuildTypes.getValue(buildType);
     }
     
     /**
@@ -148,13 +153,12 @@ public enum WeaponType
      */
     public String getFireModeDisplay(final int fireModeType)
     {
-        return STAT_COLOR + "Fire Mode: " + VALUE_COLOR + FireModeTypes.getFireMode(this, fireModeType);
+        return STAT_COLOR + FireModeTypes.getTitle() + VALUE_COLOR + FireModeTypes.getValue(fireModeType);
     }
     
     /**
      * Returns the string to display based on the weapon lore's fire mode.
      * 
-     * @param fireMode Integer set in Crackshot lore for fire mode.
      * @return String to display for fire mode.
      */
     public String getScopeDisplay(final int scopeType)
@@ -194,9 +198,9 @@ public enum WeaponType
      * Returns gun type value as an integer.
      * @return Integer value of the gun type.
      */
-    public int getIntValue()
+    public int getEnumValue()
     {
-        return value;
+        return this.enumValue;
     }
     
     /**
@@ -205,7 +209,12 @@ public enum WeaponType
      */
     public String getStringValue()
     {
-        return String.valueOf(value);
+        return String.valueOf(enumValue);
+    }
+    
+    public String getAmmoType()
+    {
+        return this.ammoValue;
     }
     
     /**
@@ -270,5 +279,16 @@ public enum WeaponType
         case 7: return SNIPER;
         default: return null;
         }
+    }
+    
+    @Override
+    public String getValue()
+    {
+        return this.ammoValue;
+    }
+    
+    public static String getTitle()
+    {
+        return title;
     }
 }

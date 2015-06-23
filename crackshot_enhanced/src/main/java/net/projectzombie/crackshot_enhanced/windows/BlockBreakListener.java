@@ -115,7 +115,8 @@ public class BlockBreakListener implements Listener
 	public boolean isBreakableLight(final Block block)
     {
         final Material blockMaterial = block.getType();
-		return (blockMaterial.equals(Material.GLOWSTONE)
+		return (blockMaterial.equals(Material.TORCH)
+                || blockMaterial.equals(Material.GLOWSTONE)
 				|| blockMaterial.equals(Material.REDSTONE_LAMP_ON)	
 				|| blockMaterial.equals(Material.BEACON)
                 || blockMaterial.equals(Material.REDSTONE_LAMP_OFF));
