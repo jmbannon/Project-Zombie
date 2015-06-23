@@ -212,11 +212,6 @@ public enum WeaponType implements Type
         return String.valueOf(enumValue);
     }
     
-    public String getAmmoType()
-    {
-        return this.ammoValue;
-    }
-    
     /**
      * Returns the upgrade price based on the current tier of the weapon.
      * 
