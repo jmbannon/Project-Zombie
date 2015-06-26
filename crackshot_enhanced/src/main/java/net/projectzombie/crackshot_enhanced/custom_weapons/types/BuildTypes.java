@@ -14,22 +14,25 @@ import org.bukkit.ChatColor;
 public enum BuildTypes implements Type
 {
     
-    Stock    (0, ChatColor.YELLOW, "Stock"),
-    Tempered (1, ChatColor.GREEN,  "Tempered"),
-    Modified (2, ChatColor.GOLD,   "Modified"),
-    Enhanced (3, ChatColor.RED,    "Enhanced");
+    Stock    (0, 1.0, ChatColor.YELLOW, "Stock"),
+    Tempered (1, 0.9, ChatColor.GREEN,  "Tempered"),
+    Modified (2, 0.8, ChatColor.GOLD,   "Modified"),
+    Enhanced (3, 0.7, ChatColor.RED,    "Enhanced");
     
     private static final String title = "Build: ";
     
     private final int enumValue;
+    private double scalar;
     private final String value;
     
-    private BuildTypes(final int value,
+    private BuildTypes(final int enumValue,
+                       final double scalar,
                        final ChatColor color,
-                       final String title)
+                       final String value)
     {
-        this.enumValue = value;
-        this.value = color + title;
+        this.enumValue = enumValue;
+        this.scalar = scalar;
+        this.value = color + value;
     }
     
     public static String getTitle()
@@ -49,5 +52,19 @@ public enum BuildTypes implements Type
             if (type.enumValue == value)
                 return type.value;
         return null;
+    }
+    
+    public static BuildTypes getBuildType(final int enumValue)
+    {
+        for (BuildTypes type : BuildTypes.values())
+            if (type.enumValue == enumValue)
+                return type;
+        
+        return Stock;
+    }
+    
+    public double getScalar()
+    {
+        return scalar;
     }
 }
