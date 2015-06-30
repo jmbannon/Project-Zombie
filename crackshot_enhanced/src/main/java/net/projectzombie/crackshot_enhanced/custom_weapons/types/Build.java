@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
  *
  * @author jbannon
  */
-public enum BuildTypes implements Type
+public enum Build implements Type
 {
     
     Stock    (0, 1.0, ChatColor.YELLOW, "Stock"),
@@ -25,7 +25,7 @@ public enum BuildTypes implements Type
     private double scalar;
     private final String value;
     
-    private BuildTypes(final int enumValue,
+    private Build(final int enumValue,
                        final double scalar,
                        final ChatColor color,
                        final String value)
@@ -48,15 +48,15 @@ public enum BuildTypes implements Type
     
     public static String getValue(final int value)
     {
-        for (BuildTypes type : BuildTypes.values())
+        for (Build type : Build.values())
             if (type.enumValue == value)
                 return type.value;
         return null;
     }
     
-    public static BuildTypes getBuildType(final int enumValue)
+    public static Build getBuildType(final int enumValue)
     {
-        for (BuildTypes type : BuildTypes.values())
+        for (Build type : Build.values())
             if (type.enumValue == enumValue)
                 return type;
         

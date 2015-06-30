@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  *
  * @author jbannon
  */
-public enum FireModeTypes implements Type
+public enum FireMode implements Type
 {
     SemiAuto    (0, "Semi-Auto"),
     Burst       (1, "Burst"),
@@ -24,7 +24,7 @@ public enum FireModeTypes implements Type
     private final int enumValue;
     private final String value;
     
-    private FireModeTypes(final int enumValue,
+    private FireMode(final int enumValue,
                           final String value) 
     {
         this.enumValue = enumValue;
@@ -33,7 +33,7 @@ public enum FireModeTypes implements Type
     
     public static String getValue(final int enumValue)
     {
-        for (FireModeTypes type : FireModeTypes.values())
+        for (FireMode type : FireMode.values())
             if (type.enumValue == enumValue)
                 return type.value;
         

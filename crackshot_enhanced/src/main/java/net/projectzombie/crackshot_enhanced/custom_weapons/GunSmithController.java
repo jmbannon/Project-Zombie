@@ -5,7 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
-import java.util.List;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,7 +19,13 @@ public class GunSmithController
 
     public void repairWeapon(final Player player)
     {
+        final ItemStack weaponInHand = player.getInventory().getItemInHand();
+        final int weaponID = CrackshotLore.getWeaponID(weaponInHand);
         
+        if (weaponID >= 0)
+        {
+            Gun gun = Gun.getGunType(weaponID);
+        }
     }
     /*
     public boolean isWeapon(final ItemStack itemInHand)

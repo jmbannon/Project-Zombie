@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
 import java.util.Random;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -14,7 +15,7 @@ import org.bukkit.ChatColor;
  * 
  * 
  */
-public enum WeaponType implements Type
+public enum Weapon implements Type
 {
     PISTOL          (130, 185,  0.450, "Pistol Bullets"),
     REVOLVER        (195, 260,  1.376, "Revolver Rounds"),
@@ -45,7 +46,7 @@ public enum WeaponType implements Type
      * @param upperBound Upper bound for durability algorithm.
      * @param weight Weight for calculating current bullet spread based on tier.
      */
-    private WeaponType(final int lowerBound,
+    private Weapon(final int lowerBound,
                        final int upperBound,
                        final double weight,
                        final String ammoType)
@@ -134,4 +135,6 @@ public enum WeaponType implements Type
     {
         return title;
     }
+          
+    
 }

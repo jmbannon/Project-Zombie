@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  *
  * @author jbannon
  */
-public enum ScopeTypes implements Type
+public enum Scope implements Type
 {
     
     na          (0, "n/a"),
@@ -22,7 +22,7 @@ public enum ScopeTypes implements Type
     private final int enumValue;
     private final String value;
     
-    private ScopeTypes(final int enumValue,
+    private Scope(final int enumValue,
                        final String value)
     {
         this.enumValue = enumValue;
@@ -37,7 +37,7 @@ public enum ScopeTypes implements Type
      */
     public static String getScopeDisplay(final int enumValue)
     {
-        for (ScopeTypes type : ScopeTypes.values())
+        for (Scope type : Scope.values())
             if (type.enumValue == enumValue)
                 return type.value;
         

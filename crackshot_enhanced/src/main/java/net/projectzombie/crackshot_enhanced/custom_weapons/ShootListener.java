@@ -5,11 +5,13 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.BuildTypes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponType;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Build;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotType;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,7 +54,7 @@ public class ShootListener implements Listener
     public void preDecayEvent(WeaponPreShootEvent event)
     {
         final Player shooter = event.getPlayer();
-        final double bulletSpread = CrackshotType.shootHandler(event.getBulletSpread(), shooter.getItemInHand());
+        final double bulletSpread = shoot(event.getBulletSpread(), shooter.getItemInHand());
         
         if (bulletSpread < 0)
         {
@@ -66,5 +68,26 @@ public class ShootListener implements Listener
         }
         else
             event.setBulletSpread(bulletSpread);
+    }
+    
+    public static double shoot(final double eventBulletSpread,
+                               final ItemStack item)
+    {
+        final ItemMeta gunMeta = item.getItemMeta();
+        double bulletSpread = -1;
+        
+        if (!item.hasItemMeta() || !item.getItemMeta().hasLore())
+            return bulletSpread;
+        
+        List<String> lore = item.getItemMeta().getLore();
+        
+        if (CrackshotLore.isPreShotWeapon(lore))
+            bulletSpread = CrackshotLore.initializeGun(eventBulletSpread, lore);
+        else if (lore.size() == LORE_SIZE)
+            bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
+        
+        gunMeta.setLore(lore);
+        item.setItemMeta(gunMeta);
+        return bulletSpread;
     }
 }

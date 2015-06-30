@@ -4,6 +4,7 @@ import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,24 +29,41 @@ public class CommandExec implements CommandExecutor {
 		
         final Player sender = (Player)cs;
         
-		if (cmd.getName().equalsIgnoreCase("bw") && args.length > 0) {
-			if (args[0].equalsIgnoreCase("restore") && args.length == 2) {
+		if (cmd.getName().equalsIgnoreCase("bw") && args.length > 0)
+        {
+			if (args[0].equalsIgnoreCase("restore") && args.length == 2)
+            {
                 int blockCount = -1;
                 if (args[1].equalsIgnoreCase("glass")) 
                 {
                     try {
                         blockCount = blockBreak.restoreGlass();
-                    } catch (Exception ex) {
+                    }
+                    catch (Exception ex)
+                    {
                         Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     sender.sendMessage("Restored " + blockCount + " glass blocks.");
-                } else if (args[1].equalsIgnoreCase("lights")) {
-                    try {
+                }
+                else if (args[1].equalsIgnoreCase("lights"))
+                {
+                    try
+                    {
                         blockCount = blockBreak.restoreLights(sender);
-                    } catch (IOException ex) {
+                    }
+                    catch (IOException ex)
+                    {
                         Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     sender.sendMessage("Restored " + blockCount + " light blocks.");
+                }
+                else if (args[1].equalsIgnoreCase("lore"))
+                {
+                    final String toEncode = CrackshotLore.getEncryptedPreInfoString(sender.getInventory().getItemInHand());
+                    if (toEncode != null)
+                        plugin.getLogger().info(toEncode);
+                    else
+                        sender.sendMessage("Not valid lore. `PZ`ID");
                 }
 			} 
 			else
