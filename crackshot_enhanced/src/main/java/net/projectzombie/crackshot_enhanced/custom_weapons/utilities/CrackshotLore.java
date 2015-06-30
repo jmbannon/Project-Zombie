@@ -127,13 +127,12 @@ public class CrackshotLore
     private static String rebuildInfoLore(String infoSplit[])
     {
         final StringBuilder stb = new StringBuilder();
-        for (int i = 0; i < infoSplit.length - 1; i++)
+        for (int i = 0; i < infoSplit.length ; i++)
         {
-            stb.append(infoSplit[i]);
             stb.append(seperator);
+            stb.append(infoSplit[i]);
         }
-        stb.append(infoSplit[infoSplit.length - 1]);
-        return HiddenStringUtils.encodeString(stb.toString());
+        return line + HiddenStringUtils.encodeString(stb.toString());
     }
     
     private static String buildLoreString(final String title,
