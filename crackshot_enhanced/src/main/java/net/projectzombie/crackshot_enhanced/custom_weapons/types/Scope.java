@@ -12,12 +12,12 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 public enum Scope implements Type
 {
     
-    na          (0, "n/a"),
-    acog        (1, "ACOG"),
-    tactical    (2, "Tactical"),
-    longrange   (3, "Long-Range");
+    NA           (0, "n/a"),
+    ACOG         (1, "ACOG"),
+    TACTICAL     (2, "Tactical"),
+    LONG_RANGE   (3, "Long-Range");
     
-    private static final String title = "Scope: ";
+    private static final String TITLE = "Scope: ";
     
     private final int enumValue;
     private final String value;
@@ -28,6 +28,11 @@ public enum Scope implements Type
         this.enumValue = enumValue;
         this.value = value;
     }
+    
+    public static String getTitle()     { return TITLE;     }
+
+    @Override public String toString()  { return value;     }
+    @Override public int getEnumValue() { return enumValue; }
     
     /**
      * Returns the string to display based on the weapon lore's scope type.
@@ -41,16 +46,8 @@ public enum Scope implements Type
             if (type.enumValue == enumValue)
                 return type.value;
         
-        return na.value;
+        return NA.value;
     }
     
-    public static String getTitle()
-    {
-        return title;
-    }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
+    
 }

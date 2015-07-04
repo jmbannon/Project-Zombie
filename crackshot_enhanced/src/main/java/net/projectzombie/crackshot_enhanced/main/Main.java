@@ -13,14 +13,14 @@ public class Main extends JavaPlugin {
 	
 	private BlockBreakListener window;
 	private ScopeZoomListener scope;
-	private CommandExec exec;
+	private OPCommandExec exec;
     private ShootListener decay;
 	
 	@Override
 	public void onEnable() {
         try {
             this.window = new BlockBreakListener(this);
-            this.exec = new CommandExec(this);
+            this.exec = new OPCommandExec(this);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

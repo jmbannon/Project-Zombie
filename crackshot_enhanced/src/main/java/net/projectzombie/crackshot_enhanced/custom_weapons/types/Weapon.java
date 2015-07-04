@@ -5,9 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
-import java.util.Random;
 import org.bukkit.ChatColor;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -17,21 +15,21 @@ import org.bukkit.inventory.ItemStack;
  */
 public enum Weapon implements Type
 {
-    PISTOL          (130, 185,  0.450, "Pistol Bullets"),
-    REVOLVER        (195, 260,  1.376, "Revolver Rounds"),
-    HUNTING_RIFLE   (370, 530,  2.105, "Hunting Rifle Bullets"),
-    SHOTGUN         (50,  110,  0.333, "Shotgun Shells"),
-    SMG             (255, 440,  0.521, "SMG Rounds"),
-    ASSAULT_RIFLE   (580, 850,  0.846, "Assault Rifle Bullets"),
-    AUTO_SNIPER     (480, 700,  1.124, "Auto-Sniper Rounds"),
-    SNIPER          (600, 1000, 2.105, "Sniper Bullets");
+    PISTOL          (0, 130, 185,  0.450, "Pistol Bullets"),
+    REVOLVER        (1, 195, 260,  1.376, "Revolver Rounds"),
+    HUNTING_RIFLE   (2, 370, 530,  2.105, "Hunting Rifle Bullets"),
+    SHOTGUN         (3, 50,  110,  0.333, "Shotgun Shells"),
+    SMG             (4, 255, 440,  0.521, "SMG Rounds"),
+    ASSAULT_RIFLE   (5, 580, 850,  0.846, "Assault Rifle Bullets"),
+    AUTO_SNIPER     (6, 480, 700,  1.124, "Auto-Sniper Rounds"),
+    SNIPER          (7, 600, 1000, 2.105, "Sniper Bullets");
     
-    private static final String title = "Ammo: ";
+    private static final String TITLE = "Ammo: ";
     
     protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
     protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
     
-    private final int lowerBound, upperBound;
+    private final int enumValue, lowerBound, upperBound;
     private final double weight;
     private final String ammoValue;
     
@@ -46,16 +44,23 @@ public enum Weapon implements Type
      * @param upperBound Upper bound for durability algorithm.
      * @param weight Weight for calculating current bullet spread based on tier.
      */
-    private Weapon(final int lowerBound,
-                       final int upperBound,
-                       final double weight,
-                       final String ammoType)
+    private Weapon(final int enumValue,
+                   final int lowerBound,
+                   final int upperBound,
+                   final double weight,
+                   final String ammoType)
     {
+        this.enumValue = enumValue;
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         this.weight = weight;
         this.ammoValue = ammoType;
     }
+    
+    public static String getTitle()     { return TITLE;     }
+    
+    @Override public String toString()  { return ammoValue; }
+    @Override public int getEnumValue() { return enumValue; }
     
     /**
      * Gets the bullet spread to be set for the event.
@@ -124,17 +129,4 @@ public enum Weapon implements Type
     {
         return (int)((double)currentDurability * (double)upperBound/(double)maxDurability);
     }
-    
-    @Override
-    public String getValue()
-    {
-        return this.ammoValue;
-    }
-    
-    public static String getTitle()
-    {
-        return title;
-    }
-          
-    
 }

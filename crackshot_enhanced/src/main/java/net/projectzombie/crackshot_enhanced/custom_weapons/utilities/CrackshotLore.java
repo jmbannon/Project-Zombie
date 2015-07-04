@@ -46,16 +46,15 @@ public class CrackshotLore
     
     public static final ChatColor TITLE_COLOR = ChatColor.DARK_RED;
     public static final ChatColor VALUE_COLOR = ChatColor.GOLD;
-    public static final ChatColor LINE_COLOR = ChatColor.DARK_GREEN;
     
     public static final String preShotVerification = TITLE_COLOR + "Shoot to unviel stats.";
     public static final String verification = "PZ";
     public static final String seperator = "`";
-    public static final String line = LINE_COLOR + "=-=-=-=-=-=-=-=-=-=-=";
+    public static final String line = TITLE_COLOR + "=-=-=-=-=-=-=-=-=-=-=";
 
     public static double generateLore(final Gun gun,
-                               final double eventBulletSpread,
-                               List<String> lore)
+                                      final double eventBulletSpread,
+                                      List<String> lore)
     {
         lore.clear();
         final int initialDurability = gun.getInitialDurability();
@@ -74,11 +73,11 @@ public class CrackshotLore
     
     private static String getAmmoLore(final Gun gun)
     {
-        return buildLoreString(Weapon.getTitle(), gun.getWeaponType().getValue());
+        return buildLoreString(Weapon.getTitle(), gun.getWeaponType().toString());
     }
     
     private static String getAccuracyLore(final Gun gun,
-                                   final int durability)
+                                          final int durability)
     {
         final Weapon wepType = gun.getWeaponType();
         return buildLoreString(wepType.getAccuracyTitle(),
@@ -98,12 +97,12 @@ public class CrackshotLore
     
     private static String getFireModeLore(final Gun gun)
     {
-        return buildLoreString(FireMode.getTitle(), gun.getFireMode().getValue());
+        return buildLoreString(FireMode.getTitle(), gun.getFireMode().toString());
     }
     
     private static String getScopeLore(final Gun gun)
     {
-        return buildLoreString(Scope.getTitle(), gun.getScopeType().getValue());
+        return buildLoreString(Scope.getTitle(), gun.getScopeType().toString());
     }
     
     private static String getStatLore(final Gun gun,
@@ -179,12 +178,10 @@ public class CrackshotLore
     }
     
     public static double decrementDurability(final double eventBulletSpread,
-                                              List<String> lore)
+                                             List<String> lore)
     {
         final int durability, condition, newCondition;
         String infoSplit[] = getInfoSplit(lore);
-        for (String tmep : infoSplit)
-                Bukkit.broadcastMessage(tmep);
         
         if (infoSplit.length == INFO_SIZE && infoSplit[INFO_VERIFY_IDX].equalsIgnoreCase(verification))
         {
@@ -235,6 +232,12 @@ public class CrackshotLore
     private static boolean hasWeaponLore(final List<String> lore)
     {
         return (lore.size() > 1 && getInfoSplit(lore)[INFO_VERIFY_IDX].equalsIgnoreCase(verification));
+    }
+    
+    public static boolean isUnencrypted(final List<String> lore)
+    {
+        final String firstLine = line + seperator + verification + seperator;
+        return lore.size() > 0  && lore.get(0).startsWith(firstLine);
     }
     
     private static String getDecryptedInfoString(final List<String> lore)
