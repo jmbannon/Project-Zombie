@@ -1,0 +1,7 @@
+name: BlockPlacer
+main: net.projectzombie.custom_interactions.main.Main
+version: 1.0
+commands:
+  bb:
+    description: Nope.
+    usage: "WIP"
