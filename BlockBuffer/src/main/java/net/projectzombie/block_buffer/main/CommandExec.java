@@ -18,7 +18,7 @@
  *
  */
 
-package net.projectzombie.custom_interactions.main;
+package net.projectzombie.block_buffer.main;
 
 import net.projectzombie.block_buffer.controller.RestoreController;
 import org.bukkit.command.Command;

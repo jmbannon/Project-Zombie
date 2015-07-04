@@ -18,7 +18,7 @@
  *
  */
 
-package net.projectzombie.custom_interactions.main;
+package net.projectzombie.block_buffer.main;
 
 import net.projectzombie.block_buffer.buffer.Buffer;
 import net.projectzombie.block_buffer.controller.RestoreController;
