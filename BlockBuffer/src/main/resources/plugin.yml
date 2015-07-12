@@ -1,5 +1,5 @@
-name: BlockPlacer
-main: net.projectzombie.custom_interactions.main.Main
+name: BlockBuffer
+main: net.projectzombie.block_buffer.main.Main
 version: 1.0
 commands:
   bb:

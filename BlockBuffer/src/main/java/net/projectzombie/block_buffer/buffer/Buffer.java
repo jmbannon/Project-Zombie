@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.projectzombie.block_buffer.main.Main;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
@@ -18,44 +19,37 @@ import org.bukkit.plugin.Plugin;
  */
 public class Buffer
 {
-    private static File BLOCK_PLACED_BUFFER;
-    private static File LIGHT_PLACED_BUFFER;
-    private static File BLOCK_BROKE_BUFFER;
-    private static File LIGHT_BROKE_BUFFER;
     
     private Buffer() { /* Do nothing */ }
     
     public static void initialize(final Plugin plugin)
     {
         Utilities.plugin = plugin;
-        Buffer.BLOCK_PLACED_BUFFER = new File(Utilities.plugin.getDataFolder(), "BLOCK_PLACED_BUFFER");
-        Buffer.LIGHT_PLACED_BUFFER = new File(Utilities.plugin.getDataFolder(), "LIGHT_PLACED_BUFFER");
-        Buffer.BLOCK_BROKE_BUFFER  = new File(Utilities.plugin.getDataFolder(), "BLOCK_BROKE_BUFFER");
-        Buffer.LIGHT_BROKE_BUFFER  = new File(Utilities.plugin.getDataFolder(), "LIGHT_BROKE_BUFFER");
+        
     }
     
-    public static String[] getBlockPlacedBuffer() { return Serialize.deserializeBuffer(Buffer.BLOCK_PLACED_BUFFER); }
-    public static String[] getLightPlacedBuffer() { return Serialize.deserializeBuffer(Buffer.LIGHT_PLACED_BUFFER); }
-    public static String[] getBlockBrokeBuffer()  { return Serialize.deserializeBuffer(Buffer.BLOCK_BROKE_BUFFER);  }
-    public static String[] getLightBrokeBuffer()  { return Serialize.deserializeBuffer(Buffer.LIGHT_BROKE_BUFFER);  }
+    public static String[] getBlockPlacedBuffer() { return Serialize.deserializeBuffer(Main.BLOCK_PLACED_BUFFER); }
+    public static String[] getLightPlacedBuffer() { return Serialize.deserializeBuffer(Main.LIGHT_PLACED_BUFFER); }
+    public static String[] getBlockBrokeBuffer()  { return Serialize.deserializeBuffer(Main.BLOCK_BROKE_BUFFER);  }
+    public static String[] getLightBrokeBuffer()  { return Serialize.deserializeBuffer(Main.LIGHT_BROKE_BUFFER);  }
     
-    public static boolean clearBlockPlacedBuffer() { return clearBuffer(Buffer.BLOCK_PLACED_BUFFER); }
-    public static boolean clearLightPlacedBuffer() { return clearBuffer(Buffer.LIGHT_PLACED_BUFFER); }
-    public static boolean clearBlockBrokeBuffer()  { return clearBuffer(Buffer.BLOCK_BROKE_BUFFER);  }
-    public static boolean clearLightBrokeBuffer()  { return clearBuffer(Buffer.LIGHT_BROKE_BUFFER);  }
+    public static boolean clearBlockPlacedBuffer() { return clearBuffer(Main.BLOCK_PLACED_BUFFER); }
+    public static boolean clearLightPlacedBuffer() { return clearBuffer(Main.LIGHT_PLACED_BUFFER); }
+    public static boolean clearBlockBrokeBuffer()  { return clearBuffer(Main.BLOCK_BROKE_BUFFER);  }
+    public static boolean clearLightBrokeBuffer()  { return clearBuffer(Main.LIGHT_BROKE_BUFFER);  }
     
     public static boolean writeToPlacedBuffer(final Block theBlock)
     {
         return Utilities.isLight(theBlock) ? 
-                writeToBuffer(LIGHT_PLACED_BUFFER, theBlock) 
-              : writeToBuffer(BLOCK_PLACED_BUFFER, theBlock);
+                writeToBuffer(Main.LIGHT_PLACED_BUFFER, theBlock) 
+              : writeToBuffer(Main.BLOCK_PLACED_BUFFER, theBlock);
     }
     
     public static boolean writeToBrokeBuffer(final Block theBlock)
     {
         return Utilities.isLight(theBlock) ? 
-                writeToBuffer(LIGHT_BROKE_BUFFER, theBlock) 
-              : writeToBuffer(BLOCK_BROKE_BUFFER, theBlock);
+                writeToBuffer(Main.LIGHT_BROKE_BUFFER, theBlock) 
+              : writeToBuffer(Main.BLOCK_BROKE_BUFFER, theBlock);
     }
     
     private static boolean writeToBuffer(final File buffer,
