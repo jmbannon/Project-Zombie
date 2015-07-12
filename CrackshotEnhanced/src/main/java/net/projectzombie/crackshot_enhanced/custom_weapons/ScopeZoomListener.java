@@ -38,7 +38,7 @@ public class ScopeZoomListener implements Listener
         {
             final Player player = event.getPlayer();
             final ItemStack pumpkinItem = new ItemStack(Material.PUMPKIN);
-
+            
             if (event.isZoomIn())
             {
                 helmetList.put(player, player.getInventory().getHelmet());	

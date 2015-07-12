@@ -6,3 +6,6 @@ commands:
   bw:
     description: Memory used storing blocks.
     usage: "Usage: /bw entries, /bw restore"
+  gunsmith:
+    description: Access the gunsmith at spawn to modify weapons.
+    usage: "/gunsmith"

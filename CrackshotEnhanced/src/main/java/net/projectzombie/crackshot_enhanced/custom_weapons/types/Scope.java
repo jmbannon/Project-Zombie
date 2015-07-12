@@ -12,18 +12,18 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 public enum Scope implements Type
 {
     
-    NA           (0, "n/a"),
-    ACOG         (1, "ACOG"),
-    TACTICAL     (2, "Tactical"),
-    LONG_RANGE   (3, "Long-Range");
+    NA           (0, "Iron Sight"),
+    ACOG         (1, "ACOG Scope"),
+    TACTICAL     (2, "Tactical Scope"),
+    LONG_RANGE   (3, "Sniper Scope");
     
-    private static final String TITLE = "Scope: ";
+    private static final String TITLE = "Sight: ";
     
     private final int enumValue;
     private final String value;
     
     private Scope(final int enumValue,
-                       final String value)
+                  final String value)
     {
         this.enumValue = enumValue;
         this.value = value;

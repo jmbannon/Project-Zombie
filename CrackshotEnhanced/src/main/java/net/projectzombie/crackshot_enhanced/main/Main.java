@@ -2,55 +2,43 @@ package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.custom_weapons.ShootListener;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.projectzombie.crackshot_enhanced.custom_weapons.ScopeZoomListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class Main extends JavaPlugin {
-	
+public class Main extends JavaPlugin
+{
 	private BlockBreakListener window;
 	private ScopeZoomListener scope;
-	private OPCommandExec exec;
+	private OPCommandExec OPexec;
+    private GunSmithCommandExec gunsmithExec;
     private ShootListener decay;
 	
 	@Override
-	public void onEnable() {
-        try {
-            this.window = new BlockBreakListener(this);
-            this.exec = new OPCommandExec(this);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	public void onEnable()
+    {
+            this.window = new BlockBreakListener();
+            this.OPexec = new OPCommandExec(this);
+            this.getCommand("bw").setExecutor(OPexec);
+            this.getServer().getPluginManager().registerEvents(window, this);
+
         
+        this.gunsmithExec = new GunSmithCommandExec();
 		this.scope = new ScopeZoomListener();
         this.decay = new ShootListener();
 		
-		this.getCommand("bw").setExecutor(exec);
-		
-		this.getServer().getPluginManager().registerEvents(window, this);
+		this.getCommand("gunsmith").setExecutor(gunsmithExec);
 		this.getServer().getPluginManager().registerEvents(scope, this);
         this.getServer().getPluginManager().registerEvents(decay, this);
 		
-		this.getLogger().info("Breakable Windows enabled!");
+		this.getLogger().info("CrackshotEnhanced enabled!");
 
 	}
 	
 	@Override
-	public void onDisable() {
-		this.getLogger().info("Restoring blocks...");
-        try {
-            this.window.restoreGlass();
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+	public void onDisable()
+    {
 		this.scope.disable();
-		this.getLogger().info("Restored blocks! Breakable Windows disabled.");
+		this.getLogger().info("CrackshotEnhanced disabled.");
 	}	
 }

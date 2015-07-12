@@ -15,22 +15,22 @@ import org.bukkit.ChatColor;
  */
 public enum Weapon implements Type
 {
-    PISTOL          (0, 130, 185,  0.450, "Pistol Bullets"),
-    REVOLVER        (1, 195, 260,  1.376, "Revolver Rounds"),
-    HUNTING_RIFLE   (2, 370, 530,  2.105, "Hunting Rifle Bullets"),
-    SHOTGUN         (3, 50,  110,  0.333, "Shotgun Shells"),
-    SMG             (4, 255, 440,  0.521, "SMG Rounds"),
-    ASSAULT_RIFLE   (5, 580, 850,  0.846, "Assault Rifle Bullets"),
-    AUTO_SNIPER     (6, 480, 700,  1.124, "Auto-Sniper Rounds"),
-    SNIPER          (7, 600, 1000, 2.105, "Sniper Bullets");
+    PISTOL          (0, 1.1, 90,  0.450, "Pistol Bullets"),
+    REVOLVER        (1, 1.3, 150, 1.376, "Revolver Rounds"),
+    HUNTING_RIFLE   (2, 1.5, 130, 2.105, "Hunting Rifle Bullets"),
+    SHOTGUN         (3, 1.3, 120, 0.333, "Shotgun Shells"),
+    SMG             (4, 1.4, 120, 0.521, "SMG Rounds"),
+    ASSAULT_RIFLE   (5, 1.6, 180, 0.846, "Assault Rifle Bullets"),
+    AUTO_SNIPER     (6, 2.4, 230, 1.124, "Auto-Sniper Rounds"),
+    SNIPER          (7, 2.7, 250, 2.105, "Sniper Bullets");
     
     private static final String TITLE = "Ammo: ";
     
     protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
     protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
     
-    private final int enumValue, lowerBound, upperBound;
-    private final double weight;
+    private final int enumValue;
+    private final double repairPriceWeight, upgradePriceWeight, bulletSpreadWeight;
     private final String ammoValue;
     
     private static final Double ACCURACY_WEIGHT = 25.3487;
@@ -40,27 +40,28 @@ public enum Weapon implements Type
      * and durability algorithms.
      * 
      * @param enumValue Enum integer value of the weapon.
-     * @param lowerBound Lower bound for durability algorithm.
-     * @param upperBound Upper bound for durability algorithm.
-     * @param weight Weight for calculating current bullet spread based on tier.
+     * @param repairPriceWeight Weight for calculating repair price.
+     * @param upgradePriceWeight Weight for calculating upgrade price.
+     * @param bulletSpreadWeight Weight for calculating current bullet spread based on tier.
      */
     private Weapon(final int enumValue,
-                   final int lowerBound,
-                   final int upperBound,
-                   final double weight,
+                   final double repairPriceWeight,
+                   final double upgradePriceWeight,
+                   final double bulletSpreadWeight,
                    final String ammoType)
     {
         this.enumValue = enumValue;
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
-        this.weight = weight;
+        this.repairPriceWeight = repairPriceWeight;
+        this.upgradePriceWeight = upgradePriceWeight;
+        this.bulletSpreadWeight = bulletSpreadWeight;
         this.ammoValue = ammoType;
     }
     
-    public static String getTitle()     { return TITLE;     }
-    
-    @Override public String toString()  { return ammoValue; }
-    @Override public int getEnumValue() { return enumValue; }
+    public static String getTitle()       { return TITLE;     }
+    public double getRepairPriceWeight()  { return repairPriceWeight;  }
+    public double getUpgradePriceWeight() { return upgradePriceWeight; }
+    @Override public String toString()    { return ammoValue; }
+    @Override public int getEnumValue()   { return enumValue; }
     
     /**
      * Gets the bullet spread to be set for the event.
@@ -71,7 +72,7 @@ public enum Weapon implements Type
     public double getBulletSpread(final double eventBulletSpread,
                                   final int condition)
     {
-        return eventBulletSpread + (eventBulletSpread * weight/(double)condition);
+        return eventBulletSpread + (eventBulletSpread * bulletSpreadWeight/(double)condition);
     }
     
     public String getAccuracyTitle()
@@ -97,36 +98,5 @@ public enum Weapon implements Type
                                          final int condition)
     {
         return ((double)100 - (ACCURACY_WEIGHT * getBulletSpread(CSBulletSpread, condition)));
-    }
-    
-    /**
-     * Returns the upgrade price based on the current tier of the weapon.
-     * 
-     * @param currentTier Current tier of the weapon.
-     * @return Price of the upgrade. -1 if not applicable.
-     */
-    public int getUpgradePrice(final int currentTier)
-    {
-        switch(currentTier)
-        {
-        case 0: return upperBound/3;
-        case 1: return upperBound/2;
-        case 2: return upperBound;
-        default: return -1;
-        }
-    }
-    
-    /**
-     * Returns the repair price to fully repair a weapon based on its current
-     * and max durability.
-     * 
-     * @param currentDurability Current durability of the weapon.
-     * @param maxDurability Max durability of the weapon.
-     * @return 
-     */
-    public int getRepairPrice(final int currentDurability,
-                              final int maxDurability)
-    {
-        return (int)((double)currentDurability * (double)upperBound/(double)maxDurability);
     }
 }

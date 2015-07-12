@@ -44,6 +44,11 @@
         <artifactId>import</artifactId>
       <version>0.01</version>
     </dependency>
+    <dependency>
+        <groupId>BlockBuffer</groupId>
+        <artifactId>BlockBuffer</artifactId>
+      <version>0.01</version>
+    </dependency>
 </dependencies>
     <name>net.projectzombie.crackshot_enhanced</name>
 </project>
