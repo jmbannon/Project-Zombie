@@ -12,8 +12,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Scope;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Suppressor;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
-import net.projectzombie.crackshot_enhanced.utilities.HiddenStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,7 +31,8 @@ public class CrackshotLore
     public static final int BUILD_IDX = 4;
     public static final int FIRE_MODE_IDX = 5;
     public static final int SCOPE_IDX = 6;
-    public static final int LORE_SIZE = 7;
+    public static final int SUPP_IDX = 7;
+    public static final int LORE_SIZE = 8;
     
     // PZ`gunID`durability`ConditionType`BuildType
     public static final int INFO_VERIFY_IDX = 0;
@@ -77,13 +78,15 @@ public class CrackshotLore
         lore.add(BUILD_IDX,      buildBuildLore(Build.STOCK.getEnumValue()));
         lore.add(FIRE_MODE_IDX,  buildFireModeLore(gun));
         lore.add(SCOPE_IDX,      buildScopeLore(gun));
+        lore.add(SUPP_IDX,       buildSuppressorLore(gun));
     }
     
-    public static String getEncryptedPreInfoString(final ItemStack item)
+    static
+    public String getEncryptedPreInfoString(final ItemStack item)
     {
         final List<String> lore;
        
-        if (!item.hasItemMeta())
+        if (!item.hasItemMeta() || !item.getItemMeta().hasLore())
             return null;
            
         lore = item.getItemMeta().getLore();
@@ -92,40 +95,47 @@ public class CrackshotLore
                 : null;
     }
     
-    public static int getDurability(final ItemStack item)
+    static
+    public int getDurability(final ItemStack item)
     {
         final String[] split = getInfoSplit(item);
         return split == null ? -1 : Integer.valueOf(split[INFO_DUR_IDX]);
     }
     
-    public static int getBuild(final ItemStack item)
+    static
+    public int getBuild(final ItemStack item)
     {
         final String[] split = getInfoSplit(item);
         return split == null ? -1 : Integer.valueOf(split[INFO_BUILD_IDX]);
     }
     
-    public static boolean isPreShotWeapon(final ItemStack item)
+    static
+    public boolean isPreShotWeapon(final ItemStack item)
     {
         return item.hasItemMeta() && item.getItemMeta().hasLore() && isPreShotWeapon(item.getItemMeta().getLore());
     }
     
-    public static boolean isPostShotWeapon(final ItemStack item)
+    static
+    public boolean isPostShotWeapon(final ItemStack item)
     {
         return item.hasItemMeta() && item.getItemMeta().hasLore() && isPostShotWeapon(item.getItemMeta().getLore());
     }
     
-    public static boolean isPreShotWeapon(final List<String> lore)
+    static
+    public boolean isPreShotWeapon(final List<String> lore)
     {
         return lore.size() == 2 && lore.get(PRE_SHOT_VERIFICATION_IDX).equalsIgnoreCase(preShotVerification);
     }
     
-    public static boolean isPostShotWeapon(final List<String> lore)
+    static
+    public boolean isPostShotWeapon(final List<String> lore)
     {
         String infoSplit[] = getInfoSplit(lore);
         return infoSplit.length == INFO_SIZE && infoSplit[INFO_VERIFY_IDX].equalsIgnoreCase(verification);
     }
     
-    public static double decrementDurability(final double eventBulletSpread,
+    static
+    public double decrementDurability(final double eventBulletSpread,
                                              List<String> lore)
     {
         if (!isPostShotWeapon(lore))
@@ -153,7 +163,8 @@ public class CrackshotLore
         return getBulletSpread(gun, eventBulletSpread, condition, Integer.valueOf(infoSplit[INFO_BUILD_IDX]));
     }
     
-    public static int getWeaponID(final ItemStack item)
+    static
+    public int getWeaponID(final ItemStack item)
     {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore())
             return -1;
@@ -161,7 +172,8 @@ public class CrackshotLore
         return getWeaponId(item.getItemMeta().getLore());
     }
     
-    public static boolean isUnencrypted(final List<String> lore)
+    static
+    public boolean isUnencrypted(final List<String> lore)
     {
         final String firstLine = line + seperator + verification + seperator;
         return lore.size() > 0  && lore.get(0).startsWith(firstLine);
@@ -235,16 +247,22 @@ public class CrackshotLore
     {
         final ItemStack newGunItem = crackshot.generateWeapon(newGun.getCSWeaponName());
         if (newGunItem == null)
-        {
             return null;
-        }
+        
         final ItemMeta newMeta = newGunItem.getItemMeta();
-        
         final List<String> newLore = newMeta.getLore();
-        final int durability = CrackshotLore.getDurability(originalGunItem);
-        final int condition = newGun.getConditionInt(durability);
+        final int durability, condition;
         
+        if (isPostShotWeapon(originalGunItem))
+            durability = CrackshotLore.getDurability(originalGunItem);
+        else if (isPreShotWeapon(originalGunItem))
+            durability = newGun.getInitialDurability();
+        else
+            return null;
+        
+        condition = newGun.getConditionInt(durability);
         CrackshotLore.generateLore(newGun, newLore, durability, condition);
+        
         newMeta.setLore(newLore);
         newGunItem.setItemMeta(newMeta);
         return newGunItem;
@@ -291,6 +309,12 @@ public class CrackshotLore
     private String buildScopeLore(final Gun gun)
     {
         return buildLoreString(Scope.getTitle(), gun.getScopeType().toString());
+    }
+    
+    static
+    private String buildSuppressorLore(final Gun gun)
+    {
+        return buildLoreString(Suppressor.getTitle(), gun.getSuppressorType().toString());
     }
     
     static

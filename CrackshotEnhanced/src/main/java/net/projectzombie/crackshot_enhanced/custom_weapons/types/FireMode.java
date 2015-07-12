@@ -11,13 +11,13 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  */
 public enum FireMode implements Type
 {
-    SEMI_AUTO    (0, "Semi-Auto"),
-    BURST        (1, "Burst"),
-    AUTOMATIC    (2, "Automatic"),
-    SINGLE_SHOT  (3, "Single Shot"),
-    BOLT_ACTION  (4, "Bolt-Action"),
-    PUMP_ACTION  (5, "Pump-Action"),
-    OVER_UNDER   (6, "Over/Under");
+    SEMI    (0, "Semi-Auto"),
+    BURST   (1, "Burst"),
+    AUTO    (2, "Automatic"),
+    SING    (3, "Single Shot"),
+    BOLT    (4, "Bolt-Action"),
+    PUMP    (5, "Pump-Action"),
+    OVER    (6, "Over/Under");
     
     private static final String TITLE = "Fire Mode: ";
     
@@ -42,6 +42,6 @@ public enum FireMode implements Type
             if (type.enumValue == enumValue)
                 return type.value;
         
-        return SEMI_AUTO.value;
+        return SEMI.value;
     }
 }

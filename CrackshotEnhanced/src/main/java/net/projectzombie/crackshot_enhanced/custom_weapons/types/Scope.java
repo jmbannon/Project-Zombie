@@ -12,10 +12,10 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 public enum Scope implements Type
 {
     
-    NA           (0, "Iron Sight"),
-    ACOG         (1, "ACOG Scope"),
-    TACTICAL     (2, "Tactical Scope"),
-    LONG_RANGE   (3, "Sniper Scope");
+    IRON  (0, "Iron Sight"),
+    ACOG  (1, "ACOG Scope"),
+    TACT  (2, "Tactical Scope"),
+    LONG  (3, "Sniper Scope");
     
     private static final String TITLE = "Sight: ";
     
@@ -46,7 +46,7 @@ public enum Scope implements Type
             if (type.enumValue == enumValue)
                 return type.value;
         
-        return NA.value;
+        return IRON.value;
     }
     
     

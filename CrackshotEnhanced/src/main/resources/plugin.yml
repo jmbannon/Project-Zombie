@@ -5,7 +5,10 @@ depend: [CrackShot]
 commands:
   bw:
     description: Memory used storing blocks.
-    usage: "Usage: /bw entries, /bw restore"
+    usage: "Usage: /bw lore"
   gunsmith:
     description: Access the gunsmith at spawn to modify weapons.
     usage: "/gunsmith"
+  gs:
+    description: Access the gunsmith at spawn to modify weapons.
+    usage: "/gs"

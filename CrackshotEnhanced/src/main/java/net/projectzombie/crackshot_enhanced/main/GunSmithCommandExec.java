@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.GunSmithController;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,10 +28,9 @@ public class GunSmithCommandExec implements CommandExecutor
 			return true;
 		
         final Player sender = (Player)cs;
-        final ItemStack itemInHand = sender.getItemInHand();
         int price;
         
-		if (cmd.getName().equalsIgnoreCase("gunsmith"))
+		if (cmd.getName().equalsIgnoreCase("gunsmith") || cmd.getName().equalsIgnoreCase("gs"))
         {
             if (args.length >= 2)
             {
@@ -54,10 +54,10 @@ public class GunSmithCommandExec implements CommandExecutor
                 else if (args[0].equalsIgnoreCase("upgrade"))
                 {
                     if (args[1].equalsIgnoreCase("weapon"))
-                       GunSmithController.upgradeWeapon(sender);
+                       GunSmithController.upgradeBuildWeapon(sender);
                     else if (args[1].equalsIgnoreCase("price"))
                     {
-                        price = GunSmithController.upgradePrice(sender);
+                        price = GunSmithController.upgradeBuildPrice(sender);
                         if (price < 0)
                             sender.sendMessage("Cannot upgrade an item that is not a gun!");
                         else if (price == 0)
@@ -70,11 +70,20 @@ public class GunSmithCommandExec implements CommandExecutor
                 }
                 else if (args[0].equalsIgnoreCase("mod"))
                 {
-                    if (args[1].equalsIgnoreCase("add") && args.length > 3)
+                    if (args[1].equalsIgnoreCase("buy") && args.length >= 3)
                     {
-                        if (args[2].equalsIgnoreCase("scope"))
-                            GunSmithController.addModification(sender, Mod.ModType.SCOPE);
+                        for (ModType mod : ModType.values())
+                            if (mod.toString().toLowerCase().contains(args[2].toLowerCase()))
+                            {
+                                GunSmithController.addModification(sender, mod);
+                                return true;
+                            }
+                        GunSmithController.listModifications(sender);
                     }
+                    else if (args[1].equalsIgnoreCase("list"))
+                        GunSmithController.listModifications(sender);
+                    else
+                        listCommands(sender);
                 }
                 else
                     listCommands(sender);
@@ -91,7 +100,8 @@ public class GunSmithCommandExec implements CommandExecutor
         sender.sendMessage("/gunsmith repair price");
         sender.sendMessage("/gunsmith upgrade weapon");
         sender.sendMessage("/gunsmith upgrade price");
-        sender.sendMessage("TEST /gunsmith mod add scope");
+        sender.sendMessage("/gunsmith mod list");
+        sender.sendMessage("/gunsmith mod buy <modification>");
     }
     
 }

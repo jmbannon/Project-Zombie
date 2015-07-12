@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.utilities;
+package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
 import java.nio.charset.Charset;
  

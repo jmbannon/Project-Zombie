@@ -28,6 +28,8 @@ public class Main extends JavaPlugin
         this.decay = new ShootListener();
 		
 		this.getCommand("gunsmith").setExecutor(gunsmithExec);
+        this.getCommand("gs").setExecutor(gunsmithExec);
+        
 		this.getServer().getPluginManager().registerEvents(scope, this);
         this.getServer().getPluginManager().registerEvents(decay, this);
 		

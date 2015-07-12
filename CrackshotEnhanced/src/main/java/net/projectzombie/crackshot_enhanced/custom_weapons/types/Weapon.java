@@ -15,14 +15,14 @@ import org.bukkit.ChatColor;
  */
 public enum Weapon implements Type
 {
-    PISTOL          (0, 1.1, 90,  0.450, "Pistol Bullets"),
-    REVOLVER        (1, 1.3, 150, 1.376, "Revolver Rounds"),
-    HUNTING_RIFLE   (2, 1.5, 130, 2.105, "Hunting Rifle Bullets"),
-    SHOTGUN         (3, 1.3, 120, 0.333, "Shotgun Shells"),
-    SMG             (4, 1.4, 120, 0.521, "SMG Rounds"),
-    ASSAULT_RIFLE   (5, 1.6, 180, 0.846, "Assault Rifle Bullets"),
-    AUTO_SNIPER     (6, 2.4, 230, 1.124, "Auto-Sniper Rounds"),
-    SNIPER          (7, 2.7, 250, 2.105, "Sniper Bullets");
+    PISTOL    (0, 1.1, 90,  0.450, "Pistol Bullets"),
+    REVOLVER  (1, 1.3, 150, 1.376, "Revolver Rounds"),
+    HUNTING   (2, 1.5, 130, 2.105, "Hunting Rifle Bullets"),
+    SHOTGUN   (3, 1.3, 120, 0.333, "Shotgun Shells"),
+    SMG       (4, 1.4, 120, 0.521, "SMG Rounds"),
+    ASSAULT   (5, 1.6, 180, 0.846, "Assault Rifle Bullets"),
+    AUTO_S    (6, 2.4, 230, 1.124, "Auto-Sniper Rounds"),
+    SNIPER    (7, 2.7, 250, 2.105, "Sniper Bullets");
     
     private static final String TITLE = "Ammo: ";
     

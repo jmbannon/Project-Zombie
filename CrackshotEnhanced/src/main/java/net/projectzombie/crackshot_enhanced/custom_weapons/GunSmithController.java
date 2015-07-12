@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
+import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
@@ -20,28 +21,57 @@ import org.bukkit.inventory.PlayerInventory;
 public class GunSmithController
 {
     static
-    public void addModification(final Player player,
-                                final ModType mod)
+    public void listModifications(final Player player)
+    {
+        final Gun currentGun = Gun.getGun(player.getItemInHand());
+        if (currentGun == null)
+        {
+            player.sendMessage("Modifications are not available for items that are not guns!");
+            return;
+        }
+        
+        final String[] list = currentGun.getModifiedList();
+        for (String modificationPrice : list)
+            player.sendMessage(modificationPrice);
+    }
+    
+    static
+    public boolean addModification(final Player player,
+                                   final ModType mod)
     {
         final Gun newGun, currentGun = Gun.getGun(player.getItemInHand());
+        final ItemStack newGunItem;
+        final int price = mod.getPrice();
+        
         if (currentGun == null)
         {
             player.sendMessage("Cannot modify an item that is not a gun!");
-            return;
+            return false;
         }
         
-        newGun = currentGun.getModification(mod);
+        newGun = currentGun.getModifiedGun(mod);
         if (newGun == null)
         {
-            player.sendMessage(mod.getName() + " is not available for this weapon.");
-            return;
+            player.sendMessage(mod.toString() + " is not available for this weapon.");
+            return false;
+        }
+        if ((newGunItem = CrackshotLore.getModifiedGunItem(player.getItemInHand(), newGun)) == null)
+        {
+            player.sendMessage("CSUtility says its null bro");
+            return false;
         }
         
-        if (CrackshotLore.getModifiedGunItem(player.getItemInHand(), newGun) == null)
-            player.sendMessage("CSUtility says its null bro");
+        if (canAfford(player, price))
+        {
+            purchase(player, price);
+            player.setItemInHand(newGunItem);
+            player.updateInventory();
+            player.sendMessage(mod.toString() + " purchased for $" + price + ".");
+        }
+        else
+            player.sendMessage("You need $" + (price - getTotalMoney(player)) + " for that!");
         
-        player.setItemInHand(CrackshotLore.getModifiedGunItem(player.getItemInHand(), newGun));
-        player.updateInventory();
+        return true;
     }
     
     static
@@ -72,9 +102,9 @@ public class GunSmithController
     }
     
     static
-    public void upgradeWeapon(final Player player)
+    public void upgradeBuildWeapon(final Player player)
     { 
-        final int upgradePrice = upgradePrice(player);
+        final int upgradePrice = upgradeBuildPrice(player);
         
         if (upgradePrice < 0)
             player.sendMessage("Cannot upgrade an item that is not a gun!");
@@ -90,7 +120,7 @@ public class GunSmithController
     }
     
     static
-    public int upgradePrice(final Player player)
+    public int upgradeBuildPrice(final Player player)
     {
         final ItemStack weaponInHand = player.getInventory().getItemInHand();
         final Gun gun = Gun.getGun(CrackshotLore.getWeaponID(weaponInHand));
