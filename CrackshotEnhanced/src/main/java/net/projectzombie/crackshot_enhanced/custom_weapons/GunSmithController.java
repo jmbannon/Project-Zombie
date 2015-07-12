@@ -5,7 +5,6 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
-import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
