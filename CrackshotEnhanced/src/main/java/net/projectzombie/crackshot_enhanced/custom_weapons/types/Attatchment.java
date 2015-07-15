@@ -9,17 +9,20 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  *
  * @author jbannon
  */
-public enum Suppressor implements Type
+public enum Attatchment implements Type
 {
-    NA (0, "Not Available"),
-    ON (1, "On"),
-    OFF(2, "Off");
+    NA   (0, "None"),  
+    SUP (1, "Suppressor"),
+    SAW  (2, "Sawed-Off"),
+    LUB  (3, "Lubed-Bolt"),
+    EXT  (4, "Extended Mag"),
+    REL  (5, "Fast-Mag");
     
     private final int enumValue;
     private final String value;
-    private static final String title = "Suppressor: ";
+    private static final String title = "Attatchment: ";
     
-    Suppressor(final int enumValue,
+    Attatchment(final int enumValue,
                final String value)
     {
         this.enumValue = enumValue;

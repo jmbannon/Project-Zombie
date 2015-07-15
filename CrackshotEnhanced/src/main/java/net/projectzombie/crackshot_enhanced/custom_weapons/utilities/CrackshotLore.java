@@ -12,7 +12,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Suppressor;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -314,7 +314,7 @@ public class CrackshotLore
     static
     private String buildSuppressorLore(final Gun gun)
     {
-        return buildLoreString(Suppressor.getTitle(), gun.getSuppressorType().toString());
+        return buildLoreString(Attatchment.getTitle(), gun.getSuppressorType().toString());
     }
     
     static

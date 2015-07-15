@@ -3,6 +3,7 @@ package net.projectzombie.crackshot_enhanced.main;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.custom_weapons.ShootListener;
 import net.projectzombie.crackshot_enhanced.custom_weapons.ScopeZoomListener;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunAccess;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -17,12 +18,12 @@ public class Main extends JavaPlugin
 	@Override
 	public void onEnable()
     {
-            this.window = new BlockBreakListener();
-            this.OPexec = new OPCommandExec(this);
-            this.getCommand("bw").setExecutor(OPexec);
-            this.getServer().getPluginManager().registerEvents(window, this);
+        GunAccess.initilize();
+        this.window = new BlockBreakListener();
+        this.OPexec = new OPCommandExec(this);
+        this.getCommand("bw").setExecutor(OPexec);
+        this.getServer().getPluginManager().registerEvents(window, this);
 
-        
         this.gunsmithExec = new GunSmithCommandExec();
 		this.scope = new ScopeZoomListener();
         this.decay = new ShootListener();

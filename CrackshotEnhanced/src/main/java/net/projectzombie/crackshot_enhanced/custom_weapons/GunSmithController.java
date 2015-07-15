@@ -19,6 +19,7 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class GunSmithController
 {
+    
     static
     public void listModifications(final Player player)
     {
