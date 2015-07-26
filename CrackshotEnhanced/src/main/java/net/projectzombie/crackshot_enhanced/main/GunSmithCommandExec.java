@@ -6,13 +6,11 @@
 package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.GunSmithController;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *

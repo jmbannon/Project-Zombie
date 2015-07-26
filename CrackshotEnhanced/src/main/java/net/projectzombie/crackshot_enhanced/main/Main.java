@@ -9,30 +9,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin
 {
-	private BlockBreakListener window;
-	private ScopeZoomListener scope;
-	private OPCommandExec OPexec;
+	private BlockBreakListener  windowListener;
+	private ScopeZoomListener   scopeListener;
+	private OPCommandExec       OPexec;
     private GunSmithCommandExec gunsmithExec;
-    private ShootListener decay;
+    private ShootListener       shootListener;
 	
 	@Override
 	public void onEnable()
     {
-        GunAccess.initilize();
-        this.window = new BlockBreakListener();
+        this.windowListener = new BlockBreakListener();
         this.OPexec = new OPCommandExec(this);
         this.getCommand("bw").setExecutor(OPexec);
-        this.getServer().getPluginManager().registerEvents(window, this);
+        this.getServer().getPluginManager().registerEvents(windowListener, this);
 
         this.gunsmithExec = new GunSmithCommandExec();
-		this.scope = new ScopeZoomListener();
-        this.decay = new ShootListener();
+		this.scopeListener = new ScopeZoomListener();
+        this.shootListener = new ShootListener();
 		
 		this.getCommand("gunsmith").setExecutor(gunsmithExec);
         this.getCommand("gs").setExecutor(gunsmithExec);
         
-		this.getServer().getPluginManager().registerEvents(scope, this);
-        this.getServer().getPluginManager().registerEvents(decay, this);
+		this.getServer().getPluginManager().registerEvents(scopeListener, this);
+        this.getServer().getPluginManager().registerEvents(shootListener, this);
 		
 		this.getLogger().info("CrackshotEnhanced enabled!");
 
@@ -41,7 +40,7 @@ public class Main extends JavaPlugin
 	@Override
 	public void onDisable()
     {
-		this.scope.disable();
+		this.scopeListener.disable();
 		this.getLogger().info("CrackshotEnhanced disabled.");
 	}	
 }

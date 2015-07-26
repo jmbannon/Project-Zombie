@@ -9,6 +9,7 @@ import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,7 +68,10 @@ public class ShootListener implements Listener
             event.setCancelled(true);
         }
         else
+        {
+            Bukkit.broadcastMessage("" + bulletSpread);
             event.setBulletSpread(bulletSpread);
+        }
     }
     
     /**

@@ -5,7 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import org.bukkit.Bukkit;
 
 /**
  *
@@ -13,19 +14,25 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
  */
 public class GunAccess
 {
-    static private Gun guns[];
+    static private CrackshotGun guns[] = null;
     
     static
     public void initilize()
     {
-        guns = new Gun[Gun.values().length];
-        for (Gun gun : Gun.values())
+        if (guns != null) return;
+
+        final CrackshotGun CrackshotGuns[] = CrackshotGun.values();
+        Bukkit.broadcastMessage("" + CrackshotGuns.length);
+        guns = new CrackshotGun[CrackshotGuns.length];
+        
+        for (CrackshotGun gun : CrackshotGuns)
             guns[gun.getEnumValue()] = gun;
     }
     
     static
-    public Gun get(final int gunID)
+    public CrackshotGun get(final int gunID)
     {
+        initilize();
         return (gunID >= 0 && gunID < guns.length) ? guns[gunID] : null;
     }
 }

@@ -12,8 +12,8 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 public enum Attatchment implements Type
 {
     NA   (0, "None"),  
-    SUP (1, "Suppressor"),
-    SAW  (2, "Sawed-Off"),
+    SUP  (1, "Suppressor"),
+    SO   (2, "Sawed-Off"),
     LUB  (3, "Lubed-Bolt"),
     EXT  (4, "Extended Mag"),
     REL  (5, "Fast-Mag");

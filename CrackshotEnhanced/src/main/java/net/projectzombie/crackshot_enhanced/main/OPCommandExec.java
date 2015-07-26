@@ -2,6 +2,8 @@ package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
+import net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator.YAMLGenerator;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,8 +34,11 @@ public class OPCommandExec implements CommandExecutor
         
 		if (cmd.getName().equalsIgnoreCase("bw") && args.length > 0)
         {
+            Bukkit.broadcastMessage(args[0]);
             if (args[0].equalsIgnoreCase("lore"))
                 this.loreCommands(sender, args);
+            else if (args[0].equalsIgnoreCase("yaml"))
+                YAMLGenerator.generateDefaultWeapons(plugin);
             else
                 this.commandList(sender);
 		}

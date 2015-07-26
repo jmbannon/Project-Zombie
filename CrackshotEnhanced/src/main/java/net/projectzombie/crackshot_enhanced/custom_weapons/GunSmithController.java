@@ -5,7 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Gun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.Material;
@@ -23,7 +23,7 @@ public class GunSmithController
     static
     public void listModifications(final Player player)
     {
-        final Gun currentGun = Gun.getGun(player.getItemInHand());
+        final CrackshotGun currentGun = CrackshotGun.getGun(player.getItemInHand());
         if (currentGun == null)
         {
             player.sendMessage("Modifications are not available for items that are not guns!");
@@ -39,7 +39,7 @@ public class GunSmithController
     public boolean addModification(final Player player,
                                    final ModType mod)
     {
-        final Gun newGun, currentGun = Gun.getGun(player.getItemInHand());
+        final CrackshotGun newGun, currentGun = CrackshotGun.getGun(player.getItemInHand());
         final ItemStack newGunItem;
         final int price = mod.getPrice();
         
@@ -96,7 +96,7 @@ public class GunSmithController
     public int repairPrice(final Player player)
     {
         final ItemStack weaponInHand = player.getInventory().getItemInHand();
-        final Gun gun = Gun.getGun(CrackshotLore.getWeaponID(weaponInHand));
+        final CrackshotGun gun = CrackshotGun.getGun(CrackshotLore.getWeaponID(weaponInHand));
         
         return gun == null || !CrackshotLore.isPostShotWeapon(player.getItemInHand()) ? -1 : gun.getRepairPrice(weaponInHand);
     }
@@ -123,7 +123,7 @@ public class GunSmithController
     public int upgradeBuildPrice(final Player player)
     {
         final ItemStack weaponInHand = player.getInventory().getItemInHand();
-        final Gun gun = Gun.getGun(CrackshotLore.getWeaponID(weaponInHand));
+        final CrackshotGun gun = CrackshotGun.getGun(CrackshotLore.getWeaponID(weaponInHand));
         
         return gun == null ? -1 : gun.getUpgradePrice(weaponInHand);
     }
