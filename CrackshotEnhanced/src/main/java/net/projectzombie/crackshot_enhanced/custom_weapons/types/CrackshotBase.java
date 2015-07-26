@@ -37,7 +37,7 @@ public enum CrackshotBase
     UMP45 ("Ump 45", SMG, 351, 10, 6, 120, 8, 0, "SLIME_WALK-6-1-1",   "BAT_HURT-1-1-1", null, 30, 40, "WITHER_IDLE-1-1-0"),
     P90   ("P90",    SMG, 351, 7,  4, 120, 8, 0, "SKELETON_WALK-6-1-0", null,            null, 50, 40, "WITHER_IDLE-1-1-0"),
     MP5   ("MP5",    SMG, 285, 0,  5, 120, 8, 0, "BAT_DEATH-6-1-1",    "BAT_HURT-1-1-1", null, 30, 40, "WITHER_IDLE-1-1-0"),
-    TMP   ("TMP",    SMG, 284, 0,  4, 120, 8, 0, "BAT_HURT-1-1-1",     "BAT_HURT-1-1-1", null, 30, 30, "WITHER_IDLE-1-1-0"),
+    TMP   ("TMP",    SMG, 284, 0,  4, 120, 8, 0, "SLIME_ATTACK-5-1-0", "BAT_HURT-1-1-1", null, 30, 30, "WITHER_IDLE-1-1-0"),
     
     
     SG552 ("SG552", ASSAULT, 351, 11, 5, 120, 10, 0, "ENDERDRAGON_DEATH-6-1-1", null,             null, 30, 45, "WITHER_SHOOT-1-1-0"),
