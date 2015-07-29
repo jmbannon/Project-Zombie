@@ -17,9 +17,9 @@ import org.bukkit.ChatColor;
  *
  * @author jbannon
  */
-public class ItemInformation
+public class ItemInformationGen
 {
-    private ItemInformation() { /* Do nothing */ }
+    private ItemInformationGen() { /* Do nothing */ }
     
     static
     protected String getItemName(final CrackshotGun gun)

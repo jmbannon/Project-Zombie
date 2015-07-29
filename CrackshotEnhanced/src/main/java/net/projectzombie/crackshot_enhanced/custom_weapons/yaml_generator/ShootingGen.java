@@ -6,6 +6,8 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment.INC;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment.SO;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotBase;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
@@ -16,7 +18,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
  *
  * @author jbannon
  */
-public class Shooting
+public class ShootingGen
 {
     static
     protected String getSoundsShoot(final CrackshotGun gun)
@@ -50,8 +52,26 @@ public class Shooting
     }
     
     static
+    protected int getProjectileAmount(final CrackshotGun gun)
+    {
+        final int projectileAmount = gun.getWeaponType().getProjectileAmount();
+        return (GunUtils.isShotgun(gun) && gun.getAttatchment().equals(SO)) ?
+            projectileAmount*2 : projectileAmount;
+    }
+    
+    static
     protected String getRemovalOrDragDelay(final CrackshotGun gun)
     {
-        return (GunUtils.isShotgun(gun)) ? "13-true" : null;
+        if (GunUtils.isShotgun(gun))
+            return (gun.getAttatchment().equals(SO)) ? "7-true" : "13-true";
+        else
+            return null;
+    }
+    
+    static
+    protected int getDamage(final CrackshotGun gun)
+    {
+        final int damage = gun.getBase().getDamage();
+        return (gun.getAttatchment().equals(INC)) ? (damage * 4)/3 : damage;
     }
 }

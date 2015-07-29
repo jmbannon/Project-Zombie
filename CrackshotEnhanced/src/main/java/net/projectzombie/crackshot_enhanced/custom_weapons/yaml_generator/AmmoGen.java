@@ -12,9 +12,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
  *
  * @author jbannon
  */
-public class Ammo
+public class AmmoGen
 {
-    private Ammo() { /* Do nothing */ }
+    private AmmoGen() { /* Do nothing */ }
     
     static
     protected String getAmmoID(final CrackshotGun gun)

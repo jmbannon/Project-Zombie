@@ -5,7 +5,6 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
-import org.bukkit.Bukkit;
 
 /**
  *
@@ -13,8 +12,6 @@ import org.bukkit.Bukkit;
  */
 public class Mod implements Comparable<Mod>
 {
-
-    
     public enum ModType implements Type
     {
         NA_       (0,  "N/A",                    0),
@@ -29,7 +26,9 @@ public class Mod implements Comparable<Mod>
         SO_       (9,  "Sawed-Off",              45),
         LUB_      (10, "Lubed-Bolt",             45),
         EXT_      (11, "Extended Mag",           45),
-        REL_      (12, "Fast-Mags",              45);
+        REL_      (12, "Fast-Mags",              45),
+        INC_      (13, "Incendiary Rounds",      120),
+        GRA_      (14, "Grave-Spawn",            200);
 
         private final int enumValue;
         private final String name;
@@ -58,6 +57,8 @@ public class Mod implements Comparable<Mod>
             case LUB: return LUB_;
             case EXT: return EXT_;
             case REL: return REL_;
+            case INC: return INC_;
+            case GRA: return GRA_;
             default:  return NA_;
             }
         }

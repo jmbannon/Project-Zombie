@@ -11,9 +11,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
  *
  * @author jbannon
  */
-public class Scope
+public class ScopeGen
 {
-    private Scope() { /* Do nothing */ }
+    private ScopeGen() { /* Do nothing */ }
     
     static
     protected int getZoomAmount(final CrackshotGun gun)

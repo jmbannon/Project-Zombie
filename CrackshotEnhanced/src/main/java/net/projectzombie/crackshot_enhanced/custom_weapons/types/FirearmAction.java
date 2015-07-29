@@ -11,7 +11,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  */
 public enum FirearmAction
 {
-
     SNIPER_BOLT  ("bolt",  "VILLAGER_DEATH-1-1-0", "VILLAGER_HAGGLE-1-1-0",    20, 16, 6,  false),
     HUNTING_BOLT ("bolt",  "VILLAGER_DEATH-1-1-0", "VILLAGER_HAGGLE-1-1-0",    20, 16, 6,  true),
     SMG_SLIDE    ("slide", null,                   null,                       0,  7,  11, false),

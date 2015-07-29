@@ -16,7 +16,9 @@ public enum Attatchment implements Type
     SO   (2, "Sawed-Off"),
     LUB  (3, "Lubed-Bolt"),
     EXT  (4, "Extended Mag"),
-    REL  (5, "Fast-Mag");
+    REL  (5, "Fast-Mag"),
+    INC  (6, "Incendiary"),
+    GRA  (7, "Grave-Spawn");
     
     private final int enumValue;
     private final String value;

@@ -14,7 +14,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -148,14 +147,14 @@ public class CrackshotLore
         final int durability, condition, newCondition, build;
         String infoSplit[] = getInfoSplit(lore);
         
-        CrackshotGun gun = CrackshotGun.getGun(Integer.valueOf(INFO_ID_IDX));
+        CrackshotGun gun = GunAccess.get(Integer.valueOf(INFO_ID_IDX));
         if (gun == null)
         {
             return -1;
         }
 
         durability = Integer.valueOf(infoSplit[INFO_DUR_IDX]) - 1;
-        Bukkit.broadcastMessage("" + durability);
+        //Bukkit.broadcastMessage("" + durability);
         if (durability < 0) // Gun is already broken
             return 0;
 
@@ -172,7 +171,7 @@ public class CrackshotLore
         }
 
         lore.set(INFO_IDX, rebuildInfoLore(infoSplit));
-        Bukkit.broadcastMessage("" + getBulletSpread(gun, eventBulletSpread, newCondition, build));
+        //Bukkit.broadcastMessage("" + getBulletSpread(gun, eventBulletSpread, newCondition, build));
         return getBulletSpread(gun, eventBulletSpread, newCondition, build);
     }
     
