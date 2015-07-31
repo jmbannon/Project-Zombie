@@ -22,7 +22,6 @@ package net.projectzombie.block_buffer.main;
 
 import java.io.File;
 import net.projectzombie.block_buffer.buffer.Buffer;
-import net.projectzombie.block_buffer.buffer.Utilities;
 import net.projectzombie.block_buffer.controller.RestoreController;
 import org.bukkit.plugin.java.JavaPlugin;
 
