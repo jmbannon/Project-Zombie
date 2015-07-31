@@ -6,7 +6,6 @@
 package net.projectzombie.custom_interactions.custom_items;
 
 import net.projectzombie.custom_interactions.listeners.Utilities;
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,8 +18,8 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author jbannon
  */
-public abstract class CustomItem {
-    
+public abstract class CustomItem
+{
     private final Material itemType, blockTypeOne, blockTypeTwo;
     private final short maxDurability, blockWear, entityWear;
     private final double entityDamage;

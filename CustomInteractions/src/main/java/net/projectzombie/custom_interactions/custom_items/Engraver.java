@@ -43,15 +43,8 @@ public class Engraver extends CustomItem
             ItemMeta meta = inHand.getItemMeta();
             if (meta.getDisplayName().startsWith(String.valueOf(ChatColor.YELLOW)))
             {
-                String[] split = meta.getDisplayName().split(String.valueOf(ChatColor.YELLOW));
-                StringBuilder stb = new StringBuilder();
-                stb.append(ChatColor.YELLOW);
-                stb.append(ChatColor.translateAlternateColorCodes('&', name));
-                stb.append(ChatColor.YELLOW);
-                for (int i = 2; i < split.length; i++)
-                    stb.append(split[i]);
-                
-                meta.setDisplayName(stb.toString());
+                player.sendMessage("Sorry, you cannot engrave guns due to Minecraft's restrictions :/");
+                return false;
             }
             else
                 meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
