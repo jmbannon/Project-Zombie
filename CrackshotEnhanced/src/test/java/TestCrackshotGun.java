@@ -17,12 +17,10 @@ import org.junit.BeforeClass;
  */
 public class TestCrackshotGun extends TestCase
 {
-    
     public TestCrackshotGun()
     {
         
     }
-    
     
     public void testUniqueIDs()
     {
