@@ -25,7 +25,6 @@ public class Buffer
     public static void initialize(final Plugin plugin)
     {
         Utilities.plugin = plugin;
-        
     }
     
     public static String[] getBlockPlacedBuffer() { return Serialize.deserializeBuffer(Main.BLOCK_PLACED_BUFFER); }
@@ -55,12 +54,15 @@ public class Buffer
     private static boolean writeToBuffer(final File buffer,
                                          final Block theBlock)
     {
-        try {
+        try
+        {
             final FileWriter blockWriter = new FileWriter(buffer, true);  
             blockWriter.append(Serialize.serialize(theBlock));
             blockWriter.close();
             return true;
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
