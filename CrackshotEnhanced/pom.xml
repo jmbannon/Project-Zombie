@@ -27,27 +27,27 @@
 <dependencies>
     <dependency>
         <groupId>org.spigotmc</groupId>
-        <artifactId>spigot</artifactId>
-        <version>1.8.6-R0.1-SNAPSHOT</version>
-        <type>jar</type>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.spigotmc</groupId>
         <artifactId>spigot-api</artifactId>
         <version>1.8.6-R0.1-SNAPSHOT</version>
         <type>jar</type>
         <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>CrackshotGuns</groupId>
-        <artifactId>import</artifactId>
-      <version>0.01</version>
-    </dependency>
-    <dependency>
         <groupId>BlockBuffer</groupId>
         <artifactId>BlockBuffer</artifactId>
       <version>0.01</version>
+    </dependency>
+    <dependency>
+        <groupId>Crackshot</groupId>
+        <artifactId>Crackshot</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+      <type>jar</type>
     </dependency>
 </dependencies>
     <name>net.projectzombie.crackshot_enhanced</name>
