@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.realistic_zombies.main;
+package net.projectzombie.dynamic_regions.main;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,5 +33,6 @@ public class Main extends JavaPlugin
     public void onDisable()
     {
         this.getLogger().info("Realistic Zombies disabled!");
+        
     }
 }
