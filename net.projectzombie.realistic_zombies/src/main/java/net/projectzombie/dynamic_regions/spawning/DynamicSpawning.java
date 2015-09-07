@@ -7,7 +7,7 @@ package net.projectzombie.dynamic_regions.spawning;
 
 
 import java.util.ArrayList;
-import net.projectzombie.dynamic_regions.utilities.BlockOffset;
+import net.projectzombie.dynamic_regions.utilities.Coordinate;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -22,17 +22,16 @@ public class DynamicSpawning
      * Checks rectangle from two given BlockOffset corners relative to playerLocation
      * for valid spawns.
      * 
-     * @param playerLocation
+     * @param playerBlock
      * @param cornerOne
      * @param cornerTwo
      * @return 
      */
-    static public ArrayList<BlockOffset> getValidSpawnOffsets(final Location playerLocation,
-                                                              final BlockOffset cornerOne,
-                                                              final BlockOffset cornerTwo)
+    static public ArrayList<Coordinate> getValidSpawnOffsets(final Block playerBlock,
+                                                             final Coordinate cornerOne,
+                                                             final Coordinate cornerTwo)
     {
-        final Block playerBlock = playerLocation.getBlock();
-        final ArrayList<BlockOffset> validSpawns = new ArrayList<>();
+        final ArrayList<Coordinate> validSpawns = new ArrayList<>();
         
         Block iterator;
         for (int x = Math.min(cornerOne.getX(), cornerTwo.getX()); x <= Math.max(cornerOne.getX(), cornerTwo.getX()); x++)
@@ -41,7 +40,7 @@ public class DynamicSpawning
                 {
                     iterator = playerBlock.getRelative(x, y, z);
                     if (isValidSpawn(iterator))
-                        validSpawns.add(new BlockOffset(x, y, z));
+                        validSpawns.add(new Coordinate(x, y, z));
                 }
         
         return validSpawns;

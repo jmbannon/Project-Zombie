@@ -38,16 +38,4 @@ public class DynamicRegion
         return false;
     }
     
-    public static Player[] getOnlinePlayers()
-    {
-        final Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
-        
-        Player[] playerArray = new Player[onlinePlayers.size()];
-        int idx = 0;
-        
-        for (Player player : onlinePlayers)
-            playerArray[idx++] = player;
-        
-        return playerArray;
-    }
 }

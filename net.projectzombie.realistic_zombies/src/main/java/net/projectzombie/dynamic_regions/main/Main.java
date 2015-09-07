@@ -16,17 +16,15 @@ public class Main extends JavaPlugin
     @Override
     public void onEnable()
     {
-//        this.getDataFolder().mkdir();
-//        Utilities.initialize(this);
-//        commandExecutor = new CommandExec();
-//        blockListener = new BlockListener();
-//        toolListener = new ToolListener();
-//        
-//        this.getCommand("bp").setExecutor(commandExecutor);
-//        this.getCommand("engrave").setExecutor(commandExecutor);
-//        this.getServer().getPluginManager().registerEvents(blockListener, this);
-//        this.getServer().getPluginManager().registerEvents(toolListener, this);
-//        this.getLogger().info("Placable Blocks enabled!");
+        /*
+        TODO:
+        
+        SksycraperSpawns
+        Recurrent checking
+        Multithreading (p/player)
+        HARDCORE: Machine Learning spawn offsets
+        
+        */
     }
 
     @Override

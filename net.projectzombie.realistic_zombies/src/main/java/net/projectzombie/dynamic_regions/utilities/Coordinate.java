@@ -5,15 +5,18 @@
  */
 package net.projectzombie.dynamic_regions.utilities;
 
+import org.bukkit.World;
+import org.bukkit.block.Block;
+
 /**
  *
  * @author jbannon
  */
-public class BlockOffset
+public class Coordinate
 {
     private final int x, y, z;
     
-    public BlockOffset(final int x,
+    public Coordinate(final int x,
                        final int y,
                        final int z)
     {
@@ -26,4 +29,14 @@ public class BlockOffset
     public int getY() { return y; }
     public int getZ() { return z; }
     
+    
+    public Block toBlock(final World world)
+    {
+        return world.getBlockAt(x, y, z);
+    }
+    
+    public Block toBlockOffset(final Block block)
+    {
+        return block.getRelative(x, y, z);
+    }
 }
