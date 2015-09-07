@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.dynamic_regions.regions.modules;
+package net.projectzombie.dynamic_regions.regions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import net.projectzombie.dynamic_regions.spawning.DynamicSpawning;
@@ -33,9 +34,10 @@ public class FlatSpawns extends RegionModule
       RECT_4 = getVerticalRectangle(false);
    
     
-    public FlatSpawns(final String regionName)
+    public FlatSpawns(final String regionName,
+                      final int frequency)
     {
-        super(regionName, 120);
+        super(regionName, frequency);
     }
 
     @Override
@@ -56,18 +58,16 @@ public class FlatSpawns extends RegionModule
     static private LinkedList<Coordinate> getValidSpawns(final Block playerLoc)
     {
         final LinkedList<Coordinate> validSpawns = new LinkedList<>();
+        final ArrayList<Player> players = PlayerMethods.getOnlinePlayers();
         
         validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_1[0], RECT_1[1]));
         validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_2[0], RECT_2[1]));
         validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_3[0], RECT_3[1]));
         validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_4[0], RECT_4[1]));
         
-        final Player players[] = PlayerMethods.getOnlinePlayers();
-        
         for (Coordinate spawn : validSpawns)
             if (!isPlayerSafe(playerLoc, players, spawn))
                 validSpawns.remove(spawn);
-        
         
         Collections.shuffle(validSpawns);
         
@@ -75,7 +75,7 @@ public class FlatSpawns extends RegionModule
     }
     
     static private boolean isPlayerSafe(final Block playerBlock,
-                                        final Player players[],
+                                        final ArrayList<Player> players,
                                         final Coordinate offset)
     {
         final Block blockOffset = offset.toBlockOffset(playerBlock);

@@ -5,10 +5,9 @@
  */
 package net.projectzombie.dynamic_regions.utilities;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -17,43 +16,24 @@ import org.bukkit.entity.Player;
  */
 public class PlayerMethods
 {
-    static final private LinkedList<Coordinate> trail = new LinkedList<>();
-    static final private int 
-        PLAYER_RECORD_COUNT = 20,
-        WAIT_DURATION       = 30; 
-        
+    static private final ArrayList<Player> onlinePlayers = new ArrayList<>();
     
-    static public void updateTrailList()
+    public static ArrayList<Player> getOnlinePlayers()
     {
-        final Player players[] = getOnlinePlayers();
-        trimTrailList(players.length);
+        final Collection<? extends Player> currentlyOnline = Bukkit.getServer().getOnlinePlayers();
         
-        Block playerBlock;
-        for (Player player : players)
+        for (int i = 0; i < onlinePlayers.size(); i++)
         {
-            playerBlock = player.getLocation().getBlock();
-            trail.add(new Coordinate(playerBlock.getX(), playerBlock.getY(), playerBlock.getZ()));
+            if (!onlinePlayers.get(i).isOnline())
+                onlinePlayers.remove(i);
         }
-    }
-    
-    static private void trimTrailList(final int playerCount)
-    {
-        final int trailLimit = playerCount * PLAYER_RECORD_COUNT;
-        while (trail.size() > trailLimit)
-            trail.removeFirst();
-    }
-    
-    
-    public static Player[] getOnlinePlayers()
-    {
-        final Collection<? extends Player> onlinePlayers = Bukkit.getServer().getOnlinePlayers();
         
-        Player[] playerArray = new Player[onlinePlayers.size()];
-        int idx = 0;
+        for (Player player : currentlyOnline)
+        {
+            if (!onlinePlayers.contains(player))
+                onlinePlayers.add(player);
+        }
         
-        for (Player player : onlinePlayers)
-            playerArray[idx++] = player;
-        
-        return playerArray;
+        return onlinePlayers;
     }
 }
