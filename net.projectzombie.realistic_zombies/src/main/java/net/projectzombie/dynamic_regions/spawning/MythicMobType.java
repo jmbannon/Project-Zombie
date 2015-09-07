@@ -17,7 +17,6 @@ public enum MythicMobType
 {
     TEST_ZOMBIE("test_zombie");
     
-    
     private final String mobID;
     
     MythicMobType(final String mobID)
@@ -30,7 +29,7 @@ public enum MythicMobType
     public void spawnMythicMob(final Block playerBlock,
                                final Coordinate offset)
     {
-        final Block spawnBlock = playerBlock.getRelative(offset.getX(), offset.getY(), offset.getZ());
+        final Block spawnBlock = offset.toBlockOffset(playerBlock);
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), this.spawnMythicMobCommand(spawnBlock));
     }
     

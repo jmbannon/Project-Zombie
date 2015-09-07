@@ -5,6 +5,8 @@
  */
 package net.projectzombie.dynamic_regions.main;
 
+import net.projectzombie.dynamic_regions.regions.Controller;
+import net.projectzombie.dynamic_regions.utilities.Plugins;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -16,6 +18,10 @@ public class Main extends JavaPlugin
     @Override
     public void onEnable()
     {
+        Plugins.initialize(this);
+        Controller.initiate();
+        this.getLogger().info("DynamicRegions enabled!");
+        
         /*
         TODO:
         
@@ -30,7 +36,6 @@ public class Main extends JavaPlugin
     @Override
     public void onDisable()
     {
-        this.getLogger().info("Realistic Zombies disabled!");
-        
+        this.getLogger().info("DynamicRegions disabled!");
     }
 }
