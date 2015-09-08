@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.dynamic_regions.regions;
+package net.projectzombie.dynamic_regions.modules.spawn_mobs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
-import net.projectzombie.dynamic_regions.spawning.DynamicSpawning;
-import net.projectzombie.dynamic_regions.spawning.MythicMobType;
 import net.projectzombie.dynamic_regions.utilities.Coordinate;
 import net.projectzombie.dynamic_regions.utilities.PlayerMethods;
 import org.bukkit.Location;
@@ -20,7 +19,7 @@ import org.bukkit.entity.Player;
  *
  * @author jbannon
  */
-public class FlatSpawns extends RegionModule
+public class SpawnFlat extends SpawnArea
 {
     static private final int 
       P_WIDTH   = 70,
@@ -34,49 +33,40 @@ public class FlatSpawns extends RegionModule
       RECT_4 = getVerticalRectangle(false);
    
     
-    public FlatSpawns(final String regionName,
-                      final int frequency)
+    public SpawnFlat(final String regionName,
+                     final int frequency)
     {
-        super(regionName, frequency);
+        super(regionName, frequency, 16, null);
     }
-
+    
+    
     @Override
-    public boolean executeModule(final Player player)
-    {
-        
-        final Block playerBlock = player.getLocation().getBlock();
-        final LinkedList<Coordinate> validSpawns = getValidSpawns(playerBlock);
-        
-        for (int i = 0; i < 10; i++)
-            MythicMobType.TEST_ZOMBIE.spawnMythicMob(playerBlock, validSpawns.get(i));
-        
-        return true;
-        
-    }
-    
-    
-    static private LinkedList<Coordinate> getValidSpawns(final Block playerLoc)
+    public LinkedList<Coordinate> getValidSpawns(final Block playerBlock)
     {
         final LinkedList<Coordinate> validSpawns = new LinkedList<>();
         final ArrayList<Player> players = PlayerMethods.getOnlinePlayers();
         
-        validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_1[0], RECT_1[1]));
-        validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_2[0], RECT_2[1]));
-        validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_3[0], RECT_3[1]));
-        validSpawns.addAll(DynamicSpawning.getValidSpawnOffsets(playerLoc, RECT_4[0], RECT_4[1]));
+        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_1[0], RECT_1[1]));
+        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_2[0], RECT_2[1]));
+        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_3[0], RECT_3[1]));
+        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_4[0], RECT_4[1]));
         
-        for (Coordinate spawn : validSpawns)
-            if (!isPlayerSafe(playerLoc, players, spawn))
-                validSpawns.remove(spawn);
+        Iterator<Coordinate> iterator = validSpawns.iterator();
+        while (iterator.hasNext())
+        {
+            if (!isPlayerSafe(playerBlock, players, iterator.next()))
+                iterator.remove();
+        }
         
         Collections.shuffle(validSpawns);
         
         return validSpawns;
     }
     
-    static private boolean isPlayerSafe(final Block playerBlock,
-                                        final ArrayList<Player> players,
-                                        final Coordinate offset)
+    @Override
+    public boolean isPlayerSafe(final Block playerBlock,
+                                final ArrayList<Player> players,
+                                final Coordinate offset)
     {
         final Block blockOffset = offset.toBlockOffset(playerBlock);
         final Location blockLocation = blockOffset.getLocation();

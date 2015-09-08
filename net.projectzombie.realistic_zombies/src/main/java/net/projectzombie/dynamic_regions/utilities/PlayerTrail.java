@@ -6,7 +6,10 @@
 package net.projectzombie.dynamic_regions.utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
+import net.projectzombie.dynamic_regions.world.DRWorld;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -17,12 +20,14 @@ import org.bukkit.entity.Player;
 public class PlayerTrail
 {
     
-    static final private LinkedList<Coordinate> trail = new LinkedList<>();
+    static final private List<Object> trail =  Collections.synchronizedList(new LinkedList<>());
     static final private int 
         PLAYER_RECORD_COUNT = 20,
-        WAIT_DURATION       = 30; 
+        WAIT_DURATION       = 30;
+    
         
-    static public LinkedList<Coordinate> getTrail() { return trail; }
+    static public List<Object> getTrail()          { return trail; }
+    static public int          getFrequencyTicks() { return DRWorld.getTickAmount(WAIT_DURATION); }
     
     static public void updateTrailList()
     {
@@ -41,7 +46,7 @@ public class PlayerTrail
     {
         final int trailLimit = playerCount * PLAYER_RECORD_COUNT;
         while (trail.size() > trailLimit)
-            trail.removeFirst();
+            trail.remove(0);
     }
     
 }
