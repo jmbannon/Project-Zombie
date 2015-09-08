@@ -39,4 +39,10 @@ public class Coordinate
     {
         return block.getRelative(x, y, z);
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Offset: " + this.x + "," + this.y + "," + this.z;
+    }
 }

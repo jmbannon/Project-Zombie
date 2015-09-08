@@ -5,8 +5,7 @@
  */
 package net.projectzombie.dynamic_regions.main;
 
-import net.projectzombie.dynamic_regions.regions.Controller;
-import net.projectzombie.dynamic_regions.utilities.Plugins;
+import net.projectzombie.dynamic_regions.modules.Controller;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -15,18 +14,18 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Main extends JavaPlugin
 {
+    private Controller PZController;
+    
     @Override
     public void onEnable()
     {
-        Plugins.initialize(this);
-        Controller.initiate();
+        PZController = new Controller(this, "PZRebornNew");
         this.getLogger().info("DynamicRegions enabled!");
         
         /*
         TODO:
         
         SksycraperSpawns
-        Recurrent checking
         Multithreading (p/player)
         HARDCORE: Machine Learning spawn offsets
         

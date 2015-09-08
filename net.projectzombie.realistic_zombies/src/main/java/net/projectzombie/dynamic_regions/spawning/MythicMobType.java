@@ -15,7 +15,7 @@ import org.bukkit.block.Block;
  */
 public enum MythicMobType
 {
-    TEST_ZOMBIE("test_zombie");
+    TEST_ZOMBIE("D8_ZOMBIE");
     
     private final String mobID;
     
