@@ -5,12 +5,7 @@
  */
 package net.projectzombie.dynamic_regions.modules.spawn_mobs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import net.projectzombie.dynamic_regions.utilities.Coordinate;
-import net.projectzombie.dynamic_regions.utilities.PlayerMethods;
 import net.projectzombie.dynamic_regions.utilities.PlayerTrail;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,38 +17,20 @@ import org.bukkit.entity.Player;
 public class SpawnSkycraper extends SpawnArea
 {
     static private final int
-      FLOOR_HEIGHT = 6,
-      SPAWN_HEIGHT = 10,
-      P_WIDTH      = 20;
-    
-    static private final Coordinate[] SPAWN_REGION = getVerticalSquare();
+      SPAWN_BASE   = 6,  // Bottom of spawn box relative to above the player.
+      SPAWN_HEIGHT = 10, // Height of spawn box relative from SPAWN_BASE.
+      SPAWN_WIDTH  = 20; // width of spawn box relative to the player.
 
     public SpawnSkycraper(final String regionName,
                           final int frequency)
     {
-        super(regionName, frequency, 6, null);
+        super(regionName, frequency, 6, getSpawnArea(), null);
     }
     
-    @Override
-    public LinkedList<Coordinate> getValidSpawns(final Block playerBlock)
-    {
-        final LinkedList<Coordinate> validSpawns = new LinkedList<>();
-        final ArrayList<Player> players = PlayerMethods.getOnlinePlayers();
-        
-        validSpawns.addAll(getValidSpawnOffsets(playerBlock, SPAWN_REGION[0], SPAWN_REGION[1]));
-        
-        Iterator<Coordinate> iterator = validSpawns.iterator();
-        while (iterator.hasNext())
-            if (!isPlayerSafe(playerBlock, players, iterator.next()))
-                iterator.remove();
-        
-        Collections.shuffle(validSpawns);
-        return validSpawns;
-    }
     
     @Override
     public boolean isPlayerSafe(final Block playerBlock,
-                                 final ArrayList<Player> players,
+                                 final Player[] players,
                                  final Coordinate offset)
     { 
         Coordinate coord;
@@ -63,32 +40,27 @@ public class SpawnSkycraper extends SpawnArea
             if (inPlayerRange(playerBlock, coord.toBlock(playerBlock.getWorld())))
                 return false;
         }
+        
         for (Player player : players)
-        {
             if (inPlayerRange(playerBlock, player.getLocation().getBlock()))
                 return false;
-        }
+        
         return true;
     }
     
-    static private boolean inPlayerRange(final Block playerBlock,
-                                         final Block otherPlayerBlock)
+    static private Coordinate[] getSpawnArea()
     {
-        
-        return (Math.abs(otherPlayerBlock.getX() - playerBlock.getX()) <= P_WIDTH
-                && Math.abs(otherPlayerBlock.getZ() - playerBlock.getZ()) <= P_WIDTH
-                && (otherPlayerBlock.getY() - playerBlock.getY()) > FLOOR_HEIGHT);
+        final int verticalSum = SPAWN_BASE+SPAWN_HEIGHT;
+        return Coordinate.getRectangle(new Coordinate(-SPAWN_WIDTH, SPAWN_BASE, -SPAWN_WIDTH),
+                                       new Coordinate( SPAWN_WIDTH, verticalSum, SPAWN_WIDTH));
     }
     
-    static private Coordinate[] getVerticalSquare()
+    private boolean inPlayerRange(final Block playerBlock,
+                                  final Block otherPlayerBlock)
     {
-        final int verticalSum = FLOOR_HEIGHT+SPAWN_HEIGHT;
         
-        return new Coordinate[] {
-            new Coordinate(-P_WIDTH, FLOOR_HEIGHT, -P_WIDTH),
-            new Coordinate( P_WIDTH, verticalSum,   P_WIDTH)
-        };
+        return (Math.abs(otherPlayerBlock.getX() - playerBlock.getX()) <= SPAWN_WIDTH
+                && Math.abs(otherPlayerBlock.getZ() - playerBlock.getZ()) <= SPAWN_WIDTH
+                && (otherPlayerBlock.getY() - playerBlock.getY()) > SPAWN_BASE);
     }
-    
-    
 }

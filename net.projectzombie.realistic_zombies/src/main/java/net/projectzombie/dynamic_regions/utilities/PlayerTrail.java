@@ -15,24 +15,30 @@ import org.bukkit.entity.Player;
 
 /**
  *
- * @author jesse
+ * @author Jesse Bannon (jmbannon@uw.edu)
+ * 
+ * Stores player's locations every WAIT_DURATION (seconds) PLAYER_RECORD_COUNT times
+ * to the synchronized LinkedList trail.
  */
 public class PlayerTrail
 {
     
     static final private List<Object> trail =  Collections.synchronizedList(new LinkedList<>());
     static final private int 
-        PLAYER_RECORD_COUNT = 20,
-        WAIT_DURATION       = 30;
+        PLAYER_RECORD_COUNT = 20, // Coordinates to store while player is online.
+        WAIT_DURATION       = 30; // Duration inbetween coordinate saves.
     
         
     static public List<Object> getTrail()          { return trail; }
     static public int          getFrequencyTicks() { return DRWorld.getTickAmount(WAIT_DURATION); }
     
+    /**
+     * Stores every player's coordinate location to the LinkedList trail.
+     */
     static public void updateTrailList()
     {
-        final ArrayList<Player> players = PlayerMethods.getOnlinePlayers();
-        trimTrailList(players.size());
+        final Player[] players = PlayerMethods.getOnlinePlayers();
+        flushTrailList(players.length);
         
         Block playerBlock;
         for (Player player : players)
@@ -42,7 +48,12 @@ public class PlayerTrail
         }
     }
     
-    static private void trimTrailList(final int playerCount)
+    /**
+     * Assures the trail LinkedList does not exceed a certain capacity based on
+     * player count. Pops first player coordinates first
+     * @param playerCount 
+     */
+    static private void flushTrailList(final int playerCount)
     {
         final int trailLimit = playerCount * PLAYER_RECORD_COUNT;
         while (trail.size() > trailLimit)

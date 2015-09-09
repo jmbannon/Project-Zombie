@@ -40,21 +40,25 @@ public abstract class RegionModule
     public void executeForAllPlayers(final World world,
                                      final RegionManager WGRegionManager)
     {
-        final ArrayList<Player> onlinePlayers = PlayerMethods.getOnlinePlayers();
+        final Player[] onlinePlayers = PlayerMethods.getOnlinePlayers();
         for (Player player : onlinePlayers)
-            if (player.getWorld().equals(world) && inRegion(WGRegionManager, player))
+        {
+            if (inRegion(WGRegionManager, player) && player.getWorld().equals(world))
                 executeModule(world, player);
+        }
     }
     
     private boolean inRegion(final RegionManager WGRegionManager,
                              final Player player)
-    { 
+    {
+        if (this.regionName.equals("__global__"))
+                return true;
+        
         final ApplicableRegionSet set = WGRegionManager.getApplicableRegions(player.getLocation());
+        
         for (ProtectedRegion region : set)
             if (region.getId().equals(this.regionName))
                 return true;
-            else
-                player.sendMessage("Nope, " + region.getId() + " != " + this.regionName);
         
         return false;
     }

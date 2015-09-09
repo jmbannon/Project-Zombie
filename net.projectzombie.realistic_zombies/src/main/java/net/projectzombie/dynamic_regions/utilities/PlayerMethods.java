@@ -5,7 +5,6 @@
  */
 package net.projectzombie.dynamic_regions.utilities;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,24 +15,19 @@ import org.bukkit.entity.Player;
  */
 public class PlayerMethods
 {
-    static private final ArrayList<Player> onlinePlayers = new ArrayList<>();
-    
-    public static ArrayList<Player> getOnlinePlayers()
+    /**
+     * @return Returns array of online players.
+     */
+    public static Player[] getOnlinePlayers()
     {
         final Collection<? extends Player> currentlyOnline = Bukkit.getServer().getOnlinePlayers();
+        final Player players[] = new Player[currentlyOnline.size()];
         
-        for (int i = 0; i < onlinePlayers.size(); i++)
-        {
-            if (!onlinePlayers.get(i).isOnline())
-                onlinePlayers.remove(i);
-        }
-        
+        int idx = 0;
         for (Player player : currentlyOnline)
-        {
-            if (!onlinePlayers.contains(player))
-                onlinePlayers.add(player);
-        }
+            players[idx++] = player;
         
-        return onlinePlayers;
+        return players;
+
     }
 }

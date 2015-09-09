@@ -5,13 +5,14 @@
  */
 package net.projectzombie.dynamic_regions.modules.spawn_mobs;
 
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import net.projectzombie.dynamic_regions.modules.RegionModule;
 import static net.projectzombie.dynamic_regions.modules.spawn_mobs.CollisionOffsetTests.*;
 import net.projectzombie.dynamic_regions.spawning.MythicMobType;
 import net.projectzombie.dynamic_regions.utilities.Coordinate;
+import net.projectzombie.dynamic_regions.utilities.PlayerMethods;
 import net.projectzombie.dynamic_regions.world.DRWorld;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,14 +24,17 @@ import org.bukkit.entity.Player;
  */
 public abstract class SpawnArea extends RegionModule
 {
+    private final Coordinate spawnArea[];
     private final int spawnLimit;
     
     public SpawnArea(final String regionName,
                      final int frequency,
                      final int spawnCount,
+                     final Coordinate[] spawnArea,
                      final MythicMobType[] mobTypes)
     {
         super(regionName, frequency);
+        this.spawnArea = spawnArea;
         this.spawnLimit = spawnCount;
     }
     
@@ -42,51 +46,60 @@ public abstract class SpawnArea extends RegionModule
         final LinkedList<Coordinate> validSpawns = getValidSpawns(playerBlock);
         
         int spawnCount = Math.min(validSpawns.size(), this.spawnLimit);
-        int i = 0;
-        while (i < spawnCount)
+        for (int i = 0; i < spawnCount; i++)
         {
-            MythicMobType.TEST_ZOMBIE.spawnMythicMob(playerBlock, validSpawns.get(i));
-            DRWorld.getPlugin().getLogger().info("Spawning mob at " + validSpawns.get(i).toString());
-            ++i;
+            Coordinate toSpawn = validSpawns.removeFirst();
+            MythicMobType.TEST_ZOMBIE.spawnMythicMob(playerBlock, toSpawn);
+            DRWorld.getPlugin().getLogger().info("Spawning mob at " + toSpawn.toBlockOffset(playerBlock).toString());
         }
         return true;
     }
+    
+    public LinkedList<Coordinate> getValidSpawns(final Block playerBlock)
+    {
+        return this.getPlayerSafeSpawns(playerBlock, getCollisionSafeSpawns(playerBlock));
+    }
+    
+    abstract public boolean isPlayerSafe(final Block playerBlock,
+                                         final Player[] players,
+                                         final Coordinate offset);
+    
     
     /**
      * Checks rectangle from two given BlockOffset corners relative to playerLocation
      * for valid spawns.
      * 
      * @param playerBlock
-     * @param cornerOne
-     * @param cornerTwo
      * @return 
      */
-    public ArrayList<Coordinate> getValidSpawnOffsets(final Block playerBlock,
-                                                      final Coordinate cornerOne,
-                                                      final Coordinate cornerTwo)
+    private LinkedList<Coordinate> getCollisionSafeSpawns(final Block playerBlock)
     {
-        final ArrayList<Coordinate> validSpawns = new ArrayList<>();
+        final LinkedList<Coordinate> validSpawns = new LinkedList<>();
         
-        Block iterator;
-        for (int x = Math.min(cornerOne.getX(), cornerTwo.getX()); x <= Math.max(cornerOne.getX(), cornerTwo.getX()); x++)
-            for (int y = Math.min(cornerOne.getY(), cornerTwo.getY()); y <= Math.max(cornerOne.getY(), cornerTwo.getY()); y++)
-                for (int z = Math.min(cornerOne.getZ(), cornerTwo.getZ()); z <= Math.max(cornerOne.getZ(), cornerTwo.getZ()); z++)
-                {
-                    iterator = playerBlock.getRelative(x, y, z);
-                    if (isCollisionSafe(iterator))
-                        validSpawns.add(new Coordinate(x, y, z));
-                }
-        
+        Block blockToTest;
+        for (Coordinate coord : this.spawnArea)
+        {
+            blockToTest = coord.toBlockOffset(playerBlock);
+            if (isCollisionSafe(blockToTest))
+                validSpawns.add(coord);
+        }
         return validSpawns;
     }
    
     
-    abstract public LinkedList<Coordinate> getValidSpawns(final Block playerBlock);
-    
-    
-    abstract public boolean isPlayerSafe(final Block playerBlock,
-                                         final ArrayList<Player> players,
-                                         final Coordinate offset);
+    private LinkedList<Coordinate> getPlayerSafeSpawns(final Block playerBlock,
+                                                       final LinkedList<Coordinate> spawnArea)
+    {
+        final Player[] players = PlayerMethods.getOnlinePlayers();
+        
+        Iterator<Coordinate> iterator = spawnArea.iterator();
+        while (iterator.hasNext())
+            if (!isPlayerSafe(playerBlock, players, iterator.next()))
+                iterator.remove();
+
+        Collections.shuffle(spawnArea);
+        return spawnArea;
+    }
     
     private boolean isCollisionSafe(final Block spawnBlock)
     {

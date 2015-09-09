@@ -13,8 +13,10 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
 /**
+ * Parent class for modules to store their world and respective WorldGuard
+ * region manager.
  *
- * @author jesse
+ * @author Jesse Bannon (jmbannon@uw.edu)
  */
 public class DRWorld
 {

@@ -35,7 +35,7 @@ public class Controller extends DRWorld
         DynamicRegions = new ArrayList<>();
         DynamicRegions.add(new SpawnFlat     ("city_base", 60));
         DynamicRegions.add(new SpawnSkycraper("city_skyscrapers", 20));
-        DynamicRegions.add(new ColdFront     ("__global__, ", 80, 1)); //900
+        DynamicRegions.add(new ColdFront     ("__global__", 80, 1)); //900
         
         for (RegionModule region : DynamicRegions)
             scheduleExecution(region);

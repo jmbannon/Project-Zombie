@@ -5,12 +5,7 @@
  */
 package net.projectzombie.dynamic_regions.modules.spawn_mobs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import net.projectzombie.dynamic_regions.utilities.Coordinate;
-import net.projectzombie.dynamic_regions.utilities.PlayerMethods;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -26,46 +21,16 @@ public class SpawnFlat extends SpawnArea
       Z_WIDTH   = 20,
       Z_HEIGHT  = 5;
     
-    static private final Coordinate[] 
-      RECT_1 = getHorizontalRectangle(true),
-      RECT_2 = getHorizontalRectangle(false),
-      RECT_3 = getVerticalRectangle(true),
-      RECT_4 = getVerticalRectangle(false);
-   
-    
     public SpawnFlat(final String regionName,
                      final int frequency)
     {
-        super(regionName, frequency, 16, null);
+        super(regionName, frequency, 16, getSpawnArea(), null);
     }
     
-    
-    @Override
-    public LinkedList<Coordinate> getValidSpawns(final Block playerBlock)
-    {
-        final LinkedList<Coordinate> validSpawns = new LinkedList<>();
-        final ArrayList<Player> players = PlayerMethods.getOnlinePlayers();
-        
-        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_1[0], RECT_1[1]));
-        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_2[0], RECT_2[1]));
-        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_3[0], RECT_3[1]));
-        validSpawns.addAll(getValidSpawnOffsets(playerBlock, RECT_4[0], RECT_4[1]));
-        
-        Iterator<Coordinate> iterator = validSpawns.iterator();
-        while (iterator.hasNext())
-        {
-            if (!isPlayerSafe(playerBlock, players, iterator.next()))
-                iterator.remove();
-        }
-        
-        Collections.shuffle(validSpawns);
-        
-        return validSpawns;
-    }
     
     @Override
     public boolean isPlayerSafe(final Block playerBlock,
-                                final ArrayList<Player> players,
+                                final Player[] players,
                                 final Coordinate offset)
     {
         final Block blockOffset = offset.toBlockOffset(playerBlock);
@@ -82,6 +47,30 @@ public class SpawnFlat extends SpawnArea
         return true;
     }
     
+    static private Coordinate[] getSpawnArea()
+    {
+        final Coordinate[] spawnArea;
+        final Coordinate[][] rectanglesToAdd =
+        {
+          getHorizontalRectangle(true),
+          getHorizontalRectangle(false),
+          getVerticalRectangle(true),
+          getVerticalRectangle(false)
+        };
+
+        int x = 0;
+        for (Coordinate[] rect : rectanglesToAdd)
+            x += rect.length;
+        
+        spawnArea = new Coordinate[x];
+        x = 0;
+        for (Coordinate[] rect : rectanglesToAdd)
+            for (Coordinate coord : rect)
+                spawnArea[x++] = coord;
+        
+        return spawnArea;
+    }
+    
     static private Coordinate[] getHorizontalRectangle(final boolean left)
     {
         final int m = left ? 1 : -1;
@@ -89,7 +78,7 @@ public class SpawnFlat extends SpawnArea
         
         return new Coordinate[] {
             new Coordinate(m*widthSum, 0,       -widthSum),
-            new Coordinate(m*P_WIDTH,  Z_HEIGHT, widthSum)
+            new Coordinate(m * P_WIDTH,  Z_HEIGHT, widthSum)
         };
     }
     
