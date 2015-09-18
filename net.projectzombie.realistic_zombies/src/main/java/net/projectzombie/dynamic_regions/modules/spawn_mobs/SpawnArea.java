@@ -70,7 +70,7 @@ public abstract class SpawnArea extends RegionModule
      * for valid spawns.
      * 
      * @param playerBlock
-     * @return 
+     * @return LinkedList of valid spawns.
      */
     private LinkedList<Coordinate> getCollisionSafeSpawns(final Block playerBlock)
     {
