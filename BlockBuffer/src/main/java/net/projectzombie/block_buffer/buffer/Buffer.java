@@ -6,6 +6,7 @@
 package net.projectzombie.block_buffer.buffer;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,8 +73,8 @@ public class Buffer
     {
         try
         {
-            final FileWriter blockWriter = new FileWriter(file);
-            blockWriter.write("");
+            final FileOutputStream blockWriter = new FileOutputStream(file);
+            blockWriter.write("".getBytes());
             blockWriter.close();
             return true;
         }

@@ -29,7 +29,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 
 /**
  *
@@ -74,14 +73,17 @@ public class Serialize implements Listener {
     public static void deserializeAndSet(final String serializedString) {
         String[] parts = serializedString.split(INFO_SEPERATOR);
         
-        final Block theBlock = Utilities.SERVER.getWorld(parts[0]).getBlockAt(
-                Integer.valueOf(parts[1]), 
-                Integer.valueOf(parts[2]), 
-                Integer.valueOf(parts[3]));
+        final Block theBlock = deserializeGetBlock(parts);
         
-        BlockBreakEvent event = new BlockBreakEvent(theBlock, null);
         theBlock.setType(Material.valueOf(parts[4]));
         theBlock.setData(Byte.valueOf(parts[5]));
+    }
+    
+    public static void deserializeAndSetToAir(final String serializedString) {
+        String[] parts = serializedString.split(INFO_SEPERATOR);
+        
+        final Block theBlock = deserializeGetBlock(parts);
+        theBlock.setType(Material.AIR);
     }
     
     /**
@@ -116,5 +118,13 @@ public class Serialize implements Listener {
             Logger.getLogger(Buffer.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+    
+    static private Block deserializeGetBlock(final String[] parts)
+    {
+        return Utilities.SERVER.getWorld(parts[0]).getBlockAt(
+                Integer.valueOf(parts[1]), 
+                Integer.valueOf(parts[2]), 
+                Integer.valueOf(parts[3]));
     }
 }

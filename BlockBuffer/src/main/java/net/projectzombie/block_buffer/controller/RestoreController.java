@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import net.projectzombie.block_buffer.buffer.Serialize;
 import net.projectzombie.block_buffer.buffer.Utilities;
+import net.projectzombie.block_buffer.main.Main;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,11 +25,11 @@ public class RestoreController
     private static int tickDelay;
     private static boolean CURRENTLY_RESTORING;
     
-    private static int removePlacedBlocks()  { return resetBlocks(Buffer.getBlockPlacedBuffer()); }
-    private static int restoreBrokenBlocks() { return resetBlocks(Buffer.getBlockBrokeBuffer());  }
+    private static int removePlacedBlocks()  { return resetBlocks(Buffer.getBlockPlacedBuffer(), true); }
+    private static int restoreBrokenBlocks() { return resetBlocks(Buffer.getBlockBrokeBuffer(), false);  }
     
-    private static int removePlacedLights(final Player player)  { return resetLights(player, Buffer.getLightPlacedBuffer()); }
-    private static int restoreBrokenLights(final Player player) { return resetLights(player, Buffer.getLightBrokeBuffer());  }
+    private static int removePlacedLights(final Player player)  { return resetLights(player, Buffer.getLightPlacedBuffer(), true); }
+    private static int restoreBrokenLights(final Player player) { return resetLights(player, Buffer.getLightBrokeBuffer(), false);  }
     
     public static void restoreAll(final Player sender)
     {
@@ -55,7 +56,8 @@ public class RestoreController
      * @param serializedBlocks Array of serialized blocks from buffer.
      * @return Blocks restored
      */
-    private static int resetBlocks(final String[] serializedBlocks)
+    private static int resetBlocks(final String[] serializedBlocks,
+                                   final boolean toAir)
     {
         if (serializedBlocks == null || serializedBlocks.length == 0)
             return 0;
@@ -68,7 +70,12 @@ public class RestoreController
                 if (CURRENTLY_RESTORING)
                 {
                     for (int i = serializedBlocks.length - 1; i >= 0; i--)
-                        Serialize.deserializeAndSet(serializedBlocks[i]);
+                    {
+                        if (toAir)
+                            Serialize.deserializeAndSetToAir(serializedBlocks[i]);
+                        else
+                            Serialize.deserializeAndSet(serializedBlocks[i]);
+                    }
                 }
             }
         }, tickDelay);
@@ -85,7 +92,8 @@ public class RestoreController
      * @return Lights removed
      */
     private static int resetLights(final Player sender,
-                                   final String[] serializedLights)
+                                   final String[] serializedLights,
+                                   final boolean toAir)
     {
         final HashMap<Chunk, LinkedList<String>> hash = new HashMap<>();
 
@@ -127,7 +135,12 @@ public class RestoreController
                             if (CURRENTLY_RESTORING)
                             {
                                 while (!entry.getValue().isEmpty())
-                                    Serialize.deserializeAndSet(entry.getValue().removeFirst());
+                                {
+                                    if (toAir)
+                                        Serialize.deserializeAndSetToAir(entry.getValue().removeFirst());
+                                    else
+                                        Serialize.deserializeAndSet(entry.getValue().removeFirst());
+                                }
                             }
                         }
 
@@ -163,10 +176,12 @@ public class RestoreController
             {
                 if (CURRENTLY_RESTORING)
                 {
-                    Buffer.clearBlockBrokeBuffer();
-                    Buffer.clearLightBrokeBuffer();
-                    Buffer.clearBlockPlacedBuffer();
-                    Buffer.clearLightPlacedBuffer();
+                    Main.deleteBuffers();
+                    Main.createBuffers();
+//                    Buffer.clearBlockBrokeBuffer();
+//                    Buffer.clearLightBrokeBuffer();
+//                    Buffer.clearBlockPlacedBuffer();
+//                    Buffer.clearLightPlacedBuffer();
                 }
             }
         }, tickDelay);
