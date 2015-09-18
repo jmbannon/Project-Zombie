@@ -6,6 +6,7 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons;
 
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
+import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
@@ -53,7 +54,7 @@ public class ShootListener implements Listener
         final Player shooter = event.getPlayer();
         final double bulletSpread = shoot(event.getBulletSpread(), shooter.getItemInHand());
         
-        if (bulletSpread == -2)
+        if (bulletSpread <= -2)
         {
             shooter.sendMessage("A parsing error has occured. Please consult an admin.");
             event.setCancelled(true);
@@ -61,16 +62,29 @@ public class ShootListener implements Listener
         else if (bulletSpread < 0)
         {
             shooter.sendMessage("Weapon's configuration is not encrypted. Please consult an admin.");
+            event.setCancelled(true);
         }
         else if (bulletSpread == 0)
         {
-            shooter.sendMessage("Your " + event.getWeaponTitle() + " is broken. Repair it at the gunsmith");
+            event.setSounds(null);
             event.setCancelled(true);
         }
         else
         {
-            Bukkit.broadcastMessage("" + bulletSpread);
+            //Bukkit.broadcastMessage("" + bulletSpread);
             event.setBulletSpread(bulletSpread);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGH)
+    public void preDecayEvent(WeaponPrepareShootEvent event)
+    {
+        final Player shooter = event.getPlayer();
+        
+        if (CrackshotLore.isBroken(shooter.getItemInHand()))
+        {
+            shooter.sendMessage("Your " + event.getWeaponTitle() + " is broken.");
+            event.setCancelled(true);
         }
     }
     

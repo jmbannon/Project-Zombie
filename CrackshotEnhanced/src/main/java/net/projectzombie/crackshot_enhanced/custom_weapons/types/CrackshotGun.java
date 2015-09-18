@@ -913,6 +913,9 @@ public enum CrackshotGun implements Type
      */
     public int getConditionInt(final int durability)
     {
+        if (durability == 0)
+            return Condition.BROKEN.getEnumValue();
+        
         final double ratio = (double)durability / (double)this.getMaxDurability();
         for (int i = 0; i <= Condition.TIERS; i++)
             if (Double.compare(ratio, (double)i/(double)Condition.TIERS) <= 0) return i;

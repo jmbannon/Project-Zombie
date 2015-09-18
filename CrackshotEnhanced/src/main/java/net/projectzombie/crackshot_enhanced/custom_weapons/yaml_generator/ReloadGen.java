@@ -38,7 +38,7 @@ public class ReloadGen
         final FirearmAction action = gun.getBase().getWeaponType().getAction();
         return action != null &&
                 (  action.equals(FirearmAction.HUNTING_BOLT)
-                || action.equals(FirearmAction.SNIPER_BOLT)
+                //|| action.equals(FirearmAction.SNIPER_BOLT)
                 || action.equals(FirearmAction.PUMP)
                 || action.equals(FirearmAction.BREAK));
     }
