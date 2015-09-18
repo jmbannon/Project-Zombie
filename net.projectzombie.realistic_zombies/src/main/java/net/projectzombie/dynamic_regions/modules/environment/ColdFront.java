@@ -6,6 +6,7 @@
 package net.projectzombie.dynamic_regions.modules.environment;
 
 import net.projectzombie.dynamic_regions.utilities.Coordinate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,16 +19,24 @@ import org.bukkit.inventory.PlayerInventory;
  *
  * @author jesse
  */
-public class ColdFront extends DamageArea
+public class ColdFront extends TimedDamageArea
 {
+    private static final String COLD_FRONT_START_TITLE    = " title {text:\"Cold Front\",color:\"aqua\",bold:true,italic:true}";
+    private static final String COLD_FRONT_START_SUBTITLE = " subtitle {text:\"Use \",color:\"gold\",extra:[{text:\"fur armor \",color:\"red\",bold:true,italic:true},{text:\"and \",color:\"gold\"},{text:\"fire \",color:\"red\",bold:true,italic:true},{text:\"to stay warm.\",color:\"gold\"}]}";
+    private static final String COLD_FRONT_END_TITLE      = " title {text:\"Cold Front \",color:\"aqua\",bold:true,extra:[{text:\"Ended\",color:\"gold\"}]}";
     
-    private static final String BEGIN_MSG = ChatColor.GOLD + "A " + ChatColor.AQUA + "cold front" + ChatColor.GOLD + " is approaching. Wear fur armor or stand near a fire to stay warm!";
-    private static final String END_MSG   = ChatColor.GOLD + "The " + ChatColor.AQUA + "cold front" + " has passed.";
-    
-    private static final int DURATION_MIN     = 70; //120
-    private static final int DURATION_MAX     = 79; //270
-    private static final int DAMAGE_FREQUENCY = 10; //30
-    private static final int DAMAGE           = 2;
+    private static final int DURATION_MIN     = 20; //120
+    private static final int DURATION_MAX     = 30; //270
+    private static final int DAMAGE_FREQUENCY = 5;  //30
+    private static final int DAMAGE           = 2;    
+    private static final String DAMAGE_MESSAGE
+            = ChatColor.GRAY + "You are "
+            + ChatColor.AQUA + "freezing" 
+            + ChatColor.GRAY + ". Wear " 
+            + ChatColor.RED + "fur armor "
+            + ChatColor.GRAY + "or stand near a "
+            + ChatColor.RED + "fire "
+            + ChatColor.GRAY + "to stay warm.";
     
     static boolean IS_RUNNING = false;
     
@@ -43,8 +52,7 @@ public class ColdFront extends DamageArea
               DURATION_MAX,
               DAMAGE_FREQUENCY,
               DAMAGE,
-              BEGIN_MSG,
-              END_MSG);
+              DAMAGE_MESSAGE);
         
         this.yValue = yValue;
     }
@@ -64,25 +72,11 @@ public class ColdFront extends DamageArea
 
     @Override
     public double damageModifier(Player player) {
-        final PlayerInventory inv = player.getInventory();
-        int damageModifier = 6;
-        
-        final ItemStack 
-          helmet = inv.getHelmet(),
-          chest  = inv.getChestplate(),
-          legs   = inv.getLeggings(),
-          boots  = inv.getBoots();
-        
-        if(helmet != null && helmet.getType().equals(Material.LEATHER_HELMET))
-            damageModifier -= 1;
-        if(chest != null && chest.getType().equals(Material.LEATHER_CHESTPLATE))
-            damageModifier -= 2;
-        if(legs != null && legs.getType().equals(Material.LEATHER_LEGGINGS))
-            damageModifier -= 2;
-        if(boots != null && boots.getType().equals(Material.LEATHER_BOOTS))
-            damageModifier -= 1;
-        
-        return (double)damageModifier/6.0;
+        return getArmorRatio(player,
+                             Material.LEATHER_HELMET,
+                             Material.LEATHER_CHESTPLATE,
+                             Material.LEATHER_LEGGINGS,
+                             Material.LEATHER_BOOTS);
     }
 
     @Override
@@ -98,7 +92,7 @@ public class ColdFront extends DamageArea
     
     private boolean isNearFire(final Player player)
     {
-        final Coordinate[] toCheck = Coordinate.getRectangle(new Coordinate(-2, -3, -2), new Coordinate(2, 1, 2));
+        final Coordinate[] toCheck = Coordinate.getRectangle(new Coordinate(-6, -9, -6), new Coordinate(6, 3, 6));
         final Block playerBlock = player.getLocation().getBlock();
         
         for (Coordinate offset : toCheck)
@@ -114,5 +108,19 @@ public class ColdFront extends DamageArea
         return type.equals(Material.FIRE)
                 || type.equals(Material.LAVA)
                 || type.equals(Material.BURNING_FURNACE);
+    }
+
+    @Override
+    public void start(final Player player)
+    {
+        final String cmdBegin = "title " + player.getName();
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmdBegin + COLD_FRONT_START_SUBTITLE);
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), cmdBegin + COLD_FRONT_START_TITLE);
+    }
+
+    @Override
+    public void end(final Player player)
+    {
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "title " + player.getName() + COLD_FRONT_END_TITLE);
     }
 }

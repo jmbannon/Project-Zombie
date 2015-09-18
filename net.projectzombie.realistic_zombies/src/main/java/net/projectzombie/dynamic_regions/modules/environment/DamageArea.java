@@ -5,114 +5,77 @@
  */
 package net.projectzombie.dynamic_regions.modules.environment;
 
-import java.util.Random;
-import java.util.logging.Level;
-import net.projectzombie.dynamic_regions.modules.Controller;
 import net.projectzombie.dynamic_regions.modules.RegionModule;
-import net.projectzombie.dynamic_regions.world.DRWorld;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 /**
  *
- * @author jesse
+ * @author jb
  */
 public abstract class DamageArea extends RegionModule
 {
-    private static final Random RAND = new Random();
-    
-    private final int durationMin;
-    private final int durationMax;
-    private final int damageFrequency;
-    private final double damage;
-    
-    private final String beginMessage;
-    private final String endMessage;
+    protected static final String DAMAGE_AREA_TAG = ChatColor.DARK_GREEN + "[" + ChatColor.DARK_GREEN + "Environment" + ChatColor.DARK_GREEN + "] ";
+
+    private final String damageMessage;
+    private final int damage;
     
     public DamageArea(final String regionName,
-                      final int executeFrequency,
-                      final int durationMin,
-                      final int durationMax,
-                      final int damageFrequency,
-                      final int damage,
-                      final String beginMessage,
-                      final String endMessage) 
+                        final int frequencySeconds,
+                        final String damageMessage,
+                        final int damage)
     {
-        super(regionName, executeFrequency);
-        this.durationMin = DRWorld.getTickAmount(durationMin);
-        this.durationMax = DRWorld.getTickAmount(durationMax);
-        this.damageFrequency = DRWorld.getTickAmount(damageFrequency);
+        super(regionName, frequencySeconds);
+        this.damageMessage = DAMAGE_AREA_TAG + damageMessage;
         this.damage = damage;
-        this.beginMessage = beginMessage;
-        this.endMessage = endMessage;
     }
-    
-    @Override
-    public boolean executeModule(final World world,
-                                 final Player player)
-    {
-        if (!this.isRunning() && this.globallyInConditions(world))
-        {
-            this.setRunning(true);
-            final int tickStart = 0;
-            final int tickDuration = RAND.nextInt(durationMax - durationMin) + durationMin;
-            
-            if (beginMessage != null)
-                Bukkit.broadcastMessage(beginMessage);
-            
-            this.scheduleDamageCheck(world, player, tickStart, tickDuration);
-            return true;
-        }
-        else
-            return false;
-    }
-    
-    private void scheduleDamageCheck(final World world,
-                                     final Player player,
-                                     final int tickDelay,
-                                     final int tickDuration)
-    {
-        final DamageArea area = this;
 
-        Bukkit.getLogger().info("scheduling damage check");
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Controller.getPlugin(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (tickDelay <= tickDuration && area.globallyInConditions(world))
-                {
-                    area.damagePlayer(world, player);
-                    area.scheduleDamageCheck(world, player, tickDelay + damageFrequency, tickDuration);
-                    Bukkit.getLogger().info("tick delay: " + tickDelay + " tickDuration: " + tickDuration);
-                    
-                } else
-                {
-                    if (area.endMessage != null)
-                        Bukkit.broadcastMessage(area.endMessage);
-                    
-                    area.setRunning(false);
-                }
-            }
-        }, tickDelay + damageFrequency);
-    }
-    
-    private void damagePlayer(final World world,
-                              final Player player)
-    {
-        final double damageModifier = this.damageModifier(player);
-        if (this.isDamageable(world, player) && damageModifier > 0)
-            player.damage(damage * damageModifier);
-    }
-    
-    public boolean globallyInConditions(final World world) { return true; }
+    @Override public abstract boolean executeModule(World world, Player player);
     
     public abstract boolean isDamageable(final World world,
                                          final Player player);
     
     public abstract double damageModifier(final Player player);
     
-    public abstract boolean isRunning();
-    public abstract void setRunning(final boolean isRunning);
+    public double getArmorRatio(final Player player,
+                                final Material helmet,
+                                final Material chest,
+                                final Material legs,
+                                final Material boots)
+    {
+        final PlayerInventory inv = player.getInventory();
+        int damageModifier = 6;
+        
+        final ItemStack 
+          playerHelmet = inv.getHelmet(),
+          playerChest  = inv.getChestplate(),
+          playerLegs   = inv.getLeggings(),
+          playerBoots  = inv.getBoots();
+        
+        if(playerHelmet != null && playerHelmet.getType().equals(helmet))
+            damageModifier -= 1;
+        if(playerChest != null && playerChest.getType().equals(chest))
+            damageModifier -= 2;
+        if(playerLegs != null && playerLegs.getType().equals(legs))
+            damageModifier -= 2;
+        if(playerBoots != null && playerBoots.getType().equals(boots))
+            damageModifier -= 1;
+        
+        return (double)damageModifier/6.0;
+    }
+    
+    public void damagePlayer(final World world,
+                              final Player player)
+    {
+        final double damageModifier = this.damageModifier(player);
+        if (this.isDamageable(world, player) && damageModifier > 0)
+        {
+            player.sendMessage(damageMessage);
+            player.damage(damage * damageModifier);
+        }
+    }
 }

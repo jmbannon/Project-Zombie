@@ -24,7 +24,7 @@ public class SpawnFlat extends SpawnArea
     public SpawnFlat(final String regionName,
                      final int frequency)
     {
-        super(regionName, frequency, 16, getSpawnArea(), null);
+        super(regionName, frequency, 12, getSpawnArea(), null);
     }
     
     
@@ -67,7 +67,7 @@ public class SpawnFlat extends SpawnArea
         for (Coordinate[] rect : rectanglesToAdd)
             for (Coordinate coord : rect)
                 spawnArea[x++] = coord;
-        
+
         return spawnArea;
     }
     
@@ -76,10 +76,8 @@ public class SpawnFlat extends SpawnArea
         final int m = left ? 1 : -1;
         final int widthSum = P_WIDTH + Z_WIDTH;
         
-        return new Coordinate[] {
-            new Coordinate(m*widthSum, 0,       -widthSum),
-            new Coordinate(m * P_WIDTH,  Z_HEIGHT, widthSum)
-        };
+        return Coordinate.getRectangle(new Coordinate(m*widthSum, -2,       -widthSum),
+                                       new Coordinate(m * P_WIDTH,  Z_HEIGHT, widthSum));
     }
     
     static private Coordinate[] getVerticalRectangle(final boolean top)
@@ -87,10 +85,9 @@ public class SpawnFlat extends SpawnArea
         final int m = top ? 1 : -1;
         final int widthSum = P_WIDTH + Z_WIDTH;
         
-        return new Coordinate[] {
-            new Coordinate(-P_WIDTH, 0,        m*P_WIDTH),
-            new Coordinate( P_WIDTH, Z_HEIGHT, m*widthSum)
-        };
+        return Coordinate.getRectangle(new Coordinate(-P_WIDTH, -2,        m*P_WIDTH),
+                                       new Coordinate( P_WIDTH, Z_HEIGHT, m*widthSum));
+
     }
     
 }

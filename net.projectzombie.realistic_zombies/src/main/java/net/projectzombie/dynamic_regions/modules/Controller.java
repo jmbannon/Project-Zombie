@@ -11,6 +11,8 @@ import net.projectzombie.dynamic_regions.modules.spawn_mobs.SpawnFlat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import net.projectzombie.dynamic_regions.modules.environment.ColdFront;
+import net.projectzombie.dynamic_regions.modules.environment.FreezingWater;
+import net.projectzombie.dynamic_regions.modules.environment.Radiation;
 import net.projectzombie.dynamic_regions.utilities.PlayerTrail;
 import net.projectzombie.dynamic_regions.world.DRWorld;
 import org.bukkit.Bukkit;
@@ -33,9 +35,12 @@ public class Controller extends DRWorld
         this.scheduleTrail();
         
         DynamicRegions = new ArrayList<>();
-        DynamicRegions.add(new SpawnFlat     ("city_base", 60));
+        DynamicRegions.add(new SpawnFlat     ("city_base",        45));
         DynamicRegions.add(new SpawnSkycraper("city_skyscrapers", 20));
-        DynamicRegions.add(new ColdFront     ("__global__", 80, 1)); //900
+        DynamicRegions.add(new Radiation     ("minetech",         15));
+        DynamicRegions.add(new FreezingWater ("__global__",       10));
+        DynamicRegions.add(new ColdFront     ("__global__",       80, 1)); //900
+        
         
         for (RegionModule region : DynamicRegions)
             scheduleExecution(region);

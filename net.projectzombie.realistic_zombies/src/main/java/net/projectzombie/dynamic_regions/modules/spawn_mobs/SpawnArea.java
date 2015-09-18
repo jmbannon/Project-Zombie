@@ -91,11 +91,12 @@ public abstract class SpawnArea extends RegionModule
                                                        final LinkedList<Coordinate> spawnArea)
     {
         final Player[] players = PlayerMethods.getOnlinePlayers();
-        
         Iterator<Coordinate> iterator = spawnArea.iterator();
         while (iterator.hasNext())
             if (!isPlayerSafe(playerBlock, players, iterator.next()))
+            {
                 iterator.remove();
+            }
 
         Collections.shuffle(spawnArea);
         return spawnArea;

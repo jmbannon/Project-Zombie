@@ -8,10 +8,9 @@ package net.projectzombie.dynamic_regions.modules;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import java.util.ArrayList;
 import net.projectzombie.dynamic_regions.utilities.PlayerMethods;
 import net.projectzombie.dynamic_regions.world.DRWorld;
-import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -43,7 +42,7 @@ public abstract class RegionModule
         final Player[] onlinePlayers = PlayerMethods.getOnlinePlayers();
         for (Player player : onlinePlayers)
         {
-            if (inRegion(WGRegionManager, player) && player.getWorld().equals(world))
+            if (player.getGameMode().equals(GameMode.SURVIVAL) && player.getWorld().equals(world) && inRegion(WGRegionManager, player))
                 executeModule(world, player);
         }
     }
