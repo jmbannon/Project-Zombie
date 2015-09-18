@@ -10,15 +10,10 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import static net.projectzombie.custom_interactions.custom_items.CustomItem.*;
 import net.projectzombie.custom_interactions.custom_items.CustomItemType;
 import net.projectzombie.custom_interactions.custom_items.InteractableItem;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,10 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Openable;
 
 /**
  *
@@ -63,7 +54,7 @@ public class ToolListener implements Listener
                 .getRegionManager(clickedBlock.getWorld())
                 .getApplicableRegions(clickedBlock.getLocation());
         
-        if (set.testState(localPlayer, DefaultFlag.BUILD) == true
+        if (set.allows(DefaultFlag.BUILD, localPlayer) == true
                 && event.getAction().equals(Action.LEFT_CLICK_BLOCK)
                 && customItem instanceof InteractableItem)
         {

@@ -15,8 +15,7 @@ public enum CustomItemType {
     
     WireCutter(new WireCutter()),
     Chainsaw(new Chainsaw()),
-    SledgeHammer(new SledgeHammer()),
-    Engraver(new Engraver());
+    SledgeHammer(new SledgeHammer());
     
     private final CustomItem item;
     
