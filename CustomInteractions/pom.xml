@@ -106,5 +106,5 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
-    <name>net.projectzombie.custom_interactions</name>
+    <name>CustomInteractions</name>
 </project>
