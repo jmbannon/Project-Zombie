@@ -44,11 +44,20 @@ public class DRWorld
     static public Plugin getWGPlugin()    { return WG_PLUGIN; }
     static public int    getTicksPerSec() { return TICKS_PER_SECOND; }
     
+    /**
+     * Converts seconds to ticks for task (process) scheduling.
+     * @param seconds
+     * @return 
+     */
     static public int getTickAmount(final int seconds) 
     { 
         return seconds * TICKS_PER_SECOND; 
     }
     
+    /**
+     * Returns instance of the WorldGuard plugin if it exists.
+     * @return 
+     */
     static private WorldGuardPlugin getWorldGuard()
     {
         Plugin WGPlugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");

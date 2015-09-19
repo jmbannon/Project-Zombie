@@ -30,14 +30,24 @@ public enum MythicMobType
                                final Coordinate offset)
     {
         final Block spawnBlock = offset.toBlockOffset(playerBlock);
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), this.spawnMythicMobCommand(spawnBlock));
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), this.getSpawnMythicMobCommand(spawnBlock));
     }
     
-    private String spawnMythicMobCommand(final Block spawnBlock)
+    /**
+     * Returns the command to spawn one MythicMob at the given block.
+     * @param spawnBlock
+     * @return 
+     */
+    private String getSpawnMythicMobCommand(final Block spawnBlock)
     {
         return "mm mobs spawn " + this.mobID + ":0 1 " + MythicMobType.toCoordinate(spawnBlock);
     }
     
+    /**
+     * Converts block to coordinate for SpawnMythicMobCommand.
+     * @param spawnBlock
+     * @return 
+     */
     static private String toCoordinate(final Block spawnBlock)
     {
         return spawnBlock.getWorld().getName() 
