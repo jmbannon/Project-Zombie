@@ -50,5 +50,5 @@
 	    <version>6.1.1-SNAPSHOT</version>
 	</dependency>
     </dependencies>
-    <name>net.projectzombie.care_package_drops</name>
+    <name>LootDrops</name>
 </project>
