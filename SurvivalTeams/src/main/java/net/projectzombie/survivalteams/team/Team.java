@@ -6,7 +6,6 @@
 package net.projectzombie.survivalteams.team;
 
 import java.util.ArrayList;
-import net.projectzombie.survivalteams.controller.TeamController;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
 
@@ -17,48 +16,47 @@ import org.bukkit.Location;
 public class Team
 {
     private final String teamName;
-    private final ArrayList<TeamPlayer> teamPlayers;
-    private final Location teamSpawn;
+    private TeamPlayer leader;
+    private ArrayList<TeamPlayer> members;
+    private Location teamSpawn;
     
     public Team(final String teamName,
-                final ArrayList<TeamPlayer> teamPlayers,
+                final TeamPlayer leader,
+                final ArrayList<TeamPlayer> members,
                 final Location teamSpawn)
     {
         this.teamName = teamName;
-        this.teamPlayers = teamPlayers;
+        this.leader = leader;
+        this.members = members;
         this.teamSpawn = teamSpawn;
     }
     
-    public String                getTeamName()      { return teamName; }
-    public ArrayList<TeamPlayer> getTeamPlayers()   { return teamPlayers; }
-    public Location              getSpawnLocation() { return teamSpawn; }
+    public String                getName()      { return teamName; }
+    public TeamPlayer            getLeader()    { return this.leader; }
+    public ArrayList<TeamPlayer> getPlayers()   { return members; }
+    public Location              getSpawn()     { return teamSpawn; }
     
-    public ArrayList<TeamPlayer> getLeaders()
-    {
-        final ArrayList<TeamPlayer> leaders = new ArrayList<>();
-        int highestRank = -1;
-        int playerRank;
+    public void    setLeader(final TeamPlayer player)    { this.leader = player; }
+    public boolean addPlayer(final TeamPlayer player)    { return members.add(player); }
+    public boolean removePlayer(final TeamPlayer player) { return members.remove(player); }
+    public void setSpawn(final Location location)     { this.teamSpawn = location; }
+    
+    /**
+     * Nulls the team variables to be garbage collected.
+     */
+    public void clearTeam()
+    { 
+        for (TeamPlayer player : members)
+            player.clearTeam();
         
-        for (TeamPlayer player : teamPlayers)
-        {
-            playerRank = player.getRank();
-            if (playerRank > highestRank)
-                highestRank = playerRank;
-        }
-        
-        for (TeamPlayer player : teamPlayers)
-        {
-            playerRank = player.getRank();
-            if (playerRank == highestRank)
-                leaders.add(player);
-        }
-        
-        return leaders;
+        this.members = null;
+        this.teamSpawn = null;
     }
     
-    public boolean removePlayer(final TeamPlayer player)
-    {
-        return false;
-    }
+
     
+    public String toFileName()
+    {
+        return this.teamName.toLowerCase().trim();
+    }
 }

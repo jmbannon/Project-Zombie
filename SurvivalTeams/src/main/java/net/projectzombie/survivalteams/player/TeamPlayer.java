@@ -6,8 +6,8 @@
 package net.projectzombie.survivalteams.player;
 
 import java.util.UUID;
-import net.projectzombie.survivalteams.controller.TeamController;
 import net.projectzombie.survivalteams.team.Team;
+import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -20,56 +20,55 @@ public class TeamPlayer
     
     private final UUID playerUUID;
     private Team team;
-    private int rank;
+    private TeamRank rank;
+    
+    private static final int NO_RANK = -1;
     
     public TeamPlayer(final UUID uuid,
                       final Team team,
-                      final int rank)
+                      final TeamRank rank)
     {
         this.playerUUID = uuid;
         this.team       = team;
         this.rank       = rank;
     }
     
+    public UUID   getUUID()       { return playerUUID; }
     public Team   getTeam()       { return team; }
     public Player getPlayer()     { return Bukkit.getPlayer(playerUUID); }
     public String getPlayerName() { return getPlayer().getName(); }
-    public int    getRank()       { return rank; }
+    public TeamRank getRank()     { return rank; }
     
-    public boolean setRank(final int rank)
+    public boolean setTeam(final Team team)
     {
-        if (rank >= 0)
+        if (team == null)
         {
-            this.rank = rank;
+            this.team = team;
             return true;
         }
         else
             return false;
     }
     
+    public boolean setRank(final TeamRank rank)
+    {
+        this.rank = rank;
+        return true;
+    }
+    
+    public void clearTeam()
+    {
+        this.team = null;
+        this.rank = TeamRank.NULL;
+    }
+    
     public void teleToSpawn()
     {
         final Player player = this.getPlayer();
         if (this.team != null)
-            player.teleport(this.team.getSpawnLocation());
+            player.teleport(this.team.getSpawn());
         else
             player.sendMessage("You're not on a team!");
-    }
-    
-    /**
-     * Disbands the team if he is the team leader.
-     * @return 
-     */
-    public boolean quitTeam()
-    {
-        team = null;
-        rank = -1;
-        return team.removePlayer(this);
-    }
-    
-    public void joinTeam(final Team teamToJoin)
-    {
-        
     }
     
     @Override
@@ -82,6 +81,11 @@ public class TeamPlayer
         }
         else
             return false;
+    }
+    
+    public String toFileName()
+    {
+        return playerUUID.toString();
     }
     
 }
