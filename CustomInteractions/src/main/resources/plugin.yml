@@ -1,4 +1,4 @@
-name: BlockPlacer
+name: CustomInteractions
 main: net.projectzombie.custom_interactions.main.Main
 depend: [WorldEdit,WorldGuard]
 version: 1.0

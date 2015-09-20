@@ -22,8 +22,6 @@ import org.bukkit.plugin.Plugin;
  */
 public class Utilities
 {
-    protected static File blockBuffer;
-    protected static File lightBuffer;
     public static Plugin plugin;
     
     private Utilities() { /* Do nothing */ }
@@ -31,79 +29,6 @@ public class Utilities
     public static void initialize(final Plugin plugin)
     {
         Utilities.plugin = plugin;
-        Utilities.blockBuffer = new File(Utilities.plugin.getDataFolder(), "block_buffer");
-        Utilities.lightBuffer = new File(Utilities.plugin.getDataFolder(), "light_buffer");
-    }
-    
-    public static boolean writeToBuffer(final Block theBlock)
-    {
-        try {
-            final FileWriter blockWriter 
-                    = new FileWriter(isLight(theBlock) ? lightBuffer : blockBuffer, true);
-            
-            blockWriter.append(Serialize.serialize(theBlock));
-            blockWriter.close();
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger(BlockListener.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-    
-    public static String[] getBlockBuffer()
-    {
-        return getBuffer(Utilities.blockBuffer);
-    }
-    
-    public static String[] getLightBuffer()
-    {
-        return getBuffer(Utilities.lightBuffer);
-    }
-    
-    public static boolean clearBlockBuffer()
-    {
-        return clearBuffer(Utilities.blockBuffer);
-    }
-    
-    public static boolean clearLightBuffer()
-    {
-        return clearBuffer(Utilities.lightBuffer);
-    }
-    
-    private static String[] getBuffer(final File file)
-    {
-        try
-        {
-            final BufferedReader reader = new BufferedReader(new FileReader(file));
-            final String buffer = reader.readLine();
-            reader.close();
-
-            if (buffer == null)
-                return null;
-
-            return buffer.split("#");
-        } 
-        catch (Exception ex)
-        {
-            Logger.getLogger(BlockListener.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    private static boolean clearBuffer(final File file)
-    {
-        try
-        {
-            final FileWriter blockWriter = new FileWriter(file);
-            blockWriter.write("");
-            blockWriter.close();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Logger.getLogger(BlockListener.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
     }
     
     /**
@@ -115,9 +40,7 @@ public class Utilities
     public static boolean canPlaceBreak(final Block theBlock)
     {
         final Material type = theBlock.getType();
-        return (type.equals(Material.TORCH)
-                || type.equals(Material.STAINED_GLASS)
-                || type.equals(Material.STAINED_GLASS_PANE)
+        return (type.equals(Material.TORCH) 
                 || type.equals(Material.SOUL_SAND)
                 || type.equals(Material.PACKED_ICE)
                 || type.equals(Material.QUARTZ_BLOCK)

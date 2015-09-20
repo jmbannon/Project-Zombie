@@ -5,6 +5,7 @@
  */
 package net.projectzombie.custom_interactions.custom_items;
 
+import net.projectzombie.block_buffer.buffer.Buffer;
 import net.projectzombie.custom_interactions.listeners.Utilities;
 import org.bukkit.Effect;
 import org.bukkit.Material;
@@ -67,7 +68,7 @@ public abstract class CustomItem
                                final ItemStack inHand,
                                final Block clickedBlock)
     {
-        if (Utilities.writeToBuffer(clickedBlock))
+        if (Buffer.writeToBrokeBuffer(clickedBlock))
         {
             if (this.breakBlock(inHand, clickedBlock))
                 player.getInventory().remove(inHand);

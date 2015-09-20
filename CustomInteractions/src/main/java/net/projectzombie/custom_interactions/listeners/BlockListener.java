@@ -32,6 +32,7 @@ import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.LocalPlayer;
+import net.projectzombie.block_buffer.buffer.Buffer;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
@@ -68,18 +69,19 @@ public class BlockListener implements Listener
 
         if (player.getGameMode() == GameMode.SURVIVAL
                 && Utilities.canPlaceBreak(blockPlaced)
-                && set.testState(localPlayer, DefaultFlag.BUILD) == true)
+                && set.testState(localPlayer, DefaultFlag.BUILD))
         {
-            if (event.getBlockReplacedState().getType().equals(Material.SNOW))
+            final Material replaced = event.getBlockReplacedState().getType();
+            if (!replaced.isSolid() && !replaced.equals(Material.AIR))
             {
-                player.sendMessage(ChatColor.RED + "Sorry, you cannot place against snow!");
+                player.sendMessage(ChatColor.RED + "Sorry, you cannot place a block against that!");
                 event.setCancelled(true);
             }
             else
             {
-                if (Utilities.writeToBuffer(blockPlaced))
-                    event.setCancelled(false);
-                else
+                boolean wroteSuccessfully = Buffer.writeToPlacedBuffer(event.getBlock());
+                
+                if (!wroteSuccessfully)
                 {
                     event.setCancelled(true);
                     player.sendMessage("An error has occured. Please consult an admin.");
@@ -89,9 +91,7 @@ public class BlockListener implements Listener
         else if (player.getGameMode() == GameMode.CREATIVE)
             event.setCancelled(false);
         else
-        {
             event.setCancelled(true);
-        }
     }
     
     /**

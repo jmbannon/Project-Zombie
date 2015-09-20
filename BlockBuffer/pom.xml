@@ -29,5 +29,5 @@
 	</dependency>
 	
     </dependencies>
-    <name>net.projectzombie.block_buffer</name>
+    <name>BlockBuffer</name>
 </project>
