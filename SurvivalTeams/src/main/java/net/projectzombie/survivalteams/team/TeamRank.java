@@ -35,4 +35,12 @@ public enum TeamRank
         return this.rank > otherRank.rank;
     }
 
+    static public TeamRank getRank(final int rankValue)
+    {
+        for (TeamRank rank : TeamRank.values())
+            if (rank.getRank() == rankValue)
+                return rank;
+        return null;
+    }
+    
 }

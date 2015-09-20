@@ -57,6 +57,6 @@ public class Team
     
     public String toFileName()
     {
-        return this.teamName.toLowerCase().trim();
+        return this.teamName.trim();
     }
 }
