@@ -7,7 +7,8 @@ package net.projectzombie.survivalteams.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -23,16 +24,18 @@ import org.bukkit.plugin.Plugin;
  *
  * @author jb
  */
-public class TeamFiles
+public class TeamFile
 {
     private static Plugin PLUGIN;
-    private static File teamFile;
-    private static FileConfiguration teamYAML;
+    private static File TEAM_FILE;
+    private static FileConfiguration TEAM_YAML;
     
     private static final String BASE      = "teams";
     private static final String BASE_PATH = BASE + ".";
     
-    private TeamFiles() { /* Do nothing. */ }
+    private static final HashMap<String, Team>     ONLINE_TEAMS   = new HashMap<>();
+    private static final HashMap<UUID, TeamPlayer> ONLINE_PLAYERS = new HashMap<>();
+    private TeamFile() { /* Do nothing. */ }
     
     public static boolean initialize(final Plugin plugin)
     {
@@ -41,24 +44,59 @@ public class TeamFiles
         return saveConfig();
     }
     
+    ////////////////////////////////////////////////////////////////////////////
+    // Team create/disband functions
+    //
+    public static boolean writeTeam(final TeamPlayer creator,
+                                    final String teamName)
+    {
+        return false;
+    }
+    
+    static public boolean removeTeam(final Team team)
+    {
+        TEAM_YAML.set(BASE_PATH + team.toFileName(), null);
+        return saveConfig();
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Leader functions
+    //
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Officer functions
+    //
+    public static boolean writeSpawn(final Team team)
+    {
+        return false;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Team functions
+    //
+    public static boolean writePromotion(final TeamPlayer sender,
+                                         final TeamPlayer reciever,
+                                         final TeamRank rank)
+    {
+        return false;
+    }
+    
+
+
+    
     public static boolean writePlayerToTeam(final Team team,
                                             final TeamPlayer player,
                                             final TeamRank rank)
     {
-        teamYAML.set(getPlayerPath(team, player), rank.toFileName());
+        TEAM_YAML.set(getPlayerPath(team, player), rank.toFileName());
         return saveConfig();
     }
     
     public static boolean removePlayerFromTeam(final Team team,
                                                final TeamPlayer player)
     {
-        teamYAML.set(getPlayerPath(team, player), null);
-        return saveConfig();
-    }
-    
-    public static boolean removeTeam(final Team team)
-    {
-        teamYAML.set(BASE_PATH + team.toFileName(), null);
+        TEAM_YAML.set(getPlayerPath(team, player), null);
         return saveConfig();
     }
     
@@ -66,7 +104,7 @@ public class TeamFiles
     {
         final UUID playerUUID = player.getUniqueId();
         
-        for (String teamName : teamYAML.getConfigurationSection(BASE).getKeys(false))
+        for (String teamName : TEAM_YAML.getConfigurationSection(BASE).getKeys(false))
             for (String uuid : getTeamPlayers(teamName))
                 if (UUID.fromString(uuid).equals(playerUUID))
                     return teamName;
@@ -80,7 +118,7 @@ public class TeamFiles
     
     public static boolean teamExists(final String teamFileName)
     {
-        return teamYAML.contains(BASE_PATH + teamFileName.trim());
+        return TEAM_YAML.contains(BASE_PATH + teamFileName.trim());
     }
     
     public static Team getTeam(final String teamFileName)
@@ -98,18 +136,11 @@ public class TeamFiles
         }
         */
         return null;
-    }
-            
-
-// ===========================================================================
-//            
-//    Private
-//            
-// ===========================================================================         
+    }      
     
     private static Set<String> getTeamPlayers(final String teamName)
     {
-        return teamYAML.getConfigurationSection(BASE_PATH + teamName).getKeys(false);
+        return TEAM_YAML.getConfigurationSection(BASE_PATH + teamName).getKeys(false);
     }
     
     private static String getPlayerPath(final Team team,
@@ -123,11 +154,11 @@ public class TeamFiles
      */
     private static void loadConfig()
     {
-        if (teamFile == null)
-            teamFile = new File(PLUGIN.getDataFolder(), "survival_teams.yml");
+        if (TEAM_FILE == null)
+            TEAM_FILE = new File(PLUGIN.getDataFolder(), "survival_teams.yml");
 
-        teamYAML = new YamlConfiguration();
-        teamYAML = YamlConfiguration.loadConfiguration(teamFile);
+        TEAM_YAML = new YamlConfiguration();
+        TEAM_YAML = YamlConfiguration.loadConfiguration(TEAM_FILE);
         saveConfig();
     }
 
@@ -136,16 +167,16 @@ public class TeamFiles
      */
     private static boolean saveConfig()
     {
-        if (teamFile == null || teamYAML == null)
+        if (TEAM_FILE == null || TEAM_YAML == null)
             return false;
         
         try
         {
-            teamYAML.save(teamFile);
+            TEAM_YAML.save(TEAM_FILE);
             return true;
         } catch (IOException e)
         {
-            PLUGIN.getLogger().log(Level.SEVERE, "Could not save config to " + teamYAML.getName(), e);
+            PLUGIN.getLogger().log(Level.SEVERE, "Could not save config to " + TEAM_YAML.getName(), e);
             return false;
         }
     }

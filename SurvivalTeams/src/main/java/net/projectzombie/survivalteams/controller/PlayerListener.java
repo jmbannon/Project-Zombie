@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
  *
  * @author jb
  */
-public class PlayerLoginListener
+public class PlayerListener
 {
     @EventHandler(priority = EventPriority.MONITOR)
     public void AssignTeamPlayerOnLoogin(final PlayerLoginEvent event)

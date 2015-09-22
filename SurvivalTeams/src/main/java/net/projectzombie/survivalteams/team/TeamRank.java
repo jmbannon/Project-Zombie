@@ -13,14 +13,14 @@ public enum TeamRank
 {
     NULL     (-1, "n/a"),
     FOLLOWER (10, "Follower"),
-    OPERATOR (5,  "Operator"),
+    OFFICER  (5,  "Officer"),
     LEADER   (0,  "Leader");
 
     private final int rank;
     private final String title;
 
     private TeamRank(final int rank,
-                      final String title)
+                     final String title)
     {
         this.rank = rank;
         this.title = title;
@@ -30,9 +30,29 @@ public enum TeamRank
     public String getTitle()   { return title; }
     public String toFileName() { return String.valueOf(rank); }
     
+    public boolean isLeader()
+    {
+        return this.equals(LEADER);
+    }
+    
     public boolean canInvite()
     {
-        return this.equals(OPERATOR) || this.equals(LEADER);
+        return this.equals(OFFICER) || this.equals(LEADER);
+    }
+    
+    public boolean canKick()
+    {
+        return this.equals(OFFICER) || this.equals(LEADER);
+    }
+    
+    public boolean canSetSpawn()
+    {
+        return this.equals(OFFICER) || this.equals(LEADER);
+    }
+    
+    public boolean canPromote()
+    {
+        return this.equals(LEADER);
     }
     
     public boolean canBePromoted()
