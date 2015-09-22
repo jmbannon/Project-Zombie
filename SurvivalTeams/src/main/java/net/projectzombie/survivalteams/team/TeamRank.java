@@ -41,4 +41,12 @@ public enum TeamRank
                 || this.equals(LEADER);
     }
 
+    static public TeamRank getRank(final int rankValue)
+    {
+        for (TeamRank rank : TeamRank.values())
+            if (rank.getRank() == rankValue)
+                return rank;
+        return null;
+    }
+    
 }

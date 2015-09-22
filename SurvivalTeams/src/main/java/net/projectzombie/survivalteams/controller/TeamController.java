@@ -5,6 +5,7 @@
  */
 package net.projectzombie.survivalteams.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
@@ -16,13 +17,13 @@ import net.projectzombie.survivalteams.team.TeamRank;
  */
 public class TeamController
 {
-    private static HashMap<String, Team> teams = new HashMap<>();
+    private static final HashMap<String, Team> teams = new HashMap<>();
     
     private TeamController() { /* Do nothing */ }
     
-    static public boolean addNewPlayerToTeam(final Team team,
-                                             final TeamPlayer player,
-                                             final TeamRank rank)
+    static public boolean addPlayerToTeam(final Team team,
+                                          final TeamPlayer player,
+                                          final TeamRank rank)
     {
         if (teamOnline(team) && TeamFiles.writePlayerToTeam(team, player, rank))
         {
@@ -34,8 +35,8 @@ public class TeamController
             return false;
     }
     
-    static public boolean removePlayerFrontTeam(final Team team,
-                                                final TeamPlayer player)
+    static public boolean removePlayerFromTeam(final Team team,
+                                               final TeamPlayer player)
     {
         if (teamOnline(team) && TeamFiles.removePlayerFromTeam(team, player))
         {
@@ -46,15 +47,41 @@ public class TeamController
             return false;
     }
     
+    static public boolean createNewTeam(final TeamPlayer player,
+                                        final String teamName)
+    {
+        final Team team = new Team(teamName, player, new ArrayList<TeamPlayer>(), null);
+        
+        if (TeamFiles.writePlayerToTeam(team, player, player.getRank()))
+        {
+            player.setRank(TeamRank.LEADER);
+            player.setTeam(team);
+            team.addPlayer(player);
+            teams.put(team.toFileName(), team);
+            return true;
+        }
+        else
+            return false;
+    }
+    
     static public boolean disbandTeam(final Team team)
     {
-        if (teamOnline(team) && TeamFiles.teamExists(team))
+        if (teamOnline(team) && TeamFiles.teamExists(team.toFileName()))
         {
             team.clearTeam();
             teams.remove(team.toFileName());
             return TeamFiles.removeTeam(team);
         } else
             return false;
+    }
+    
+    static public Team getExistingTeam(final String teamName)
+    {
+        if (!teams.containsKey(teamName))
+        {
+            
+        }
+        return teams.get(teamName);
     }
     
     static public boolean teamOnline(final Team team)
