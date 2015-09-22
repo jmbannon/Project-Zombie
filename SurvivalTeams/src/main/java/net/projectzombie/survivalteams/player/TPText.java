@@ -72,7 +72,7 @@ public class TPText
     
     static public String disbandedTeam(final Team team)
     {
-        return team.getName() + " has been disbanded by " + team.getLeader().getPlayerName() + ".";
+        return team.getName() + " has been disbanded.";
     }
     
     static public String hasQuitTeam(final TeamPlayer quitter)

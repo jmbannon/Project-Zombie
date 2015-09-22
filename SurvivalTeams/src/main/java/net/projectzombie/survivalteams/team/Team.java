@@ -6,6 +6,7 @@
 package net.projectzombie.survivalteams.team;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import net.projectzombie.survivalteams.controller.TeamFile;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
@@ -17,18 +18,18 @@ import org.bukkit.Location;
 public class Team
 {
     private final String teamName;
-    private final TeamPlayer leader;
+    private final UUID leaderUUID;
     private final int teamLimit;
-    private final ArrayList<TeamPlayer> members;
+    private final ArrayList<UUID> members;
     private Location teamSpawn;
     
     public Team(final String teamName,
-                final TeamPlayer leader,
-                final ArrayList<TeamPlayer> members,
+                final UUID leaderUUID,
+                final ArrayList<UUID> members,
                 final Location teamSpawn)
     {
         this.teamName = teamName;
-        this.leader = leader;
+        this.leaderUUID = leaderUUID;
         this.members = members;
         this.teamSpawn = teamSpawn;
         this.teamLimit = 10;
@@ -36,22 +37,34 @@ public class Team
     }
     
     public Team(final String teamName,
-                final TeamPlayer leader)
+                final UUID   leaderUUID)
     {
-        this(teamName, leader, newTeamMemberList(leader), null);
+        this(teamName, leaderUUID, newTeamMemberList(leaderUUID), null);
     }
     
-    public String                getName()      { return teamName; }
-    public TeamPlayer            getLeader()    { return this.leader; }
-    public ArrayList<TeamPlayer> getPlayers()   { return members; }
-    public Location              getSpawn()     { return teamSpawn; }
-    public boolean               canAdd()       { return members.size() < teamLimit; }
+    public String                getName()        { return teamName; }
+    public UUID                  getLeaderUUID()  { return this.leaderUUID; }
+    public ArrayList<UUID>       getMemberUUIDs() { return members; }
+    public Location              getSpawn()       { return teamSpawn; }
+    public boolean               canAdd()         { return members.size() < teamLimit; }
+    
+    public ArrayList<TeamPlayer> getOnlinePlayers()
+    {
+        final ArrayList<TeamPlayer> playersOnline = new ArrayList<>();
+        TeamPlayer player;
+        
+        for (UUID uuid : members)
+            if ((player = TeamFile.getOnlineTeamPlayer(uuid)) != null)
+                playersOnline.add(player);
+        
+        return playersOnline;
+    }
     
     public boolean addPlayer(final TeamPlayer player)
     {
         final boolean fileWriteCheck = TeamFile.writePlayerToTeam(this, player, player.getRank());
         if (fileWriteCheck)
-            members.add(player);
+            members.add(player.getUUID());
         return fileWriteCheck;
     }
     public boolean removePlayer(final TeamPlayer player)
@@ -64,16 +77,16 @@ public class Team
     
     public void setSpawn(final Location location)     { this.teamSpawn = location; }
     
-    public String toFileName()
+    private static ArrayList<UUID> newTeamMemberList(final UUID leaderUUID)
     {
-        return this.teamName.trim();
+        final ArrayList<UUID> newTeam = new ArrayList<>();
+        newTeam.add(leaderUUID);
+        return newTeam;
     }
     
-    private static ArrayList<TeamPlayer> newTeamMemberList(final TeamPlayer leader)
+    public String getPath()
     {
-        final ArrayList<TeamPlayer> newTeam = new ArrayList<>();
-        newTeam.add(leader);
-        return newTeam;
+         return TeamFile.getTeamPath(teamName);
     }
     
 }

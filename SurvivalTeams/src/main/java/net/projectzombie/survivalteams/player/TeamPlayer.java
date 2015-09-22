@@ -34,6 +34,12 @@ public class TeamPlayer
     
     private HashMap<String, Long> pendingInvites;
     
+    /**
+     * TeamPlayer if they have a team.
+     * @param player
+     * @param team
+     * @param rank 
+     */
     public TeamPlayer(final Player player,
                       final Team team,
                       final TeamRank rank)
@@ -42,6 +48,19 @@ public class TeamPlayer
         this.playerUUID = player.getUniqueId();
         this.team       = team;
         this.rank       = rank;
+        this.pendingInvites = null;
+    }
+    
+    /**
+     * TeamPlayer if they do not have a team.
+     * @param player 
+     */
+    public TeamPlayer(final Player player)
+    {
+        this.player = player;
+        this.playerUUID = player.getUniqueId();
+        this.team = null;
+        this.rank = TeamRank.NULL;
         this.pendingInvites = new HashMap<>();
     }
     
@@ -63,8 +82,7 @@ public class TeamPlayer
           if (TeamFile.teamExists(teamName))
               if (TeamFile.writeTeam(this, teamName))
               {
-                  team = new Team(teamName, this);
-                  rank = TeamRank.LEADER;
+                  initializeTeam(teamName);
                   player.sendMessage(TPText.createdNewTeam(team));
               }
               else
@@ -75,12 +93,18 @@ public class TeamPlayer
             player.sendMessage(TPText.ON_TEAM);
     }
     
+    public void initializeTeam(final String teamName)
+    {
+        team = new Team(teamName, this.playerUUID);
+        rank = TeamRank.LEADER;
+    }
+    
     public void disbandTeam()
     {
         if (isLeader())
         {
             if (TeamFile.removeTeam(team))
-                for (TeamPlayer teamMembers : team.getPlayers())
+                for (TeamPlayer teamMembers : team.getOnlinePlayers())
                     teamMembers.disbandedFromTeam();
             else
                 player.sendMessage(TPText.FILE_ERROR);
@@ -94,7 +118,7 @@ public class TeamPlayer
     {
         if (rank.canPromote())
             if (reciever.rank.canBePromoted() && team.equals(reciever.team))
-                if (TeamFile.writePromotion(this, reciever, newRank))
+                if (TeamFile.writePromotion(reciever, newRank))
                 {
                     player.sendMessage(TPText.promoted(reciever, newRank));
                     reciever.recievePromotion(this, newRank);
@@ -112,10 +136,10 @@ public class TeamPlayer
     public void setSpawn()
     {
         if (hasTeam() && rank.canSetSpawn())
-            if (TeamFile.writeSpawn(team))
+            if (TeamFile.writeSpawn(team, player.getLocation()))
             {
                 team.setSpawn(player.getLocation());
-                for (TeamPlayer member : team.getPlayers())
+                for (TeamPlayer member : team.getOnlinePlayers())
                     member.getPlayer().sendMessage(TPText.NEW_SPAWN);
             }
             else
@@ -181,7 +205,7 @@ public class TeamPlayer
                 if (TeamFile.removePlayerFromTeam(team, this))
                 {
                     player.sendMessage(TPText.quitTeam(team));
-                    for (TeamPlayer oldMember : team.getPlayers())
+                    for (TeamPlayer oldMember : team.getOnlinePlayers())
                         oldMember.getPlayer().sendMessage(TPText.hasQuitTeam(this));
                     clearTeam();
                 }
@@ -268,9 +292,17 @@ public class TeamPlayer
         this.pendingInvites = null;
     }
     
-    public String toFileName()     { return playerUUID.toString(); }
+    public String getPath()
+    {
+        if (hasTeam())
+            return rank.equals(TeamRank.LEADER) ? TeamFile.getLeaderPath(this, team.getName()) : TeamFile.getPlayerPath(this, team.getName());
+        else
+            return null;
+    }
+    
+    public String getFileName()     { return playerUUID.toString(); }
     public boolean hasTeam()       { return team != null; }
-    public boolean isLeader()      { return team != null && rank.isLeader() && team.getLeader().equals(this); }
+    public boolean isLeader()      { return team != null && rank.isLeader() && team.getLeaderUUID().equals(playerUUID); }
     
     static public long getTimeStamp() { return System.currentTimeMillis() / 1000L; }
 }

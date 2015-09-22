@@ -7,14 +7,15 @@ package net.projectzombie.survivalteams.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -23,6 +24,8 @@ import org.bukkit.plugin.Plugin;
 /**
  *
  * @author jb
+ * 
+ * To only handle files; nothing more.
  */
 public class TeamFile
 {
@@ -31,10 +34,11 @@ public class TeamFile
     private static FileConfiguration TEAM_YAML;
     
     private static final String BASE      = "teams";
-    private static final String BASE_PATH = BASE + ".";
+    public static  final String BASE_PATH = BASE + ".";
     
-    private static final HashMap<String, Team>     ONLINE_TEAMS   = new HashMap<>();
-    private static final HashMap<UUID, TeamPlayer> ONLINE_PLAYERS = new HashMap<>();
+    private static final HashMap<String, Team>     ONLINE_TEAMS     = new HashMap<>();
+    private static final HashMap<UUID, TeamPlayer> RELEVANT_PLAYERS = new HashMap<>();
+
     private TeamFile() { /* Do nothing. */ }
     
     public static boolean initialize(final Plugin plugin)
@@ -45,109 +49,139 @@ public class TeamFile
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    // Team create/disband functions
+    // Write functions
     //
     public static boolean writeTeam(final TeamPlayer creator,
                                     final String teamName)
     {
-        return false;
+        TEAM_YAML.set(getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
+        return saveConfig();
     }
     
     static public boolean removeTeam(final Team team)
     {
-        TEAM_YAML.set(BASE_PATH + team.toFileName(), null);
+        TEAM_YAML.set(team.getPath(), null);
         return saveConfig();
     }
     
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // Leader functions
-    //
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // Officer functions
-    //
-    public static boolean writeSpawn(final Team team)
+    public static boolean writeSpawn(final Team team,
+                                     final Location location)
     {
-        return false;
+        TEAM_YAML.set(team.getPath() + ".spawn", location);
+        return saveConfig();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
-    // Team functions
-    //
-    public static boolean writePromotion(final TeamPlayer sender,
-                                         final TeamPlayer reciever,
+    static public boolean removeSpawn(final Team team)
+    {
+        TEAM_YAML.set(team.getPath() + ".spawn", null);
+        return saveConfig();
+    }
+
+    public static boolean writePromotion(final TeamPlayer reciever,
                                          final TeamRank rank)
     {
-        return false;
+        TEAM_YAML.set(reciever.getPath(), rank.getRank());
+        return saveConfig();
     }
-    
-
-
     
     public static boolean writePlayerToTeam(final Team team,
                                             final TeamPlayer player,
                                             final TeamRank rank)
     {
-        TEAM_YAML.set(getPlayerPath(team, player), rank.toFileName());
+        TEAM_YAML.set(player.getPath(), rank.toFileName());
         return saveConfig();
     }
     
     public static boolean removePlayerFromTeam(final Team team,
                                                final TeamPlayer player)
     {
-        TEAM_YAML.set(getPlayerPath(team, player), null);
+        TEAM_YAML.set(player.getPath(), null);
         return saveConfig();
     }
     
-    public static String findPlayerTeam(final Player player)
+    ////////////////////////////////////////////////////////////////////////////
+    // Read functions
+    //
+    
+    
+    
+    static TeamRank getMemberRank(final String teamName,
+                                  final UUID uuid)
     {
-        final UUID playerUUID = player.getUniqueId();
-        
-        for (String teamName : TEAM_YAML.getConfigurationSection(BASE).getKeys(false))
-            for (String uuid : getTeamPlayers(teamName))
-                if (UUID.fromString(uuid).equals(playerUUID))
-                    return teamName;
-        return null;
+        final String memberPath = getUUIDMemberPath(teamName) + "." + uuid.toString();
+        return TEAM_YAML.contains(memberPath) ? TeamRank.getRank(TEAM_YAML.getInt(memberPath)) : TeamRank.NULL;
     }
     
-    public static TeamPlayer getLeader(final String teamName)
+    /**
+     * Gets a list of member UUIDs from an existing team.
+     * @param teamName Existing team name within TEAM_YAML.
+     * @return 
+     */
+    static private ArrayList<UUID> getMemberUUIDs(final String teamName)
     {
-        return null;
+        final ArrayList<UUID> uuids = new ArrayList<>();
+        for (String uuid : TEAM_YAML.getConfigurationSection(getUUIDMemberPath(teamName)).getKeys(false))
+            uuids.add(UUID.fromString(uuid));
+        return uuids;
     }
     
-    public static boolean teamExists(final String teamFileName)
+    static private boolean containsMember(final String teamName,
+                                          final UUID uuid)
     {
-        return TEAM_YAML.contains(BASE_PATH + teamFileName.trim());
+        return TEAM_YAML.contains(getTeamPath(teamName) + ".members." + uuid.toString());
     }
     
-    public static Team getTeam(final String teamFileName)
+    static private UUID getLeaderUUID(final String teamName)
     {
-        /*
-        final Team team = new Team()
-        final ArrayList<TeamPlayer> players = new ArrayList<>();
-        final TeamPlayer leader;
-        TeamPlayer player;
-        TeamRank rank;
-        for (String playerUUID : getTeamPlayers(teamFileName))
-        {
-            rank = TeamRank.getRank(teamYAML.getInt(BASE_PATH + teamFileName + "." + playerUUID));
-            player = new TeamPlayer(null, )
-        }
-        */
-        return null;
-    }      
-    
-    private static Set<String> getTeamPlayers(final String teamName)
-    {
-        return TEAM_YAML.getConfigurationSection(BASE_PATH + teamName).getKeys(false);
+        return teamExists(teamName) ?
+            UUID.fromString(TEAM_YAML.getString(getLeaderUUIDpath(teamName))) : null;
     }
     
-    private static String getPlayerPath(final Team team,
-                                        final TeamPlayer player)
+    
+    static public TeamPlayer getOnlineTeamPlayer(final UUID uuid)
     {
-        return BASE_PATH + team.toFileName() + "." + player.toFileName();
+        return RELEVANT_PLAYERS.get(uuid);
     }
+   
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Path functions
+    // 
+    
+    public static boolean teamExists(String teamName)
+    {
+        return TEAM_YAML.contains(getTeamPath(teamName));
+    }
+    
+     public static String getTeamPath(final String teamName)
+    { 
+        return BASE_PATH + teamName;
+    }
+    
+    public static String getLeaderUUIDpath(final String teamName)
+    {
+        return getTeamPath(teamName) + ".leader";
+    }
+     
+    public static String getUUIDMemberPath(final String teamName)
+    {
+        return getTeamPath(teamName) + ".members";
+    }
+    
+    public static String getPlayerPath(final TeamPlayer player,
+                                       final String teamName) 
+    { 
+        return player.hasTeam() ? getUUIDMemberPath(teamName) + player.getUUID().toString() : null; 
+    }
+    public static String getLeaderPath(final TeamPlayer player,
+                                       final String teamName)
+    {
+        return player.hasTeam() ? getLeaderUUIDpath(teamName) : null;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // File functions
+    //
     
      /**
      * Loads file from plugin folder.
