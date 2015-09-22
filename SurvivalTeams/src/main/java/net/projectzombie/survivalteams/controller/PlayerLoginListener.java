@@ -32,8 +32,6 @@ public class PlayerLoginListener
         final Player player = event.getPlayer();
         final UUID playerUUID = player.getUniqueId();
         
-        final TeamPlayer loggedInPlayer = new TeamPlayer(playerUUID,
-                                                         null,  // Team
-                                                         TeamRank.NULL); // Rank
+        
     }
 }

@@ -11,10 +11,10 @@ package net.projectzombie.survivalteams.team;
  */
 public enum TeamRank
 {
-    LEADER (0,  "Leader"),
-    OFFICER(1,  "Guardian"),
-    MEMBER (10, "Member"),
-    NULL   (1024, "n/a");
+    LEADER   (0,  "Leader"),
+    OPERATOR (5,  "Operator"),
+    FOLLOWER (10, "Follower"),
+    NULL   (-1, "n/a");
     
     private final int rank;
     private final String title;
@@ -33,6 +33,12 @@ public enum TeamRank
     public boolean higherRank(final TeamRank otherRank)
     {
         return this.rank > otherRank.rank;
+    }
+    
+    public boolean canInvite()
+    {
+        return this.equals(OPERATOR) 
+                || this.equals(LEADER);
     }
 
 }

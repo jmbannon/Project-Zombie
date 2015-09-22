@@ -14,21 +14,25 @@ import org.bukkit.entity.Player;
 /**
  *
  * @author jb
+ * 
+ * Instance of all online players as a 'TeamPlayer'. Stores their current team
+ * and rank. Controls all of their commands.
+ * 
  */
 public class TeamPlayer
 {
     
+    private final Player player;
     private final UUID playerUUID;
     private Team team;
     private TeamRank rank;
     
-    private static final int NO_RANK = -1;
-    
-    public TeamPlayer(final UUID uuid,
+    public TeamPlayer(final Player player,
                       final Team team,
                       final TeamRank rank)
     {
-        this.playerUUID = uuid;
+        this.player     = player;
+        this.playerUUID = player.getUniqueId();
         this.team       = team;
         this.rank       = rank;
     }
@@ -64,23 +68,16 @@ public class TeamPlayer
     
     public void teleToSpawn()
     {
-        final Player player = this.getPlayer();
         if (this.team != null)
             player.teleport(this.team.getSpawn());
         else
             player.sendMessage("You're not on a team!");
     }
     
-    @Override
-    public boolean equals(final Object object)
+    public boolean invitePlayerToTeam(final TeamPlayer player)
     {
-        if (object instanceof TeamPlayer)
-        {
-            final TeamPlayer otherPlayer = (TeamPlayer) object;
-            return this.playerUUID.equals(otherPlayer.playerUUID);
-        }
-        else
-            return false;
+        return (rank.canInvite());
+            
     }
     
     public String toFileName()
