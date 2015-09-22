@@ -16,7 +16,7 @@ import org.bukkit.Location;
 public class Team
 {
     private final String teamName;
-    private TeamPlayer leader;
+    private final TeamPlayer leader;
     private ArrayList<TeamPlayer> members;
     private Location teamSpawn;
     
@@ -36,7 +36,6 @@ public class Team
     public ArrayList<TeamPlayer> getPlayers()   { return members; }
     public Location              getSpawn()     { return teamSpawn; }
     
-    public void    setLeader(final TeamPlayer player)    { this.leader = player; }
     public boolean addPlayer(final TeamPlayer player)    { return members.add(player); }
     public boolean removePlayer(final TeamPlayer player) { return members.remove(player); }
     public void setSpawn(final Location location)     { this.teamSpawn = location; }

@@ -15,11 +15,11 @@ import net.projectzombie.survivalteams.team.TeamRank;
  *
  * @author jb
  */
-public class TeamController
+public class Controller
 {
     private static final HashMap<String, Team> teams = new HashMap<>();
     
-    private TeamController() { /* Do nothing */ }
+    private Controller() { /* Do nothing */ }
     
     static public boolean addPlayerToTeam(final Team team,
                                           final TeamPlayer player,
@@ -62,6 +62,13 @@ public class TeamController
         }
         else
             return false;
+    }
+    
+    static public boolean invitePlayerToTeam(final TeamPlayer sender,
+                                             final TeamPlayer reciever,
+                                             final TeamRank rankOffered)
+    {
+        return true;
     }
     
     static public boolean disbandTeam(final Team team)

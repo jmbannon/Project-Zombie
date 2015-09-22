@@ -5,6 +5,7 @@
  */
 package net.projectzombie.survivalteams.player;
 
+import net.projectzombie.survivalteams.controller.Controller;
 import java.util.UUID;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
@@ -37,28 +38,14 @@ public class TeamPlayer
         this.rank       = rank;
     }
     
-    public UUID   getUUID()       { return playerUUID; }
-    public Team   getTeam()       { return team; }
-    public Player getPlayer()     { return Bukkit.getPlayer(playerUUID); }
-    public String getPlayerName() { return getPlayer().getName(); }
+    public UUID     getUUID()       { return playerUUID; }
+    public Team     getTeam()       { return team; }
+    public Player   getPlayer()     { return Bukkit.getPlayer(playerUUID); }
+    public String   getPlayerName() { return getPlayer().getName(); }
     public TeamRank getRank()     { return rank; }
     
-    public boolean setTeam(final Team team)
-    {
-        if (team == null)
-        {
-            this.team = team;
-            return true;
-        }
-        else
-            return false;
-    }
-    
-    public boolean setRank(final TeamRank rank)
-    {
-        this.rank = rank;
-        return true;
-    }
+    public void setTeam(final Team team)     { this.team = team; }
+    public void setRank(final TeamRank rank) { this.rank = rank; }
     
     public void clearTeam()
     {
@@ -68,21 +55,39 @@ public class TeamPlayer
     
     public void teleToSpawn()
     {
-        if (this.team != null)
-            player.teleport(this.team.getSpawn());
+        if (team != null)
+            player.teleport(team.getSpawn());
         else
-            player.sendMessage("You're not on a team!");
+            player.sendMessage(TPText.NO_TEAM);
     }
     
-    public boolean invitePlayerToTeam(final TeamPlayer player)
+    public void invitePlayerToTeam(final TeamPlayer reciever,
+                                   final TeamRank rank)
     {
-        return (rank.canInvite());
-            
+        if (canInvite())
+            Controller.invitePlayerToTeam(this, reciever, rank);
+        else if (team == null)
+            player.sendMessage(TPText.NO_TEAM);
+        else
+            player.sendMessage(TPText.CANNOT_INVITE);
     }
     
-    public String toFileName()
+    public void promotePlayer(final TeamPlayer reciever,
+                              final TeamRank rank)
     {
-        return playerUUID.toString();
+        if (canPromote())
+            if (reciever.canBePromoted())
+                ;
     }
     
+    public void recievePromotion()
+    {
+        
+    }
+    
+    public String toFileName() { return playerUUID.toString(); }
+    public boolean isLeader()  { return rank.equals(TeamRank.LEADER); }
+    public boolean canInvite() { return rank.canInvite() && team != null;}
+    public boolean canPromote() { return rank.equals(TeamRank.LEADER); }
+    public boolean canBePromoted() { return rank.canBePromoted(); }
 }

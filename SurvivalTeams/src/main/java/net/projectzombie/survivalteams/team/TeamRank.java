@@ -11,11 +11,11 @@ package net.projectzombie.survivalteams.team;
  */
 public enum TeamRank
 {
-    LEADER   (0,  "Leader"),
-    OPERATOR (5,  "Operator"),
+    NULL     (-1, "n/a"),
     FOLLOWER (10, "Follower"),
-    NULL   (-1, "n/a");
-    
+    OPERATOR (5,  "Operator"),
+    LEADER   (0,  "Leader");
+
     private final int rank;
     private final String title;
 
@@ -30,15 +30,14 @@ public enum TeamRank
     public String getTitle()   { return title; }
     public String toFileName() { return String.valueOf(rank); }
     
-    public boolean higherRank(final TeamRank otherRank)
-    {
-        return this.rank > otherRank.rank;
-    }
-    
     public boolean canInvite()
     {
-        return this.equals(OPERATOR) 
-                || this.equals(LEADER);
+        return this.equals(OPERATOR) || this.equals(LEADER);
+    }
+    
+    public boolean canBePromoted()
+    {
+        return this.equals(FOLLOWER);
     }
 
     static public TeamRank getRank(final int rankValue)
@@ -48,5 +47,7 @@ public enum TeamRank
                 return rank;
         return null;
     }
+    
+    
     
 }
