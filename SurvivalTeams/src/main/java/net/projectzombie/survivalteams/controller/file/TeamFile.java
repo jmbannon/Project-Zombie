@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.survivalteams.controller;
+package net.projectzombie.survivalteams.controller.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +14,9 @@ import java.util.logging.Level;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -36,8 +34,8 @@ public class TeamFile
     private static final String BASE      = "teams";
     public static  final String BASE_PATH = BASE + ".";
     
-    private static final HashMap<String, Team>     ONLINE_TEAMS     = new HashMap<>();
-    private static final HashMap<UUID, TeamPlayer> RELEVANT_PLAYERS = new HashMap<>();
+    protected static final HashMap<String, Team>     ONLINE_TEAMS     = new HashMap<>();
+    protected static final HashMap<UUID, TeamPlayer> ONLINE_PLAYERS   = new HashMap<>();
 
     private TeamFile() { /* Do nothing. */ }
     
@@ -54,7 +52,7 @@ public class TeamFile
     public static boolean writeTeam(final TeamPlayer creator,
                                     final String teamName)
     {
-        TEAM_YAML.set(getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
+        TEAM_YAML.set(Paths.getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
         return saveConfig();
     }
     
@@ -100,15 +98,13 @@ public class TeamFile
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    // Read functions
+    // Accessor functions
     //
-    
-    
     
     static TeamRank getMemberRank(final String teamName,
                                   final UUID uuid)
     {
-        final String memberPath = getUUIDMemberPath(teamName) + "." + uuid.toString();
+        final String memberPath = Paths.getUUIDMemberPath(teamName) + "." + uuid.toString();
         return TEAM_YAML.contains(memberPath) ? TeamRank.getRank(TEAM_YAML.getInt(memberPath)) : TeamRank.NULL;
     }
     
@@ -117,67 +113,56 @@ public class TeamFile
      * @param teamName Existing team name within TEAM_YAML.
      * @return 
      */
-    static private ArrayList<UUID> getMemberUUIDs(final String teamName)
+    static protected ArrayList<UUID> getMemberUUIDs(final String teamName)
     {
         final ArrayList<UUID> uuids = new ArrayList<>();
-        for (String uuid : TEAM_YAML.getConfigurationSection(getUUIDMemberPath(teamName)).getKeys(false))
+        for (String uuid : TEAM_YAML.getConfigurationSection(Paths.getUUIDMemberPath(teamName)).getKeys(false))
             uuids.add(UUID.fromString(uuid));
         return uuids;
     }
     
-    static private boolean containsMember(final String teamName,
-                                          final UUID uuid)
+    static protected String getTeamName(final UUID uuid)
     {
-        return TEAM_YAML.contains(getTeamPath(teamName) + ".members." + uuid.toString());
+        for (String teamName : TEAM_YAML.getConfigurationSection(Paths.getTeamPath(BASE)).getKeys(false))
+        {
+             if (containsMemberUUID(teamName, uuid) || getLeaderUUID(teamName).equals(uuid))
+                 return teamName;
+        }
+        return null;
     }
     
-    static private UUID getLeaderUUID(final String teamName)
+    static protected UUID getLeaderUUID(final String teamName)
     {
-        return teamExists(teamName) ?
-            UUID.fromString(TEAM_YAML.getString(getLeaderUUIDpath(teamName))) : null;
+        return containsTeam(teamName) ?
+            UUID.fromString(TEAM_YAML.getString(Paths.getLeaderUUIDpath(teamName))) : null;
     }
     
+    static protected Location getSpawn(final String teamName)
+    {
+        return WorldCoordinate.toLocation(TEAM_YAML.getString(Paths.getTeamPath(teamName) + ".spawn"));
+    }
     
     static public TeamPlayer getOnlineTeamPlayer(final UUID uuid)
     {
-        return RELEVANT_PLAYERS.get(uuid);
+        return ONLINE_PLAYERS.get(uuid);
     }
-   
     
     ////////////////////////////////////////////////////////////////////////////
-    // Path functions
-    // 
+    // Boolean functions
+    //
     
-    public static boolean teamExists(String teamName)
+    static protected boolean containsMemberUUID(final String teamName,
+                                                final UUID uuid)
     {
-        return TEAM_YAML.contains(getTeamPath(teamName));
-    }
-    
-     public static String getTeamPath(final String teamName)
-    { 
-        return BASE_PATH + teamName;
+        return TEAM_YAML.contains(Paths.getTeamPath(teamName) + ".members." + uuid.toString());
     }
     
-    public static String getLeaderUUIDpath(final String teamName)
+    
+    public static boolean containsTeam(String teamName)
     {
-        return getTeamPath(teamName) + ".leader";
-    }
-     
-    public static String getUUIDMemberPath(final String teamName)
-    {
-        return getTeamPath(teamName) + ".members";
+        return TEAM_YAML.contains(Paths.getTeamPath(teamName));
     }
     
-    public static String getPlayerPath(final TeamPlayer player,
-                                       final String teamName) 
-    { 
-        return player.hasTeam() ? getUUIDMemberPath(teamName) + player.getUUID().toString() : null; 
-    }
-    public static String getLeaderPath(final TeamPlayer player,
-                                       final String teamName)
-    {
-        return player.hasTeam() ? getLeaderUUIDpath(teamName) : null;
-    }
     
     ////////////////////////////////////////////////////////////////////////////
     // File functions
@@ -186,7 +171,7 @@ public class TeamFile
      /**
      * Loads file from plugin folder.
      */
-    private static void loadConfig()
+    protected static void loadConfig()
     {
         if (TEAM_FILE == null)
             TEAM_FILE = new File(PLUGIN.getDataFolder(), "survival_teams.yml");
@@ -199,7 +184,7 @@ public class TeamFile
     /**
      * Saves all changes to file and file configuration.
      */
-    private static boolean saveConfig()
+    protected static boolean saveConfig()
     {
         if (TEAM_FILE == null || TEAM_YAML == null)
             return false;

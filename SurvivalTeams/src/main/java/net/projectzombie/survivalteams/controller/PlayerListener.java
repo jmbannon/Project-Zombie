@@ -5,10 +5,7 @@
  */
 package net.projectzombie.survivalteams.controller;
 
-import java.util.UUID;
-import net.projectzombie.survivalteams.player.TeamPlayer;
-import net.projectzombie.survivalteams.team.TeamRank;
-import org.bukkit.entity.Player;
+import net.projectzombie.survivalteams.controller.file.FileController;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -22,16 +19,7 @@ public class PlayerListener
     @EventHandler(priority = EventPriority.MONITOR)
     public void AssignTeamPlayerOnLoogin(final PlayerLoginEvent event)
     {
-        // Search if team exists based on UUID
-        // if exists
-          // if !team instance is created
-          //   create instance of team
-          // join player to team
-        // else
-          // make player team null
-        final Player player = event.getPlayer();
-        final UUID playerUUID = player.getUniqueId();
-        
-        
+        FileController.initializePlayer(event.getPlayer());
     }
+    
 }

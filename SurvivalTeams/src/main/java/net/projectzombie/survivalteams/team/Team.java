@@ -7,7 +7,8 @@ package net.projectzombie.survivalteams.team;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import net.projectzombie.survivalteams.controller.TeamFile;
+import net.projectzombie.survivalteams.controller.file.Paths;
+import net.projectzombie.survivalteams.controller.file.TeamFile;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
 
@@ -86,7 +87,7 @@ public class Team
     
     public String getPath()
     {
-         return TeamFile.getTeamPath(teamName);
+         return Paths.getTeamPath(teamName);
     }
     
 }

@@ -7,7 +7,8 @@ package net.projectzombie.survivalteams.player;
 
 import java.util.HashMap;
 import java.util.UUID;
-import net.projectzombie.survivalteams.controller.TeamFile;
+import net.projectzombie.survivalteams.controller.file.Paths;
+import net.projectzombie.survivalteams.controller.file.TeamFile;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
@@ -79,7 +80,7 @@ public class TeamPlayer
     public void createTeam(final String teamName)
     {
         if (!hasTeam())
-          if (TeamFile.teamExists(teamName))
+          if (TeamFile.containsTeam(teamName))
               if (TeamFile.writeTeam(this, teamName))
               {
                   initializeTeam(teamName);
@@ -295,7 +296,7 @@ public class TeamPlayer
     public String getPath()
     {
         if (hasTeam())
-            return rank.equals(TeamRank.LEADER) ? TeamFile.getLeaderPath(this, team.getName()) : TeamFile.getPlayerPath(this, team.getName());
+            return rank.equals(TeamRank.LEADER) ? Paths.getLeaderPath(this, team.getName()) : Paths.getPlayerPath(this, team.getName());
         else
             return null;
     }
