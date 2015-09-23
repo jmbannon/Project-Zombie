@@ -1,8 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ * SurvivalTeams
+ *
+ * Version:     0.5
+ * MC Build:    1.8.3
+ * Date:        09-22-2015
+ *
+ * Author:      Jesse Bannon
+ * Email:       jbann1994@gmail.com
+ * Server:      Project Zombie
+ * Website:     www.projectzombie.net
+ *
+ * Allows players to create rank-based Teams. Includes features such as no
+ * team PVP and a group spawn.
+ *
+*/
 package net.projectzombie.survivalteams.controller.file;
 
 import java.io.File;
@@ -52,7 +63,7 @@ public class TeamFile
     public static boolean writeTeam(final TeamPlayer creator,
                                     final String teamName)
     {
-        TEAM_YAML.set(Paths.getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
+        TEAM_YAML.set(FilePath.getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
         return saveConfig();
     }
     
@@ -104,7 +115,7 @@ public class TeamFile
     static TeamRank getMemberRank(final String teamName,
                                   final UUID uuid)
     {
-        final String memberPath = Paths.getUUIDMemberPath(teamName) + "." + uuid.toString();
+        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString();
         return TEAM_YAML.contains(memberPath) ? TeamRank.getRank(TEAM_YAML.getInt(memberPath)) : TeamRank.NULL;
     }
     
@@ -116,14 +127,14 @@ public class TeamFile
     static protected ArrayList<UUID> getMemberUUIDs(final String teamName)
     {
         final ArrayList<UUID> uuids = new ArrayList<>();
-        for (String uuid : TEAM_YAML.getConfigurationSection(Paths.getUUIDMemberPath(teamName)).getKeys(false))
+        for (String uuid : TEAM_YAML.getConfigurationSection(FilePath.getUUIDMemberPath(teamName)).getKeys(false))
             uuids.add(UUID.fromString(uuid));
         return uuids;
     }
     
     static protected String getTeamName(final UUID uuid)
     {
-        for (String teamName : TEAM_YAML.getConfigurationSection(Paths.getTeamPath(BASE)).getKeys(false))
+        for (String teamName : TEAM_YAML.getConfigurationSection(FilePath.getTeamPath(BASE)).getKeys(false))
         {
              if (containsMemberUUID(teamName, uuid) || getLeaderUUID(teamName).equals(uuid))
                  return teamName;
@@ -134,12 +145,12 @@ public class TeamFile
     static protected UUID getLeaderUUID(final String teamName)
     {
         return containsTeam(teamName) ?
-            UUID.fromString(TEAM_YAML.getString(Paths.getLeaderUUIDpath(teamName))) : null;
+            UUID.fromString(TEAM_YAML.getString(FilePath.getLeaderUUIDpath(teamName))) : null;
     }
     
     static protected Location getSpawn(final String teamName)
     {
-        return WorldCoordinate.toLocation(TEAM_YAML.getString(Paths.getTeamPath(teamName) + ".spawn"));
+        return WorldCoordinate.toLocation(TEAM_YAML.getString(FilePath.getTeamPath(teamName) + ".spawn"));
     }
     
     static public TeamPlayer getOnlineTeamPlayer(final UUID uuid)
@@ -154,13 +165,13 @@ public class TeamFile
     static protected boolean containsMemberUUID(final String teamName,
                                                 final UUID uuid)
     {
-        return TEAM_YAML.contains(Paths.getTeamPath(teamName) + ".members." + uuid.toString());
+        return TEAM_YAML.contains(FilePath.getTeamPath(teamName) + ".members." + uuid.toString());
     }
     
     
     public static boolean containsTeam(String teamName)
     {
-        return TEAM_YAML.contains(Paths.getTeamPath(teamName));
+        return TEAM_YAML.contains(FilePath.getTeamPath(teamName));
     }
     
     

@@ -1,23 +1,19 @@
 /*
- * CarePackage
+ * SurvivalTeams
  *
  * Version:     0.5
  * MC Build:    1.8.3
- * Date:        05-03-2015
+ * Date:        09-22-2015
  *
- * Authur:      Jesse Bannon
+ * Author:      Jesse Bannon
+ * Email:       jbann1994@gmail.com
  * Server:      Project Zombie
  * Website:     www.projectzombie.net
- * 
- * Initiates random care package drops by combining an alternate state of the
- * map with a base state on the actual player map. Stores the base state blocks
- * within a text buffer and pastes the alt state to the location of the base
- * state. Finds single chest within the pasted alt state and sets a randomly
- * define set of items made by the administrator.  Restores the state on a
- * timer.
+ *
+ * Allows players to create rank-based Teams. Includes features such as no
+ * team PVP and a group spawn.
  *
  */
-
 package net.projectzombie.survivalteams.main;
 
 import org.bukkit.plugin.java.JavaPlugin;
