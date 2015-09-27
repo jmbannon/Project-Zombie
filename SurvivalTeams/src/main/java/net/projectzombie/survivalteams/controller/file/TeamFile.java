@@ -78,7 +78,7 @@ public class TeamFile
         final String teamName = team.getName();
         final boolean savedSuccessfully;
         
-        TEAM_YAML.set(FilePath.getLeaderPath(teamName), creator.getUUID().toString());
+        TEAM_YAML.set(FilePath.getLeaderPath(teamName) + "." + creator.getUUID().toString(), creator.getPlayerName());
         savedSuccessfully = saveConfig();
         
         if (savedSuccessfully)
@@ -130,24 +130,18 @@ public class TeamFile
         return saveConfig();
     }
 
-    public static boolean writeRank(final TeamPlayer reciever,
-                                    final TeamRank rank)
+    public static boolean writePlayerToTeam(final Team team,
+                                            final TeamPlayer reciever,
+                                            final TeamRank rank)
     {
         if (!reciever.isLeader())
         {
-            TEAM_YAML.set(reciever.getPath(reciever.getTeam()), rank.toFileName());
+            TEAM_YAML.set(reciever.getPath(team) + ".rank", rank.toFileName());
+            TEAM_YAML.set(reciever.getPath(team) + ".name", reciever.getPlayerName());
             return saveConfig();
         }
         else
             return false;
-    }
-    
-    public static boolean writePlayerToTeam(final Team team,
-                                            final TeamPlayer player,
-                                            final TeamRank rank)
-    {
-        TEAM_YAML.set(player.getPath(team), rank.toFileName());
-        return saveConfig();
     }
     
     public static boolean removePlayerFromTeam(final Team team,
@@ -176,8 +170,22 @@ public class TeamFile
     static public TeamRank getMemberRank(final String teamName,
                                          final UUID uuid)
     {
-        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString();
+        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString() + ".rank";
         return TEAM_YAML.contains(memberPath) ? TeamRank.getIntRank(TEAM_YAML.getString(memberPath)) : TeamRank.NULL;
+    }
+    
+    static public String getMemberName(final String teamName,
+                                       final UUID uuid)
+    {
+        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString() + ".name";
+        return TEAM_YAML.contains(memberPath) ? TEAM_YAML.getString(memberPath) : null;
+    }
+    
+    static public String getLeaderName(final String teamName,
+                                       final UUID uuid)
+    {
+        final String leaderPath = FilePath.getLeaderPath(teamName) + "." + uuid.toString();
+        return TEAM_YAML.contains(leaderPath) ? TEAM_YAML.getString(leaderPath) : null;
     }
     
     /**
@@ -213,8 +221,12 @@ public class TeamFile
     
     static protected UUID getLeaderUUID(final String teamName)
     {
-        return containsTeam(teamName) ?
-            UUID.fromString(TEAM_YAML.getString(FilePath.getLeaderPath(teamName))) : null;
+        if (containsTeam(teamName))
+        {
+            for (String leaderUUID : TEAM_YAML.getConfigurationSection(FilePath.getLeaderPath(teamName)).getKeys(false))
+                return UUID.fromString(leaderUUID);
+        }
+        return null;
     }
     
     static protected Location getSpawn(final String teamName)
@@ -225,7 +237,11 @@ public class TeamFile
     
     static public TeamPlayer getPlayer(final UUID uuid)
     {
-        return ONLINE_PLAYERS.get(uuid);
+        final TeamPlayer tp = ONLINE_PLAYERS.get(uuid);
+        if (tp != null && tp.getPlayer() != null)
+            return tp;
+        else
+            return null;
     }
     
     static public Team getTeam(final String teamName)

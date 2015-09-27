@@ -103,11 +103,11 @@ public class TeamPlayer
         {
           if (!TeamFile.containsTeam(teamName))
           {
-              final Team team = new Team(teamName, this.playerUUID);
-              if (TeamFile.writeTeam(this, team))
+              final Team newTeam = new Team(teamName, this.playerUUID);
+              if (TeamFile.writeTeam(this, newTeam))
               {
-                  initializeTeam(team);
-                  player.sendMessage(TPText.createdNewTeam(team));
+                  initializeTeam(newTeam);
+                  player.sendMessage(TPText.createdNewTeam(newTeam));
               }
               else
                   player.sendMessage(FILE_ERROR);
@@ -155,7 +155,7 @@ public class TeamPlayer
     public void promotePlayer(final String playerToPromote,
                               final String theRank)
     {
-        this.setMemberRank(playerToPromote, theRank, false);
+        this.setMemberRank(playerToPromote, theRank, true);
     }
     
     /**
@@ -167,12 +167,12 @@ public class TeamPlayer
     public void demotePlayer(final String playerToPromote,
                              final String theRank)
     {
-        this.setMemberRank(playerToPromote, theRank, true);
+        this.setMemberRank(playerToPromote, theRank, false);
     }
     
     private void setMemberRank(final String playerToPromote,
                                final String theRank,
-                               final boolean demoted)
+                               final boolean promoted)
     {
         final TeamPlayer reciever = TeamFile.getPlayer(playerToPromote);
         final TeamRank newRank = TeamRank.getRank(theRank);
@@ -187,21 +187,21 @@ public class TeamPlayer
             player.sendMessage(RANK_NOT_FOUND);
         else if (!team.equals(reciever.team))
             player.sendMessage(TPText.NOT_ON_TEAM);
-        else if (demoted && rank.canPromote(newRank))
+        else if (promoted && rank.canPromote(newRank))
         {
-            if (TeamFile.writeRank(reciever, newRank))
+            if (TeamFile.writePlayerToTeam(team, reciever, newRank))
             {
-                player.sendMessage(demoted(reciever, newRank));
-                reciever.recieveDemotion(this, newRank);
+                player.sendMessage(promoted(reciever, newRank));
+                reciever.recievePromotion(this, newRank);
             }
             else
                 player.sendMessage(FILE_ERROR);
         }
-        else if (!demoted && rank.canDemote(newRank))
-            if (TeamFile.writeRank(reciever, newRank))
+        else if (!promoted && rank.canDemote(newRank))
+            if (TeamFile.writePlayerToTeam(team, reciever, newRank))
             {
-                player.sendMessage(promoted(reciever, newRank));
-                reciever.recievePromotion(this, newRank);
+                player.sendMessage(demoted(reciever, newRank));
+                reciever.recieveDemotion(this, newRank);
             }
             else
                 player.sendMessage(FILE_ERROR);
@@ -267,20 +267,18 @@ public class TeamPlayer
                 player.sendMessage(PLAYER_NOT_FOUND);
             else if (reciever.equals(this))
                 player.sendMessage(SELF_ERROR);
+            else if (!reciever.getTeam().equals(team))
+                player.sendMessage(NOT_ON_TEAM);
             else if (rank.canKick(reciever.getRank()))
             {
-                if (reciever.getTeam().equals(team))
+                if (team.removePlayer(reciever))
                 {
-                    if (TeamFile.removePlayerFromTeam(team, reciever))
-                    {
-                        reciever.kickedFromTeam();
-                        player.sendMessage(TPText.kickedPlayer(reciever));
-                    }
-                    else
-                        player.sendMessage(FILE_ERROR);
+                    reciever.kickedFromTeam();
+                    player.sendMessage(TPText.kickedPlayer(reciever));
                 }
                 else
-                    player.sendMessage(NOT_ON_TEAM);
+                    player.sendMessage(FILE_ERROR);
+                    
             }
             else
                 player.sendMessage(RANK_NO_OPERATION);
@@ -364,7 +362,7 @@ public class TeamPlayer
     
     public void getTeamInfo()
     {
-        TPText.printTeamInfo(this);
+        TPText.printTeamInfo(team, this);
     }
 
     private void recievePromotion(final TeamPlayer sender,

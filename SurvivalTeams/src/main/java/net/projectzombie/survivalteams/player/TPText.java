@@ -17,7 +17,9 @@
 package net.projectzombie.survivalteams.player;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import net.projectzombie.consistentchatapi.PluginChat;
+import net.projectzombie.survivalteams.controller.file.TeamFile;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.ChatColor;
@@ -134,24 +136,40 @@ public class TPText
         return tag+"You have demoted " + chat.toK1(reciever.getPlayerName()) + " to " + chat.toK2(rank.getTitle()) + ".";
     }
     
-    static public void printTeamInfo(final TeamPlayer teamPlayer)
+    static public void printTeamInfo(final Team team,
+                                     final TeamPlayer teamPlayer)
     {
         final Player player = teamPlayer.getPlayer();
         
-        if (teamPlayer.hasTeam())
+        if (team != null)
         {
-            final Team team = teamPlayer.getTeam();
-            final ArrayList<TeamPlayer> officers = team.getMembers(TeamRank.OFFICER);
-            final ArrayList<TeamPlayer> followers = team.getMembers(TeamRank.FOLLOWER);
+            final String teamName = team.getName();
+            final ArrayList<String> officers = new ArrayList<>();
+            final ArrayList<String> followers = new ArrayList<>();
             
-            player.sendMessage(tag+chat.toK1(team.getName()));
-            player.sendMessage(chat.toK1("Leader: ") + team.getLeader().getPlayerName());
+            TeamRank rank;
+            String name;
+            for (UUID uuid : team.getMemberUUIDs())
+            {
+                name = TeamFile.getMemberName(teamName, uuid);
+                rank = TeamFile.getMemberRank(teamName, uuid);
+                if (name != null)
+                {
+                    if (rank.equals(TeamRank.OFFICER))
+                        officers.add(name);
+                    else if (rank.equals(TeamRank.FOLLOWER))
+                        followers.add(name);
+                }
+            }
+            
+            player.sendMessage(tag+chat.toK1(teamName));
+            player.sendMessage(chat.toK1("Leader: ") + TeamFile.getLeaderName(teamName, team.getLeaderUUID()));
             player.sendMessage(chat.toK1("Officers: "));
-            for (TeamPlayer tp : officers)
-                player.sendMessage(chat.toPT(tp.getPlayerName()));
+            for (String officerName : officers)
+                player.sendMessage(chat.toPT(officerName));
             player.sendMessage(chat.toK1("Followers: "));
-            for (TeamPlayer tp : followers)
-                player.sendMessage(chat.toPT(tp.getPlayerName()));
+            for (String followerName : followers)
+                player.sendMessage(chat.toPT(followerName));
             
         }
         else

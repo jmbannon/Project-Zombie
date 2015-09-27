@@ -74,9 +74,10 @@ public class Team implements Comparable<Team>
     public ArrayList<TeamPlayer> getPlayers()
     {
         final ArrayList<TeamPlayer> playersOnline = new ArrayList<>();
-        TeamPlayer player;
+        TeamPlayer player = TeamFile.getPlayer(leaderUUID);
         
-        playersOnline.add(TeamFile.getPlayer(leaderUUID));
+        if (player != null)
+            playersOnline.add(TeamFile.getPlayer(leaderUUID));
         
         for (UUID uuid : members)
             if ((player = TeamFile.getPlayer(uuid)) != null)
