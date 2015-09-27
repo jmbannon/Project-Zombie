@@ -29,17 +29,17 @@ public class FilePath
 
     static public String getTeamPath(final String teamName)
     {
-        return TeamFile.BASE_PATH + teamName;
+        return TeamFile.ROOT_PATH + teamName;
     }
 
     static public String getLeaderPath(final TeamPlayer player, final String teamName)
     {
-        return player.hasTeam() ? getLeaderUUIDpath(teamName) : null;
+        return getLeaderUUIDpath(teamName) + "." + player.getUUID().toString();
     }
 
     static public String getPlayerPath(final TeamPlayer player, final String teamName)
     {
-        return player.hasTeam() ? getUUIDMemberPath(teamName) + player.getUUID().toString() : null;
+        return getUUIDMemberPath(teamName) + "." + player.getUUID().toString();
     }
 
     static protected String getUUIDMemberPath(final String teamName)

@@ -70,6 +70,14 @@ public enum TeamRank
     {
         return this.equals(FOLLOWER);
     }
+    
+    static public TeamRank getRank(final String rankName)
+    {
+        for (TeamRank rank : TeamRank.values())
+            if (rank.getTitle().equalsIgnoreCase(rankName))
+                return rank;
+        return null;
+    }
 
     static public TeamRank getRank(final int rankValue)
     {

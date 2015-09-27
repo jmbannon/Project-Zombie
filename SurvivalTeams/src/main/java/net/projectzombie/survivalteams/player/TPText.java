@@ -43,8 +43,10 @@ public class TPText
     ON_TEAM                 = "You cannot do this while on a team.",
     NOT_ON_TEAM             = "This player is not on your team.",
     FILE_ERROR              = "A file error has occured with this operation. Please consult an admin",
-    NEW_SPAWN               = "A new team spawn has been set.";
-    
+    NEW_SPAWN               = "A new team spawn has been set.",
+    PLAYER_NOT_FOUND        = "Could find a player with that name.",
+    RANK_NOT_FOUND          = "That rank does not exist.",
+    TEAM_NOT_ONLINE         = "None of your team is online.";
     
     private TPText() { /* Return nothing. */ }
     
@@ -58,10 +60,9 @@ public class TPText
         return "You have been kicked from " + team.getName() + ".";
     }
     
-    static public String recieveTeamInvite(final TeamPlayer sender,
-                                           final TeamRank newRank)
+    static public String recieveTeamInvite(final TeamPlayer sender)
     {
-        return sender.getPlayerName() + " has invited you to " + sender.getTeam().getName() + " offering " + newRank.getTitle() + " status.";
+        return sender.getPlayerName() + " has invited you to " + sender.getTeam().getName() + ".";
     }
     
     static public String recievePromototion(final TeamPlayer sender,

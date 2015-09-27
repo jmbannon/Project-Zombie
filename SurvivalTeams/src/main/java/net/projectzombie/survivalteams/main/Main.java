@@ -16,6 +16,10 @@
  */
 package net.projectzombie.survivalteams.main;
 
+import net.projectzombie.survivalteams.controller.PlayerCommands;
+import net.projectzombie.survivalteams.controller.PlayerListener;
+import net.projectzombie.survivalteams.controller.file.FileController;
+import net.projectzombie.survivalteams.controller.file.TeamFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -24,16 +28,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  * 
  * Main is used for enabling and disable the plugin on server startup/stop.
  */
-public class Main extends JavaPlugin {
-
-
+public class Main extends JavaPlugin
+{
     @Override
-    public void onEnable() {
-        this.getLogger().info("Care Package Enabled!");
+    public void onEnable()
+    {
+        TeamFile.initialize(this);
+        this.getCommand("party").setExecutor(new PlayerCommands());
+        this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        this.getLogger().info("SurvivalParties Enabled.");
+        
     }
 
     @Override
-    public void onDisable() {
-        this.getLogger().info("CarePackage disabled");
+    public void onDisable()
+    {
+        TeamFile.onDisable();
+        this.getLogger().info("SurvivalParties disabled.");
     }
 }

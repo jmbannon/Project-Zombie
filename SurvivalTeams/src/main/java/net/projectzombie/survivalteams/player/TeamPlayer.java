@@ -16,6 +16,7 @@
  */
 package net.projectzombie.survivalteams.player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import net.projectzombie.survivalteams.controller.file.FilePath;
@@ -91,7 +92,9 @@ public class TeamPlayer
     public void createTeam(final String teamName)
     {
         if (!hasTeam())
-          if (TeamFile.containsTeam(teamName))
+        {
+          if (!TeamFile.containsTeam(teamName))
+          {
               if (TeamFile.writeTeam(this, teamName))
               {
                   initializeTeam(teamName);
@@ -99,8 +102,10 @@ public class TeamPlayer
               }
               else
                   player.sendMessage(TPText.FILE_ERROR);
+          }
           else
               player.sendMessage(TPText.TEAM_CREATE_NAME_TAKEN);
+        }
         else
             player.sendMessage(TPText.ON_TEAM);
     }
@@ -125,11 +130,20 @@ public class TeamPlayer
             player.sendMessage(TPText.NOT_LEADER);
     }
     
-    public void promotePlayer(final TeamPlayer reciever,
-                              final TeamRank newRank)
+    public void promotePlayer(final String toPromote,
+                              final String theRank)
     {
+        final TeamPlayer reciever;
+        final TeamRank newRank;
         if (rank.canPromote())
-            if (reciever.rank.canBePromoted() && team.equals(reciever.team))
+        {
+            reciever = TeamFile.getPlayer(toPromote);
+            newRank = TeamRank.getRank(theRank);
+            if (reciever == null)
+                player.sendMessage(TPText.PLAYER_NOT_FOUND);
+            else if (newRank == null)
+                player.sendMessage(TPText.RANK_NOT_FOUND);
+            else if (reciever.rank.canBePromoted() && team.equals(reciever.team))
                 if (TeamFile.writePromotion(reciever, newRank))
                 {
                     player.sendMessage(TPText.promoted(reciever, newRank));
@@ -139,6 +153,7 @@ public class TeamPlayer
                     player.sendMessage(TPText.FILE_ERROR);
             else
                 player.sendMessage(TPText.CANNOT_PROMOTE);
+        }
         else if (team == null)
             player.sendMessage(TPText.NO_TEAM);
         else
@@ -164,11 +179,13 @@ public class TeamPlayer
     ////////////////////////////////////////////////////////////////////////////
     // Officer functions
     //
-    public void invitePlayerToTeam(final TeamPlayer reciever,
-                                   final TeamRank recieverRank)
+    public void invitePlayerToTeam(final String toInvite)
     {
-        if (rank.canInvite() && !reciever.hasTeam())
-            reciever.recieveTeamInvite(this, recieverRank);
+        final TeamPlayer reciever = TeamFile.getPlayer(toInvite);
+        if (reciever == null)
+            player.sendMessage(TPText.PLAYER_NOT_FOUND);
+        else if (rank.canInvite() && !reciever.hasTeam())
+            reciever.recieveTeamInvite(this);
         else if (reciever.team != null)
             player.sendMessage(TPText.INVITE_INVALID_HAS_TEAM);
         else if (team == null)
@@ -177,26 +194,55 @@ public class TeamPlayer
             player.sendMessage(TPText.RANK_NO_OPERATION);
     }
     
-    public void kickPlayerFromTeam(final TeamPlayer reciever)
+    public void kickPlayerFromTeam(final String toKick)
     {
-        if (rank.canKick())
-            if (reciever.getTeam().equals(team))
-                if (TeamFile.removePlayerFromTeam(team, reciever))
-                {
-                    reciever.kickedFromTeam();
-                    player.sendMessage(TPText.kickedPlayer(reciever));
-                }
+        final TeamPlayer reciever;
+        if (hasTeam())
+        {
+            if (rank.canKick())
+            {
+                reciever = TeamFile.getPlayer(toKick);
+                if (reciever == null)
+                    player.sendMessage(TPText.PLAYER_NOT_FOUND);
+                else if (reciever.getTeam().equals(team))
+                    if (TeamFile.removePlayerFromTeam(team, reciever))
+                    {
+                        reciever.kickedFromTeam();
+                        player.sendMessage(TPText.kickedPlayer(reciever));
+                    }
+                    else
+                        player.sendMessage(TPText.FILE_ERROR);
                 else
-                    player.sendMessage(TPText.FILE_ERROR);
+                    player.sendMessage(TPText.NOT_ON_TEAM);
+            }
             else
-                player.sendMessage(TPText.NOT_ON_TEAM);
+                player.sendMessage(TPText.RANK_NO_OPERATION);
+        }
         else
-            player.sendMessage(TPText.RANK_NO_OPERATION); 
+            player.sendMessage(TPText.NO_TEAM);
     }
     
     ////////////////////////////////////////////////////////////////////////////
     // Team functions
     //
+    
+    public void listOnlineTeamMembers()
+    {
+        if (hasTeam())
+        {
+            final ArrayList<TeamPlayer> onlineTeamMembers = team.getOnlinePlayers();
+            if (onlineTeamMembers.size() == 1)
+                player.sendMessage(TPText.TEAM_NOT_ONLINE);
+            else
+            {
+                for (TeamPlayer onlinePlayer : team.getOnlinePlayers())
+                    player.sendMessage(onlinePlayer.getPlayerName());
+            }
+        }
+        else
+            player.sendMessage(TPText.NO_TEAM);
+            
+    }
     
     public void teleportToSpawn()
     {
@@ -252,24 +298,22 @@ public class TeamPlayer
     //
 
     
-    private void recieveTeamInvite(final TeamPlayer sender,
-                                  final TeamRank rank)
+    private void recieveTeamInvite(final TeamPlayer sender)
     {
         if (sender.team != null && team == null)
         {
             pendingInvites.put(sender.team.getName(), getTimeStamp());
-            player.sendMessage(TPText.recieveTeamInvite(sender, rank));
+            player.sendMessage(TPText.recieveTeamInvite(sender));
         }
     }
     
-    public void acceptTeamInvite(final TeamPlayer sender,
-                                 final TeamRank offeredRank)
+    public void acceptTeamInvite(final String teamName)
     {
-        final Team newTeam = sender.team;
-        if (validInvite(sender))
+        final Team newTeam = TeamFile.getTeam(teamName);
+        if (validInvite(newTeam))
         {
-            if (newTeam.addPlayer(sender))
-                joinTeam(newTeam, offeredRank);
+            if (newTeam.addPlayer(this))
+                joinTeam(newTeam);
             else
                 player.sendMessage(TPText.FILE_ERROR);
         }
@@ -282,11 +326,10 @@ public class TeamPlayer
     // Helper Functions
     //
     
-    private boolean validInvite(final TeamPlayer sender)
+    private boolean validInvite(final Team team)
     {
-        final String teamName = sender.team.getName();
-        return team == null && pendingInvites.containsKey(teamName)
-                && (pendingInvites.get(teamName) - getTimeStamp() <= INVITATION_ACCEPT_TIME);
+        return team == null && pendingInvites.containsKey(team.getName())
+                && (pendingInvites.get(team.getName()) - getTimeStamp() <= INVITATION_ACCEPT_TIME);
     }
     
     private void clearTeam()
@@ -296,11 +339,10 @@ public class TeamPlayer
         this.pendingInvites = new HashMap<>();
     }
     
-    private void joinTeam(final Team team,
-                          final TeamRank rank)
+    private void joinTeam(final Team team)
     {
         this.team = team;
-        this.rank = rank;
+        this.rank = TeamRank.FOLLOWER;
         this.pendingInvites = null;
     }
     

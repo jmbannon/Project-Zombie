@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
+import net.projectzombie.survivalteams.player.TPText;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -42,8 +45,8 @@ public class TeamFile
     private static File TEAM_FILE;
     private static FileConfiguration TEAM_YAML;
     
-    private static final String BASE      = "teams";
-    public static  final String BASE_PATH = BASE + ".";
+    private static final String ROOT      = "teams";
+    public static  final String ROOT_PATH = ROOT + ".";
     
     protected static final HashMap<String, Team>     ONLINE_TEAMS     = new HashMap<>();
     protected static final HashMap<UUID, TeamPlayer> ONLINE_PLAYERS   = new HashMap<>();
@@ -54,6 +57,11 @@ public class TeamFile
     {
         PLUGIN = plugin;
         loadConfig();
+        return saveConfig();
+    }
+    
+    public static boolean onDisable()
+    {
         return saveConfig();
     }
     
@@ -134,10 +142,13 @@ public class TeamFile
     
     static protected String getTeamName(final UUID uuid)
     {
-        for (String teamName : TEAM_YAML.getConfigurationSection(FilePath.getTeamPath(BASE)).getKeys(false))
+        if (TEAM_YAML.contains(ROOT))
         {
-             if (containsMemberUUID(teamName, uuid) || getLeaderUUID(teamName).equals(uuid))
-                 return teamName;
+            for (String teamName : TEAM_YAML.getConfigurationSection(ROOT).getKeys(false))
+            {
+                 if (containsMemberUUID(teamName, uuid) || getLeaderUUID(teamName).equals(uuid))
+                     return teamName;
+            }
         }
         return null;
     }
@@ -156,6 +167,17 @@ public class TeamFile
     static public TeamPlayer getOnlineTeamPlayer(final UUID uuid)
     {
         return ONLINE_PLAYERS.get(uuid);
+    }
+    
+    static public Team getTeam(final String teamName)
+    {
+        return ONLINE_TEAMS.get(teamName);
+    }
+    
+    static public TeamPlayer getPlayer(final String name)
+    {
+        final Player player = Bukkit.getPlayer(name);
+        return ONLINE_PLAYERS.get(player.getUniqueId());
     }
     
     ////////////////////////////////////////////////////////////////////////////

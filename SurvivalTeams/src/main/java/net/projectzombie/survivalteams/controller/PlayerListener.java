@@ -19,13 +19,14 @@ package net.projectzombie.survivalteams.controller;
 import net.projectzombie.survivalteams.controller.file.FileController;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 /**
  *
  * @author jb
  */
-public class PlayerListener
+public class PlayerListener implements Listener
 {
     @EventHandler(priority = EventPriority.MONITOR)
     public void AssignTeamPlayerOnLoogin(final PlayerLoginEvent event)

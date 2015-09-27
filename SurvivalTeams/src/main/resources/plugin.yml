@@ -1,0 +1,7 @@
+name: SurvivalTeams
+main: net.projectzombie.survivalteams.main.Main
+version: 1.0
+commands:
+  party:
+    description: Nope.
+    usage: "WIP"

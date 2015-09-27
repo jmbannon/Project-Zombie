@@ -17,6 +17,9 @@
 package net.projectzombie.survivalteams.controller;
 
 import static net.projectzombie.survivalteams.controller.CMDText.*;
+import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.player.TeamPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,15 +36,58 @@ public class PlayerCommands implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String label, String[] args)
     {
-        if (!(cs instanceof Player))
-			return true;
+        if (!(cs instanceof Player && isCommand(label, COMMAND)))
+            return true;
 		
-        final Player sender = (Player)cs;
+        final Player player = (Player)cs;
+        final TeamPlayer sender = TeamFile.getOnlineTeamPlayer(player.getUniqueId());
         
-        if (isCommand(label, COMMAND))
+        
+        if (args.length == 1)
         {
+            if (isCommand(args[0], ARG_LEAVE))
+                sender.quitTeam();
+            
+            else if (isCommand(args[0], ARG_DISBAND))
+                sender.disbandTeam();
+            
+            else if (isCommand(args[0], ARG_LIST))
+                sender.listOnlineTeamMembers();
+            
+            else
+                listCommands(player);
             
         }
+        
+        else if (args.length == 2)
+        {
+            if (isCommand(args[0], ARG_CREATE))
+                sender.createTeam(args[1]);
+            
+            else if (isCommand(args[0], ARG_INVITE))
+                sender.invitePlayerToTeam(args[1]);
+            
+            
+            
+            else if (isCommand(args[0], ARG_KICK))
+                sender.kickPlayerFromTeam(args[1]);
+            
+            else if (isCommand(args[0], ARG_ACCEPT))
+                sender.acceptTeamInvite(args[1]);
+            else
+                listCommands(player);
+        }
+        
+        else if (args.length == 3)
+        {
+            if (isCommand(args[0], ARG_PROMOTE))
+                sender.promotePlayer(args[1], args[2]);
+            if (isCommand(args[0], ARG_DEMOTE))
+                ; // DO STUFF
+            else
+                listCommands(player);
+        }
+        
         return true;
     }
     
@@ -56,7 +102,9 @@ public class PlayerCommands implements CommandExecutor
     
     public void listCommands(final Player player)
     {
-        
+        player.sendMessage("SurvivalParty Commands:");
+        player.sendMessage("/party create <Team Name>");
+        player.sendMessage("/party invite <Player Name>");
     }
     
 }
