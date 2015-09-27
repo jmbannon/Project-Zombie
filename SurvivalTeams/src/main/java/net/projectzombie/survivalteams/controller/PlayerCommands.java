@@ -47,6 +47,9 @@ public class PlayerCommands implements CommandExecutor
             if (isCommand(args[0], ARG_LEAVE))
                 sender.quitTeam();
             
+            else if (isCommand(args[0], ARG_BASE))
+                sender.teleportToBase();
+
             else if (isCommand(args[0], ARG_DISBAND))
                 sender.disbandTeam();
             
@@ -55,6 +58,15 @@ public class PlayerCommands implements CommandExecutor
             
             else if (isCommand(args[0], ARG_LIST))
                 sender.listOnlineTeams(1);
+            
+            else if (isCommand(args[0], ARG_INFO))
+                sender.getTeamInfo();
+            
+            else if (isCommand(args[0], ARG_SETBASE))
+                sender.setBase();
+            
+            else if (player.isOp() && isCommand(args[0], ARG_REMOVE_SPAWNS))
+                TeamFile.removeAllTeamSpawns();
             
             else
                 listCommands(player);
@@ -111,6 +123,9 @@ public class PlayerCommands implements CommandExecutor
         player.sendMessage("SurvivalParty Commands:");
         player.sendMessage("/party create <Team Name>");
         player.sendMessage("/party invite <Player Name>");
+        player.sendMessage("/party setbase");
+        player.sendMessage("/party base");        
+        player.sendMessage("/party info");
         player.sendMessage("/party online");
         player.sendMessage("/party leave");
         player.sendMessage("/party disband");

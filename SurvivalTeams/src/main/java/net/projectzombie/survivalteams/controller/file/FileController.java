@@ -72,5 +72,10 @@ public class FileController
         TeamFile.ONLINE_TEAMS.put(teamName, team);
         return team;
     }
+    
+    static public void removeOnlineTeamPlayer(final Player player)
+    {
+        TeamFile.ONLINE_PLAYERS.remove(player.getUniqueId());
+    }
 
 }

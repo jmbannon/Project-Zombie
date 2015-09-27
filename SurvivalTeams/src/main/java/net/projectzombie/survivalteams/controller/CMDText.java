@@ -34,8 +34,13 @@ public class CMDText
     ARG_LEAVE  = new String[]  { "leave",   "quit",   "q", "l" },
     ARG_DISBAND = new String[] { "disband" },
     ARG_ONLINE = new String[]  { "online", "o" },
+    ARG_INFO   = new String[]  { "info" },
+    ARG_SETBASE = new String[] { "setbase", "set" },
+    ARG_BASE    = new String[] { "base", "spawn" },
     ARG_LIST   = new String[]  { "list" },
-    ARG_HELP   = new String[]  { "help",    "commands" };
+    ARG_HELP   = new String[]  { "help",    "commands" },
+            
+    ARG_REMOVE_SPAWNS   = new String[]  { "removeAllSpawns" };
     
     
             

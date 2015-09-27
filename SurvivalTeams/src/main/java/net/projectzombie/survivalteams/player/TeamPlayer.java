@@ -26,6 +26,7 @@ import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 /**
@@ -154,7 +155,7 @@ public class TeamPlayer
     public void promotePlayer(final String playerToPromote,
                               final String theRank)
     {
-        this.setMemberRank(playerToPromote, theRank, true);
+        this.setMemberRank(playerToPromote, theRank, false);
     }
     
     /**
@@ -166,12 +167,12 @@ public class TeamPlayer
     public void demotePlayer(final String playerToPromote,
                              final String theRank)
     {
-        this.setMemberRank(playerToPromote, theRank, false);
+        this.setMemberRank(playerToPromote, theRank, true);
     }
     
     private void setMemberRank(final String playerToPromote,
                                final String theRank,
-                               final boolean promote)
+                               final boolean demoted)
     {
         final TeamPlayer reciever = TeamFile.getPlayer(playerToPromote);
         final TeamRank newRank = TeamRank.getRank(theRank);
@@ -186,7 +187,7 @@ public class TeamPlayer
             player.sendMessage(RANK_NOT_FOUND);
         else if (!team.equals(reciever.team))
             player.sendMessage(TPText.NOT_ON_TEAM);
-        else if (promote && rank.canPromote(newRank))
+        else if (demoted && rank.canPromote(newRank))
         {
             if (TeamFile.writeRank(reciever, newRank))
             {
@@ -196,7 +197,7 @@ public class TeamPlayer
             else
                 player.sendMessage(FILE_ERROR);
         }
-        else if (!promote && rank.canDemote(newRank))
+        else if (!demoted && rank.canDemote(newRank))
             if (TeamFile.writeRank(reciever, newRank))
             {
                 player.sendMessage(promoted(reciever, newRank));
@@ -211,18 +212,24 @@ public class TeamPlayer
     /**
      * Sets the team spawn if the player is the team leader.
      */
-    public void setSpawn()
+    public void setBase()
     {
+        final Location location = player.getEyeLocation();
         if (isLeader())
         {
-            if (TeamFile.writeSpawn(team, player.getLocation()))
+            if (TeamFile.isValidSpawnSet(location))
             {
-                team.setSpawn(player.getLocation());
-                for (TeamPlayer member : team.getPlayers())
-                    member.getPlayer().sendMessage(NEW_SPAWN);
+                if (TeamFile.writeSpawn(team, location))
+                {
+                    team.setSpawn(location);
+                    for (TeamPlayer member : team.getPlayers())
+                        member.getPlayer().sendMessage(NEW_SPAWN);
+                }
+                else
+                    player.sendMessage(FILE_ERROR);
             }
             else
-                player.sendMessage(FILE_ERROR);
+                player.sendMessage(INVALID_BASE_SET);
         }
         else
             player.sendMessage(NOT_LEADER);
@@ -304,14 +311,14 @@ public class TeamPlayer
             
     }
     
-    public void teleportToSpawn()
+    public void teleportToBase()
     {
         final Location spawn = team.getSpawn();
         if (hasTeam())
-            if (spawn != null)
+            if (team.validSpawn())
                 player.teleport(spawn);
             else
-                player.sendMessage(NO_SPAWN);
+                player.sendMessage(INVALID_BASE);
         else
             player.sendMessage(NO_TEAM);
     }
@@ -319,16 +326,21 @@ public class TeamPlayer
     public void quitTeam()
     {
         if (hasTeam())
+        {
             if (!isLeader())
-                if (TeamFile.removePlayerFromTeam(team, this))
+            {
+                final Team toQuit = team;
+                if (toQuit.removePlayer(this))
                 {
-                    player.sendMessage(TPText.quitTeam(team));
-                    for (TeamPlayer oldMember : team.getPlayers())
-                        oldMember.getPlayer().sendMessage(hasQuitTeam(this));
                     clearTeam();
+                    player.sendMessage(TPText.quitTeam(toQuit));
+                    for (TeamPlayer oldMember : toQuit.getPlayers())
+                        oldMember.getPlayer().sendMessage(hasQuitTeam(this));
                 }
+            }
             else
                 player.sendMessage(LEADER_CANT_QUIT);
+        }
         else
             player.sendMessage(NO_TEAM);
     }
@@ -349,6 +361,11 @@ public class TeamPlayer
     ////////////////////////////////////////////////////////////////////////////
     // Outsider Functions
     //
+    
+    public void getTeamInfo()
+    {
+        TPText.printTeamInfo(this);
+    }
 
     private void recievePromotion(final TeamPlayer sender,
                                   final TeamRank newRank)
@@ -379,7 +396,10 @@ public class TeamPlayer
         if (validInvite(newTeam))
         {
             if (newTeam.addPlayer(this))
+            {
                 joinTeam(newTeam);
+                player.sendMessage(TPText.acceptTeamInvite(newTeam));
+            }
             else
                 player.sendMessage(FILE_ERROR);
         }
@@ -428,12 +448,12 @@ public class TeamPlayer
         this.pendingInvites.clear();
     }
     
-    public String getPath()
+    public String getPath(final Team newTeam)
     {
         if (hasTeam())
             return rank.equals(TeamRank.LEADER) ? FilePath.getLeaderPath(team.getName()) : FilePath.getPlayerPath(this, team.getName());
         else
-            return null;
+            return FilePath.getPlayerPath(this, newTeam.getName());
     }
     
     public String getFileName()     { return playerUUID.toString(); }

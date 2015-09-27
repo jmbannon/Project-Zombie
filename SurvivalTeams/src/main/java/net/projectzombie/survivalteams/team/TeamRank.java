@@ -85,10 +85,10 @@ public enum TeamRank
         return null;
     }
 
-    static public TeamRank getRank(final int rankValue)
+    static public TeamRank getIntRank(final String rankValue)
     {
         for (TeamRank rank : TeamRank.values())
-            if (rank.getRank() == rankValue)
+            if (rank.toFileName().equalsIgnoreCase(rankValue))
                 return rank;
         return null;
     }

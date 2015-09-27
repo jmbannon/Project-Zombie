@@ -18,7 +18,6 @@ package net.projectzombie.survivalteams.main;
 
 import net.projectzombie.survivalteams.controller.PlayerCommands;
 import net.projectzombie.survivalteams.controller.PlayerListener;
-import net.projectzombie.survivalteams.controller.file.FileController;
 import net.projectzombie.survivalteams.controller.file.TeamFile;
 import org.bukkit.plugin.java.JavaPlugin;
 

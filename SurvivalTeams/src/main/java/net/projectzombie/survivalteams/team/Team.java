@@ -23,6 +23,9 @@ import net.projectzombie.survivalteams.controller.file.TeamFile;
 import net.projectzombie.survivalteams.player.TPText;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  *
@@ -82,9 +85,23 @@ public class Team implements Comparable<Team>
         return playersOnline;
     }
     
+    public TeamPlayer getLeader()
+    {
+        return TeamFile.getPlayer(leaderUUID);
+    }
+    
+    public ArrayList<TeamPlayer> getMembers(final TeamRank memberRank)
+    {
+        final ArrayList<TeamPlayer> membersWithRank = new ArrayList<>();
+        for (TeamPlayer player : getPlayers())
+            if (player.getRank().equals(memberRank))
+                membersWithRank.add(player);
+        return membersWithRank;
+    }
+    
     public boolean addPlayer(final TeamPlayer player)
     {
-        final boolean fileWriteCheck = TeamFile.writePlayerToTeam(this, player, player.getRank());
+        final boolean fileWriteCheck = TeamFile.writePlayerToTeam(this, player, TeamRank.FOLLOWER);
         if (fileWriteCheck)
         {
             for (TeamPlayer onlineMembers : getPlayers())
@@ -102,7 +119,27 @@ public class Team implements Comparable<Team>
         return fileWriteCheck;
     }
     
-    public void setSpawn(final Location location)     { this.teamSpawn = location; }
+    public void setSpawn(final Location location) 
+    { 
+        this.teamSpawn = location;
+        final Block flagBlock = location.getBlock().getRelative(BlockFace.DOWN);
+        if (flagBlock.isEmpty())
+            flagBlock.setType(Material.STANDING_BANNER);
+    }
+    
+    public boolean validSpawn()
+    {
+        if (teamSpawn != null)
+        {
+            final Block spawnBlock = teamSpawn.getBlock();
+            return teamSpawn != null
+                    && spawnBlock.isEmpty()
+                    && spawnBlock.getRelative(0, -1, 0).getType().equals(Material.STANDING_BANNER)
+                    && !spawnBlock.getRelative(0, -2, 0).isEmpty();
+        }
+        else
+            return false;
+    }
     
     
     public String getPath()

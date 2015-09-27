@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import net.projectzombie.survivalteams.player.TeamPlayer;
@@ -30,6 +29,9 @@ import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -94,7 +96,7 @@ public class TeamFile
     public static boolean writeSpawn(final Team team,
                                      final Location location)
     {
-        TEAM_YAML.set(team.getPath() + ".spawn", location);
+        TEAM_YAML.set(team.getPath() + ".spawn", WorldCoordinate.toWorldCoordinate(location.getBlock()));
         return saveConfig();
     }
     
@@ -103,26 +105,55 @@ public class TeamFile
         TEAM_YAML.set(team.getPath() + ".spawn", null);
         return saveConfig();
     }
+    
+    static public boolean removeAllTeamSpawns()
+    {
+        Location spawnLocation;
+        String spawnPath;
+        Block bannerBlock;
+        if (TEAM_YAML.contains(ROOT))
+        {
+            for (String teamName : TEAM_YAML.getConfigurationSection(ROOT).getKeys(false))
+            {
+                spawnPath = FilePath.getTeamPath(teamName) + ".spawn";
+                spawnLocation = WorldCoordinate.toLocation(TEAM_YAML.getString(spawnPath));
+                if (spawnLocation != null)
+                {
+                    bannerBlock = spawnLocation.getBlock().getRelative(BlockFace.DOWN);
+                    if (bannerBlock.getType().equals(Material.STANDING_BANNER))
+                        bannerBlock.setType(Material.AIR);
+                }
+                    
+                TEAM_YAML.set(spawnPath, null);
+            }
+        }
+        return saveConfig();
+    }
 
     public static boolean writeRank(final TeamPlayer reciever,
                                     final TeamRank rank)
     {
-        TEAM_YAML.set(reciever.getPath(), rank.getRank());
-        return saveConfig();
+        if (!reciever.isLeader())
+        {
+            TEAM_YAML.set(reciever.getPath(reciever.getTeam()), rank.toFileName());
+            return saveConfig();
+        }
+        else
+            return false;
     }
     
     public static boolean writePlayerToTeam(final Team team,
                                             final TeamPlayer player,
                                             final TeamRank rank)
     {
-        TEAM_YAML.set(player.getPath(), rank.toFileName());
+        TEAM_YAML.set(player.getPath(team), rank.toFileName());
         return saveConfig();
     }
     
     public static boolean removePlayerFromTeam(final Team team,
                                                final TeamPlayer player)
     {
-        TEAM_YAML.set(player.getPath(), null);
+        TEAM_YAML.set(player.getPath(team), null);
         return saveConfig();
     }
     
@@ -146,7 +177,7 @@ public class TeamFile
                                          final UUID uuid)
     {
         final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString();
-        return TEAM_YAML.contains(memberPath) ? TeamRank.getRank(TEAM_YAML.getInt(memberPath)) : TeamRank.NULL;
+        return TEAM_YAML.contains(memberPath) ? TeamRank.getIntRank(TEAM_YAML.getString(memberPath)) : TeamRank.NULL;
     }
     
     /**
@@ -205,12 +236,20 @@ public class TeamFile
     static public TeamPlayer getPlayer(final String name)
     {
         final Player player = Bukkit.getPlayer(name);
-        return ONLINE_PLAYERS.get(player.getUniqueId());
+        return player != null ? ONLINE_PLAYERS.get(player.getUniqueId()) : null;
     }
     
     ////////////////////////////////////////////////////////////////////////////
     // Boolean functions
     //
+    
+    static public boolean isValidSpawnSet(final Location location)
+    {
+        final Block locBlock = location.getBlock();
+        return locBlock.isEmpty()
+                && locBlock.getRelative(0, -1, 0).isEmpty()
+                && !locBlock.getRelative(0, -2, 0).isEmpty();
+    }
     
     static protected boolean containsMemberUUID(final String teamName,
                                                 final UUID uuid)
