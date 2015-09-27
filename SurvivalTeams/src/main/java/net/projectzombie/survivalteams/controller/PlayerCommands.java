@@ -19,7 +19,6 @@ package net.projectzombie.survivalteams.controller;
 import static net.projectzombie.survivalteams.controller.CMDText.*;
 import net.projectzombie.survivalteams.controller.file.TeamFile;
 import net.projectzombie.survivalteams.player.TeamPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,7 +39,7 @@ public class PlayerCommands implements CommandExecutor
             return true;
 		
         final Player player = (Player)cs;
-        final TeamPlayer sender = TeamFile.getOnlineTeamPlayer(player.getUniqueId());
+        final TeamPlayer sender = TeamFile.getPlayer(player.getUniqueId());
         
         
         if (args.length == 1)
@@ -51,8 +50,11 @@ public class PlayerCommands implements CommandExecutor
             else if (isCommand(args[0], ARG_DISBAND))
                 sender.disbandTeam();
             
-            else if (isCommand(args[0], ARG_LIST))
+            else if (isCommand(args[0], ARG_ONLINE))
                 sender.listOnlineTeamMembers();
+            
+            else if (isCommand(args[0], ARG_LIST))
+                sender.listOnlineTeams(1);
             
             else
                 listCommands(player);
@@ -67,7 +69,8 @@ public class PlayerCommands implements CommandExecutor
             else if (isCommand(args[0], ARG_INVITE))
                 sender.invitePlayerToTeam(args[1]);
             
-            
+            else if (isCommand(args[0], ARG_LIST))
+                sender.listOnlineTeams(Integer.valueOf(args[1]));
             
             else if (isCommand(args[0], ARG_KICK))
                 sender.kickPlayerFromTeam(args[1]);
@@ -105,6 +108,14 @@ public class PlayerCommands implements CommandExecutor
         player.sendMessage("SurvivalParty Commands:");
         player.sendMessage("/party create <Team Name>");
         player.sendMessage("/party invite <Player Name>");
+        player.sendMessage("/party online");
+        player.sendMessage("/party leave");
+        player.sendMessage("/party disband");
+        player.sendMessage("/party list");
+        player.sendMessage("/party kick <Player Name>");
+        player.sendMessage("/party accept <Team Name>");
+        player.sendMessage("/party promote <Player Name> <Rank>");
+        player.sendMessage("/party demote <Player Name> <Rank>");
     }
     
 }

@@ -27,7 +27,7 @@ import org.bukkit.Location;
  *
  * @author jb
  */
-public class Team
+public class Team implements Comparable<Team>
 {
     private final String teamName;
     private final UUID leaderUUID;
@@ -35,6 +35,13 @@ public class Team
     private final ArrayList<UUID> members;
     private Location teamSpawn;
     
+    /**
+     * Creates a team from file/database. 
+     * @param teamName
+     * @param leaderUUID
+     * @param members
+     * @param teamSpawn 
+     */
     public Team(final String teamName,
                 final UUID leaderUUID,
                 final ArrayList<UUID> members,
@@ -66,7 +73,7 @@ public class Team
         TeamPlayer player;
         
         for (UUID uuid : members)
-            if ((player = TeamFile.getOnlineTeamPlayer(uuid)) != null)
+            if ((player = TeamFile.getPlayer(uuid)) != null)
                 playersOnline.add(player);
         
         return playersOnline;
@@ -83,7 +90,7 @@ public class Team
     {
         final boolean fileWriteCheck = TeamFile.removePlayerFromTeam(this, player);
         if (fileWriteCheck)
-            members.remove(player);
+            members.remove(player.getUUID());
         return fileWriteCheck;
     }
     
@@ -99,6 +106,12 @@ public class Team
     public String getPath()
     {
          return FilePath.getTeamPath(teamName);
+    }
+
+    @Override
+    public int compareTo(final Team o)
+    {
+        return teamName.compareTo(o.teamName);
     }
     
 }

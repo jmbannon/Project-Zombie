@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import net.projectzombie.survivalteams.controller.file.FilePath;
 import net.projectzombie.survivalteams.controller.file.TeamFile;
+import static net.projectzombie.survivalteams.player.TPText.*;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
@@ -48,10 +49,10 @@ public class TeamPlayer
     private HashMap<String, Long> pendingInvites;
     
     /**
-     * TeamPlayer if they have a team.
-     * @param player
-     * @param team
-     * @param rank 
+     * Creates a TeamPlayer if they have a team and rank.
+     * @param player Bukkit Player object.
+     * @param team Team they are on.
+     * @param rank  Current rank on team.
      */
     public TeamPlayer(final Player player,
                       final Team team,
@@ -65,8 +66,8 @@ public class TeamPlayer
     }
     
     /**
-     * TeamPlayer if they do not have a team.
-     * @param player 
+     * Creates a TeamPlayer if they do not have a team.
+     * @param player Bukkit Player object.
      */
     public TeamPlayer(final Player player)
     {
@@ -89,6 +90,12 @@ public class TeamPlayer
     ////////////////////////////////////////////////////////////////////////////
     // Leader functions
     //
+    
+    /**
+     * Creates a team of the given name if the name is not taken by an existing
+     * team.
+     * @param teamName Team name to be created.
+     */
     public void createTeam(final String teamName)
     {
         if (!hasTeam())
@@ -101,21 +108,28 @@ public class TeamPlayer
                   player.sendMessage(TPText.createdNewTeam(team));
               }
               else
-                  player.sendMessage(TPText.FILE_ERROR);
+                  player.sendMessage(FILE_ERROR);
           }
           else
-              player.sendMessage(TPText.TEAM_CREATE_NAME_TAKEN);
+              player.sendMessage(TEAM_CREATE_NAME_TAKEN);
         }
         else
-            player.sendMessage(TPText.ON_TEAM);
+            player.sendMessage(ON_TEAM);
     }
     
+    /**
+     * Creates a new Team as leader and sets rank as leader.
+     * @param teamName 
+     */
     public void initializeTeam(final String teamName)
     {
         team = new Team(teamName, this.playerUUID);
         rank = TeamRank.LEADER;
     }
     
+    /**
+     * Disbands the entire team if the player is the team leader.
+     */
     public void disbandTeam()
     {
         if (isLeader())
@@ -124,55 +138,93 @@ public class TeamPlayer
                 for (TeamPlayer teamMembers : team.getOnlinePlayers())
                     teamMembers.disbandedFromTeam();
             else
-                player.sendMessage(TPText.FILE_ERROR);
+                player.sendMessage(FILE_ERROR);
         }
         else
-            player.sendMessage(TPText.NOT_LEADER);
+            player.sendMessage(NOT_LEADER);
     }
     
-    public void promotePlayer(final String toPromote,
+    /**
+     * Promotes a player to the specified rank if the given player and rank are
+     * valid. The playerToPromote must be on the same team and a low
+     * @param playerToPromote
+     * @param theRank 
+     */
+    public void promotePlayer(final String playerToPromote,
                               final String theRank)
     {
-        final TeamPlayer reciever;
-        final TeamRank newRank;
-        if (rank.canPromote())
+        this.setMemberRank(playerToPromote, theRank, true);
+    }
+    
+    /**
+     * Promotes a player to the specified rank if the given player and rank are
+     * valid. The playerToPromote must be on the same team and a low
+     * @param playerToPromote
+     * @param theRank 
+     */
+    public void demotePlayer(final String playerToPromote,
+                             final String theRank)
+    {
+        this.setMemberRank(playerToPromote, theRank, false);
+    }
+    
+    private void setMemberRank(final String playerToPromote,
+                               final String theRank,
+                               final boolean promote)
+    {
+        final TeamPlayer reciever = TeamFile.getPlayer(playerToPromote);
+        final TeamRank newRank = TeamRank.getRank(theRank);
+        
+        if (team == null)
+            player.sendMessage(NO_TEAM);
+        else if (reciever == null)
+            player.sendMessage(PLAYER_NOT_FOUND);
+        else if (reciever.equals(this))
+            player.sendMessage(SELF_ERROR);
+        else if (newRank == null)
+            player.sendMessage(RANK_NOT_FOUND);
+        else if (!team.equals(reciever.team))
+            player.sendMessage(TPText.NOT_ON_TEAM);
+        else if (promote && rank.canPromote(newRank))
         {
-            reciever = TeamFile.getPlayer(toPromote);
-            newRank = TeamRank.getRank(theRank);
-            if (reciever == null)
-                player.sendMessage(TPText.PLAYER_NOT_FOUND);
-            else if (newRank == null)
-                player.sendMessage(TPText.RANK_NOT_FOUND);
-            else if (reciever.rank.canBePromoted() && team.equals(reciever.team))
-                if (TeamFile.writePromotion(reciever, newRank))
-                {
-                    player.sendMessage(TPText.promoted(reciever, newRank));
-                    reciever.recievePromotion(this, newRank);
-                }
-                else
-                    player.sendMessage(TPText.FILE_ERROR);
+            if (TeamFile.writeRank(reciever, newRank))
+            {
+                player.sendMessage(demoted(reciever, newRank));
+                reciever.recieveDemotion(this, newRank);
+            }
             else
-                player.sendMessage(TPText.CANNOT_PROMOTE);
+                player.sendMessage(FILE_ERROR);
         }
-        else if (team == null)
-            player.sendMessage(TPText.NO_TEAM);
+        else if (!promote && rank.canDemote(newRank))
+            if (TeamFile.writeRank(reciever, newRank))
+            {
+                player.sendMessage(promoted(reciever, newRank));
+                reciever.recievePromotion(this, newRank);
+            }
+            else
+                player.sendMessage(FILE_ERROR);
         else
             player.sendMessage(TPText.RANK_NO_OPERATION);
     }
     
+    /**
+     * Sets the team spawn if the player is the team leader.
+     */
     public void setSpawn()
     {
-        if (hasTeam() && rank.canSetSpawn())
+        if (isLeader())
+        {
             if (TeamFile.writeSpawn(team, player.getLocation()))
             {
                 team.setSpawn(player.getLocation());
                 for (TeamPlayer member : team.getOnlinePlayers())
-                    member.getPlayer().sendMessage(TPText.NEW_SPAWN);
+                    member.getPlayer().sendMessage(NEW_SPAWN);
             }
             else
-                player.sendMessage(TPText.FILE_ERROR);
+                player.sendMessage(FILE_ERROR);
+        }
         else
-            player.sendMessage(TPText.RANK_NO_OPERATION);
+            player.sendMessage(NOT_LEADER);
             
     }
 
@@ -183,15 +235,15 @@ public class TeamPlayer
     {
         final TeamPlayer reciever = TeamFile.getPlayer(toInvite);
         if (reciever == null)
-            player.sendMessage(TPText.PLAYER_NOT_FOUND);
+            player.sendMessage(PLAYER_NOT_FOUND);
         else if (rank.canInvite() && !reciever.hasTeam())
             reciever.recieveTeamInvite(this);
         else if (reciever.team != null)
-            player.sendMessage(TPText.INVITE_INVALID_HAS_TEAM);
+            player.sendMessage(INVITE_INVALID_HAS_TEAM);
         else if (team == null)
-            player.sendMessage(TPText.NO_TEAM);
+            player.sendMessage(NO_TEAM);
         else
-            player.sendMessage(TPText.RANK_NO_OPERATION);
+            player.sendMessage(RANK_NO_OPERATION);
     }
     
     public void kickPlayerFromTeam(final String toKick)
@@ -199,27 +251,31 @@ public class TeamPlayer
         final TeamPlayer reciever;
         if (hasTeam())
         {
-            if (rank.canKick())
+            reciever = TeamFile.getPlayer(toKick);
+            if (reciever == null)
+                player.sendMessage(PLAYER_NOT_FOUND);
+            else if (reciever.equals(this))
+                player.sendMessage(SELF_ERROR);
+            else if (rank.canKick(reciever.getRank()))
             {
-                reciever = TeamFile.getPlayer(toKick);
-                if (reciever == null)
-                    player.sendMessage(TPText.PLAYER_NOT_FOUND);
-                else if (reciever.getTeam().equals(team))
+                if (reciever.getTeam().equals(team))
+                {
                     if (TeamFile.removePlayerFromTeam(team, reciever))
                     {
                         reciever.kickedFromTeam();
                         player.sendMessage(TPText.kickedPlayer(reciever));
                     }
                     else
-                        player.sendMessage(TPText.FILE_ERROR);
+                        player.sendMessage(FILE_ERROR);
+                }
                 else
-                    player.sendMessage(TPText.NOT_ON_TEAM);
+                    player.sendMessage(NOT_ON_TEAM);
             }
             else
-                player.sendMessage(TPText.RANK_NO_OPERATION);
+                player.sendMessage(RANK_NO_OPERATION);
         }
         else
-            player.sendMessage(TPText.NO_TEAM);
+            player.sendMessage(NO_TEAM);
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -232,7 +288,7 @@ public class TeamPlayer
         {
             final ArrayList<TeamPlayer> onlineTeamMembers = team.getOnlinePlayers();
             if (onlineTeamMembers.size() == 1)
-                player.sendMessage(TPText.TEAM_NOT_ONLINE);
+                player.sendMessage(TEAM_NOT_ONLINE);
             else
             {
                 for (TeamPlayer onlinePlayer : team.getOnlinePlayers())
@@ -240,7 +296,7 @@ public class TeamPlayer
             }
         }
         else
-            player.sendMessage(TPText.NO_TEAM);
+            player.sendMessage(NO_TEAM);
             
     }
     
@@ -251,9 +307,9 @@ public class TeamPlayer
             if (spawn != null)
                 player.teleport(spawn);
             else
-                player.sendMessage(TPText.NO_SPAWN);
+                player.sendMessage(NO_SPAWN);
         else
-            player.sendMessage(TPText.NO_TEAM);
+            player.sendMessage(NO_TEAM);
     }
     
     public void quitTeam()
@@ -264,13 +320,13 @@ public class TeamPlayer
                 {
                     player.sendMessage(TPText.quitTeam(team));
                     for (TeamPlayer oldMember : team.getOnlinePlayers())
-                        oldMember.getPlayer().sendMessage(TPText.hasQuitTeam(this));
+                        oldMember.getPlayer().sendMessage(hasQuitTeam(this));
                     clearTeam();
                 }
             else
-                player.sendMessage(TPText.LEADER_CANT_QUIT);
+                player.sendMessage(LEADER_CANT_QUIT);
         else
-            player.sendMessage(TPText.NO_TEAM);
+            player.sendMessage(NO_TEAM);
     }
     
     private void kickedFromTeam()
@@ -281,22 +337,28 @@ public class TeamPlayer
     
     private void disbandedFromTeam()
     {
-        player.sendMessage(TPText.disbandedTeam(team));
+        player.sendMessage(disbandedTeam(team));
         clearTeam();
     }
     
-    
-    private void recievePromotion(final TeamPlayer sender,
-                                  final TeamRank newRank)
-    {
-        rank = newRank;
-        player.sendMessage(TPText.recievePromototion(sender, newRank));
-    }
     
     ////////////////////////////////////////////////////////////////////////////
     // Outsider Functions
     //
 
+    private void recievePromotion(final TeamPlayer sender,
+                                  final TeamRank newRank)
+    {
+        rank = newRank;
+        player.sendMessage(TPText.recievePromotion(sender, newRank));
+    }
+    
+    private void recieveDemotion(final TeamPlayer sender,
+                                 final TeamRank newRank)
+    {
+        rank = newRank;
+        player.sendMessage(TPText.recieveDemotion(sender, newRank));
+    }
     
     private void recieveTeamInvite(final TeamPlayer sender)
     {
@@ -315,10 +377,26 @@ public class TeamPlayer
             if (newTeam.addPlayer(this))
                 joinTeam(newTeam);
             else
-                player.sendMessage(TPText.FILE_ERROR);
+                player.sendMessage(FILE_ERROR);
         }
         else
-            player.sendMessage(TPText.INVITE_INVALID_EXPIRED);
+            player.sendMessage(INVITE_INVALID_EXPIRED);
+    }
+    
+    public void listOnlineTeams(int pageNumber)
+    {
+        ArrayList<Team> onlineTeams = TeamFile.getOnlineTeams();
+        
+        if (pageNumber < 0)
+            pageNumber = 1;
+        
+        final int indexBegin = (pageNumber - 1) * 10;
+        final int indexEnd   = indexBegin + 19;
+        
+        for (Team onlineTeam : onlineTeams.subList(indexBegin, indexEnd))
+        {
+            player.sendMessage(onlineTeam.getName());
+        }
     }
     
 
@@ -328,7 +406,7 @@ public class TeamPlayer
     
     private boolean validInvite(final Team team)
     {
-        return team == null && pendingInvites.containsKey(team.getName())
+        return team != null && pendingInvites.containsKey(team.getName())
                 && (pendingInvites.get(team.getName()) - getTimeStamp() <= INVITATION_ACCEPT_TIME);
     }
     

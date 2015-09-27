@@ -22,18 +22,21 @@ package net.projectzombie.survivalteams.controller;
  */
 public class CMDText
 {
-    public static String[] COMMAND    = new String[] { "party", "p"};
+    public static String[]
+    COMMAND = new String[] { "party", "p"},
     
-    public static String[] ARG_INVITE = new String[]  { "invite",  "inv",    "i" };
-    public static String[] ARG_KICK   = new String[]  { "kick",    "boot",   "k" };
-    public static String[] ARG_CREATE = new String[]  { "create",  "new",    "c" };
-    public static String[] ARG_ACCEPT = new String[]  { "accept",            "a" };
-    public static String[] ARG_PROMOTE = new String[] { "promote", "raise",  "p" };
-    public static String[] ARG_DEMOTE = new String[]  { "demote",  "d" };
-    public static String[] ARG_LEAVE  = new String[]  { "leave",   "quit",   "q", "l" };
-    public static String[] ARG_DISBAND = new String[] { "disband" };
-    public static String[] ARG_ONLINE = new String[]  { "invite",  "online", "o" };
-    public static String[] ARG_LIST   = new String[]  { "archive", "list" };
-    public static String[] ARG_HELP   = new String[]  { "help",    "commands" };
+    ARG_INVITE = new String[]  { "invite",  "inv",    "i" },
+    ARG_KICK   = new String[]  { "kick",    "boot",   "k" },
+    ARG_CREATE = new String[]  { "create",  "new",    "c" },
+    ARG_ACCEPT = new String[]  { "accept",            "a" },
+    ARG_PROMOTE = new String[] { "promote", "raise",  "p" },
+    ARG_DEMOTE = new String[]  { "demote",  "d" },
+    ARG_LEAVE  = new String[]  { "leave",   "quit",   "q", "l" },
+    ARG_DISBAND = new String[] { "disband" },
+    ARG_ONLINE = new String[]  { "online", "o" },
+    ARG_LIST   = new String[]  { "list" },
+    ARG_HELP   = new String[]  { "help",    "commands" };
+    
+    
             
 }

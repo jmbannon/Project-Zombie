@@ -19,10 +19,12 @@ package net.projectzombie.survivalteams.controller.file;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-import net.projectzombie.survivalteams.player.TPText;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
@@ -94,8 +96,8 @@ public class TeamFile
         return saveConfig();
     }
 
-    public static boolean writePromotion(final TeamPlayer reciever,
-                                         final TeamRank rank)
+    public static boolean writeRank(final TeamPlayer reciever,
+                                    final TeamRank rank)
     {
         TEAM_YAML.set(reciever.getPath(), rank.getRank());
         return saveConfig();
@@ -120,8 +122,20 @@ public class TeamFile
     // Accessor functions
     //
     
-    static TeamRank getMemberRank(final String teamName,
-                                  final UUID uuid)
+    static public ArrayList<Team> getOnlineTeams()
+    {
+        final ArrayList<Team> sortedTeams = new ArrayList<>();
+        final Collection<Team> teams = ONLINE_TEAMS.values();
+        
+        for (Team team : teams)
+            sortedTeams.add(team);
+        
+        Collections.sort(sortedTeams);
+        return sortedTeams;
+    }
+    
+    static public TeamRank getMemberRank(final String teamName,
+                                         final UUID uuid)
     {
         final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString();
         return TEAM_YAML.contains(memberPath) ? TeamRank.getRank(TEAM_YAML.getInt(memberPath)) : TeamRank.NULL;
@@ -164,7 +178,7 @@ public class TeamFile
         return WorldCoordinate.toLocation(TEAM_YAML.getString(FilePath.getTeamPath(teamName) + ".spawn"));
     }
     
-    static public TeamPlayer getOnlineTeamPlayer(final UUID uuid)
+    static public TeamPlayer getPlayer(final UUID uuid)
     {
         return ONLINE_PLAYERS.get(uuid);
     }

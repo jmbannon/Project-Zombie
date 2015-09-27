@@ -37,7 +37,6 @@ public class TPText
             
     LEADER_CANT_QUIT        = "As the leader you must disband your team to quit it.",
     NOT_LEADER              = "You must be a leader to perform this action.",
-    CANNOT_PROMOTE          = "You cannot promote this player.",
     NO_TEAM                 = "You are not on a team.",
     NO_SPAWN                = "Your team does not have a spawn point set.",
     ON_TEAM                 = "You cannot do this while on a team.",
@@ -46,7 +45,8 @@ public class TPText
     NEW_SPAWN               = "A new team spawn has been set.",
     PLAYER_NOT_FOUND        = "Could find a player with that name.",
     RANK_NOT_FOUND          = "That rank does not exist.",
-    TEAM_NOT_ONLINE         = "None of your team is online.";
+    TEAM_NOT_ONLINE         = "None of your team is online.",
+    SELF_ERROR              = "You cannot perform this action on yourself.";
     
     private TPText() { /* Return nothing. */ }
     
@@ -65,10 +65,16 @@ public class TPText
         return sender.getPlayerName() + " has invited you to " + sender.getTeam().getName() + ".";
     }
     
-    static public String recievePromototion(final TeamPlayer sender,
-                                            final TeamRank newRank)
+    static public String recievePromotion(final TeamPlayer sender,
+                                          final TeamRank newRank)
     {
         return sender.getPlayerName() + " has promoted you to " + newRank.getTitle() + ".";
+    }
+    
+    static public String recieveDemotion(final TeamPlayer sender,
+                                            final TeamRank newRank)
+    {
+        return sender.getPlayerName() + " has demoted you to " + newRank.getTitle() + ".";
     }
     
     static public String acceptTeamInvite(final Team team,
@@ -101,5 +107,11 @@ public class TPText
                                   final TeamRank rank)
     {
         return "You have promoted " + reciever.getPlayerName() + " to " + rank.getTitle() + ".";
+    }
+    
+    static public String demoted(final TeamPlayer reciever,
+                                 final TeamRank rank)
+    {
+        return "You have demoted " + reciever.getPlayerName() + " to " + rank.getTitle() + ".";
     }
 }

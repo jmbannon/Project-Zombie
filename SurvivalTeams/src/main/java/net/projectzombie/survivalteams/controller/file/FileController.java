@@ -27,7 +27,11 @@ import org.bukkit.entity.Player;
  */
 public class FileController
 {
-    
+    /**
+     * To be called when a player logs into the server.
+     * @param player
+     * @return The player's initialized TeamPlayer object.
+     */
     static public TeamPlayer initializePlayer(final Player player)
     {
         final UUID uuid = player.getUniqueId();
@@ -46,6 +50,13 @@ public class FileController
         return teamPlayer;
     }
     
+    /**
+     * Gets the team by name if one of its players are online and the team is
+     * within ONLINE_TEAMS.
+     * 
+     * @param teamName Name of the team.
+     * @return  Team of the given name if one of the players is online.
+     */
     static private Team getTeam(final String teamName)
     {
         final Team team;

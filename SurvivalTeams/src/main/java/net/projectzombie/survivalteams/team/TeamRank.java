@@ -51,24 +51,30 @@ public enum TeamRank
         return this.equals(OFFICER) || this.equals(LEADER);
     }
     
-    public boolean canKick()
+    public boolean canKick(final TeamRank toKickRank)
     {
-        return this.equals(OFFICER) || this.equals(LEADER);
+        return (this.equals(OFFICER) || this.equals(LEADER))
+                && isHigherRank(toKickRank);
     }
     
     public boolean canSetSpawn()
     {
-        return this.equals(OFFICER) || this.equals(LEADER);
-    }
-    
-    public boolean canPromote()
-    {
         return this.equals(LEADER);
     }
     
-    public boolean canBePromoted()
+    public boolean canPromote(final TeamRank promotionRank)
     {
-        return this.equals(FOLLOWER);
+        return this.equals(LEADER) && promotionRank.equals(OFFICER);
+    }
+    
+    public boolean canDemote(final TeamRank demotionRank)
+    {
+        return this.equals(LEADER) && demotionRank.equals(FOLLOWER);
+    }
+    
+    public boolean isHigherRank(final TeamRank otherRank)
+    {
+        return this.rank < otherRank.rank && !otherRank.equals(NULL);
     }
     
     static public TeamRank getRank(final String rankName)
