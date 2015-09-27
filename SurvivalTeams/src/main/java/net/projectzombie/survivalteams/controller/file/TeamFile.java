@@ -71,10 +71,18 @@ public class TeamFile
     // Write functions
     //
     public static boolean writeTeam(final TeamPlayer creator,
-                                    final String teamName)
+                                    final Team team)
     {
-        TEAM_YAML.set(FilePath.getLeaderPath(creator, teamName), TeamRank.LEADER.getRank());
-        return saveConfig();
+        final String teamName = team.getName();
+        final boolean savedSuccessfully;
+        
+        TEAM_YAML.set(FilePath.getLeaderPath(teamName), creator.getUUID().toString());
+        savedSuccessfully = saveConfig();
+        
+        if (savedSuccessfully)
+            ONLINE_TEAMS.put(teamName, team);
+        
+        return savedSuccessfully;
     }
     
     static public boolean removeTeam(final Team team)
@@ -149,8 +157,13 @@ public class TeamFile
     static protected ArrayList<UUID> getMemberUUIDs(final String teamName)
     {
         final ArrayList<UUID> uuids = new ArrayList<>();
-        for (String uuid : TEAM_YAML.getConfigurationSection(FilePath.getUUIDMemberPath(teamName)).getKeys(false))
-            uuids.add(UUID.fromString(uuid));
+        final String memberPath = FilePath.getUUIDMemberPath(teamName);
+        
+        if (TEAM_YAML.contains(memberPath))
+        {
+            for (String uuid : TEAM_YAML.getConfigurationSection(memberPath).getKeys(false))
+                uuids.add(UUID.fromString(uuid));
+        }
         return uuids;
     }
     
@@ -170,12 +183,13 @@ public class TeamFile
     static protected UUID getLeaderUUID(final String teamName)
     {
         return containsTeam(teamName) ?
-            UUID.fromString(TEAM_YAML.getString(FilePath.getLeaderUUIDpath(teamName))) : null;
+            UUID.fromString(TEAM_YAML.getString(FilePath.getLeaderPath(teamName))) : null;
     }
     
     static protected Location getSpawn(final String teamName)
     {
-        return WorldCoordinate.toLocation(TEAM_YAML.getString(FilePath.getTeamPath(teamName) + ".spawn"));
+        final String spawnPath = FilePath.getTeamPath(teamName) + ".spawn";
+        return TEAM_YAML.contains(spawnPath) ? WorldCoordinate.toLocation(TEAM_YAML.getString(spawnPath)) : null;
     }
     
     static public TeamPlayer getPlayer(final UUID uuid)

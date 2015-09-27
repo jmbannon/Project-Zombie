@@ -46,7 +46,7 @@ public class TeamPlayer
     private Team team;
     private TeamRank rank;
     
-    private HashMap<String, Long> pendingInvites;
+    private final HashMap<String, Long> pendingInvites;
     
     /**
      * Creates a TeamPlayer if they have a team and rank.
@@ -62,7 +62,7 @@ public class TeamPlayer
         this.playerUUID = player.getUniqueId();
         this.team       = team;
         this.rank       = rank;
-        this.pendingInvites = null;
+        this.pendingInvites = new HashMap<>();
     }
     
     /**
@@ -102,9 +102,10 @@ public class TeamPlayer
         {
           if (!TeamFile.containsTeam(teamName))
           {
-              if (TeamFile.writeTeam(this, teamName))
+              final Team team = new Team(teamName, this.playerUUID);
+              if (TeamFile.writeTeam(this, team))
               {
-                  initializeTeam(teamName);
+                  initializeTeam(team);
                   player.sendMessage(TPText.createdNewTeam(team));
               }
               else
@@ -118,12 +119,12 @@ public class TeamPlayer
     }
     
     /**
-     * Creates a new Team as leader and sets rank as leader.
-     * @param teamName 
+     * Creates a new Team as leader and sets rank as leader. 
+     * @param createdTeam
      */
-    public void initializeTeam(final String teamName)
+    public void initializeTeam(final Team createdTeam)
     {
-        team = new Team(teamName, this.playerUUID);
+        team = createdTeam;
         rank = TeamRank.LEADER;
     }
     
@@ -135,7 +136,7 @@ public class TeamPlayer
         if (isLeader())
         {
             if (TeamFile.removeTeam(team))
-                for (TeamPlayer teamMembers : team.getOnlinePlayers())
+                for (TeamPlayer teamMembers : team.getPlayers())
                     teamMembers.disbandedFromTeam();
             else
                 player.sendMessage(FILE_ERROR);
@@ -217,7 +218,7 @@ public class TeamPlayer
             if (TeamFile.writeSpawn(team, player.getLocation()))
             {
                 team.setSpawn(player.getLocation());
-                for (TeamPlayer member : team.getOnlinePlayers())
+                for (TeamPlayer member : team.getPlayers())
                     member.getPlayer().sendMessage(NEW_SPAWN);
             }
             else
@@ -237,7 +238,10 @@ public class TeamPlayer
         if (reciever == null)
             player.sendMessage(PLAYER_NOT_FOUND);
         else if (rank.canInvite() && !reciever.hasTeam())
+        {
             reciever.recieveTeamInvite(this);
+            player.sendMessage(TPText.sendInvite(reciever));
+        }
         else if (reciever.team != null)
             player.sendMessage(INVITE_INVALID_HAS_TEAM);
         else if (team == null)
@@ -286,12 +290,12 @@ public class TeamPlayer
     {
         if (hasTeam())
         {
-            final ArrayList<TeamPlayer> onlineTeamMembers = team.getOnlinePlayers();
+            final ArrayList<TeamPlayer> onlineTeamMembers = team.getPlayers();
             if (onlineTeamMembers.size() == 1)
                 player.sendMessage(TEAM_NOT_ONLINE);
             else
             {
-                for (TeamPlayer onlinePlayer : team.getOnlinePlayers())
+                for (TeamPlayer onlinePlayer : team.getPlayers())
                     player.sendMessage(onlinePlayer.getPlayerName());
             }
         }
@@ -319,7 +323,7 @@ public class TeamPlayer
                 if (TeamFile.removePlayerFromTeam(team, this))
                 {
                     player.sendMessage(TPText.quitTeam(team));
-                    for (TeamPlayer oldMember : team.getOnlinePlayers())
+                    for (TeamPlayer oldMember : team.getPlayers())
                         oldMember.getPlayer().sendMessage(hasQuitTeam(this));
                     clearTeam();
                 }
@@ -391,11 +395,12 @@ public class TeamPlayer
             pageNumber = 1;
         
         final int indexBegin = (pageNumber - 1) * 10;
-        final int indexEnd   = indexBegin + 19;
+        final int indexEnd   = indexBegin + 10;
         
-        for (Team onlineTeam : onlineTeams.subList(indexBegin, indexEnd))
+        for (int i = indexBegin; i < indexEnd; i++)
         {
-            player.sendMessage(onlineTeam.getName());
+            if (i < onlineTeams.size())
+                player.sendMessage(onlineTeams.get(i).getName());
         }
     }
     
@@ -407,27 +412,26 @@ public class TeamPlayer
     private boolean validInvite(final Team team)
     {
         return team != null && pendingInvites.containsKey(team.getName())
-                && (pendingInvites.get(team.getName()) - getTimeStamp() <= INVITATION_ACCEPT_TIME);
+                && (getTimeStamp() - pendingInvites.get(team.getName())) <= INVITATION_ACCEPT_TIME;
     }
     
     private void clearTeam()
     {
         this.team = null;
         this.rank = TeamRank.NULL;
-        this.pendingInvites = new HashMap<>();
     }
     
     private void joinTeam(final Team team)
     {
         this.team = team;
         this.rank = TeamRank.FOLLOWER;
-        this.pendingInvites = null;
+        this.pendingInvites.clear();
     }
     
     public String getPath()
     {
         if (hasTeam())
-            return rank.equals(TeamRank.LEADER) ? FilePath.getLeaderPath(this, team.getName()) : FilePath.getPlayerPath(this, team.getName());
+            return rank.equals(TeamRank.LEADER) ? FilePath.getLeaderPath(team.getName()) : FilePath.getPlayerPath(this, team.getName());
         else
             return null;
     }

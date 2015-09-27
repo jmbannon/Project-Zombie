@@ -19,6 +19,7 @@ package net.projectzombie.survivalteams.controller.file;
 import java.util.UUID;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
+import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.entity.Player;
 
 /**
@@ -41,7 +42,10 @@ public class FileController
         if ((teamName = TeamFile.getTeamName(uuid)) != null)
         {
             Team team = getTeam(teamName);
-            teamPlayer = new TeamPlayer(player, team, TeamFile.getMemberRank(teamName, uuid));
+            if (TeamFile.getLeaderUUID(teamName).equals(uuid))
+                teamPlayer = new TeamPlayer(player, team, TeamRank.LEADER);
+            else
+                teamPlayer = new TeamPlayer(player, team, TeamFile.getMemberRank(teamName, uuid));
         }
         else
             teamPlayer = new TeamPlayer(player);

@@ -85,11 +85,14 @@ public class PlayerCommands implements CommandExecutor
         {
             if (isCommand(args[0], ARG_PROMOTE))
                 sender.promotePlayer(args[1], args[2]);
-            if (isCommand(args[0], ARG_DEMOTE))
-                ; // DO STUFF
+            else if (isCommand(args[0], ARG_DEMOTE))
+                sender.demotePlayer(args[1], args[2]);
             else
                 listCommands(player);
         }
+        
+        else
+            listCommands(player);
         
         return true;
     }

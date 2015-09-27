@@ -50,6 +50,11 @@ public class TPText
     
     private TPText() { /* Return nothing. */ }
     
+    static public String sendInvite(final TeamPlayer invited)
+    {
+        return "You have invited " + invited.getPlayerName() + ".";
+    }
+    
     static public String kickedPlayer(final TeamPlayer player)
     {
         return "You have kicked " + player.getPlayerName() + ".";
@@ -96,6 +101,11 @@ public class TPText
     static public String hasQuitTeam(final TeamPlayer quitter)
     {
         return quitter.getPlayerName() + " has quit your team.";
+    }
+    
+    static public String hasJoinedTeam(final TeamPlayer joiner)
+    {
+        return joiner.getPlayerName() + " has joined your team.";
     }
     
     static public String quitTeam(final Team team)

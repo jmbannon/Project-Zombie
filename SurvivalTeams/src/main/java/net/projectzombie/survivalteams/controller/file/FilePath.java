@@ -32,11 +32,6 @@ public class FilePath
         return TeamFile.ROOT_PATH + teamName;
     }
 
-    static public String getLeaderPath(final TeamPlayer player, final String teamName)
-    {
-        return getLeaderUUIDpath(teamName) + "." + player.getUUID().toString();
-    }
-
     static public String getPlayerPath(final TeamPlayer player, final String teamName)
     {
         return getUUIDMemberPath(teamName) + "." + player.getUUID().toString();
@@ -47,7 +42,7 @@ public class FilePath
         return getTeamPath(teamName) + ".members";
     }
 
-    static protected String getLeaderUUIDpath(final String teamName)
+    static public String getLeaderPath(final String teamName)
     {
         return getTeamPath(teamName) + ".leader";
     }

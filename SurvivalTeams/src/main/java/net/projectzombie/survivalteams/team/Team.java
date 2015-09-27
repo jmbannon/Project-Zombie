@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import net.projectzombie.survivalteams.controller.file.FilePath;
 import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.player.TPText;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
 
@@ -58,7 +59,7 @@ public class Team implements Comparable<Team>
     public Team(final String teamName,
                 final UUID   leaderUUID)
     {
-        this(teamName, leaderUUID, newTeamMemberList(leaderUUID), null);
+        this(teamName, leaderUUID, new ArrayList<UUID>(), null);
     }
     
     public String                getName()        { return teamName; }
@@ -67,10 +68,12 @@ public class Team implements Comparable<Team>
     public Location              getSpawn()       { return teamSpawn; }
     public boolean               canAdd()         { return members.size() < teamLimit; }
     
-    public ArrayList<TeamPlayer> getOnlinePlayers()
+    public ArrayList<TeamPlayer> getPlayers()
     {
         final ArrayList<TeamPlayer> playersOnline = new ArrayList<>();
         TeamPlayer player;
+        
+        playersOnline.add(TeamFile.getPlayer(leaderUUID));
         
         for (UUID uuid : members)
             if ((player = TeamFile.getPlayer(uuid)) != null)
@@ -83,7 +86,12 @@ public class Team implements Comparable<Team>
     {
         final boolean fileWriteCheck = TeamFile.writePlayerToTeam(this, player, player.getRank());
         if (fileWriteCheck)
+        {
+            for (TeamPlayer onlineMembers : getPlayers())
+                onlineMembers.getPlayer().sendMessage(TPText.hasJoinedTeam(player));
+            
             members.add(player.getUUID());
+        }
         return fileWriteCheck;
     }
     public boolean removePlayer(final TeamPlayer player)
@@ -96,12 +104,6 @@ public class Team implements Comparable<Team>
     
     public void setSpawn(final Location location)     { this.teamSpawn = location; }
     
-    private static ArrayList<UUID> newTeamMemberList(final UUID leaderUUID)
-    {
-        final ArrayList<UUID> newTeam = new ArrayList<>();
-        newTeam.add(leaderUUID);
-        return newTeam;
-    }
     
     public String getPath()
     {
