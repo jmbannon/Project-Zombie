@@ -18,8 +18,9 @@ package net.projectzombie.survivalteams.team;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import net.projectzombie.survivalteams.controller.file.FilePath;
-import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.file.FilePath;
+import net.projectzombie.survivalteams.file.FileWrite;
+import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
 import net.projectzombie.survivalteams.player.TPText;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.Location;
@@ -74,13 +75,13 @@ public class Team implements Comparable<Team>
     public ArrayList<TeamPlayer> getPlayers()
     {
         final ArrayList<TeamPlayer> playersOnline = new ArrayList<>();
-        TeamPlayer player = TeamFile.getPlayer(leaderUUID);
+        TeamPlayer player = PlayerBuffer.get(leaderUUID);
         
         if (player != null)
-            playersOnline.add(TeamFile.getPlayer(leaderUUID));
+            playersOnline.add(PlayerBuffer.get(leaderUUID));
         
         for (UUID uuid : members)
-            if ((player = TeamFile.getPlayer(uuid)) != null)
+            if ((player = PlayerBuffer.get(uuid)) != null)
                 playersOnline.add(player);
         
         return playersOnline;
@@ -88,7 +89,7 @@ public class Team implements Comparable<Team>
     
     public TeamPlayer getLeader()
     {
-        return TeamFile.getPlayer(leaderUUID);
+        return PlayerBuffer.get(leaderUUID);
     }
     
     public ArrayList<TeamPlayer> getMembers(final TeamRank memberRank)
@@ -102,7 +103,7 @@ public class Team implements Comparable<Team>
     
     public boolean addPlayer(final TeamPlayer player)
     {
-        final boolean fileWriteCheck = TeamFile.writePlayerToTeam(this, player, TeamRank.FOLLOWER);
+        final boolean fileWriteCheck = FileWrite.writePlayerToTeam(this, player, TeamRank.FOLLOWER);
         if (fileWriteCheck)
         {
             for (TeamPlayer onlineMembers : getPlayers())
@@ -114,7 +115,7 @@ public class Team implements Comparable<Team>
     }
     public boolean removePlayer(final TeamPlayer player)
     {
-        final boolean fileWriteCheck = TeamFile.removePlayerFromTeam(this, player);
+        final boolean fileWriteCheck = FileWrite.removePlayerFromTeam(this, player);
         if (fileWriteCheck)
             members.remove(player.getUUID());
         return fileWriteCheck;

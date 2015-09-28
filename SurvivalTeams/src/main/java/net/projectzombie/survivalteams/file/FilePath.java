@@ -14,7 +14,7 @@
  * team PVP and a group spawn.
  *
 */
-package net.projectzombie.survivalteams.controller.file;
+package net.projectzombie.survivalteams.file;
 
 import net.projectzombie.survivalteams.player.TeamPlayer;
 
@@ -24,12 +24,13 @@ import net.projectzombie.survivalteams.player.TeamPlayer;
  */
 public class FilePath
 {
+    protected static final String ROOT_      = "teams";
     
     private FilePath() { /* Do nothing */ }
 
     static public String getTeamPath(final String teamName)
     {
-        return TeamFile.ROOT_PATH + teamName;
+        return ROOT_ + "." + teamName;
     }
 
     static public String getPlayerPath(final TeamPlayer player, final String teamName)

@@ -18,7 +18,7 @@ package net.projectzombie.survivalteams.main;
 
 import net.projectzombie.survivalteams.controller.PlayerCommands;
 import net.projectzombie.survivalteams.controller.PlayerListener;
-import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.file.FileContents;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -32,7 +32,7 @@ public class Main extends JavaPlugin
     @Override
     public void onEnable()
     {
-        TeamFile.initialize(this);
+        FileContents.initialize(this);
         this.getCommand("party").setExecutor(new PlayerCommands());
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getLogger().info("SurvivalParties Enabled.");
@@ -42,7 +42,7 @@ public class Main extends JavaPlugin
     @Override
     public void onDisable()
     {
-        TeamFile.onDisable();
+        FileContents.onDisable();
         this.getLogger().info("SurvivalParties disabled.");
     }
 }

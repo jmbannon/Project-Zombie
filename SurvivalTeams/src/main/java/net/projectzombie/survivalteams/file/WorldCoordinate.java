@@ -14,7 +14,7 @@
  * team PVP and a group spawn.
  *
  */
-package net.projectzombie.survivalteams.controller.file;
+package net.projectzombie.survivalteams.file;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

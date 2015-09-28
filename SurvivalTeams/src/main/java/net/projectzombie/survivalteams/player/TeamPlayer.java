@@ -19,14 +19,16 @@ package net.projectzombie.survivalteams.player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import net.projectzombie.survivalteams.controller.file.FilePath;
-import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.file.FilePath;
+import net.projectzombie.survivalteams.file.FileWrite;
+import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
+import net.projectzombie.survivalteams.file.FileRead;
 import static net.projectzombie.survivalteams.player.TPText.*;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -101,10 +103,10 @@ public class TeamPlayer
     {
         if (!hasTeam())
         {
-          if (!TeamFile.containsTeam(teamName))
+          if (!FileRead.containsTeam(teamName))
           {
               final Team newTeam = new Team(teamName, this.playerUUID);
-              if (TeamFile.writeTeam(this, newTeam))
+              if (FileWrite.writeTeam(this, newTeam))
               {
                   initializeTeam(newTeam);
                   player.sendMessage(TPText.createdNewTeam(newTeam));
@@ -136,7 +138,7 @@ public class TeamPlayer
     {
         if (isLeader())
         {
-            if (TeamFile.removeTeam(team))
+            if (FileWrite.removeTeam(team))
                 for (TeamPlayer teamMembers : team.getPlayers())
                     teamMembers.disbandedFromTeam();
             else
@@ -174,7 +176,7 @@ public class TeamPlayer
                                final String theRank,
                                final boolean promoted)
     {
-        final TeamPlayer reciever = TeamFile.getPlayer(playerToPromote);
+        final TeamPlayer reciever = FileWrite.getPlayer(playerToPromote);
         final TeamRank newRank = TeamRank.getRank(theRank);
         
         if (team == null)
@@ -189,7 +191,7 @@ public class TeamPlayer
             player.sendMessage(TPText.NOT_ON_TEAM);
         else if (promoted && rank.canPromote(newRank))
         {
-            if (TeamFile.writePlayerToTeam(team, reciever, newRank))
+            if (FileWrite.writePlayerToTeam(team, reciever, newRank))
             {
                 player.sendMessage(promoted(reciever, newRank));
                 reciever.recievePromotion(this, newRank);
@@ -198,7 +200,7 @@ public class TeamPlayer
                 player.sendMessage(FILE_ERROR);
         }
         else if (!promoted && rank.canDemote(newRank))
-            if (TeamFile.writePlayerToTeam(team, reciever, newRank))
+            if (FileWrite.writePlayerToTeam(team, reciever, newRank))
             {
                 player.sendMessage(demoted(reciever, newRank));
                 reciever.recieveDemotion(this, newRank);
@@ -217,9 +219,9 @@ public class TeamPlayer
         final Location location = player.getEyeLocation();
         if (isLeader())
         {
-            if (TeamFile.isValidSpawnSet(location))
+            if (isValidSpawnSet(location))
             {
-                if (TeamFile.writeSpawn(team, location))
+                if (FileWrite.writeSpawn(team, location))
                 {
                     team.setSpawn(location);
                     for (TeamPlayer member : team.getPlayers())
@@ -241,7 +243,7 @@ public class TeamPlayer
     //
     public void invitePlayerToTeam(final String toInvite)
     {
-        final TeamPlayer reciever = TeamFile.getPlayer(toInvite);
+        final TeamPlayer reciever = FileWrite.getPlayer(toInvite);
         if (reciever == null)
             player.sendMessage(PLAYER_NOT_FOUND);
         else if (rank.canInvite() && !reciever.hasTeam())
@@ -262,7 +264,7 @@ public class TeamPlayer
         final TeamPlayer reciever;
         if (hasTeam())
         {
-            reciever = TeamFile.getPlayer(toKick);
+            reciever = FileWrite.getPlayer(toKick);
             if (reciever == null)
                 player.sendMessage(PLAYER_NOT_FOUND);
             else if (reciever.equals(this))
@@ -390,7 +392,7 @@ public class TeamPlayer
     
     public void acceptTeamInvite(final String teamName)
     {
-        final Team newTeam = TeamFile.getTeam(teamName);
+        final Team newTeam = TeamBuffer.get(teamName);
         if (validInvite(newTeam))
         {
             if (newTeam.addPlayer(this))
@@ -407,7 +409,7 @@ public class TeamPlayer
     
     public void listOnlineTeams(int pageNumber)
     {
-        ArrayList<Team> onlineTeams = TeamFile.getOnlineTeams();
+        ArrayList<Team> onlineTeams = TeamBuffer.getAll();
         
         if (pageNumber < 0)
             pageNumber = 1;
@@ -457,6 +459,14 @@ public class TeamPlayer
     public String getFileName()     { return playerUUID.toString(); }
     public boolean hasTeam()       { return team != null; }
     public boolean isLeader()      { return team != null && rank.isLeader() && team.getLeaderUUID().equals(playerUUID); }
-    
+    public boolean isOnline()      { return player.isOnline(); }
     static public long getTimeStamp() { return System.currentTimeMillis() / 1000L; }
+    
+    static private boolean isValidSpawnSet(final Location location)
+    {
+        final Block locBlock = location.getBlock();
+        return locBlock.isEmpty()
+                && locBlock.getRelative(0, -1, 0).isEmpty()
+                && !locBlock.getRelative(0, -2, 0).isEmpty();
+    }
 }

@@ -19,7 +19,7 @@ package net.projectzombie.survivalteams.player;
 import java.util.ArrayList;
 import java.util.UUID;
 import net.projectzombie.consistentchatapi.PluginChat;
-import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.ChatColor;
@@ -151,8 +151,8 @@ public class TPText
             String name;
             for (UUID uuid : team.getMemberUUIDs())
             {
-                name = TeamFile.getMemberName(teamName, uuid);
-                rank = TeamFile.getMemberRank(teamName, uuid);
+                name = FileRead.getMemberName(teamName, uuid);
+                rank = FileRead.getMemberRank(teamName, uuid);
                 if (name != null)
                 {
                     if (rank.equals(TeamRank.OFFICER))
@@ -163,7 +163,7 @@ public class TPText
             }
             
             player.sendMessage(tag+chat.toK1(teamName));
-            player.sendMessage(chat.toK1("Leader: ") + TeamFile.getLeaderName(teamName, team.getLeaderUUID()));
+            player.sendMessage(chat.toK1("Leader: ") + FileRead.getLeaderName(teamName, team.getLeaderUUID()));
             player.sendMessage(chat.toK1("Officers: "));
             for (String officerName : officers)
                 player.sendMessage(chat.toPT(officerName));

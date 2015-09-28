@@ -17,7 +17,8 @@
 package net.projectzombie.survivalteams.controller;
 
 import static net.projectzombie.survivalteams.controller.CMDText.*;
-import net.projectzombie.survivalteams.controller.file.TeamFile;
+import net.projectzombie.survivalteams.file.FileWrite;
+import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,7 +40,7 @@ public class PlayerCommands implements CommandExecutor
             return true;
 		
         final Player player = (Player)cs;
-        final TeamPlayer sender = TeamFile.getPlayer(player.getUniqueId());
+        final TeamPlayer sender = PlayerBuffer.get(player.getUniqueId());
         
         
         if (args.length == 1)
@@ -66,7 +67,7 @@ public class PlayerCommands implements CommandExecutor
                 sender.setBase();
             
             else if (player.isOp() && isCommand(args[0], ARG_REMOVE_SPAWNS))
-                TeamFile.removeAllTeamSpawns();
+                FileWrite.removeAllTeamSpawns();
             
             else
                 listCommands(player);
@@ -89,6 +90,7 @@ public class PlayerCommands implements CommandExecutor
             
             else if (isCommand(args[0], ARG_ACCEPT))
                 sender.acceptTeamInvite(args[1]);
+            
             else
                 listCommands(player);
         }
@@ -97,8 +99,10 @@ public class PlayerCommands implements CommandExecutor
         {
             if (isCommand(args[0], ARG_PROMOTE))
                 sender.promotePlayer(args[1], args[2]);
+            
             else if (isCommand(args[0], ARG_DEMOTE))
                 sender.demotePlayer(args[1], args[2]);
+            
             else
                 listCommands(player);
         }
