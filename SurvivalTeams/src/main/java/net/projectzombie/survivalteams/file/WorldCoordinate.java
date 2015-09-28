@@ -26,7 +26,7 @@ import org.bukkit.block.Block;
  */
 public class WorldCoordinate
 {
-    static public String toWorldCoordinate(final Block location)
+    static public String toString(final Block location)
     {
         final StringBuilder stb = new StringBuilder();
         stb.append(location.getWorld().getUID().toString());

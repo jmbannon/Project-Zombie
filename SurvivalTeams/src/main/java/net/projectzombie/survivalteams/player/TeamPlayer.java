@@ -19,7 +19,6 @@ package net.projectzombie.survivalteams.player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import net.projectzombie.survivalteams.file.FilePath;
 import net.projectzombie.survivalteams.file.FileWrite;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.file.FileRead;
@@ -448,15 +447,7 @@ public class TeamPlayer
         this.pendingInvites.clear();
     }
     
-    public String getPath(final Team newTeam)
-    {
-        if (hasTeam())
-            return rank.equals(TeamRank.LEADER) ? FilePath.getLeaderPath(team.getName()) : FilePath.getPlayerPath(this, team.getName());
-        else
-            return FilePath.getPlayerPath(this, newTeam.getName());
-    }
-    
-    public String getFileName()     { return playerUUID.toString(); }
+    public String getFileName()    { return playerUUID.toString(); }
     public boolean hasTeam()       { return team != null; }
     public boolean isLeader()      { return team != null && rank.isLeader() && team.getLeaderUUID().equals(playerUUID); }
     public boolean isOnline()      { return player.isOnline(); }

@@ -33,7 +33,7 @@ public class FileWrite
     {
         final String teamName = team.getName();
         final boolean savedSuccessfully;
-        TEAM_YAML.set(FilePath.getLeaderPath(teamName) + "." + creator.getUUID().toString(), creator.getPlayerName());
+        TEAM_YAML.set(FilePath.leader(teamName) + "." + creator.getUUID().toString(), creator.getPlayerName());
         savedSuccessfully = saveConfig();
         if (savedSuccessfully)
         {
@@ -42,12 +42,14 @@ public class FileWrite
         return savedSuccessfully;
     }
 
-    public static boolean writePlayerToTeam(final Team team, final TeamPlayer reciever, final TeamRank rank)
+    public static boolean writePlayerToTeam(final Team team,
+                                            final TeamPlayer reciever,
+                                            final TeamRank rank)
     {
         if (!reciever.isLeader())
         {
-            TEAM_YAML.set(reciever.getPath(team) + ".rank", rank.toFileName());
-            TEAM_YAML.set(reciever.getPath(team) + ".name", reciever.getPlayerName());
+            TEAM_YAML.set(FilePath.memberRank(team, reciever), rank.toFileName());
+            TEAM_YAML.set(FilePath.memberName(team, reciever), reciever.getPlayerName());
             return saveConfig();
         } else
         {
@@ -55,9 +57,10 @@ public class FileWrite
         }
     }
 
-    public static boolean writeSpawn(final Team team, final Location location)
+    public static boolean writeSpawn(final Team team,
+                                     final Location location)
     {
-        TEAM_YAML.set(team.getPath() + ".spawn", WorldCoordinate.toWorldCoordinate(location.getBlock()));
+        TEAM_YAML.set(FilePath.spawn(team), WorldCoordinate.toString(location.getBlock()));
         return saveConfig();
     }
 
@@ -70,20 +73,20 @@ public class FileWrite
     public static boolean removePlayerFromTeam(final Team team,
                                                final TeamPlayer player)
     {
-        TEAM_YAML.set(player.getPath(team), null);
+        TEAM_YAML.set(FilePath.member(team, player), null);
         return saveConfig();
     }
     
     static public boolean removeTeam(final Team team)
     {
-        TEAM_YAML.set(team.getPath(), null);
+        TEAM_YAML.set(FilePath.team(team), null);
         return saveConfig();
     }
     
     
     static public boolean removeSpawn(final Team team)
     {
-        TEAM_YAML.set(team.getPath() + ".spawn", null);
+        TEAM_YAML.set(FilePath.spawn(team), null);
         return saveConfig();
     }
     
@@ -92,11 +95,11 @@ public class FileWrite
         Location spawnLocation;
         String spawnPath;
         Block bannerBlock;
-        if (TEAM_YAML.contains(ROOT_))
+        if (TEAM_YAML.contains(FilePath.teams()))
         {
-            for (String teamName : TEAM_YAML.getConfigurationSection(ROOT_).getKeys(false))
+            for (String teamName : TEAM_YAML.getConfigurationSection(FilePath.teams()).getKeys(false))
             {
-                spawnPath = FilePath.getTeamPath(teamName) + ".spawn";
+                spawnPath = FilePath.team(teamName) + ".spawn";
                 spawnLocation = WorldCoordinate.toLocation(TEAM_YAML.getString(spawnPath));
                 if (spawnLocation != null)
                 {

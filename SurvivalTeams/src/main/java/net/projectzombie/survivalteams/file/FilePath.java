@@ -16,7 +16,9 @@
 */
 package net.projectzombie.survivalteams.file;
 
+import java.util.UUID;
 import net.projectzombie.survivalteams.player.TeamPlayer;
+import net.projectzombie.survivalteams.team.Team;
 
 /**
  *
@@ -24,28 +26,78 @@ import net.projectzombie.survivalteams.player.TeamPlayer;
  */
 public class FilePath
 {
-    protected static final String ROOT_      = "teams";
+    private static final String ROOT_PATH      = "teams";
     
     private FilePath() { /* Do nothing */ }
 
-    static public String getTeamPath(final String teamName)
+    static protected String teams()
     {
-        return ROOT_ + "." + teamName;
-    }
-
-    static public String getPlayerPath(final TeamPlayer player, final String teamName)
-    {
-        return getUUIDMemberPath(teamName) + "." + player.getUUID().toString();
-    }
-
-    static protected String getUUIDMemberPath(final String teamName)
-    {
-        return getTeamPath(teamName) + ".members";
-    }
-
-    static public String getLeaderPath(final String teamName)
-    {
-        return getTeamPath(teamName) + ".leader";
+        return ROOT_PATH;
     }
     
+    static protected String team(final String teamName)
+    {
+        return ROOT_PATH + "." + teamName;
+    }
+    
+    static protected String team(final Team team)
+    {
+        return ROOT_PATH + "." + team.getName();
+    }
+
+    static protected String member(final Team team,
+                                   final TeamPlayer player)
+    {
+        return members(team.getName()) + "." + player.getUUID().toString();
+    }
+    
+    static protected String member(final Team team,
+                                   final UUID uuid)
+    {
+        return members(team.getName()) + "." + uuid.toString();
+    }
+    
+    static protected String member(final String teamName,
+                                   final UUID uuid)
+    {
+        return members(teamName) + "." + uuid.toString();
+    }
+    
+    static protected String memberRank(final Team team,
+                                       final TeamPlayer player)
+    {
+        return members(team.getName()) + "." + player.getUUID().toString() + ".rank";
+    }
+    
+    static protected String memberName(final Team team,
+                                       final TeamPlayer player)
+    {
+        return members(team.getName()) + "." + player.getUUID().toString() + ".name";
+    }
+
+    static protected String members(final String teamName)
+    {
+        return team(teamName) + ".members";
+    }
+
+    static protected String leader(final String teamName)
+    {
+        return team(teamName) + ".leader";
+    }
+    
+    static protected String leaderName(final String teamName,
+                                       final UUID uuid)
+    {
+        return team(teamName) + ".leader." + uuid.toString();
+    }
+    
+    static protected String spawn(final String team)
+    {
+        return team(team) + ".spawn";
+    }
+    
+    static protected String spawn(final Team team)
+    {
+        return team(team) + ".spawn";
+    }
 }

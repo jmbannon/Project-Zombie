@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import static net.projectzombie.survivalteams.file.FileContents.*;
 import static net.projectzombie.survivalteams.file.FilePath.*;
+import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
 
@@ -21,21 +22,21 @@ public class FileRead
     static public TeamRank getMemberRank(final String teamName,
                                          final UUID uuid)
     {
-        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString() + ".rank";
+        final String memberPath = FilePath.members(teamName) + "." + uuid.toString() + ".rank";
         return TEAM_YAML.contains(memberPath) ? TeamRank.getIntRank(TEAM_YAML.getString(memberPath)) : TeamRank.NULL;
     }
     
     static public String getMemberName(final String teamName,
                                        final UUID uuid)
     {
-        final String memberPath = FilePath.getUUIDMemberPath(teamName) + "." + uuid.toString() + ".name";
+        final String memberPath = FilePath.members(teamName) + "." + uuid.toString() + ".name";
         return TEAM_YAML.contains(memberPath) ? TEAM_YAML.getString(memberPath) : null;
     }
     
     static public String getLeaderName(final String teamName,
                                        final UUID uuid)
     {
-        final String leaderPath = FilePath.getLeaderPath(teamName) + "." + uuid.toString();
+        final String leaderPath = FilePath.leader(teamName) + "." + uuid.toString();
         return TEAM_YAML.contains(leaderPath) ? TEAM_YAML.getString(leaderPath) : null;
     }
     
@@ -47,7 +48,7 @@ public class FileRead
     public static ArrayList<UUID> getMemberUUIDs(final String teamName)
     {
         final ArrayList<UUID> uuids = new ArrayList<>();
-        final String memberPath = FilePath.getUUIDMemberPath(teamName);
+        final String memberPath = FilePath.members(teamName);
         
         if (TEAM_YAML.contains(memberPath))
         {
@@ -60,14 +61,15 @@ public class FileRead
     static protected boolean containsMemberUUID(final String teamName,
                                                 final UUID uuid)
     {
-        return TEAM_YAML.contains(FilePath.getTeamPath(teamName) + ".members." + uuid.toString());
+        return TEAM_YAML.contains(FilePath.member(teamName, uuid));
     }
         
     public static String getTeamName(final UUID uuid)
     {
-        if (TEAM_YAML.contains(ROOT_))
+        final String teamsPath = FilePath.teams();
+        if (TEAM_YAML.contains(teamsPath))
         {
-            for (String teamName : TEAM_YAML.getConfigurationSection(ROOT_).getKeys(false))
+            for (String teamName : TEAM_YAML.getConfigurationSection(teamsPath).getKeys(false))
             {
                  if (containsMemberUUID(teamName, uuid) || getLeaderUUID(teamName).equals(uuid))
                      return teamName;
@@ -80,7 +82,7 @@ public class FileRead
     {
         if (containsTeam(teamName))
         {
-            for (String leaderUUID : TEAM_YAML.getConfigurationSection(FilePath.getLeaderPath(teamName)).getKeys(false))
+            for (String leaderUUID : TEAM_YAML.getConfigurationSection(FilePath.leader(teamName)).getKeys(false))
                 return UUID.fromString(leaderUUID);
         }
         return null;
@@ -88,12 +90,12 @@ public class FileRead
     
     public static Location getSpawn(final String teamName)
     {
-        final String spawnPath = FilePath.getTeamPath(teamName) + ".spawn";
+        final String spawnPath = FilePath.team(teamName) + ".spawn";
         return TEAM_YAML.contains(spawnPath) ? WorldCoordinate.toLocation(TEAM_YAML.getString(spawnPath)) : null;
     }
     
-    public static boolean containsTeam(String teamName)
+    public static boolean containsTeam(final String teamName)
     {
-        return TEAM_YAML.contains(FilePath.getTeamPath(teamName));
+        return TEAM_YAML.contains(FilePath.team(teamName));
     }
 }

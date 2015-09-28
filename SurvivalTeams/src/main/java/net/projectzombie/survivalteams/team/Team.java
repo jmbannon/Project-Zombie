@@ -142,12 +142,6 @@ public class Team implements Comparable<Team>
         else
             return false;
     }
-    
-    
-    public String getPath()
-    {
-         return FilePath.getTeamPath(teamName);
-    }
 
     @Override
     public int compareTo(final Team o)
