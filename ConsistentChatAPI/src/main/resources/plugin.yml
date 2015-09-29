@@ -1,0 +1,4 @@
+name: ConsistentChatAPI
+main: net.projectzombie.consistentchatapi.Main
+version: 1.0
+commands:
