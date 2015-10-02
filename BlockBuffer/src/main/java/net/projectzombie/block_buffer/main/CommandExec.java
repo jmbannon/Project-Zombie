@@ -51,11 +51,11 @@ public class CommandExec implements CommandExecutor
                              String[] args)
     {
         if (!(cs instanceof Player))
-			return true;
-		
+            return true;
+        
         final Player sender = (Player)cs;
         
-		if (cs.isOp() && label.equalsIgnoreCase("bb"))
+        if (cs.isOp() && label.equalsIgnoreCase("bb"))
         {
             if (args.length == 1 && args[0].equalsIgnoreCase("restore") && !RestoreController.isRestoring())
                 RestoreController.restoreAll(sender);
