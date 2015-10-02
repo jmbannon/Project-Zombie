@@ -8,6 +8,8 @@ package net.projectzombie.survivalteams.file.buffers;
 import java.util.HashMap;
 import java.util.UUID;
 import net.projectzombie.survivalteams.player.TeamPlayer;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -39,6 +41,15 @@ public class PlayerBuffer
     public static boolean contains(final UUID uuid)
     {
         return ONLINE_PLAYERS.containsKey(uuid);
+    }
+    
+    static public Location getSpawnLocation(final Player player)
+    {
+        final TeamPlayer tp = get(player.getUniqueId());
+        if (tp != null && tp.hasTeam())
+            return tp.getTeam().getSpawn();
+        else
+            return null;
     }
     
 }
