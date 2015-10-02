@@ -105,23 +105,6 @@ public class StateSwitcher {
         final String baseWorldPath = basePath + ".world";
         final String baseCoordPath = basePath + ".coords";
         final String baseAltDescPath = basePath + ".alts." + altStateName;
-
-        /*
-        if (!stateConfig.contains(altPath)
-                || !stateConfig.contains(altWorldPath)
-                || !stateConfig.contains(altCoordPath)
-                || !stateConfig.contains(altChestPath)
-                || !stateConfig.contains(basePath)
-                || !stateConfig.contains(baseWorldPath)
-                || !stateConfig.contains(baseCoordPath) {
-                //|| !stateConfig.contains(baseAltPath)) {
-            if (stateConfig == null)
-                plugin.getServer().broadcastMessage("file is null");
-            else
-                plugin.getServer().broadcastMessage("path is missing");
-            return -1;
-        }
-        */
         
         // Debugging only!
         String temps = null;
@@ -271,7 +254,7 @@ public class StateSwitcher {
     /**
      * @return Block of a care package chest. Null if it there is no drop.
      */
-    public Block getChestBlock()
+    static public Block getChestBlock()
     {
         return CHEST_BLOCK;
     }
