@@ -1,6 +1,6 @@
 name: CustomInteractions
 main: net.projectzombie.custom_interactions.main.Main
-depend: [WorldEdit,WorldGuard]
+depend: [WorldEdit,WorldGuard,BlockBuffer]
 version: 1.0
 commands:
   bp:

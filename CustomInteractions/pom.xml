@@ -101,9 +101,9 @@
 	    <version>6.1.1-SNAPSHOT</version>
 	</dependency>
         <dependency>
-            <groupId>BlockBuffer</groupId>
+            <groupId>net.projectzombie</groupId>
             <artifactId>BlockBuffer</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <name>CustomInteractions</name>
