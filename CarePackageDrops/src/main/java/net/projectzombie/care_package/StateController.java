@@ -90,6 +90,12 @@ public class StateController {
         final ArrayList<String> baseStates = new ArrayList<>();
         final ArrayList<String> altStates = new ArrayList<>();
         
+        if (!dropConfig.contains(BASE_ROOT))
+        {
+            Bukkit.getLogger().info("Drop config is empty. Aborting drop.");
+            return;
+        }
+        
         int randIndex;
         for (String key : dropConfig.getConfigurationSection(BASE_ROOT).getKeys(false))
             baseStates.add(key);
@@ -101,6 +107,12 @@ public class StateController {
         randIndex = rand.nextInt(baseStates.size());
         baseState = baseStates.get(randIndex);
         baseAltsPath = BASE_ROOT + "." + baseState + ".alts";
+        
+        if (!dropConfig.contains(baseAltsPath))
+        {
+            Bukkit.getLogger().info("Alt state path does not exist. Aborting drop.");
+            return;
+        }
         
         for (String key : dropConfig.getConfigurationSection(baseAltsPath).getKeys(false))
             altStates.add(key);

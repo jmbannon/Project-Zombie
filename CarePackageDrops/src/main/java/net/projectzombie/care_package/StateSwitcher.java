@@ -56,7 +56,8 @@ public class StateSwitcher {
     private static final int ALT_STATE_WIDTH = 30;
     private static final int ALT_STATE_HEIGHT = 8;
     private static PackageHandler CONTENTS;
-    private static Block BASE_BLOCK;
+    private static Block BASE_BLOCK = null;
+    private static Block CHEST_BLOCK = null; 
 
     private File stateFile;
     private final Plugin plugin;
@@ -68,8 +69,8 @@ public class StateSwitcher {
      * @param plugin Bukkit plugin.
      * @param config drop_locations.yml config.
      */
-    public StateSwitcher(final Plugin plugin,
-                         final FileConfiguration config)
+    protected StateSwitcher(final Plugin plugin,
+                            final FileConfiguration config)
     {
         this.plugin = plugin;
         this.stateConfig = config;
@@ -86,8 +87,8 @@ public class StateSwitcher {
      * @return Negative indicates error, positive success.
      * @throws IOException
      */
-    public int setState(final String altName,
-                        final String baseName) throws IOException 
+    protected int setState(final String altName,
+                           final String baseName) throws IOException 
     {    
         this.stateFile = new File(plugin.getDataFolder(), "buffer.txt");
         final FileWriter stateWriter = new FileWriter(stateFile);
@@ -156,7 +157,6 @@ public class StateSwitcher {
                 baseVector.getY(),
                 baseVector.getZ()).getBlock();
 
-        final Block chestBlock;
         Block temp;
 
         for (int i = 0; i < ALT_STATE_LENGTH; i++) {
@@ -171,25 +171,37 @@ public class StateSwitcher {
         }
         stateWriter.flush();
         stateWriter.close();
-        chestBlock = BASE_BLOCK.getRelative((int)chestVector.getBlockX(),
+        CHEST_BLOCK = BASE_BLOCK.getRelative((int)chestVector.getBlockX(),
                                             (int)chestVector.getBlockY(),
                                             (int)chestVector.getBlockZ());
         
-        if (chestBlock.getState() instanceof Chest) {
-            final Chest chest = (Chest)chestBlock.getState();
+        if (CHEST_BLOCK.getState() instanceof Chest) {
+            final Chest chest = (Chest)CHEST_BLOCK.getState();
             final ArrayList<ItemStack> items = CONTENTS.getRandPackage();
-            final ItemStack[] chestItems = new ItemStack[27];
-            if (items != null) {
-                while (items.size() < 27)
-                    items.add(new ItemStack(Material.AIR));
-                Collections.shuffle(items);
-                for (int i = 0; i < items.size(); i++)
-                    chestItems[i] = items.get(i);
-                chest.getInventory().setContents(chestItems);
-                chest.update(true);
+            
+            if (items == null) {
+                Bukkit.getLogger().info("No packages within YML. Aborting state change");
+                return -1;
             }
+            
+            final ItemStack[] chestItems = new ItemStack[27];
+            while (items.size() < 27)
+                items.add(new ItemStack(Material.AIR));
+            
+            Collections.shuffle(items);
+            for (int i = 0; i < items.size(); i++)
+                chestItems[i] = items.get(i);
+            
+            chest.getInventory().setContents(chestItems);
+            chest.update(true);
+            plugin.getServer().broadcastMessage(desc);
         }
-        plugin.getServer().broadcastMessage(desc);
+        else
+        {
+            restoreState();
+            return -1;
+        }
+        
         return 1;
     }
 
@@ -200,7 +212,7 @@ public class StateSwitcher {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public void restoreState() throws FileNotFoundException, IOException 
+    protected void restoreState() throws FileNotFoundException, IOException 
     {
         BufferedReader reader = new BufferedReader(new FileReader(stateFile));
         final String[] blocks = reader.readLine().split("#");
@@ -210,6 +222,8 @@ public class StateSwitcher {
         }  
         stateFile.delete();
         this.removeDroppedEntities(BASE_BLOCK);
+        BASE_BLOCK = null;
+        CHEST_BLOCK = null;
     }
     
     private void removeDroppedEntities(Block baseBlock) {
@@ -234,7 +248,7 @@ public class StateSwitcher {
      * Returns Returns the state's length.
      * @return Length of all states.
      */
-    public int getStateLength() {
+    protected int getStateLength() {
         return ALT_STATE_LENGTH;
     }
     
@@ -242,7 +256,7 @@ public class StateSwitcher {
      * Returns Returns the state's width.
      * @return Width of all states.
      */
-    public int getStateWidth() {
+    protected int getStateWidth() {
         return ALT_STATE_WIDTH;
     }
     
@@ -250,7 +264,15 @@ public class StateSwitcher {
      * Returns Returns the state's height.
      * @return Height of all states.
      */
-    public int getStateHeight() {
+    protected int getStateHeight() {
         return ALT_STATE_HEIGHT;
+    }
+    
+    /**
+     * @return Block of a care package chest. Null if it there is no drop.
+     */
+    public Block getChestBlock()
+    {
+        return CHEST_BLOCK;
     }
 }

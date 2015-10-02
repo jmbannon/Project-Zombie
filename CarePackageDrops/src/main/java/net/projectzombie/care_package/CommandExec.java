@@ -180,12 +180,14 @@ public class CommandExec implements CommandExecutor {
         sender.sendMessage("/cp reload");
     }
     
-    public void onEnable() {
+    public void onEnable()
+    {
         controller.onEnable();
         chest.onEnable();
     }
     
-    public void onDisable() {
+    public void onDisable()
+    {
         controller.onDisable();
         controller.onDisable();
     }

@@ -68,6 +68,9 @@ public class PackageHandler {
         final String chestName;
         ArrayList<String> chestList = new ArrayList<>();
         
+        if (!chestConfig.contains(ROOT_PATH))
+            return null;
+        
         for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
             chestList.add(key);
         }
