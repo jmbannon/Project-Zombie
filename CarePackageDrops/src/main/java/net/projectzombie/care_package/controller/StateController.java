@@ -20,24 +20,18 @@
 
 package net.projectzombie.care_package.controller;
 
-import net.projectzombie.care_package.serialize.BlockSerialize;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import net.projectzombie.care_package.files.StateBuffer;
+import net.projectzombie.care_package.files.StateFile;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.logging.Level;
+import net.projectzombie.care_package.files.CopyBuffer;
 import net.projectzombie.care_package.state.StateType;
 import net.projectzombie.care_package.state.AltState;
 import net.projectzombie.care_package.state.BaseState;
 import net.projectzombie.care_package.state.State;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -53,61 +47,17 @@ import org.bukkit.util.Vector;
  */
 public class StateController
 {
-
-    static private final Random RAND = new Random();
-    
-    static private File COPY_FILE;
-    static private boolean COPY_IN_PROGRESS = false;
     
     private StateController() { /* Do nothing */ }
     
     
     /**
      * Initiates a random care package drop.
+     * @return True if the drop was valid and initiated.
      */
-    static public void initiateDrop() 
+    static public boolean initiateDrop() 
     {
-        final ArrayList<String> baseStateNames = new ArrayList<>();
-        final ArrayList<String> altStateNames = new ArrayList<>();
-        final BaseState base;
-        int randIndex;
-        
-        if (!StateFile.contains(StateType.ALT.getPath())
-                || !StateFile.contains(StateType.BASE.getPath()))
-        {
-            Bukkit.getLogger().info("Drop config is empty. Aborting drop.");
-            return;
-        }
-
-        for (String key : StateFile.getSection(BaseState.path()))
-            baseStateNames.add(key);
-      
-        if (baseStateNames.isEmpty())
-        {
-            Bukkit.getServer().getLogger().info("[CarePackage] No base states exist. Cannot initiate drop.");
-            return;
-        }
-        
-        randIndex = RAND.nextInt(baseStateNames.size());
-        base = new BaseState(baseStateNames.get(randIndex));
-        
-        if (!StateFile.contains(base.getAltPath()))
-        {
-            Bukkit.getLogger().info("Alt state path does not exist. Aborting drop.");
-            return;
-        }
-        
-        for (String key : StateFile.getSection(base.getAltPath()))
-            altStateNames.add(key);
-        
-        if (altStateNames.isEmpty())
-        {
-            Bukkit.getServer().getLogger().log(Level.INFO, "[CarePackage] No alt states exist for base {0}. Cannot initiate drop.", base.getName());
-            return;
-        }
-        randIndex = RAND.nextInt(altStateNames.size());
-        
-        setAltState(base.getName(), altStateNames.get(randIndex));
+        return executeStateChange(StateFile.getRandomStateChange());
     }
     
     /**
@@ -123,7 +73,7 @@ public class StateController
     {
         final State state = State.create(stateType, stateName);
         final Location senderLoc = sender.getLocation();
-        Vector chestSerialized = null;
+        Vector chestSerialized;
         
         if (stateType == StateType.ALT)
         {
@@ -145,25 +95,27 @@ public class StateController
         StateFile.saveConfig();
     }
 
-    /**
-     * Swaps an alternate state to a base state's location.
-     *
-     * @param baseName Name of base state.
-     * @param altName Name of alternate state.
-     */
-    static public void setAltState(final String baseName,
-                                   final String altName) 
+    static public boolean executeStateChange(final String baseName,
+                                             final String altName)
     {
-        if (!ActiveStateChanges.contains(baseName))
+        return executeStateChange(new StateChange(baseName, altName));
+    }
+    
+    /**
+     * Executes a StateChange and adds it to the StateBuffer if it is validated.
+     * @param stateChange StateChange to execute.
+     * @return True if it executed successfully.
+     */
+    static public boolean executeStateChange(final StateChange stateChange) 
+    {
+        if (!StateBuffer.contains(stateChange) && stateChange.isValid())
         {
-            final StateChange stateChange = new StateChange(baseName, altName);
-            if (stateChange.isValid())
-            {
-                stateChange.setState();
-                ActiveStateChanges.put(stateChange);
-            }
+            stateChange.setState();
+            StateBuffer.put(stateChange);
+            return true;
         }
-        
+        else
+            return false;
     }
 
     /**
@@ -191,7 +143,7 @@ public class StateController
     static public void restoreState(final Player sender,
                                     final String baseName)
     {
-        ActiveStateChanges.removeAndRestore(baseName);
+        StateBuffer.removeAndRestore(baseName);
     }
     
     /**
@@ -213,23 +165,21 @@ public class StateController
             description = "NEEDS DESCRIPTION";
         
         if (!StateFile.contains(base.getPath()))
-        {
             player.sendMessage("Base state " + baseStateName + " does not exist.");
-            return;
-        }
-        if (!StateFile.contains(alt.getPath()))
-        {
-            player.sendMessage("Alt state " + altStateName + " does not exist.");
-            return;
-        }
         
-        StateFile.set(base.getPathAltDescription(altStateName), description);
-        StateFile.saveConfig();
-        player.sendMessage(baseStateName + " linked to " + altStateName);
+        else if (!StateFile.contains(alt.getPath()))
+            player.sendMessage("Alt state " + altStateName + " does not exist.");
+        
+        else if (StateFile.linkStates(baseStateName, altStateName, description))
+            player.sendMessage(baseStateName + " linked to " + altStateName);
+
+        else
+            player.sendMessage("An error occured when linking states.");
     }
     
     /**
-     * Removes state of the given name.
+     * Removes state of the given name if it exists.
+     * 
      * @param player
      * @param stateName
      * @param stateType
@@ -239,36 +189,24 @@ public class StateController
                                    final StateType stateType)
     {
         final State state = State.create(stateType, stateName);
-        final String statePath = state.getPath();
-        BaseState linkedBaseState;
         
-        if (StateFile.contains(statePath))
-        {
-            StateFile.set(statePath, null);
-            if (stateType.equals(StateType.ALT))
-            {
-                for (String baseStateName : StateFile.getSection(BaseState.path()))
-                {
-                    linkedBaseState = new BaseState(baseStateName);
-                    StateFile.set(linkedBaseState.getPathAltDescription(stateName), null);
-                }
-            }
+        if (!state.exists())
+            player.sendMessage(stateName + " does not exists.");
+        else if (StateFile.removeState(state))
             player.sendMessage(stateName + " deleted.");
-        }
         else
-        {
-            player.sendMessage(stateName + " does not exist.");
-        }
+            player.sendMessage("An error occured when removing " + stateName + ".");
     }
     
     /**
-     * Gets the vector of the alt state's single chest relative to the
+     * Gets the vector of the AltState's single chest relative to the
      * player's location.
      * 
      * @param playerLoc Location of the player.
-     * @return Vector of the offset relative to the player.
+     * @return Vector of the offset relative to the player. Null if no chest
+     * or more than chest exist.
      */
-    static public Vector getChestRelative(final Location playerLoc)
+    static private Vector getChestRelative(final Location playerLoc)
     {
         final Block loc = playerLoc.getBlock();
         final int length = StateChange.getStateLength();
@@ -291,6 +229,10 @@ public class StateController
                             chestRelative = new Vector(i, k, j);
                             hasChest = true;
                         }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 }
             }
@@ -303,21 +245,18 @@ public class StateController
                                        final StateType type)
     {
         final State state = State.create(type, stateName);
-        final String worldPath = state.getPathWorld();
-        final String vectorPath = state.getPathVector();
+        final Block locationBlock = state.getLocationBlock();
         
-        if (!StateFile.contains(worldPath) || !StateFile.contains(vectorPath))
-        {
+        if (locationBlock == null)
             sender.sendMessage(stateName + " does not exist.");
-            return;
-        }
-        
-        final Vector locVector = StateFile.getVector(vectorPath);
-        final World world = Bukkit.getWorld(StateFile.getString(worldPath));       
-        final Location loc = new Location(world, locVector.getBlockX(),
-                                                 locVector.getBlockY(),
-                                                 locVector.getBlockZ());
-        sender.teleport(loc);
+        else
+            sender.teleport(locationBlock.getLocation());
+    }
+    
+    static public void listActive(final Player sender)
+    {
+        for (String baseName : StateBuffer.active())
+            sender.sendMessage(baseName);
     }
     
     static public void checkYaw(final Player sender)
@@ -329,66 +268,35 @@ public class StateController
             sender.sendMessage("Wrong direction! States always point SE.");
     }
     
-    static public void pasteBaseState(final Player sender,
-                                      final String baseStateName) throws IOException
+    static public void pasteAltState(final Player sender,
+                                     final String altName)
     {
-        final BaseState base = new BaseState(baseStateName);
+        final AltState altState = new AltState(altName);
+        final Block playerBodyBlock = sender.getEyeLocation().getBlock().getRelative(BlockFace.DOWN);
+        
+        if (!altState.exists())
+            sender.sendMessage(altName + " does not exist.");
 
-        if (!StateFile.contains(base.getPath()))
-        {
-            sender.sendMessage(baseStateName + " does not exist.");
-            return;
-        }
-        
-        COPY_FILE = new File(StateFile.getFolder(), "buffer.copy_buffer");
-        final FileWriter stateWriter = new FileWriter(COPY_FILE);
-        final Vector baseVector = StateFile.getVector(base.getPathVector());
-        
-        final Block playerBlock = sender.getLocation().getBlock();
-        final Block baseBlock = new Location(
-                Bukkit.getWorld(StateFile.getString(base.getPathWorld())),
-                baseVector.getX(),
-                baseVector.getY(),
-                baseVector.getZ()).getBlock();
-        
-        Block temp;
-        for (int i = 0; i < StateChange.getStateLength(); i++)
-        {
-            for (int j = 0; j < StateChange.getStateWidth(); j++)
-            {
-                for (int k = 0; k < StateChange.getStateHeight(); k++)
-                {
-                    temp = playerBlock.getRelative(i, k, j);
-                    stateWriter.write(BlockSerialize.serialize(temp));
-                    temp.setType(baseBlock.getRelative(i, k, j).getType());
-                    temp.setData(baseBlock.getRelative(i, k, j).getData());
-                }
-            }
-        }
-        stateWriter.flush();
-        stateWriter.close();
-        COPY_IN_PROGRESS = true;
-        sender.sendMessage(baseStateName + " pasted.");
+        else if (CopyBuffer.inProgress())
+            sender.sendMessage("A paste has already been placed.");
+
+        else if (CopyBuffer.pasteAltState(altState, playerBodyBlock))
+            sender.sendMessage("Pasted " + altName);
+
+        else
+            sender.sendMessage("An error occured");
     }
     
     static public void undoPaste(Player sender) throws IOException
     {
-        if (!COPY_IN_PROGRESS)
-        {
+        if (!CopyBuffer.inProgress())
             sender.sendMessage("Nothing pasted.");
-            return;
-        }
         
-        BufferedReader reader = new BufferedReader(new FileReader(COPY_FILE));
-        final String[] blocks = reader.readLine().split("#");
+        else if (CopyBuffer.restorePaste())
+            sender.sendMessage("Undid paste.");
 
-        for (String block : blocks)
-        {
-            BlockSerialize.deserializeAndSet(block);
-        }  
-        COPY_FILE.delete();
-        COPY_IN_PROGRESS = false;
-        sender.sendMessage("Undid paste.");
+        else
+            sender.sendMessage("An error occured.");   
     }
     
     static public void reloadConfig(final Player sender)

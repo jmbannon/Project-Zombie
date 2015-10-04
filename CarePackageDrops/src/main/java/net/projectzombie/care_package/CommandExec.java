@@ -25,12 +25,11 @@ import net.projectzombie.care_package.controller.StateController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.projectzombie.care_package.controller.StateFile;
+import net.projectzombie.care_package.files.StateFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -57,13 +56,14 @@ public class CommandExec implements CommandExecutor
      * @return
      */
     @Override
-    public boolean onCommand(CommandSender cs,
-            Command cmd,
-            String label,
-            String[] args) {
+    public boolean onCommand(final CommandSender cs,
+                             final Command cmd,
+                             final String label,
+                             final String[] args)
+    {
         final Player player = (Player) cs;
 
-        if (!player.isOp()) // Change later!!!
+        if (!player.isOp())
         {
             return false;
         }
@@ -114,15 +114,10 @@ public class CommandExec implements CommandExecutor
             chest.getPlayerPackage(player, args[1]);
         
         else if (args[0].equalsIgnoreCase("set") && args.length == 3)
-            StateController.setAltState(args[1], args[2]);
+            StateController.executeStateChange(args[1], args[2]);
             
         else if (args[0].equalsIgnoreCase("paste") && args.length == 2)
-            try {
-                StateController.pasteBaseState(player, args[1]);
-            } catch (IOException ex) {
-                Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
-                player.sendMessage("IOexception, report to administrator.");
-            }
+                StateController.pasteAltState(player, args[1]);
         
         else if (args[0].equalsIgnoreCase("unpaste") && args.length == 1)
             try {
@@ -149,7 +144,8 @@ public class CommandExec implements CommandExecutor
         else if (args[0].equalsIgnoreCase("initiate"))
             StateController.initiateDrop();
         
-
+        else if (args[0].equalsIgnoreCase("active"))
+            StateController.listActive(player);
         
         else if (args[0].equalsIgnoreCase("check"))
             StateController.checkYaw(player);
@@ -179,6 +175,7 @@ public class CommandExec implements CommandExecutor
         sender.sendMessage("/cp unpaste");
         sender.sendMessage("/cp package <package name>");
         sender.sendMessage("/cp initiate");
+        sender.sendMessage("/cp active");
         sender.sendMessage("/cp restore <base_name>");
         sender.sendMessage("/cp check");
         sender.sendMessage("/cp reload");

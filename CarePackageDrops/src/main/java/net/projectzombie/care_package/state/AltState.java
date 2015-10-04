@@ -5,7 +5,7 @@
  */
 package net.projectzombie.care_package.state;
 
-import net.projectzombie.care_package.controller.StateFile;
+import net.projectzombie.care_package.files.StateFile;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.util.Vector;

@@ -5,7 +5,7 @@
  */
 package net.projectzombie.care_package.state;
 
-import net.projectzombie.care_package.controller.StateFile;
+import net.projectzombie.care_package.files.StateFile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,11 +23,13 @@ public abstract class State
     private final String pathState;
     private final String pathWorld;
     private final String pathVector;
+    private final StateType type;
     
     public State(final StateType type,
                  final String stateName)
     {
         this.name           = stateName;
+        this.type           = type;
         this.pathState      = type.getPath() + "." + stateName;
         this.pathWorld      = pathState + ".world";
         this.pathVector     = pathState + ".coords";
@@ -58,6 +60,16 @@ public abstract class State
         return StateFile.contains(pathState)
                 && StateFile.contains(pathWorld)
                 && StateFile.contains(pathVector);
+    }
+    
+    public boolean isAlt()
+    {
+        return type.equals(StateType.ALT);
+    }
+    
+    public boolean isBase()
+    {
+        return type.equals(StateType.BASE);
     }
     
     public BaseState toBaseState()

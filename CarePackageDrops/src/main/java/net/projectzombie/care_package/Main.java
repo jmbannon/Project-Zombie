@@ -20,7 +20,7 @@
 
 package net.projectzombie.care_package;
 
-import net.projectzombie.care_package.controller.StateFile;
+import net.projectzombie.care_package.files.StateFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

@@ -20,10 +20,10 @@
 
 package net.projectzombie.care_package.controller;
 
-import net.projectzombie.care_package.serialize.BlockSerialize;
+import net.projectzombie.care_package.files.StateFile;
+import net.projectzombie.care_package.utilities.BlockSerialize;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import net.projectzombie.care_package.PackageHandler;
 import net.projectzombie.care_package.state.AltState;
 import net.projectzombie.care_package.state.BaseState;
+import net.projectzombie.care_package.state.State;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -67,7 +68,6 @@ public class StateChange
     private final Chest chestBlock; 
     private final String description;
     
-    private final String stateBufferName;
     private final File   stateBuffer;
     
     /**
@@ -76,8 +76,8 @@ public class StateChange
      * @param baseName
      * @param altName
      */
-    protected StateChange(final String baseName,
-                          final String altName)
+    public StateChange(final String baseName,
+                       final String altName)
     {
         this.base = new BaseState(baseName);
         this.alt  = new AltState(altName);
@@ -86,9 +86,8 @@ public class StateChange
         this.baseBlock   = base.getLocationBlock();
         this.chestBlock  = alt.getChestBlock();
         this.description = base.getDescription(altName);
-        
-        this.stateBufferName = baseName + ".state_buffer";
-        this.stateBuffer     = new File(StateFile.getFolder(), stateBufferName);
+
+        this.stateBuffer     = new File(StateFile.getFolder(), baseName + ".state_buffer");
         
         this.CONTENTS = new PackageHandler();
     }
@@ -102,9 +101,11 @@ public class StateChange
     {
         return base.exists()
                 && alt.exists()
+                && base.containsAlt(alt)
                 && altBlock != null
                 && baseBlock != null
-                && chestBlock != null;
+                && chestBlock != null
+                && description != null;
     }
     
     /**
@@ -122,31 +123,13 @@ public class StateChange
         final ArrayList<ItemStack> items = CONTENTS.getRandPackage();
         final ItemStack[] chestItems = new ItemStack[27];
         
-        /* Initialize file paths */
-        try (FileWriter stateWriter = new FileWriter(stateBuffer))
+        if (items == null)
         {
-
-            Block temp;
-            for (int i = 0; i < ALT_STATE_LENGTH; i++)
-            {
-                for (int j = 0; j < ALT_STATE_WIDTH; j++)
-                {
-                    for (int k = 0; k < ALT_STATE_HEIGHT; k++)
-                    {
-                        temp = baseBlock.getRelative(i, k, j);
-                        stateWriter.write(BlockSerialize.serialize(temp));
-                        temp.setType(altBlock.getRelative(i, k, j).getType());
-                        temp.setData(altBlock.getRelative(i, k, j).getData());
-                    }
-                }
-            }   
-            stateWriter.flush();
-
-            if (items == null) {
-                Bukkit.getLogger().info("No packages within YML. Aborting state change");
-                return -1;
-            }
-
+            Bukkit.getLogger().info("No packages within YML. Aborting state change");
+            return -1;
+        }
+        else if (set(alt, base.getLocationBlock(), stateBuffer))
+        {
             while (items.size() < 27)
                 items.add(new ItemStack(Material.AIR));
 
@@ -157,13 +140,79 @@ public class StateChange
             chestBlock.getInventory().setContents(chestItems);
             chestBlock.update(true);
             StateFile.getPlugin().getServer().broadcastMessage(description);
-            }
+            return 1;
+        }
+        else
+            return -1;
+    }
+    
+    /**
+     * Pastes a state to the set Location.
+     * @param state State to paste at the setLocationBlock.
+     * @param setLocationBlock Block to paste the state.
+     * @param buffer Buffer to save the setLocationBlock contents at.
+     * @return True if the paste was successful.
+     */
+    static public boolean set(final State state,
+                              final Block setLocationBlock,
+                              final File buffer)
+    {
+        final Block stateLocation = state.getLocationBlock();
+        boolean isSet = false;
+        Block toPaste;
+        
+        if (stateLocation == null)
+            return false;
+        
+        try (FileWriter stateWriter = new FileWriter(buffer))
+        {
+            isSet = true;
+            for (int i = 0; i < ALT_STATE_LENGTH; i++)
+            {
+                for (int j = 0; j < ALT_STATE_WIDTH; j++)
+                {
+                    for (int k = 0; k < ALT_STATE_HEIGHT; k++)
+                    {
+                        toPaste = setLocationBlock.getRelative(i, k, j);
+                        stateWriter.write(BlockSerialize.serialize(toPaste));
+                        toPaste.setType(stateLocation.getRelative(i, k, j).getType());
+                        toPaste.setData(stateLocation.getRelative(i, k, j).getData());
+                    }
+                }
+            }   
+            stateWriter.flush();
+            stateWriter.close();
+            return true;
+        }
         catch (IOException ex)
         {
             Logger.getLogger(StateChange.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    static public boolean restore(final Block setLocationBlock,
+                                  final File buffer)
+    {
+        try
+        {
+            BufferedReader reader = new BufferedReader(new FileReader(buffer));
+            final String[] blocks = reader.readLine().split("#");
+
+            for (String block : blocks)
+            {
+                BlockSerialize.deserializeAndSet(block);
+            }
+            buffer.delete();
+            removeDroppedEntities(setLocationBlock);
+            return true;
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(StateChange.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
         
-        return 1;
     }
 
     /**
@@ -171,7 +220,7 @@ public class StateChange
      * file and pasting those blocks with respect to it's offset coordinate.
      *
      */
-    protected void restoreState()
+    public void restoreState()
     {
         try
         {
@@ -183,7 +232,7 @@ public class StateChange
                 BlockSerialize.deserializeAndSet(block);
             }
             stateBuffer.delete();
-            this.removeDroppedEntities(baseBlock);
+            removeDroppedEntities(baseBlock);
         }
         catch (IOException ex)
         {
@@ -192,23 +241,23 @@ public class StateChange
         }
     }
     
-    private void removeDroppedEntities(Block baseBlock)
+    static private void removeDroppedEntities(Block baseBlock)
     {
         final Location centerLoc 
                 = baseBlock.getRelative(ALT_STATE_WIDTH/2, 
                                         ALT_STATE_HEIGHT/2, 
                                         ALT_STATE_WIDTH/2).getLocation();
         
-        final Entity temp 
-                = centerLoc.getWorld().spawnEntity(centerLoc, EntityType.ARROW);
+        final Entity tempEntity = centerLoc.getWorld().spawnEntity(centerLoc, EntityType.ARROW);
         
-        for (Entity entity : temp.getNearbyEntities(ALT_STATE_WIDTH/2, 
-                                                    ALT_STATE_HEIGHT/2, 
-                                                    ALT_STATE_WIDTH/2)) {
+        for (Entity entity : tempEntity.getNearbyEntities(ALT_STATE_WIDTH/2, 
+                                                          ALT_STATE_HEIGHT/2, 
+                                                          ALT_STATE_WIDTH/2))
+        {
             if (entity.getType() == EntityType.DROPPED_ITEM)
                 entity.remove();            
         }
-        temp.remove();
+        tempEntity.remove();
     }
     
     /**

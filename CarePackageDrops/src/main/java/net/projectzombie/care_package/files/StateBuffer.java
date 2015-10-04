@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.care_package.controller;
+package net.projectzombie.care_package.files;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
+import net.projectzombie.care_package.controller.StateChange;
 
 /**
  *
  * @author com.gmail.jbann1994
  */
-public class ActiveStateChanges
+public class StateBuffer
 {
     static private HashMap<String, StateChange> activeStateChanges;
     
-    private ActiveStateChanges() { /* Do nothing. */ }
+    private StateBuffer() { /* Do nothing. */ }
     
     static public void put(final StateChange stateChange)
     {
@@ -41,9 +44,19 @@ public class ActiveStateChanges
         }
     }
     
+    static public Set<String> active()
+    {
+        return activeStateChanges.keySet();
+    }
+    
     static public boolean contains(final String baseName)
     {
         return activeStateChanges.containsKey(baseName);
+    }
+    
+    static public boolean contains(final StateChange stateChange)
+    {
+        return activeStateChanges.containsKey(stateChange.getBaseName());
     }
     
     static public void onDisable()

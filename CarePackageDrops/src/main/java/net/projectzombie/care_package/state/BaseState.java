@@ -5,7 +5,7 @@
  */
 package net.projectzombie.care_package.state;
 
-import net.projectzombie.care_package.controller.StateFile;
+import net.projectzombie.care_package.files.StateFile;
 
 /**
  *
@@ -35,6 +35,16 @@ public class BaseState extends State
     public String getDescription(final String altStateName)
     {
         return StateFile.getString(getPathAltDescription(altStateName));
+    }
+    
+    public boolean containsAlt(final String altStateName)
+    {
+        return StateFile.contains(getPathAltDescription(altStateName));
+    }
+    
+    public boolean containsAlt(final AltState alt)
+    {
+        return containsAlt(alt.getName());
     }
     
     @Override
