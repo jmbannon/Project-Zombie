@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
+import net.projectzombie.care_package.controller.StateFile;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,15 +48,13 @@ public class PackageHandler {
     private static final String ROOT_PATH = "chest_configs";
     private File chestFile;
     private FileConfiguration chestConfig;
-    private final Plugin plugin;
     
     /**
      * Initializes config file.
      * @param plugin Bukkit plugin.
      */
-    public PackageHandler(Plugin plugin)
+    public PackageHandler()
     {
-        this.plugin = plugin;
         this.loadConfig();
     }
     
@@ -71,26 +70,28 @@ public class PackageHandler {
         if (!chestConfig.contains(ROOT_PATH))
             return null;
         
-        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
+        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false))
+        {
             chestList.add(key);
         }
       
-        if (chestList.isEmpty()) {
+        if (chestList.isEmpty())
+        {
             Bukkit.getServer().getLogger().info("[CarePackage] No chests exist. Cannot initate drop.");
             return null;
         }
         
         chestName = chestList.get(RAND.nextInt(chestList.size()));
         chestList.clear();
-        
         return this.getPackage(chestName);
     }
     
-    private ArrayList<ItemStack> getPackage(final String packageName) {
+    private ArrayList<ItemStack> getPackage(final String packageName)
+    {
         if (!chestConfig.contains(ROOT_PATH + "." + packageName))
             return null;
-        
-        return (ArrayList<ItemStack>)chestConfig.getList(ROOT_PATH + "." + packageName);
+        else
+            return (ArrayList<ItemStack>)chestConfig.getList(ROOT_PATH + "." + packageName);
     }
     
     /**
@@ -102,14 +103,18 @@ public class PackageHandler {
     public void createPackage(final Player sender,
                               final String packageName) 
     {
-        if (chestConfig == null) {
+        if (chestConfig == null)
+        {
             sender.sendMessage("The file is null! Please contact the server administrator.");
             return;
         }
+        
         final ArrayList<ItemStack> inventoryItems = new ArrayList<>();
         final PlayerInventory inventory = sender.getInventory();
         ItemStack tempItem;
-        for (int i = 9; i <= 35; i++) {
+        
+        for (int i = 9; i <= 35; i++)
+        {
             tempItem = inventory.getItem(i);
             if (tempItem != null && tempItem.getType() != Material.AIR)
                 inventoryItems.add(inventory.getItem(i));
@@ -129,11 +134,14 @@ public class PackageHandler {
     public void removePackage(final Player sender,
                               final String packageName)
     {
-        if (chestConfig == null) {
+        if (chestConfig == null)
+        {
             sender.sendMessage("The file is null! Please contact the server administrator.");
             return;
-        } 
-        if (chestConfig.contains(ROOT_PATH + "."  + packageName)) {
+        }
+        
+        if (chestConfig.contains(ROOT_PATH + "."  + packageName))
+        {
             chestConfig.set(ROOT_PATH + "."  + packageName, null);
             this.saveConfig();
             sender.sendMessage(packageName + " has been deleted.");
@@ -144,12 +152,15 @@ public class PackageHandler {
     public void getPlayerPackage(final Player sender,
                                  final String packageName)
     {
-        if (!chestConfig.contains(ROOT_PATH + "." + packageName)) {
+        if (!chestConfig.contains(ROOT_PATH + "." + packageName))
+        {
             sender.sendMessage("Chest does not exist.");
             return;
         }
+        
         ArrayList<ItemStack> items = this.getPackage(packageName);
-        if (items == null) {
+        if (items == null)
+        {
             sender.sendMessage("An error has occured.");
             return;
         }
@@ -160,9 +171,11 @@ public class PackageHandler {
         sender.sendMessage("Package " + packageName + " recieved.");
     }
     
-    public void listPackages(final Player sender) {
+    public void listPackages(final Player sender)
+    {
         sender.sendMessage("Packages:");
-        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false)) {
+        for (String key : chestConfig.getConfigurationSection(ROOT_PATH).getKeys(false))
+        {
             sender.sendMessage(" - " + key);
         }
     }
@@ -173,7 +186,7 @@ public class PackageHandler {
     private void loadConfig()
     {
         if (chestFile == null) 
-            chestFile = new File(plugin.getDataFolder(), CONFIG_FILE_NAME);
+            chestFile = new File(StateFile.getFolder(), CONFIG_FILE_NAME);
 
         chestConfig = new YamlConfiguration();
         chestConfig = YamlConfiguration.loadConfiguration(chestFile);
@@ -190,7 +203,7 @@ public class PackageHandler {
         try {
             chestConfig.save(chestFile);
         } catch (IOException e) {
-            plugin.getLogger().log(Level.SEVERE, "Could not save config to "
+            StateFile.getPlugin().getLogger().log(Level.SEVERE, "Could not save config to "
                     + chestConfig, e);
         }
     }

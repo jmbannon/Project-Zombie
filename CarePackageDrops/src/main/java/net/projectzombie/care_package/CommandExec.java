@@ -20,10 +20,12 @@
 
 package net.projectzombie.care_package;
 
-import net.projectzombie.care_package.StateController.StateType;
+import net.projectzombie.care_package.state.StateType;
+import net.projectzombie.care_package.controller.StateController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.projectzombie.care_package.controller.StateFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,15 +36,13 @@ import org.bukkit.plugin.Plugin;
  *
  * @author jbannon
  */
-public class CommandExec implements CommandExecutor {
-    private final Plugin plugin;
-    private final StateController controller;
+public class CommandExec implements CommandExecutor
+{
     private final PackageHandler chest;
     
-    public CommandExec(Plugin plugin) {
-        this.plugin = plugin;
-        controller = new StateController(plugin);
-        chest = new PackageHandler(plugin);
+    public CommandExec()
+    {
+        chest = new PackageHandler();
     }
     
     /**
@@ -73,9 +73,9 @@ public class CommandExec implements CommandExecutor {
             
         } else if (args[0].equalsIgnoreCase("list") && args.length == 2) {
             if (args[1].equalsIgnoreCase("alt"))
-                controller.listStates(player, StateType.ALT);
+                StateController.listStates(player, StateType.ALT);
             else if (args[1].equalsIgnoreCase("base"))
-                controller.listStates(player, StateType.BASE);
+                StateController.listStates(player, StateType.BASE);
             else if (args[1].equalsIgnoreCase("package"))
                 chest.listPackages(player);
             else
@@ -84,9 +84,9 @@ public class CommandExec implements CommandExecutor {
             
         } else if (args[0].equalsIgnoreCase("create") && args.length == 3) {
             if (args[1].equalsIgnoreCase("alt"))
-                controller.createState(player, args[2], StateType.ALT);
+                StateController.createState(player, args[2], StateType.ALT);
             else if (args[1].equalsIgnoreCase("base"))
-                controller.createState(player, args[2], StateType.BASE);
+                StateController.createState(player, args[2], StateType.BASE);
             else if (args[1].equalsIgnoreCase("package"))
                 chest.createPackage(player, args[2]);
             else
@@ -94,9 +94,9 @@ public class CommandExec implements CommandExecutor {
   
         } else if (args[0].equalsIgnoreCase("remove") && args.length == 3) {
             if (args[1].equalsIgnoreCase("base"))
-                controller.removeState(player, args[2], StateController.StateType.BASE);
+                StateController.removeState(player, args[2], StateType.BASE);
             else if (args[1].equalsIgnoreCase("alt"))
-                controller.removeState(player, args[2], StateController.StateType.ALT);
+                StateController.removeState(player, args[2], StateType.ALT);
             else if (args[1].equalsIgnoreCase("package"))
                 chest.removePackage(player, args[2]);
             else
@@ -108,17 +108,17 @@ public class CommandExec implements CommandExecutor {
                 temp.append(args[i]);
                 temp.append(' ');
             }
-            controller.linkState(player, args[1], args[2], temp.toString());
+            StateController.linkState(player, args[1], args[2], temp.toString());
             
         } else if (args[0].equalsIgnoreCase("package") && args.length == 2)
             chest.getPlayerPackage(player, args[1]);
         
         else if (args[0].equalsIgnoreCase("set") && args.length == 3)
-            controller.setAltState(args[1], args[2]);
+            StateController.setAltState(args[1], args[2]);
             
         else if (args[0].equalsIgnoreCase("paste") && args.length == 2)
             try {
-                controller.pasteBaseState(player, args[1]);
+                StateController.pasteBaseState(player, args[1]);
             } catch (IOException ex) {
                 Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
                 player.sendMessage("IOexception, report to administrator.");
@@ -126,7 +126,7 @@ public class CommandExec implements CommandExecutor {
         
         else if (args[0].equalsIgnoreCase("unpaste") && args.length == 1)
             try {
-                controller.undoPaste(player);
+                StateController.undoPaste(player);
             } catch (IOException ex) {
                 Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
                 player.sendMessage("IOexception, report to administrator.");
@@ -134,24 +134,28 @@ public class CommandExec implements CommandExecutor {
         
         else if (args[0].equalsIgnoreCase("tele") && args.length == 3) {
             if (args[1].equalsIgnoreCase("base"))
-                controller.teleportToState(player, args[2], StateType.BASE);
+                StateController.teleportToState(player, args[2], StateType.BASE);
             else if (args[1].equalsIgnoreCase("alt"))
-                controller.teleportToState(player, args[2], StateType.ALT);
+                StateController.teleportToState(player, args[2], StateType.ALT);
             else
                 this.listCommands(player);
-        } 
+        }
+        
+        else if (args[0].equalsIgnoreCase("restore") && args.length == 2)
+        {
+            StateController.restoreState(player, args[1]);
+        }
         
         else if (args[0].equalsIgnoreCase("initiate"))
-            controller.initiateDrop();
+            StateController.initiateDrop();
         
-        else if (args[0].equalsIgnoreCase("restore"))
-            controller.restoreState();
+
         
         else if (args[0].equalsIgnoreCase("check"))
-            controller.checkYaw(player);
+            StateController.checkYaw(player);
         
         else if (args[0].equalsIgnoreCase("reload"))
-            controller.reloadConfig(player);
+            StateController.reloadConfig(player);
             
         else
             this.listCommands(player);
@@ -175,20 +179,18 @@ public class CommandExec implements CommandExecutor {
         sender.sendMessage("/cp unpaste");
         sender.sendMessage("/cp package <package name>");
         sender.sendMessage("/cp initiate");
-        sender.sendMessage("/cp restore");
+        sender.sendMessage("/cp restore <base_name>");
         sender.sendMessage("/cp check");
         sender.sendMessage("/cp reload");
     }
     
     public void onEnable()
     {
-        controller.onEnable();
         chest.onEnable();
     }
     
     public void onDisable()
     {
-        controller.onDisable();
-        controller.onDisable();
+        StateFile.onDisable();
     }
 }
