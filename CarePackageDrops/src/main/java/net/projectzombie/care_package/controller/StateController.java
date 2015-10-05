@@ -23,6 +23,7 @@ package net.projectzombie.care_package.controller;
 import net.projectzombie.care_package.files.StateBuffer;
 import net.projectzombie.care_package.files.StateFile;
 import java.io.IOException;
+import java.util.Set;
 import net.projectzombie.care_package.files.CopyBuffer;
 import net.projectzombie.care_package.state.StateType;
 import net.projectzombie.care_package.state.AltState;
@@ -255,8 +256,14 @@ public class StateController
     
     static public void listActive(final Player sender)
     {
-        for (String baseName : StateBuffer.active())
-            sender.sendMessage(baseName);
+        Set<String> baseNames = StateBuffer.active();
+        if (baseNames != null)
+        {
+            for (String baseName : StateBuffer.active())
+                sender.sendMessage(baseName);
+        }
+        else
+            sender.sendMessage("No state changes are active.");
     }
     
     static public void checkYaw(final Player sender)
@@ -287,7 +294,7 @@ public class StateController
             sender.sendMessage("An error occured");
     }
     
-    static public void undoPaste(Player sender) throws IOException
+    static public void undoPaste(Player sender)
     {
         if (!CopyBuffer.inProgress())
             sender.sendMessage("Nothing pasted.");

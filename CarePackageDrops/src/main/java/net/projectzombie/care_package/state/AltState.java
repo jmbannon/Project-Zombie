@@ -30,26 +30,16 @@ public class AltState extends State
         return pathChest;
     }
     
-   public Chest getChestBlock()
+   public Block getChestBlock(final Block baseLocationBlock)
    {
-       final Block chestBlock;
        final Vector relativeVec;
-       final Block locationBlock = this.getLocationBlock();
-       
-       if (locationBlock != null && StateFile.contains(pathChest))
+
+       if (baseLocationBlock != null && StateFile.contains(pathChest))
        {
            relativeVec = StateFile.getVector(pathChest);
-           chestBlock = locationBlock.getRelative(relativeVec.getBlockX(),
-                                                  relativeVec.getBlockY(),
-                                                  relativeVec.getBlockZ());
-           if (chestBlock instanceof Chest)
-           {
-               return (Chest)chestBlock.getState();
-           }
-           else
-           {
-               return null;
-           }
+           return baseLocationBlock.getRelative(relativeVec.getBlockX(),
+                                                relativeVec.getBlockY(),
+                                                relativeVec.getBlockZ());
        }
        else
        {

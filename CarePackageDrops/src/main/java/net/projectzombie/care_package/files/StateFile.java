@@ -30,7 +30,7 @@ public class StateFile
     static private Plugin plugin;
     static private File stateFile;
     static private FileConfiguration stateConfig;
-
+    static private final String FILE_NAME = "drop_locations.yml";
     
     private StateFile() { /* Do nothing. */ }
     
@@ -75,7 +75,10 @@ public class StateFile
         }
             
         for (String baseName : StateFile.getSection(BaseState.path()))
-            baseNames.add(baseName);
+        {
+            if (!StateBuffer.contains(baseName))
+                baseNames.add(baseName);
+        }
         
         if (baseNames.isEmpty())
         {
@@ -182,7 +185,7 @@ public class StateFile
     {
         if (stateFile == null)
         {
-            stateFile = new File(StateFile.getFolder(), "drop_locations.yml");
+            stateFile = new File(StateFile.getFolder(), FILE_NAME);
         }
         stateConfig = new YamlConfiguration();
         stateConfig = YamlConfiguration.loadConfiguration(stateFile);

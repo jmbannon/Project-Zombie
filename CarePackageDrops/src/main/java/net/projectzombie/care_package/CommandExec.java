@@ -22,9 +22,6 @@ package net.projectzombie.care_package;
 
 import net.projectzombie.care_package.state.StateType;
 import net.projectzombie.care_package.controller.StateController;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.projectzombie.care_package.files.StateFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,14 +61,14 @@ public class CommandExec implements CommandExecutor
         final Player player = (Player) cs;
 
         if (!player.isOp())
-        {
             return false;
-        }
 
-        if (args.length == 0) {
+        if (args.length == 0)
+        {
             this.listCommands(player);
-            
-        } else if (args[0].equalsIgnoreCase("list") && args.length == 2) {
+        } 
+        else if (args[0].equalsIgnoreCase("list") && args.length == 2)
+        {
             if (args[1].equalsIgnoreCase("alt"))
                 StateController.listStates(player, StateType.ALT);
             else if (args[1].equalsIgnoreCase("base"))
@@ -79,10 +76,10 @@ public class CommandExec implements CommandExecutor
             else if (args[1].equalsIgnoreCase("package"))
                 chest.listPackages(player);
             else
-                this.listCommands(player);
-            
-            
-        } else if (args[0].equalsIgnoreCase("create") && args.length == 3) {
+                this.listCommands(player);   
+        }
+        else if (args[0].equalsIgnoreCase("create") && args.length == 3)
+        {
             if (args[1].equalsIgnoreCase("alt"))
                 StateController.createState(player, args[2], StateType.ALT);
             else if (args[1].equalsIgnoreCase("base"))
@@ -91,8 +88,9 @@ public class CommandExec implements CommandExecutor
                 chest.createPackage(player, args[2]);
             else
                 this.listCommands(player);
-  
-        } else if (args[0].equalsIgnoreCase("remove") && args.length == 3) {
+        }
+        else if (args[0].equalsIgnoreCase("remove") && args.length == 3)
+        {
             if (args[1].equalsIgnoreCase("base"))
                 StateController.removeState(player, args[2], StateType.BASE);
             else if (args[1].equalsIgnoreCase("alt"))
@@ -102,7 +100,9 @@ public class CommandExec implements CommandExecutor
             else
                 this.listCommands(player);
                 
-        }  else if (args[0].equalsIgnoreCase("link") && args.length >= 3) {
+        }
+        else if (args[0].equalsIgnoreCase("link") && args.length >= 3)
+        {
             StringBuilder temp = new StringBuilder("");
             for (int i = 3; i < args.length; i++) {
                 temp.append(args[i]);
@@ -110,7 +110,8 @@ public class CommandExec implements CommandExecutor
             }
             StateController.linkState(player, args[1], args[2], temp.toString());
             
-        } else if (args[0].equalsIgnoreCase("package") && args.length == 2)
+        }
+        else if (args[0].equalsIgnoreCase("package") && args.length == 2)
             chest.getPlayerPackage(player, args[1]);
         
         else if (args[0].equalsIgnoreCase("set") && args.length == 3)
@@ -119,15 +120,11 @@ public class CommandExec implements CommandExecutor
         else if (args[0].equalsIgnoreCase("paste") && args.length == 2)
                 StateController.pasteAltState(player, args[1]);
         
-        else if (args[0].equalsIgnoreCase("unpaste") && args.length == 1)
-            try {
-                StateController.undoPaste(player);
-            } catch (IOException ex) {
-                Logger.getLogger(CommandExec.class.getName()).log(Level.SEVERE, null, ex);
-                player.sendMessage("IOexception, report to administrator.");
-            }
+        else if (args[0].equalsIgnoreCase("unpaste") && args.length == 1) 
+            StateController.undoPaste(player);
         
-        else if (args[0].equalsIgnoreCase("tele") && args.length == 3) {
+        else if (args[0].equalsIgnoreCase("tele") && args.length == 3)
+        {
             if (args[1].equalsIgnoreCase("base"))
                 StateController.teleportToState(player, args[2], StateType.BASE);
             else if (args[1].equalsIgnoreCase("alt"))

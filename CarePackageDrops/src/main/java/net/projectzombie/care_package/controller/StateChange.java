@@ -22,9 +22,7 @@ package net.projectzombie.care_package.controller;
 
 import net.projectzombie.care_package.files.StateFile;
 import net.projectzombie.care_package.utilities.BlockSerialize;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,16 +30,14 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.projectzombie.care_package.PackageHandler;
+import net.projectzombie.care_package.files.StateBuffer;
 import net.projectzombie.care_package.state.AltState;
 import net.projectzombie.care_package.state.BaseState;
 import net.projectzombie.care_package.state.State;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -65,7 +61,7 @@ public class StateChange
     private final PackageHandler CONTENTS;
     private final Block altBlock;
     private final Block baseBlock;
-    private final Chest chestBlock; 
+    private final Block chestBlock; 
     private final String description;
     
     private final File   stateBuffer;
@@ -84,7 +80,7 @@ public class StateChange
         
         this.altBlock    = alt.getLocationBlock();
         this.baseBlock   = base.getLocationBlock();
-        this.chestBlock  = alt.getChestBlock();
+        this.chestBlock  = alt.getChestBlock(this.baseBlock);
         this.description = base.getDescription(altName);
 
         this.stateBuffer     = new File(StateFile.getFolder(), baseName + ".state_buffer");
@@ -130,20 +126,43 @@ public class StateChange
         }
         else if (set(alt, base.getLocationBlock(), stateBuffer))
         {
-            while (items.size() < 27)
-                items.add(new ItemStack(Material.AIR));
+            Bukkit.broadcastMessage("state set");
+            final Chest chest = setChest();
+            if (chest != null)
+            {
+                
+                while (items.size() < 27)
+                    items.add(new ItemStack(Material.AIR));
 
-            Collections.shuffle(items);
-            for (int i = 0; i < items.size(); i++)
-                chestItems[i] = items.get(i);
+                Collections.shuffle(items);
+                for (int i = 0; i < items.size(); i++)
+                    chestItems[i] = items.get(i);
 
-            chestBlock.getInventory().setContents(chestItems);
-            chestBlock.update(true);
-            StateFile.getPlugin().getServer().broadcastMessage(description);
-            return 1;
+                chest.getInventory().setContents(chestItems);
+                chest.update(true);
+                StateFile.getPlugin().getServer().broadcastMessage(description);
+                return 1;
+            }
+            else
+            {
+                Bukkit.broadcastMessage("chest not instanceof!");
+                restoreState();
+                return -1;
+            }
         }
         else
             return -1;
+    }
+    
+    public boolean restoreState()
+    {
+        return StateBuffer.removeAndRestore(this);
+    }
+    
+    private Chest setChest()
+    {
+        //chestBlock.setType(Material.CHEST);
+        return (chestBlock.getState() instanceof Chest) ? (Chest)chestBlock.getState() : null;
     }
     
     /**
@@ -158,7 +177,6 @@ public class StateChange
                               final File buffer)
     {
         final Block stateLocation = state.getLocationBlock();
-        boolean isSet = false;
         Block toPaste;
         
         if (stateLocation == null)
@@ -166,7 +184,6 @@ public class StateChange
         
         try (FileWriter stateWriter = new FileWriter(buffer))
         {
-            isSet = true;
             for (int i = 0; i < ALT_STATE_LENGTH; i++)
             {
                 for (int j = 0; j < ALT_STATE_WIDTH; j++)
@@ -191,80 +208,21 @@ public class StateChange
         }
     }
     
-    static public boolean restore(final Block setLocationBlock,
-                                  final File buffer)
+    public Block getBaseLocationBlock()
     {
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(buffer));
-            final String[] blocks = reader.readLine().split("#");
-
-            for (String block : blocks)
-            {
-                BlockSerialize.deserializeAndSet(block);
-            }
-            buffer.delete();
-            removeDroppedEntities(setLocationBlock);
-            return true;
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(StateChange.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        
-    }
-
-    /**
-     * Restores a base state to its original form by deserializing the text 
-     * file and pasting those blocks with respect to it's offset coordinate.
-     *
-     */
-    public void restoreState()
-    {
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(stateBuffer));
-            final String[] blocks = reader.readLine().split("#");
-            
-            for (String block : blocks)
-            {
-                BlockSerialize.deserializeAndSet(block);
-            }
-            stateBuffer.delete();
-            removeDroppedEntities(baseBlock);
-        }
-        catch (IOException ex)
-        {
-            stateBuffer.delete();
-            Logger.getLogger(StateChange.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return this.baseBlock;
     }
     
-    static private void removeDroppedEntities(Block baseBlock)
+    public File getBuffer()
     {
-        final Location centerLoc 
-                = baseBlock.getRelative(ALT_STATE_WIDTH/2, 
-                                        ALT_STATE_HEIGHT/2, 
-                                        ALT_STATE_WIDTH/2).getLocation();
-        
-        final Entity tempEntity = centerLoc.getWorld().spawnEntity(centerLoc, EntityType.ARROW);
-        
-        for (Entity entity : tempEntity.getNearbyEntities(ALT_STATE_WIDTH/2, 
-                                                          ALT_STATE_HEIGHT/2, 
-                                                          ALT_STATE_WIDTH/2))
-        {
-            if (entity.getType() == EntityType.DROPPED_ITEM)
-                entity.remove();            
-        }
-        tempEntity.remove();
+        return this.stateBuffer;
     }
     
     /**
      * Returns Returns the state's length.
      * @return Length of all states.
      */
-    static protected int getStateLength()
+    static public int getStateLength()
     {
         return ALT_STATE_LENGTH;
     }
@@ -273,7 +231,7 @@ public class StateChange
      * Returns Returns the state's width.
      * @return Width of all states.
      */
-    static protected int getStateWidth()
+    static public int getStateWidth()
     {
         return ALT_STATE_WIDTH;
     }
@@ -282,7 +240,7 @@ public class StateChange
      * Returns Returns the state's height.
      * @return Height of all states.
      */
-    static protected int getStateHeight()
+    static public int getStateHeight()
     {
         return ALT_STATE_HEIGHT;
     }

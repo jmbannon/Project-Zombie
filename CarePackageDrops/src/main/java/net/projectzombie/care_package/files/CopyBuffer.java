@@ -36,7 +36,7 @@ public class CopyBuffer
     static public boolean restorePaste()
     {
         COPY_IN_PROGRESS = false;
-        return StateChange.restore(COPY_BLOCK, COPY_FILE);
+        return StateBuffer.restore(COPY_BLOCK, COPY_FILE);
     }
     
     static public boolean inProgress()
