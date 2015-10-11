@@ -78,7 +78,7 @@ public class PluginChat
      * @param plainText
      * @return Properly colored plugin tag.
      */
-    public static String buildTag(final String pluginTag,
+    private static String buildTag(final String pluginTag,
                                   final ChatColor tagColor,
                                   final ChatColor plainText)
     {
