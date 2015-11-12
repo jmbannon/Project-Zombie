@@ -118,4 +118,9 @@ public enum Weapon implements Type
     {
         return ((double)100 - (ACCURACY_WEIGHT * getBulletSpread(CSBulletSpread, condition)));
     }
+
+    @Override
+    public String title() {
+        return TITLE;
+    }
 }

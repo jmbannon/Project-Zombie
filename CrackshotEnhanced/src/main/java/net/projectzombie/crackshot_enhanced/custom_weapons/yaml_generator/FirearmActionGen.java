@@ -5,8 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment.LUB;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.LUB;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
 /**
  *

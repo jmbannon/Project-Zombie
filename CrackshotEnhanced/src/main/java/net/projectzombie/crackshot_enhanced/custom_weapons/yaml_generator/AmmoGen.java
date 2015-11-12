@@ -5,7 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 
 /**
@@ -19,7 +19,7 @@ public class AmmoGen
     static
     protected String getAmmoID(final CrackshotGun gun)
     {
-        final Weapon weaponType = gun.getBase().getWeaponType();
+        final Weapon weaponType = gun.getSkeleton().getWeaponType();
         final int ammoData = weaponType.getAmmoData();
         final StringBuilder stb = new StringBuilder();
         

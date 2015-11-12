@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
+
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 
 /**
  *
  * @author jbannon
  */
-public enum FireMode implements Type
+public enum FireMode implements Type, GunModifier
 {
     SEMI    (0, "Semi-Auto"),
     BURST   (1, "Burst"),
@@ -31,7 +33,6 @@ public enum FireMode implements Type
         this.value = value;
     }
     
-    public static String getTitle()     { return TITLE;      }
     
     @Override public String toString()  { return value;      }
     @Override public int getEnumValue() { return enumValue;  }
@@ -43,5 +44,17 @@ public enum FireMode implements Type
                 return type.value;
         
         return SEMI.value;
+    }
+
+    @Override
+    public int price()
+    {
+        return 40;
+    }
+
+    @Override
+    public String title()
+    {
+        return TITLE;
     }
 }

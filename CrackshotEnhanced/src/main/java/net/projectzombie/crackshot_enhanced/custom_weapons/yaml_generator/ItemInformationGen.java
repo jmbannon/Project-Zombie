@@ -5,8 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotBase;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.PISTOL;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.REVOLVER;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
@@ -24,7 +24,7 @@ public class ItemInformationGen
     static
     protected String getItemName(final CrackshotGun gun)
     {
-        final String ID = String.valueOf(gun.getEnumValue() * 13);
+        final String ID = String.valueOf(gun.getUniqueId() * 13);
         final StringBuilder stb = new StringBuilder();
         
         stb.append(CrackshotLore.ITEM_COLOR);
@@ -34,14 +34,14 @@ public class ItemInformationGen
             stb.append(c);
         }
         stb.append(CrackshotLore.ITEM_COLOR);
-        stb.append(gun.getBase().toString());
+        stb.append(gun.getSkeleton().toString());
         return stb.toString().replace(ChatColor.COLOR_CHAR, '&');
     }
     
     static
     protected String getItemType(final CrackshotGun gun)
     {
-        final CrackshotBase base = gun.getBase();
+        final GunSkeleton base = gun.getSkeleton();
         final int materialData = base.getItemData();
         final StringBuilder stb = new StringBuilder();
         
@@ -61,7 +61,7 @@ public class ItemInformationGen
         stbVerify.append(CrackshotLore.seperator);
         stbVerify.append(CrackshotLore.verification);
         stbVerify.append(CrackshotLore.seperator);
-        stbVerify.append(gun.getEnumValue());
+        stbVerify.append(gun.getUniqueId());
         
         final StringBuilder stb = new StringBuilder();
         stb.append(CrackshotLore.line);
@@ -75,8 +75,8 @@ public class ItemInformationGen
     static
     protected String getInventoryControl(final CrackshotGun gun)
     {
-        return (gun.getBase().getWeaponType().equals(PISTOL)
-                || gun.getBase().getWeaponType().equals(REVOLVER)) ? 
+        return (gun.getSkeleton().getWeaponType().equals(PISTOL)
+                || gun.getSkeleton().getWeaponType().equals(REVOLVER)) ? 
             "Group_Sidearm" : "Group_Primary";
     }
 }

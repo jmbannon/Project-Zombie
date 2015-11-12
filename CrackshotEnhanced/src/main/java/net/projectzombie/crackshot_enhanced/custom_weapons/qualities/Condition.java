@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.qualities;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 import org.bukkit.ChatColor;
 
 /**
@@ -64,5 +65,10 @@ public enum Condition implements Type
                 return condition.toString();
         
         return null;
+    }
+
+    @Override
+    public String title() {
+        return TITLE;
     }
 }

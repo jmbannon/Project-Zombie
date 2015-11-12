@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
+import java.util.ArrayList;
 import junit.framework.TestCase;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,41 +24,25 @@ public class TestCrackshotGun extends TestCase
         
     }
     
-    public void testUniqueIDs()
+    public void testGunAccess2()
     {
-        CrackshotGun enums[] = CrackshotGun.values();
-        String msg;
+        boolean indexMatch = true;
+        ArrayList<CrackshotGun> guns = Guns.getGuns();
+        int id;
+        String msg = "should not see this";
         
-        for (CrackshotGun gunOne : enums)
+        for (int i = 0; i < guns.size(); i++)
         {
-            for (CrackshotGun gunTwo : enums)
+            id = guns.get(i).getUniqueId();
+            if (id != i)
             {
-                 if (!gunOne.equals(gunTwo))
-                 {
-                     msg = "Expected " + gunOne.getUniqueId() + " != " + gunTwo.getUniqueId();
-                     assertTrue(msg, gunOne.getUniqueId() != gunTwo.getUniqueId());
-                 }
+                indexMatch = false;
+                msg = "GunAccess(" + i + ") != uniqueId(" + id + ").";
+                break;
             }
         }
-    }
-    
-    public void testGunAccess()
-    {
-        CrackshotGun enums[] = CrackshotGun.values();
-        Boolean hasID;
-        String msg;
         
-        for (int i = 0; i < enums.length; i++)
-        {
-            hasID = false;
-            msg = i + " is not in the sequential unique IDs";
-            for (CrackshotGun gun : enums)
-            {
-                if (i == gun.getUniqueId())
-                    hasID = true;
-            }
-            assertTrue(msg, hasID);
-        }
+        assertTrue(msg, indexMatch);
     }
     
     @BeforeClass

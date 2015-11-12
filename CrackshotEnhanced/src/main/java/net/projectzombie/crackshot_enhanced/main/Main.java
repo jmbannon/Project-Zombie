@@ -1,8 +1,8 @@
 package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
-import net.projectzombie.crackshot_enhanced.custom_weapons.ShootListener;
-import net.projectzombie.crackshot_enhanced.custom_weapons.ScopeZoomListener;
+import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
+import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {

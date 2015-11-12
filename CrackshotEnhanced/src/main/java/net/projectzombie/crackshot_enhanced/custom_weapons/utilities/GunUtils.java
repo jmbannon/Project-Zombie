@@ -5,9 +5,11 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Scope;
+import java.util.ArrayList;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 
 /**
@@ -19,7 +21,7 @@ public class GunUtils
     static
     public Boolean isShotgun(final CrackshotGun gun)
     {
-        final Weapon weaponType = gun.getBase().getWeaponType();
+        final Weapon weaponType = gun.getSkeleton().getWeaponType();
         return (weaponType.equals(Weapon.SH_BREAK)
                 || weaponType.equals(Weapon.SH_PUMP)
                 || weaponType.equals(Weapon.SH_SLIDE));
@@ -28,19 +30,19 @@ public class GunUtils
     static
     public Boolean isSniper(final CrackshotGun gun)
     {
-        return gun.getBase().getWeaponType().equals(Weapon.SNIPER);
+        return gun.getSkeleton().getWeaponType().equals(Weapon.SNIPER);
     }
     
     static
     public Boolean isHuntingRifle(final CrackshotGun gun)
     {
-        return gun.getBase().getWeaponType().equals(Weapon.HUNTING);
+        return gun.getSkeleton().getWeaponType().equals(Weapon.HUNTING);
     }
     
     static
     public Boolean hasScope(final CrackshotGun gun)
     {
-        return !gun.getScopeType().equals(Scope.IRON);
+        return !gun.getScope().equals(Scope.IRON);
     }
     
     static
@@ -53,5 +55,32 @@ public class GunUtils
     public Boolean isAutomatic(final CrackshotGun gun)
     {
         return gun.getFireMode().equals(FireMode.AUTO);
+    }
+    
+    /**
+     * Sorts GunModifiers by price ascending using bubble sort.
+     * @param mods ArrayList of GunModifier
+     * @return Sorted ArraylList of GunModifier
+     */
+    static
+    public ArrayList<GunModifier> sortMods(final ArrayList<GunModifier> mods)
+    {
+        GunModifier temp;
+        int i = 0;
+        while (i < mods.size() - 1)
+        {
+            if (mods.get(i).price() > mods.get(i + 1).price())
+            {
+                temp = mods.get(i);
+                mods.set(i, mods.get(i + 1));
+                mods.set(i + 1, temp);
+                i = 0;
+            }
+            else
+            {
+                ++i;
+            }
+        }
+        return mods;
     }
 }

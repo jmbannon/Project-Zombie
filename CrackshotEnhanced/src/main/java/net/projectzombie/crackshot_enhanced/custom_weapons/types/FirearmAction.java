@@ -5,27 +5,31 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Sounds;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Sounds.*;
+
 /**
  *
  * @author jbannon
  */
 public enum FirearmAction
 {
-    SNIPER_BOLT  ("bolt",  "VILLAGER_DEATH-1-1-0", "VILLAGER_HAGGLE-1-1-0",    20, 16, 6,  false),
-    HUNTING_BOLT ("bolt",  "VILLAGER_DEATH-1-1-0", "VILLAGER_HAGGLE-1-1-0",    20, 16, 6,  true),
-    SMG_SLIDE    ("slide", null,                   null,                       0,  7,  11, false),
-    SLIDE        ("slide", null,                   null,                       0,  10, 12, false),
-    BREAK        ("break", "AMBIENCE_THUNDER-1-1-0", "AMBIENCE_THUNDER-1-1-0", 0,  12, 12, true),
-    PUMP         ("break", "AMBIENCE_THUNDER-1-1-0", "HORSE_ANGRY-1-1-0",      0,  12, 12, true);
+    SNIPER_BOLT  ("bolt",  BOLT_OPEN, BOLT_CLOSE, 20, 16, 6,  false),
+    HUNTING_BOLT ("bolt",  BOLT_OPEN, BOLT_CLOSE, 20, 16, 6,  true),
+    SMG_SLIDE    ("slide", null,      null,       0,  7,  11, false),
+    SLIDE        ("slide", null,      null,       0,  10, 12, false),
+    BREAK        ("break", REL_BREAK, REL_BREAK, 0,  12, 12, true),
+    PUMP         ("pump",  REL_BREAK, REL_PUMP,  0,  12, 12, true);
     
     //Action, SoundOpen, SoundClose, delay, open, close
-    private final String type, soundOpen, soundClose;
+    private final Sounds soundOpen, soundClose;
+    private final String type;
     private final int openDuration, closeDuration, closeShootDelay;
     private final Boolean individualBullets;
     
     private FirearmAction(final String type,
-                          final String soundOpen,
-                          final String soundClose,
+                          final Sounds soundOpen,
+                          final Sounds soundClose,
                           final int openDuration,
                           final int closeDuration,
                           final int closeShootDelay,
@@ -40,8 +44,8 @@ public enum FirearmAction
         this.individualBullets = individualBullets;
     }
     
-    public String  getSoundOpen()         { return soundOpen;         }
-    public String  getSoundClose()        { return soundClose;        }
+    public String  getSoundOpen()         { return soundOpen.toString();  }
+    public String  getSoundClose()        { return soundClose.toString(); }
     public int     getOpenDuration()      { return openDuration;      }
     public int     getCloseDuration()     { return closeDuration;     }
     public int     getCloseShootDelay()   { return closeShootDelay;   }

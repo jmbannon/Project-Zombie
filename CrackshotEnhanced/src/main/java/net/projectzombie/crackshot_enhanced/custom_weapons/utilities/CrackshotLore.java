@@ -5,14 +5,15 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import com.shampaggon.crackshot.CSUtility;
 import java.util.List;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Build;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Condition;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
+import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -145,7 +146,7 @@ public class CrackshotLore
         final int durability, condition, newCondition, build;
         String infoSplit[] = getInfoSplit(lore);
         
-        CrackshotGun gun = GunAccess.get(Integer.valueOf(INFO_ID_IDX));
+        CrackshotGun gun = Guns.get(Integer.valueOf(INFO_ID_IDX));
         if (gun == null)
             return -1;
 
@@ -192,7 +193,7 @@ public class CrackshotLore
                                 List<String> lore)
     {
         
-        final CrackshotGun gun = CrackshotGun.getGun(getWeaponId(lore));
+        final CrackshotGun gun = Guns.get(getWeaponId(lore));
         if (gun == null)
             return -1;
         
@@ -209,7 +210,7 @@ public class CrackshotLore
         List<String> lore = meta.getLore();
         String split[] = getInfoSplit(lore);
         
-        final CrackshotGun gun = CrackshotGun.getGun(Integer.valueOf(split[INFO_ID_IDX]));
+        final CrackshotGun gun = Guns.get(Integer.valueOf(split[INFO_ID_IDX]));
         final int maxDur = gun.getMaxDurability()-1;
         final int build = Integer.valueOf(split[INFO_BUILD_IDX]);
         
@@ -234,7 +235,7 @@ public class CrackshotLore
         List<String> lore = meta.getLore();
         String split[] = getInfoSplit(lore);
         
-        final CrackshotGun gun = CrackshotGun.getGun(Integer.valueOf(split[INFO_ID_IDX]));
+        final CrackshotGun gun = Guns.get(Integer.valueOf(split[INFO_ID_IDX]));
         final int newBuild = Integer.valueOf(split[INFO_BUILD_IDX]) + 1;
         final int durability = Integer.valueOf(split[INFO_DUR_IDX]);
         
@@ -312,13 +313,14 @@ public class CrackshotLore
     static
     private String buildFireModeLore(final CrackshotGun gun)
     {
-        return buildLoreString(FireMode.getTitle(), gun.getFireMode().toString());
+        final FireMode gunFireMode = gun.getFireMode();
+        return buildLoreString(gunFireMode.title(), gunFireMode.toString());
     }
     
     static
     private String buildScopeLore(final CrackshotGun gun)
     {
-        return buildLoreString(Scope.getTitle(), gun.getScopeType().toString());
+        return buildLoreString(Scope.getTitle(), gun.getScope().toString());
     }
     
     static

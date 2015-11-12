@@ -5,12 +5,12 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment.INC;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Attatchment.SO;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotBase;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INC;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.SO;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 
@@ -23,16 +23,16 @@ public class ShootingGen
     static
     protected String getSoundsShoot(final CrackshotGun gun)
     {
-        final CrackshotBase base = gun.getBase();
+        final GunSkeleton base = gun.getSkeleton();
         return (gun.getAttatchment().equals(Attatchment.SUP)) ? 
                 base.getSilencedSound() : base.getShootSound();
     }
     static
     protected int getDelayBetweenShots(final CrackshotGun gun)
     {
-        final int shootDelay = gun.getBase().getShootDelay();
+        final int shootDelay = gun.getSkeleton().getShootDelay();
         final FireMode fireMode = gun.getFireMode();
-        final Weapon weaponType = gun.getBase().getWeaponType();
+        final Weapon weaponType = gun.getSkeleton().getWeaponType();
         
         if (shootDelay == 0 || fireMode.equals(FireMode.AUTO)
                 || weaponType.equals(Weapon.SNIPER)
@@ -71,7 +71,7 @@ public class ShootingGen
     static
     protected int getDamage(final CrackshotGun gun)
     {
-        final int damage = gun.getBase().getDamage();
+        final int damage = gun.getSkeleton().getDamage();
         return (gun.getAttatchment().equals(INC)) ? (damage * 4)/3 : damage;
     }
 }

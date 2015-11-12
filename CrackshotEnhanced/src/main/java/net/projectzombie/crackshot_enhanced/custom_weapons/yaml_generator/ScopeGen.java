@@ -5,7 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 
 /**
  *
@@ -18,7 +18,7 @@ public class ScopeGen
     static
     protected int getZoomAmount(final CrackshotGun gun)
     {
-        switch(gun.getScopeType())
+        switch(gun.getScope())
         {
         case ACOG: return 4;
         case TACT: return 5;

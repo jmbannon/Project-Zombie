@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons;
+package net.projectzombie.crackshot_enhanced.main;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +24,7 @@ public class GunSmithController
     static
     public void listModifications(final Player player)
     {
-        final CrackshotGun currentGun = CrackshotGun.getGun(player.getItemInHand());
+        final CrackshotGun currentGun = Guns.get(player.getItemInHand());
         if (currentGun == null)
         {
             player.sendMessage("Modifications are not available for items that are not guns!");
@@ -37,11 +38,11 @@ public class GunSmithController
     
     static
     public boolean addModification(final Player player,
-                                   final ModType mod)
+                                   final GunModifier mod)
     {
-        final CrackshotGun newGun, currentGun = CrackshotGun.getGun(player.getItemInHand());
+        final CrackshotGun newGun, currentGun = Guns.get(player.getItemInHand());
         final ItemStack newGunItem;
-        final int price = mod.getPrice();
+        final int price = mod.price();
         
         if (currentGun == null)
         {
@@ -96,7 +97,7 @@ public class GunSmithController
     public int repairPrice(final Player player)
     {
         final ItemStack weaponInHand = player.getInventory().getItemInHand();
-        final CrackshotGun gun = CrackshotGun.getGun(CrackshotLore.getWeaponID(weaponInHand));
+        final CrackshotGun gun = Guns.get(CrackshotLore.getWeaponID(weaponInHand));
         
         return gun == null || !CrackshotLore.isPostShotWeapon(player.getItemInHand()) ? -1 : gun.getRepairPrice(weaponInHand);
     }
@@ -123,7 +124,7 @@ public class GunSmithController
     public int upgradeBuildPrice(final Player player)
     {
         final ItemStack weaponInHand = player.getInventory().getItemInHand();
-        final CrackshotGun gun = CrackshotGun.getGun(CrackshotLore.getWeaponID(weaponInHand));
+        final CrackshotGun gun = Guns.get(CrackshotLore.getWeaponID(weaponInHand));
         
         return gun == null ? -1 : gun.getUpgradePrice(weaponInHand);
     }

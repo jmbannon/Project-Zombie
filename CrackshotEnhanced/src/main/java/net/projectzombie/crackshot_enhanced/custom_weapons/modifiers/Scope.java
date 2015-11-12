@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
+
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 
 /**
  *
  * @author jbannon
  */
-public enum Scope implements Type
+public enum Scope implements Type, GunModifier
 {
     
     IRON  (0, "Iron Sight"),
@@ -47,6 +50,16 @@ public enum Scope implements Type
                 return type.value;
         
         return IRON.value;
+    }
+
+    @Override
+    public String title() {
+        return TITLE;
+    }
+
+    @Override
+    public int price() {
+        return 20;
     }
     
     
