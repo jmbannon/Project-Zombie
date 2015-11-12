@@ -44,7 +44,7 @@ public enum FirearmAction
         this.individualBullets = individualBullets;
     }
     
-    public String  getSoundOpen()         { return soundOpen.toString();  }
+    public String  getSoundOpen()         { return soundOpen.toString();  } 
     public String  getSoundClose()        { return soundClose.toString(); }
     public int     getOpenDuration()      { return openDuration;      }
     public int     getCloseDuration()     { return closeDuration;     }
