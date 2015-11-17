@@ -34,7 +34,7 @@ public class ItemInformationGen
             stb.append(c);
         }
         stb.append(CrackshotLore.ITEM_COLOR);
-        stb.append(gun.getSkeleton().toString());
+        stb.append(gun.getSkeleton().getName());
         return stb.toString().replace(ChatColor.COLOR_CHAR, '&');
     }
     

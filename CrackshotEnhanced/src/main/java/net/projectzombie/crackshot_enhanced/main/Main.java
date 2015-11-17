@@ -1,5 +1,7 @@
 package net.projectzombie.crackshot_enhanced.main;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.crafting.Recipes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
@@ -12,10 +14,12 @@ public class Main extends JavaPlugin {
     private OPCommandExec OPexec;
     private GunSmithCommandExec gunsmithExec;
     private ShootListener shootListener;
+    private Recipes recipes;
 
     @Override
     public void onEnable()
     {
+        Guns.initialize();
         this.windowListener = new BlockBreakListener();
         this.OPexec = new OPCommandExec(this);
         this.getCommand("bw").setExecutor(OPexec);
@@ -24,12 +28,14 @@ public class Main extends JavaPlugin {
         this.gunsmithExec = new GunSmithCommandExec();
         this.scopeListener = new ScopeZoomListener();
         this.shootListener = new ShootListener();
-
+        this.recipes = new Recipes();
+        
         this.getCommand("gunsmith").setExecutor(gunsmithExec);
         this.getCommand("gs").setExecutor(gunsmithExec);
 
         this.getServer().getPluginManager().registerEvents(scopeListener, this);
         this.getServer().getPluginManager().registerEvents(shootListener, this);
+        this.getServer().getPluginManager().registerEvents(recipes, this);
 
         this.getLogger().info("CrackshotEnhanced enabled!");
 

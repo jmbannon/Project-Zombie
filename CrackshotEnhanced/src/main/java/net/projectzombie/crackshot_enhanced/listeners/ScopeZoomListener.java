@@ -1,7 +1,6 @@
 package net.projectzombie.crackshot_enhanced.listeners;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import com.shampaggon.crackshot.events.WeaponScopeEvent;
+import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -25,7 +26,7 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class ScopeZoomListener implements Listener
 {
-	private final HashMap<Player, ItemStack> helmetList = new HashMap<>();
+	private static final HashMap<UUID, ItemStack> helmetList = new HashMap<>();
 
         /**
          * Places pumpkin on the player's head when zoomed in. Restores helmet
@@ -37,22 +38,18 @@ public class ScopeZoomListener implements Listener
 	public void scopeEvent(WeaponScopeEvent event)
         {
             final Player player = event.getPlayer();
-            final ItemStack pumpkinItem = new ItemStack(Material.PUMPKIN);
+            final UUID playerUUID = event.getPlayer().getUniqueId();
+            final ItemStack scope = new ItemStack(Material.PUMPKIN);
             
             if (event.isZoomIn())
             {
-                helmetList.put(player, player.getInventory().getHelmet());	
-                player.getInventory().setHelmet(pumpkinItem);
+                helmetList.put(playerUUID, player.getInventory().getHelmet());	
+                player.getInventory().setHelmet(scope);
             } 
-            else
+            else if (helmetList.containsKey(playerUUID))
             {
-                for (Entry<Player, ItemStack> entry : helmetList.entrySet())
-                {
-                    if (entry.getKey().equals(player)) {
-                            player.getInventory().setHelmet(entry.getValue());
-                            helmetList.remove(player);
-                    }
-                }
+                player.getInventory().setHelmet(helmetList.get(playerUUID));
+                helmetList.remove(playerUUID);
             }
 	}
     
@@ -81,10 +78,14 @@ public class ScopeZoomListener implements Listener
      */
     public void disable()
     {
-        for (Entry<Player, ItemStack> entry : helmetList.entrySet())
+        Player player;
+        for (UUID playerUUID : helmetList.keySet())
         {
-            entry.getKey().getInventory().setHelmet(entry.getValue());
-            helmetList.remove(entry.getKey());
+            player = Bukkit.getPlayer(playerUUID);
+            if (player != null)
+            {
+                player.getInventory().setHelmet(helmetList.get(playerUUID));
+            }
         }
     }
 	

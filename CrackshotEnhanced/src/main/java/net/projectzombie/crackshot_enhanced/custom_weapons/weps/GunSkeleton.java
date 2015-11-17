@@ -19,6 +19,9 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Part
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Sounds.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -83,7 +86,7 @@ public enum GunSkeleton
             reloadAmount, 
             reloadDuration;
     
-    private final Sounds
+    private final String
             soundShoot,
             soundSilenced,
             soundReload;
@@ -116,12 +119,12 @@ public enum GunSkeleton
         this.bulletSpread = initialBulletSpread;
         this.damage = damage;
         this.recoilAmount = recoilAmount;    
-        this.soundShoot = sounds_shoot;
-        this.soundSilenced = sounds_silenced;
+        this.soundShoot = (sounds_shoot != null) ? sounds_shoot.toString() : null;
+        this.soundSilenced = (sounds_silenced != null) ? sounds_silenced.toString() : null;
         this.particleShoot = particle_shoot;
         this.reloadAmount = reload_amount;
         this.reloadDuration = reload_duration;
-        this.soundReload = sounds_reloading;
+        this.soundReload = (sounds_reloading != null) ? sounds_reloading.toString() : null;
         this.modifiers = modifiers;
     }
     
@@ -131,16 +134,18 @@ public enum GunSkeleton
     public double   getBulletSpread()   { return bulletSpread;   }
     public int      getItemID()         { return itemID;         }
     public int      getItemData()       { return itemData;       }
+    public Material getItemMaterial()   { return Material.getMaterial(itemID); }
     public int      getShootDelay()     { return shootDelay;     }
     public int      getMaxDurability()  { return maxDurability;  }
     public int      getDamage()         { return damage;         }
     public int      getRecoil()         { return recoilAmount;   }
-    public String   getShootSound()     { return soundShoot.toString();    }
-    public String   getSilencedSound()  { return soundSilenced.toString(); }
+    public String   getShootSound()     { return soundShoot;    }
+    public String   getSilencedSound()  { return soundSilenced; }
     public String   getShootParticle()  { return particleShoot.toString(); }
     public int      getReloadAmount()   { return reloadAmount;   }
     public int      getReloadDuration() { return reloadDuration; }
-    public String   getReloadSound()    { return soundReload.toString();   }
+    public String   getReloadSound()    { return soundReload;   }
+    public ItemStack getBareItemStack() { return new ItemStack(itemID, 1, (short)itemData); }
     public GunModifier[] getModifiers() { return modifiers; }
 
     public CrackshotGun[] getGuns(final int uniqueIDOffset)
@@ -181,6 +186,10 @@ public enum GunSkeleton
         if (!containsMod(modifier))
             return null;
         
+        FireMode gunFireMode = gun.getFireMode();
+        Scope gunScope = gun.getScope();
+        Attatchment gunAttatchment = gun.getAttatchment();
+        
         for (FireMode fireMode : getFireModes())
         {
             for (Scope scope : getScopes())
@@ -189,20 +198,26 @@ public enum GunSkeleton
                 {
                     if (gun.containsMods(fireMode, scope, attatchment))
                         gunIndex = i;
-                    else if (modifier instanceof FireMode && gun.containsMods((FireMode)modifier, scope, attatchment))
+                    
+                    if (modifier instanceof FireMode && gunScope.equals(scope) && gunAttatchment.equals(attatchment))
                         modIndex = i;
-                    else if (modifier instanceof Scope && gun.containsMods(fireMode, (Scope)modifier, attatchment))
+                    else if (modifier instanceof Scope && gunFireMode.equals(fireMode) && gunAttatchment.equals(attatchment))
                         modIndex = i;
-                    else if (modifier instanceof Attatchment && gun.containsMods(fireMode, scope, (Attatchment)modifier))
+                    else if (modifier instanceof Attatchment && gunFireMode.equals(fireMode) && gunScope.equals(scope))
                         modIndex = i;
+                    ++i;
                 }
             }
         }
         
         if (gunIndex != -1 && modIndex != -1)
+        {
             return Guns.get(gun.getUniqueId() + (modIndex - gunIndex));
+        }
         else
+        {
             return null;
+        }
     }
     
     private ArrayList<FireMode> getFireModes()

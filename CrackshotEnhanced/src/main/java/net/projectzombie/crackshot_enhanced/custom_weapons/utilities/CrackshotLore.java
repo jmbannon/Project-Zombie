@@ -15,6 +15,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -255,11 +256,13 @@ public class CrackshotLore
                                         final CrackshotGun newGun)
     {
         final ItemStack newGunItem = crackshot.generateWeapon(newGun.getCSWeaponName());
+        
         if (newGunItem == null)
             return null;
         
         final ItemMeta newMeta = newGunItem.getItemMeta();
         final List<String> newLore = newMeta.getLore();
+        final String adjustedAmmoDisplayName = getAdjustedAmmoCount(originalGunItem, newMeta);
         final int durability, condition;
         
         if (isPostShotWeapon(originalGunItem))
@@ -269,10 +272,11 @@ public class CrackshotLore
         else
             return null;
         
+        
         condition = newGun.getConditionInt(durability);
         CrackshotLore.generateLore(newGun, newLore, durability, condition);
-        
         newMeta.setLore(newLore);
+        newMeta.setDisplayName(adjustedAmmoDisplayName);
         newGunItem.setItemMeta(newMeta);
         return newGunItem;
     }
@@ -443,5 +447,18 @@ public class CrackshotLore
         return CrackshotLore.isPostShotWeapon(item) && CrackshotLore.getDurability(item) <= 0;
     }
     
+    static
+    private String getAdjustedAmmoCount(final ItemStack originalGun,
+                                        final ItemMeta newGunMeta)
+    {
+        final String origName = originalGun.getItemMeta().getDisplayName();
+        final String newName = newGunMeta.getDisplayName();
+        
+        String ammoSubString = origName.substring(origName.indexOf("«"), origName.indexOf("»"));
+        String adjustedNewName = newName.substring(0, newName.indexOf("«")) + ammoSubString + newName.substring(newName.indexOf("»"), newName.length());
+        
+        return adjustedNewName;
+        
+    }
     
 }

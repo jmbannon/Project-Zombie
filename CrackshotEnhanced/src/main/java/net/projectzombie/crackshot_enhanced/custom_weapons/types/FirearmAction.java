@@ -22,7 +22,7 @@ public enum FirearmAction
     PUMP         ("pump",  REL_BREAK, REL_PUMP,  0,  12, 12, true);
     
     //Action, SoundOpen, SoundClose, delay, open, close
-    private final Sounds soundOpen, soundClose;
+    private final String soundOpen, soundClose;
     private final String type;
     private final int openDuration, closeDuration, closeShootDelay;
     private final Boolean individualBullets;
@@ -36,16 +36,16 @@ public enum FirearmAction
                           final boolean individualBullets)
     {
         this.type = type;
-        this.soundOpen = soundOpen;
-        this.soundClose = soundClose;
+        this.soundOpen = (soundOpen != null) ? soundOpen.toString() : null;
+        this.soundClose = (soundClose != null) ? soundClose.toString() : null;
         this.openDuration = openDuration;
         this.closeDuration = closeDuration;
         this.closeShootDelay = closeShootDelay;
         this.individualBullets = individualBullets;
     }
     
-    public String  getSoundOpen()         { return soundOpen.toString();  } 
-    public String  getSoundClose()        { return soundClose.toString(); }
+    public String  getSoundOpen()         { return soundOpen;         } 
+    public String  getSoundClose()        { return soundClose;        }
     public int     getOpenDuration()      { return openDuration;      }
     public int     getCloseDuration()     { return closeDuration;     }
     public int     getCloseShootDelay()   { return closeShootDelay;   }

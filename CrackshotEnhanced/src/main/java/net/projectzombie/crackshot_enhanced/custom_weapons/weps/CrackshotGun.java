@@ -47,7 +47,7 @@ public class CrackshotGun
         this.firemodeType = firemodeType;
         this.scopeType = scopeType;
         this.attatchment = attatchment;
-        this.csWeaponName = skeleton.getName();
+        this.csWeaponName = String.valueOf(uniqueID) + "_" + skeleton.getFileName();
         this.initialBulletSpread = skeleton.getBulletSpread();
     }
     
