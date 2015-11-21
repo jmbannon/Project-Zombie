@@ -5,7 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
@@ -62,6 +62,15 @@ public class CrackshotGun
     public String      getCSWeaponName()     { return csWeaponName;            }
     public double      getInitBulletSpread() { return initialBulletSpread;     }
     public int         getMaxDurability()    { return skeleton.getMaxDurability(); }
+    public CraftableModifier[] getCraftableModifiers()
+    {
+        return new CraftableModifier[]
+        { 
+            firemodeType,
+            scopeType,
+            attatchment
+        };
+    }
     
     @Override public String toString()       { return csWeaponName;  }
 
@@ -131,7 +140,7 @@ public class CrackshotGun
             return (int)((build + 1) * this.getWeaponType().getUpgradePriceWeight());
     }
     
-    public CrackshotGun getModifiedGun(final GunModifier modType)
+    public CrackshotGun getModifiedGun(final CraftableModifier modType)
     {
         return skeleton.getModifiedGun(this, modType);
     }
@@ -142,7 +151,7 @@ public class CrackshotGun
      */
     public String[] getModifiedList()
     {
-        ArrayList<GunModifier> mods = this.getModifiedIDs();
+        ArrayList<CraftableModifier> mods = this.getModifiedIDs();
         String toReturn[] = new String[mods.size()];
         
         for (int i = 0; i < mods.size(); i++)
@@ -160,11 +169,11 @@ public class CrackshotGun
                 && this.attatchment == attatchment;
     }
     
-    private ArrayList<GunModifier> getModifiedIDs()
+    private ArrayList<CraftableModifier> getModifiedIDs()
     {
-        final ArrayList<GunModifier> mods = new ArrayList<>();
+        final ArrayList<CraftableModifier> mods = new ArrayList<>();
         
-        for (GunModifier modifier : skeleton.getModifiers())
+        for (CraftableModifier modifier : skeleton.getModifiers())
         {
             if (this.attatchment != modifier
                     && this.firemodeType != modifier

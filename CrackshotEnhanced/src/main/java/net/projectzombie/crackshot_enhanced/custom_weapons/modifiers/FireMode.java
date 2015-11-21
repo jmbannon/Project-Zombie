@@ -6,12 +6,13 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import org.bukkit.Material;
 
 /**
  *
  * @author jbannon
  */
-public enum FireMode implements Type, GunModifier
+public enum FireMode implements Type, CraftableModifier
 {
     SEMI    (0, "Semi-Auto"),
     BURST   (1, "Burst"),
@@ -57,4 +58,27 @@ public enum FireMode implements Type, GunModifier
     {
         return TITLE;
     }
+    
+    @Override
+    public double getBulletSpreadBoost(int baseBulletSpread)
+    {
+        return 0;
+    }
+
+    @Override
+    public int getDamageBoost(int baseDamage)
+    {
+        return 0;
+    }
+
+    @Override
+    public Material getMaterial() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public byte getMaterialData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -15,7 +15,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

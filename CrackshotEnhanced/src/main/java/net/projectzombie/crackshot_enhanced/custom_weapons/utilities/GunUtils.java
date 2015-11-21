@@ -8,7 +8,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 
@@ -63,9 +63,9 @@ public class GunUtils
      * @return Sorted ArraylList of GunModifier
      */
     static
-    public ArrayList<GunModifier> sortMods(final ArrayList<GunModifier> mods)
+    public ArrayList<CraftableModifier> sortMods(final ArrayList<CraftableModifier> mods)
     {
-        GunModifier temp;
+        CraftableModifier temp;
         int i = 0;
         while (i < mods.size() - 1)
         {

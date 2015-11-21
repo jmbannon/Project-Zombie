@@ -6,12 +6,13 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import org.bukkit.Material;
 
 /**
  *
  * @author jbannon
  */
-public enum Attatchment implements Type, GunModifier
+public enum Attatchment implements Type, CraftableModifier
 {
     NA   (0, 0,  "None"),  
     SUP  (1, 10, "Suppressor"),
@@ -35,9 +36,32 @@ public enum Attatchment implements Type, GunModifier
         this.value = value;
     }
     
+    @Override
+    public double getBulletSpreadBoost(final int baseBulletSpread)
+    {
+        return 0;
+    }
+    
+    @Override
+    public int getDamageBoost(final int baseDamage)
+    {
+        return 0;
+    }
+    
     static public String getTitle()     { return title;     }
     @Override public int getEnumValue() { return enumValue; }
     @Override public String toString()  { return value;     }
     @Override public int price()        { return price;     }
     @Override public String title()     { return title;     }
+
+    @Override
+    public Material getMaterial() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public byte getMaterialData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

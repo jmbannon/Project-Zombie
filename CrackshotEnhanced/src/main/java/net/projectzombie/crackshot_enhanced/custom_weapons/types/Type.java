@@ -13,6 +13,5 @@ public interface Type
 {
     public int getEnumValue();
     public String title();
-    @Override
-    public String toString();
+    @Override public String toString();
 }

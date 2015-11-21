@@ -15,11 +15,15 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -63,4 +67,13 @@ public class Recipes implements Listener
         }
     }
     
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void disableMobEggs(final PlayerInteractEvent event)
+    {
+        if (event.getMaterial() == Material.MONSTER_EGG
+                && event.getAction() == Action.RIGHT_CLICK_BLOCK)
+        {
+            event.setCancelled(true);
+        }
+    }
 }
