@@ -12,7 +12,7 @@ import org.bukkit.Material;
  *
  * @author jesse
  */
-public interface CraftableModifier
+public interface GunModifier
 {
     /**
      * @return Returns the price of the gun modification at the gunsmith.
@@ -39,8 +39,5 @@ public interface CraftableModifier
      * @return Int to be added to damage.
      */
     public int getDamageBoost(final int baseDamage);
-    
-    public Material getMaterial();
-    public byte     getMaterialData();
     
 }

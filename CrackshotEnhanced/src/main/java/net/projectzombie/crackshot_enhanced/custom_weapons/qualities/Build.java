@@ -15,10 +15,13 @@ import org.bukkit.ChatColor;
 public enum Build implements Type
 {
     
-    STOCK    (0, 1.0, ChatColor.YELLOW, "Stock"),
-    TEMPERED (1, 0.9, ChatColor.GREEN,  "Tempered"),
-    MODIFIED (2, 0.8, ChatColor.GOLD,   "Modified"),
-    ENHANCED (3, 0.7, ChatColor.RED,    "Enhanced");
+    STOCK    (0, 1.0, ChatColor.YELLOW,  "Stock"),
+    TEMPERED (1, 0.96, ChatColor.GREEN,  "Tempered"),
+    MODIFIED (2, 0.91, ChatColor.GOLD,   "Modified"),
+    ENHANCED (3, 0.85, ChatColor.RED,    "Enhanced"),
+    SUPERIOR (3, 0.78, ChatColor.RED,    "Superior"),
+    RARE     (3, 0.71, ChatColor.RED,    "Rare"),
+    UNIQUE   (3, 0.65, ChatColor.RED,    "Unique");
     
     private static final String TITLE = "Build: ";
     
@@ -40,7 +43,7 @@ public enum Build implements Type
     public double getScalar()           { return scalar;    }
     
     @Override public String toString()  { return value;     }
-    @Override public int getEnumValue() { return enumValue; }
+    public int getEnumValue() { return enumValue; }
     
     public static String getValue(final int value)
     {

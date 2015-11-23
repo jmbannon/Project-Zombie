@@ -6,12 +6,11 @@
 
 import java.util.ArrayList;
 import junit.framework.TestCase;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  *
@@ -22,6 +21,13 @@ public class TestCrackshotGun extends TestCase
     public TestCrackshotGun()
     {
         
+    }
+    
+    public void testGunShit()
+    {
+        ArrayList<GunModifier> mods = new ArrayList<>();
+        
+        assertTrue(mods.addAll(GunSkeleton.AWP.getScopes()));
     }
     
     public void testGunAccess2()
@@ -45,25 +51,6 @@ public class TestCrackshotGun extends TestCase
         assertTrue(msg, indexMatch);
     }
     
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-    
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-    
-    @Before
-    public void setUp()
-    {
-    }
-    
-    @After
-    public void tearDown()
-    {
-    }
 
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

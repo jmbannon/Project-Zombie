@@ -5,69 +5,52 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
-import org.bukkit.Material;
-
 /**
  *
  * @author jesse
  */
-public enum GunCleaner implements Type, CraftableModifier
+public enum GunCleaner implements GunModifier
 {
 
-    SOLVENT(),
-    LUBR_OIL(),
-    CLEANING_KIT();
+    SOLVENT(0.10),
+    LUBR_OIL(0.25),
+    CLEANING_KIT(0.50);
+
+    private final double durFix;
     
-    private GunCleaner()
+    private GunCleaner(double durFix)
     {
-        
+        this.durFix = durFix;
     }
 
+    @Override public double getBulletSpreadBoost(int baseBulletSpread) { return 0; }
+    @Override public int getDamageBoost(int baseDamage)                { return 0; }
+    
     @Override
-    public int getEnumValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String title() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int price() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getBulletSpreadBoost(int baseBulletSpread) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public int getDamageBoost(int baseDamage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int price()
+    {
+        return 0;
     }
 
     /**
      * Calculates an int based on Crackshot gun's maximum durability to be added
      * to a weapon's durability.
+     * @param currentDurability
      * @param maximumDurability Maximum durability from a Crackshot gun skeleton.
      * @return Int to be added to a Crackshot gun's durability.
      */
-    public int getDurabilityBoost(final int maximumDurability) 
+    public int getDurabilityBoost(final int currentDurability,
+                                  final int maximumDurability) 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Material getMaterial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public byte getMaterialData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final int fixedDurability = (int)(maximumDurability * (durFix));
+        if (currentDurability + fixedDurability > maximumDurability)
+        {
+            return maximumDurability - currentDurability;
+        }
+        else
+        {
+            return fixedDurability;
+        }
     }
     
 }

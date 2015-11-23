@@ -6,61 +6,38 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
 import org.bukkit.Material;
 
 /**
  *
  * @author jbannon
  */
-public enum FireMode implements Type, CraftableModifier
+public enum FireMode implements Type, GunModifier
 {
-    SEMI    (0, "Semi-Auto"),
-    BURST   (1, "Burst"),
-    AUTO    (2, "Automatic"),
-    SING    (3, "Single Shot"),
-    BOLT    (4, "Bolt-Action"),
-    PUMP    (5, "Pump-Action"),
-    OVER    (6, "Over/Under");
+    SEMI    ("Semi-Auto"),
+    BURST   ("Burst"),
+    AUTO    ("Automatic"),
+    SING    ("Single Shot"),
+    BOLT    ("Bolt-Action"),
+    PUMP    ("Pump-Action"),
+    OVER    ("Over/Under");
     
     private static final String TITLE = "Fire Mode: ";
-    
-    private final int enumValue;
+
     private final String value;
     
-    private FireMode(final int enumValue,
-                     final String value) 
+    private FireMode(final String value) 
     {
-        this.enumValue = enumValue;
         this.value = value;
     }
     
     
-    @Override public String toString()  { return value;      }
-    @Override public int getEnumValue() { return enumValue;  }
+    @Override public String toString()      { return value;    }
+    @Override public int price()            { return 40;       }
+    @Override public String title()         { return TITLE;    }
     
-    public static String toString(final int enumValue)
-    {
-        for (FireMode type : FireMode.values())
-            if (type.enumValue == enumValue)
-                return type.value;
-        
-        return SEMI.value;
-    }
-
-    @Override
-    public int price()
-    {
-        return 40;
-    }
-
-    @Override
-    public String title()
-    {
-        return TITLE;
-    }
-    
-    @Override
-    public double getBulletSpreadBoost(int baseBulletSpread)
+    @Override public double getBulletSpreadBoost(int baseBulletSpread)
     {
         return 0;
     }
@@ -69,16 +46,6 @@ public enum FireMode implements Type, CraftableModifier
     public int getDamageBoost(int baseDamage)
     {
         return 0;
-    }
-
-    @Override
-    public Material getMaterial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public byte getMaterialData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

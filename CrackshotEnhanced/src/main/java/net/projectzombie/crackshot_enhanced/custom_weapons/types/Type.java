@@ -11,7 +11,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
  */
 public interface Type
 {
-    public int getEnumValue();
     public String title();
     @Override public String toString();
 }

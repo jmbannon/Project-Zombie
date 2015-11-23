@@ -7,8 +7,12 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableItems;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -16,15 +20,13 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Guns
 {
-    private static ArrayList<CrackshotGun> guns = null;
+    private static final ArrayList<CrackshotGun> guns = initializeGuns();
+    
     
     static
-    public void initialize()
+    private ArrayList<CrackshotGun> initializeGuns()
     {
-        if (guns != null)
-            return;
-        
-        guns = new ArrayList<>();
+        ArrayList<CrackshotGun> gunArray = new ArrayList<>();
         final GunSkeleton gunSkeletons[] = GunSkeleton.values();
         CrackshotGun skeleGuns[];
         int id = 0;
@@ -34,18 +36,17 @@ public class Guns
             skeleGuns = skeleton.getGuns(id);
             if (skeleGuns != null)
             {
-                guns.addAll(Arrays.asList(skeleGuns));
+                gunArray.addAll(Arrays.asList(skeleGuns));
                 id += skeleGuns.length;
             }
         }
+        return gunArray;
     }
     
+
     static
     public CrackshotGun get(final int gunID)
     {
-        if (guns == null)
-            initialize();
-        
         return (gunID >= 0 && gunID < guns.size()) ? guns.get(gunID) : null;
     }
     
@@ -58,8 +59,6 @@ public class Guns
     static
     public ArrayList<CrackshotGun> getGuns()
     {
-        if (guns == null)
-            initialize();
         return guns;
     }
 }

@@ -19,7 +19,6 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable()
     {
-        Guns.initialize();
         this.windowListener = new BlockBreakListener();
         this.OPexec = new OPCommandExec(this);
         this.getCommand("bw").setExecutor(OPexec);

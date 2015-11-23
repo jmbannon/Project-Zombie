@@ -6,7 +6,7 @@
 package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Material;
@@ -38,7 +38,7 @@ public class GunSmithController
     
     static
     public boolean addModification(final Player player,
-                                   final CraftableModifier mod)
+                                   final GunModifier mod)
     {
         final CrackshotGun newGun, currentGun = Guns.get(player.getItemInHand());
         final ItemStack newGunItem;

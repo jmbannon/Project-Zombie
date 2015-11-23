@@ -78,7 +78,6 @@ public enum Weapon implements Type
     public int           getAmmoData()           { return ammoData;           }
     
     @Override public String toString()           { return ammoValue;          }
-    @Override public int getEnumValue()          { return enumValue;          }
     
     /**
      * Gets the bullet spread to be set for the event.

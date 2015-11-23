@@ -47,9 +47,8 @@ public enum Condition implements Type
     }
     
     public static String getTitle()     { return TITLE;     }
-    
+    public int getEnumValue()           { return enumValue; }
     @Override public String toString()  { return condition; }
-    @Override public int getEnumValue() { return enumValue; }
     
     /**
      * Returns the condition string based on the tier.  Returns null if tier 
