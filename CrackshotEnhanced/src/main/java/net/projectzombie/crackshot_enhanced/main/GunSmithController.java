@@ -6,7 +6,7 @@
 package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Material;

@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
  *
  * @author jesse
  */
-public enum GunCleaner implements GunModifier
+public enum GunCleaner
 {
 
     SOLVENT(0.10),
@@ -23,14 +23,6 @@ public enum GunCleaner implements GunModifier
         this.durFix = durFix;
     }
 
-    @Override public double getBulletSpreadBoost(int baseBulletSpread) { return 0; }
-    @Override public int getDamageBoost(int baseDamage)                { return 0; }
-    
-    @Override
-    public int price()
-    {
-        return 0;
-    }
 
     /**
      * Calculates an int based on Crackshot gun's maximum durability to be added
@@ -51,6 +43,11 @@ public enum GunCleaner implements GunModifier
         {
             return fixedDurability;
         }
+    }
+
+    public String getDisplayName()
+    {
+        return null;
     }
     
 }

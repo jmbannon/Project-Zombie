@@ -5,9 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
-import org.bukkit.Material;
 
 /**
  *
@@ -25,27 +24,23 @@ public enum FireMode implements Type, GunModifier
     
     private static final String TITLE = "Fire Mode: ";
 
-    private final String value;
+    private final String displayName;
     
-    private FireMode(final String value) 
+    private FireMode(final String displayName) 
     {
-        this.value = value;
+        this.displayName = displayName;
     }
     
     
-    @Override public String toString()      { return value;    }
+    @Override public String toString()      { return displayName;    }
     @Override public int price()            { return 40;       }
     @Override public String title()         { return TITLE;    }
     
-    @Override public double getBulletSpreadBoost(int baseBulletSpread)
-    {
-        return 0;
-    }
 
     @Override
-    public int getDamageBoost(int baseDamage)
+    public String getDisplayName()
     {
-        return 0;
+        return displayName;
     }
 
 }

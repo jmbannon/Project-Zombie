@@ -5,13 +5,15 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 
 /**
  *
  * @author jbannon
  */
-public enum Scope implements Type, GunModifier
+public enum Scope implements Type, GunModifier, BulletSpreadModifier
 {
     
     IRON  ("Iron Sight",     0),
@@ -22,19 +24,19 @@ public enum Scope implements Type, GunModifier
     private static final String TITLE = "Sight: ";
 
     private final int zoomAmount;
-    private final String value;
+    private final String displayName;
     
     private Scope(final String value,
                   final int crackshotZoomAmount)
     {
-        this.value = value;
+        this.displayName = value;
         this.zoomAmount = crackshotZoomAmount;
     }
     
-    public static String getTitle()         { return TITLE;     }
-    public int getZoomAmount()              { return zoomAmount; }
-    @Override public String toString()      { return value;     }
-    @Override public String title()         {  return TITLE; }
+    public static String getTitle()         { return TITLE;       }
+    public int getZoomAmount()              { return zoomAmount;  }
+    @Override public String toString()      { return displayName; }
+    @Override public String title()         {  return TITLE;      }
 
     @Override
     public int price() {
@@ -43,11 +45,6 @@ public enum Scope implements Type, GunModifier
 
     @Override
     public double getBulletSpreadBoost(int baseBulletSpread) {
-        return 0;
-    }
-
-    @Override
-    public int getDamageBoost(int baseDamage) {
         return 0;
     }
 
@@ -60,6 +57,12 @@ public enum Scope implements Type, GunModifier
     public double getZoomBullsetSpreadBoost(final int baseBullsetSpread)
     {
         return 0;
+    }
+
+    @Override
+    public String getDisplayName()
+    {
+        return displayName;
     }
     
 }

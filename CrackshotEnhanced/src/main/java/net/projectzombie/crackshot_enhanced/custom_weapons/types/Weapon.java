@@ -16,23 +16,23 @@ import org.bukkit.ChatColor;
  */
 public enum Weapon implements Type
 {
-    PISTOL    (0, null,         2,  1.1, 90,  0.450, "Pistol Bullets",        372, 0),
-    REVOLVER  (1, null,         2,  1.3, 150, 1.376, "Revolver Rounds",       351, 0),
-    HUNTING   (2, HUNTING_BOLT, 3,  1.5, 130, 2.105, "Hunting Rifle Bullets", 318, 0),
-    SH_BREAK  (3, BREAK,        10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
-    SH_SLIDE  (4, SLIDE,        10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
-    SH_PUMP   (5, PUMP,         10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
-    SMG       (6, SMG_SLIDE,    2, 1.4, 120, 0.521, "SMG Rounds",            371, 0),
-    ASSAULT   (7, SLIDE,        2, 1.6, 180, 0.846, "Assault Rifle Bullets", 361, 0),
-    AUTO_S    (8, SLIDE,        2, 2.4, 230, 1.124, "Auto-Sniper Rounds",    351, 1),
-    SNIPER    (9, SNIPER_BOLT,  3, 2.7, 250, 2.105, "Sniper Bullets",        337, 0);
+    PISTOL    (null,         2,  1.1, 90,  0.450, "Pistol Bullets",        372, 0),
+    REVOLVER  (null,         2,  1.3, 150, 1.376, "Revolver Rounds",       351, 0),
+    HUNTING   (HUNTING_BOLT, 3,  1.5, 130, 2.105, "Hunting Rifle Bullets", 318, 0),
+    SH_BREAK  (BREAK,        10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
+    SH_SLIDE  (SLIDE,        10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
+    SH_PUMP   (PUMP,         10, 1.3, 120, 0.333, "Shotgun Shells",        371, 0),
+    SMG       (SMG_SLIDE,    2, 1.4, 120, 0.521, "SMG Rounds",            371, 0),
+    ASSAULT   (SLIDE,        2, 1.6, 180, 0.846, "Assault Rifle Bullets", 361, 0),
+    AUTO_S    (SLIDE,        2, 2.4, 230, 1.124, "Auto-Sniper Rounds",    351, 1),
+    SNIPER    (SNIPER_BOLT,  3, 2.7, 250, 2.105, "Sniper Bullets",        337, 0);
     
     private static final String TITLE = "Ammo: ";
     
     protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
     protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
     
-    private final int enumValue, projectileAmount, ammoID, ammoData;
+    private final int projectileAmount, ammoID, ammoData;
     private final double repairPriceWeight, upgradePriceWeight, bulletSpreadWeight;
     private final String ammoValue;
     private final FirearmAction action;
@@ -48,8 +48,7 @@ public enum Weapon implements Type
      * @param upgradePriceWeight Weight for calculating upgrade price.
      * @param bulletSpreadWeight Weight for calculating current bullet spread based on tier.
      */
-    private Weapon(final int enumValue,
-                   final FirearmAction action,
+    private Weapon(final FirearmAction action,
                    final int projectileAmount,
                    final double repairPriceWeight,
                    final double upgradePriceWeight,
@@ -58,7 +57,6 @@ public enum Weapon implements Type
                    final int ammoID,
                    final int ammoData)
     {
-        this.enumValue = enumValue;
         this.action = action;
         this.projectileAmount = projectileAmount;
         this.repairPriceWeight = repairPriceWeight;

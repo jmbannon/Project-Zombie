@@ -5,32 +5,30 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 
 /**
  *
  * @author jbannon
  */
-public enum Attatchment implements Type, GunModifier
+public enum Attatchment implements Type, GunModifier, BulletSpreadModifier, DamageModifier
 {
     NA   (0,  "None"),  
     SUP  (10, "Suppressor"),
-    SO   (10, "Sawed-Off"),
-    LUB  (10, "Lubed-Bolt"),
-    EXT  (10, "Extended Mag"),
-    REL  (10, "Fast-Mag"),
-    INC  (10, "Incendiary"),
-    GRA  (10, "Grave-Spawn");
+    INC  (10, "Incendiary");
     
     private final int price;
-    private final String value;
+    private final String displayName;
     private static final String title = "Attatchment: ";
     
     Attatchment(final int price,
-                final String value)
+                final String displayname)
     {
         this.price = price;
-        this.value = value;
+        this.displayName = displayname;
     }
     
     @Override
@@ -46,8 +44,14 @@ public enum Attatchment implements Type, GunModifier
     }
     
     static public String getTitle()     { return title;     }
-    @Override public String toString()  { return value;     }
+    @Override public String toString()  { return displayName;     }
     @Override public int price()        { return price;     }
     @Override public String title()     { return title;     }
+
+    @Override
+    public String getDisplayName()
+    {
+        return displayName;
+    }
     
 }

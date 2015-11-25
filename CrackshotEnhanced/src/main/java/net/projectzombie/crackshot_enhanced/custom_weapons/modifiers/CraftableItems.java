@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import java.util.HashMap;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import org.bukkit.Material;
@@ -41,7 +42,7 @@ public enum CraftableItems
     
     
     static
-    public HashMap<MaterialData, GunModifier> initializeMods()
+    private HashMap<MaterialData, GunModifier> initializeMods()
     {
         HashMap<MaterialData, GunModifier> craftableHash = new HashMap<>();
         for (CraftableItems item : CraftableItems.values())
@@ -52,7 +53,7 @@ public enum CraftableItems
     }
     
     static
-    public HashMap<GunModifier, MaterialData> initializeItems()
+    private HashMap<GunModifier, MaterialData> initializeItems()
     {
         HashMap<GunModifier, MaterialData> craftableHash = new HashMap<>();
         for (CraftableItems item : CraftableItems.values())

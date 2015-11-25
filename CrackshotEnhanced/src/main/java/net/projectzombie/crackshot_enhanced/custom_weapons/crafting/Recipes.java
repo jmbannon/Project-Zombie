@@ -7,7 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.crafting;
 
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableItems;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
