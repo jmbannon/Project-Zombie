@@ -17,5 +17,7 @@ public interface BulletSpreadModifier
      * @param baseBulletSpread Initial bullet spread from a Crackshot gun skeleton.
      * @return Double to be subtracted from bullet spread.
      */
-    public double getBulletSpreadBoost(final int baseBulletSpread);
+    public double getBulletSpreadBoost(final double baseBulletSpread);
+    
+    public double getBulletSpreadModifyPercentage(final double baseBulletSpread);
 }

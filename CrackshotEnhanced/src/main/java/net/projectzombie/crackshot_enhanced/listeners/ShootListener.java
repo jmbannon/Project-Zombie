@@ -5,18 +5,20 @@
  */
 package net.projectzombie.crackshot_enhanced.listeners;
 
+import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
-import org.bukkit.Bukkit;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 /**
  *
@@ -89,6 +91,19 @@ public class ShootListener implements Listener
     }
     
     /**
+     * Testing
+     * @param event 
+     */
+    private void onHitEvent(WeaponDamageEntityEvent event)
+    {
+        if (event.getVictim() instanceof Monster)
+        {
+            Monster victim = (Monster)event.getVictim();
+            
+        }
+    }
+    
+    /**
      * 
      * @param eventBulletSpread
      * @param item
@@ -121,4 +136,5 @@ public class ShootListener implements Listener
         item.setItemMeta(gunMeta);
         return bulletSpread;
     }
+    
 }

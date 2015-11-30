@@ -8,13 +8,16 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
 
 /**
  *
  * @author jesse
  */
-public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier
+public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier, ProjectileAmountModifier
 {
+    NULL_BARREL(null),
+    
     // Pistol
     THREADED("Threaded Barrel"),
     PRECISION("Precision Barrel"),
@@ -47,21 +50,39 @@ public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier
     }
 
     @Override
-    public double getBulletSpreadBoost(int baseBulletSpread)
-    {
-        return 0;
-    }
-
-    @Override
-    public int getDamageBoost(int baseDamage)
-    {
-        return 0;
-    }
-
-    @Override
     public String getDisplayName()
     {
         return displayName;
+    }
+
+    @Override
+    public double getBulletSpreadBoost(double baseBulletSpread)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getBulletSpreadModifyPercentage(double baseBulletSpread)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDamageBoost(double baseDamage)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDamageModifyPercentage(double baseDamage)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getAdditionalProjectileAmount()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

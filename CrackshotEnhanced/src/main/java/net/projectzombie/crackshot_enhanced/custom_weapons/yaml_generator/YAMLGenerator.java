@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INC;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INCENDIARY;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
@@ -119,7 +119,7 @@ public class YAMLGenerator
         wepsYAML.set(path + "Bullet_Spread",                   gen.getGun().getCSBulletSpread());
         wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
         
-        if (gen.getGun().getAttatchment().equals(INC))
+        if (gen.getGun().getAttatchment().equals(INCENDIARY))
             this.writeProjectileIncendiary();
     }
     

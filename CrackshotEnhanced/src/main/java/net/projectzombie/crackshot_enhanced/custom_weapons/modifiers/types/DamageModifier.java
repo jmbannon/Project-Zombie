@@ -15,7 +15,9 @@ public interface DamageModifier
      * Calculates an int based on a Crackshot gun's base damage to be added to
      * the modified bullet spread.
      * @param baseDamage Initial damage from a Crackshot gun.
-     * @return Int to be added to damage.
+     * @return Double to be added to damage.
      */
-    public int getDamageBoost(final int baseDamage);
+    public double getDamageBoost(final double baseDamage);
+    
+    public double getDamageModifyPercentage(final double baseDamage);
 }

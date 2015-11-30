@@ -14,12 +14,13 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunMo
  */
 public enum Stock implements GunModifier, BulletSpreadModifier
 {
-
-    ST_FOLDING   ("Folding"),
-    ST_RECOIL_ABS("Recoil Absorber"),
-    ST_TACTICAL  ("Tactical"),
-    ST_FIBERGLASS("Fiberglass"),
-    ST_SYNTHETIC ("Synthetic");
+    NULL_STOCK  (null),
+    IVORY_GRIP   ("Ivory Grip"),
+    ST_FOLDING   ("Folding Stock"),
+    RECOIL_ABS("Recoil Absorber Stock"),
+    TACTICAL  ("Tactical Stock"),
+    FIBERGLASS("Fiberglass Stock"),
+    SYNTHETIC ("Synthetic Stock");
 
     private final String displayName;
     
@@ -35,15 +36,19 @@ public enum Stock implements GunModifier, BulletSpreadModifier
     }
 
     @Override
-    public double getBulletSpreadBoost(int baseBulletSpread)
-    {
-        return 3;
-    }
-
-    @Override
     public String getDisplayName()
     {
         return displayName;
+    }
+
+    @Override
+    public double getBulletSpreadBoost(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getBulletSpreadModifyPercentage(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

@@ -5,13 +5,17 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.EXT;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INC;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.LUB;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.REL;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.SO;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INCENDIARY;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.PISTOL;
@@ -37,6 +41,7 @@ public class GunGenerator
         this.gun = gun;
         this.gunFileName = String.valueOf(gun.getUniqueId() + "_" + gun.getSkeleton().getFileName());
     }
+    
     
     public GunSkeleton getSkeleton()
     {
@@ -185,7 +190,7 @@ public class GunGenerator
     public String getSoundsShoot()
     {
         final GunSkeleton base = gun.getSkeleton();
-        return (gun.getAttatchment().equals(Attatchment.SUP)) ? 
+        return (gun.getAttatchment().equals(Attatchment.SUPPRESOR)) ? 
                 base.getSilencedSound() : base.getShootSound();
     }
     
@@ -229,6 +234,6 @@ public class GunGenerator
     public int getDamage()
     {
         final int damage = gun.getSkeleton().getDamage();
-        return (gun.getAttatchment().equals(INC)) ? (damage * 4)/3 : damage;
+        return (gun.getAttatchment().equals(INCENDIARY)) ? (damage * 4)/3 : damage;
     }
 }

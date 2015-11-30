@@ -13,8 +13,12 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import java.util.ArrayList;
 import java.util.Random;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.inventory.ItemStack;
@@ -38,9 +42,13 @@ public class CrackshotGun
     
     public CrackshotGun(final int uniqueID,
                 final GunSkeleton skeleton,
+                final Attatchment attatchment,
+                final Barrel barrel,
+                final Bolt bolt,
                 final FireMode firemodeType,
+                final Magazine magazine,
                 final Scope scopeType,
-                final Attatchment attatchment)
+                final Stock stock)
     {
         this.uniqueID = uniqueID;
         this.skeleton = skeleton;
@@ -51,17 +59,17 @@ public class CrackshotGun
         this.initialBulletSpread = skeleton.getBulletSpread();
     }
     
-    public GunSkeleton getSkeleton()         { return skeleton;                }
-    public int         getUniqueId()         { return uniqueID;                }
-    public Weapon      getWeaponType()       { return skeleton.getWeaponType();}
-    public FireMode    getFireMode()         { return firemodeType;            }
-    public Scope       getScope()            { return scopeType;               }
-    public Attatchment getAttatchment()      { return attatchment;             }
-    public int         getItemID()           { return skeleton.getItemID();    }
-    public int         getItemData()         { return skeleton.getItemData();  }
-    public String      getCSWeaponName()     { return csWeaponName;            }
-    public double      getInitBulletSpread() { return initialBulletSpread;     }
-    public int         getMaxDurability()    { return skeleton.getMaxDurability(); }
+    public GunSkeleton getSkeleton()          { return skeleton;                }
+    public int                getUniqueId()          { return uniqueID;                }
+    public Weapon        getWeaponType()    { return skeleton.getWeaponType();}
+    public FireMode      getFireMode()          { return firemodeType;            }
+    public Scope           getScope()               { return scopeType;               }
+    public Attatchment  getAttatchment()      { return attatchment;             }
+    public int                getItemID()               { return skeleton.getItemID();    }
+    public int                getItemData()            { return skeleton.getItemData();  }
+    public String           getCSWeaponName() { return csWeaponName;            }
+    public double          getInitBulletSpread()  { return initialBulletSpread;     }
+    public int                getMaxDurability()     { return skeleton.getMaxDurability(); }
     public GunModifier[] getCraftableModifiers()
     {
         return new GunModifier[]

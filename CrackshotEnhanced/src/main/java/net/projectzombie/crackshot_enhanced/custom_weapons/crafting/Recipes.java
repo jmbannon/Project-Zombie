@@ -96,16 +96,7 @@ public class Recipes implements Listener
         }
     }
     
-    public void scopedRecipes()
-    {
-        ArrayList<GunModifier> mods = new ArrayList<>();
-        for (GunSkeleton skele : GunSkeleton.values())
-        {
-            mods.addAll(skele.getScopes());
-            addSkeletonRecipe(skele, mods, " X ", " G ", "   ");
-            mods.clear();
-        }
-    }
+
     
     
     

@@ -16,32 +16,25 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
  */
 public enum Attatchment implements Type, GunModifier, BulletSpreadModifier, DamageModifier
 {
-    NA   (0,  "None"),  
-    SUP  (10, "Suppressor"),
-    INC  (10, "Incendiary");
+    NULL_ATTATCHMENT(0, null),
+    SUPPRESOR  (10, "Suppressor"),
+    INCENDIARY  (10, "Incendiary Rounds"),
+    CRIT_CHANCE(20, "Critical Chance Increase"),
+    CRIT_STRIKE  (20, "Critical Strike Multiplier"),
+    BLEEDOUT_INCREASE(20, "Bleedout Time Increase"),
+    BLEEDOUT_DAMAGE_INCREASE(20, "Bleedout Damage Increase");
     
     private final int price;
     private final String displayName;
     private static final String title = "Attatchment: ";
     
     Attatchment(final int price,
-                final String displayname)
+                       final String displayname)
     {
         this.price = price;
         this.displayName = displayname;
     }
     
-    @Override
-    public double getBulletSpreadBoost(final int baseBulletSpread)
-    {
-        return 0;
-    }
-    
-    @Override
-    public int getDamageBoost(final int baseDamage)
-    {
-        return 0;
-    }
     
     static public String getTitle()     { return title;     }
     @Override public String toString()  { return displayName;     }
@@ -52,6 +45,26 @@ public enum Attatchment implements Type, GunModifier, BulletSpreadModifier, Dama
     public String getDisplayName()
     {
         return displayName;
+    }
+
+    @Override
+    public double getBulletSpreadBoost(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getBulletSpreadModifyPercentage(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDamageBoost(double baseDamage) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDamageModifyPercentage(double baseDamage) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

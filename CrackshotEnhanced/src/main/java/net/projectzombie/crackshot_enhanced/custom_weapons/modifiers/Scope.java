@@ -16,10 +16,12 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 public enum Scope implements Type, GunModifier, BulletSpreadModifier
 {
     
-    IRON  ("Iron Sight",     0),
-    ACOG  ("ACOG Scope",     4),
-    TACT  ("Tactical Scope", 5),
-    LONG  ("Sniper Scope",   10);
+    BROKEN     ("Broken",            0),
+    IRON          ("Iron Sight",        0),
+    RED_IRON  ("Red Dot Iron Sight", 0),
+    ACOG         ("ACOG Scope",   4),
+    TACT          ("Tactical Scope", 5),
+    LONG         ("Sniper Scope",   10);
     
     private static final String TITLE = "Sight: ";
 
@@ -43,11 +45,6 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
         return 20;
     }
 
-    @Override
-    public double getBulletSpreadBoost(int baseBulletSpread) {
-        return 0;
-    }
-
     /**
      * Calculates a double based on a Crackshot gun's bullet spread to be subtracted
      * from the modified bullet spread when zoomed in. Applicable for scopes.
@@ -63,6 +60,16 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
     public String getDisplayName()
     {
         return displayName;
+    }
+
+    @Override
+    public double getBulletSpreadBoost(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getBulletSpreadModifyPercentage(double baseBulletSpread) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
