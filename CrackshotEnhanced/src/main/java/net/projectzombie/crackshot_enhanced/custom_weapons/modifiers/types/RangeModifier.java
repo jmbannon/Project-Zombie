@@ -9,11 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  *
  * @author jesse
  */
-public interface BulletSpreadModifier
+public interface RangeModifier
 {
-    /**
-     * @return Percentage to modifiy the bullet spread.
-     */
-    public double getBulletSpreadModifyPercentage();
-   
+    
 }

@@ -47,24 +47,23 @@ public enum Attatchment implements Type, GunModifier, BulletSpreadModifier, Dama
         return displayName;
     }
 
+
     @Override
-    public double getBulletSpreadBoost(double baseBulletSpread) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getDamageBoost(double baseDamage)
+    {
+        return 0;
     }
 
     @Override
-    public double getBulletSpreadModifyPercentage(double baseBulletSpread) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getDamageModifyPercentage(double baseDamage)
+    {
+        return 1.0;
     }
 
     @Override
-    public double getDamageBoost(double baseDamage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getDamageModifyPercentage(double baseDamage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double getBulletSpreadModifyPercentage()
+    {
+        return 1.0;
     }
     
 }

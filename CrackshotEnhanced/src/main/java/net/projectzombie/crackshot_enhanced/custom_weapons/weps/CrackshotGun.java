@@ -19,6 +19,13 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.inventory.ItemStack;
@@ -31,74 +38,109 @@ import org.bukkit.inventory.ItemStack;
 public class CrackshotGun
 {   
     private static final Random rand = new Random();
+    private static final double CROUCH_BULLET_SPREAD_MODIFIER = -0.05;
+    private static final double BULLET_SPREAD_MODIFIER_CAP = 0.10;
     
+    private final int gunIDOffset;
     private final int uniqueID;
     private final GunSkeleton skeleton;
-    private final FireMode firemodeType;
-    private final Scope scopeType;
-    private final Attatchment attatchment;
-    private final String csWeaponName;
-    private final double initialBulletSpread;
     
-    public CrackshotGun(final int uniqueID,
-                final GunSkeleton skeleton,
-                final Attatchment attatchment,
-                final Barrel barrel,
-                final Bolt bolt,
-                final FireMode firemodeType,
-                final Magazine magazine,
-                final Scope scopeType,
-                final Stock stock)
+    /* Craftable gun modifiers */
+    private final Attatchment attatchment;
+    private final Barrel barrel;
+    private final Bolt bolt;
+    private final FireMode firemodeType;
+    private final Magazine magazine;
+    private final Scope scopeType;
+    private final Stock stock;
+    
+    private final String csWeaponName;
+    
+    public CrackshotGun(final int gunIDOffset,
+                        final int uniqueID,
+                        final GunSkeleton skeleton,
+                        final Attatchment attatchment,
+                        final Barrel barrel,
+                        final Bolt bolt,
+                        final FireMode firemodeType,
+                        final Magazine magazine,
+                        final Scope scopeType,
+                        final Stock stock)
     {
+        this.gunIDOffset = gunIDOffset;
         this.uniqueID = uniqueID;
         this.skeleton = skeleton;
         this.firemodeType = firemodeType;
         this.scopeType = scopeType;
         this.attatchment = attatchment;
+        this.bolt = bolt;
+        this.barrel = barrel;
+        this.stock = stock;
+        this.magazine = magazine;
         this.csWeaponName = String.valueOf(uniqueID) + "_" + skeleton.getFileName();
-        this.initialBulletSpread = skeleton.getBulletSpread();
     }
     
-    public GunSkeleton getSkeleton()          { return skeleton;                }
-    public int                getUniqueId()          { return uniqueID;                }
-    public Weapon        getWeaponType()    { return skeleton.getWeaponType();}
-    public FireMode      getFireMode()          { return firemodeType;            }
-    public Scope           getScope()               { return scopeType;               }
-    public Attatchment  getAttatchment()      { return attatchment;             }
-    public int                getItemID()               { return skeleton.getItemID();    }
-    public int                getItemData()            { return skeleton.getItemData();  }
-    public String           getCSWeaponName() { return csWeaponName;            }
-    public double          getInitBulletSpread()  { return initialBulletSpread;     }
-    public int                getMaxDurability()     { return skeleton.getMaxDurability(); }
+    public GunSkeleton getSkeleton()         { return skeleton;                }
+    public int         getIDOffset()         { return gunIDOffset;             }
+    public int         getUniqueId()         { return uniqueID;                }
+    public Weapon      getWeaponType()       { return skeleton.getWeaponType();}
+    public FireMode    getFireMode()         { return firemodeType;            }
+    public Scope       getScope()            { return scopeType;               }
+    public Attatchment getAttatchment()      { return attatchment;             }
+    public Barrel      getBarrel()           { return barrel;                  }
+    public int         getItemID()           { return skeleton.getItemID();    }
+    public int         getItemData()         { return skeleton.getItemData();  }
+    public String      getCSWeaponName()     { return csWeaponName;            }
+    public double      getInitBulletSpread() { return skeleton.getBulletSpread();  }
+    public int         getMaxDurability()    { return skeleton.getMaxDurability(); }
+    
     public GunModifier[] getCraftableModifiers()
     {
         return new GunModifier[]
         { 
+            attatchment,
+            barrel,
+            bolt,
             firemodeType,
+            magazine,
             scopeType,
-            attatchment
+            stock
         };
     }
     
     @Override public String toString()       { return csWeaponName;  }
 
-    public double getCSBulletSpread()
+    public double getEventBulletSpread(final boolean isScoped,
+                                       final boolean isCrouch)
     {
-        switch(scopeType)
+        final double initialBulletSpread = skeleton.getBulletSpread();
+        BulletSpreadModifier bulletSpreadModifier;
+        
+        double percentModifier = 1.0;
+        
+        for (GunModifier mod : getCraftableModifiers())
         {
-        case IRON: return initialBulletSpread;
-        case ACOG: return initialBulletSpread + 0.25;
-        case TACT: return initialBulletSpread + 0.50;
-        case LONG: return initialBulletSpread + 1.00;
-        default:   return initialBulletSpread;
+            if (mod instanceof BulletSpreadModifier && !(mod instanceof Scope))
+            {
+                bulletSpreadModifier = (BulletSpreadModifier)mod;
+                percentModifier += bulletSpreadModifier.getBulletSpreadModifyPercentage();
+            }
         }
+        
+        if (isCrouch)
+        {
+            percentModifier += CROUCH_BULLET_SPREAD_MODIFIER;
+        }
+        
+        percentModifier += (isScoped) ?
+                this.scopeType.getZoomedBulletSpreadPercentModifier()
+              : this.scopeType.getBulletSpreadModifyPercentage();
+        
+        return (percentModifier < BULLET_SPREAD_MODIFIER_CAP) ? 
+                initialBulletSpread * BULLET_SPREAD_MODIFIER_CAP
+              : initialBulletSpread * percentModifier;
     }
     
-    public double getSneakCSBulletSpread()
-    {
-        return (GunUtils.hasScope(this)) ? 
-                getCSBulletSpread() : initialBulletSpread * 0.85;
-    }
     
     public int getInitialDurability()
     {
@@ -191,5 +233,105 @@ public class CrackshotGun
             }
         }
         return GunUtils.sortMods(mods);
+    }
+    
+    
+    
+    /**
+     * @return Returns all BleedoutModifiers on the gun.
+     */
+    public ArrayList<BleedoutModifier> getBleedoutModifiers()
+    {
+        ArrayList<BleedoutModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof BleedoutModifier)
+                mods.add((BleedoutModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all BoltModifiers on the gun.
+     */
+    public ArrayList<BoltModifier> getBoltModifiers()
+    {
+        ArrayList<BoltModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof BoltModifier)
+                mods.add((BoltModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all BulletSpreadModifiers on the gun.
+     */
+    public ArrayList<BulletSpreadModifier> getBulletSpreadModifiers()
+    {
+        ArrayList<BulletSpreadModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof BulletSpreadModifier)
+                mods.add((BulletSpreadModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all CritModifiers on the gun.
+     */
+    public ArrayList<CritModifier> getCritModifiers()
+    {
+        ArrayList<CritModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof CritModifier)
+                mods.add((CritModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all DamageModifiers on the gun.
+     */
+    public ArrayList<DamageModifier> getDamageModifiers()
+    {
+        ArrayList<DamageModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof DamageModifier)
+                mods.add((DamageModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all MagazineModifiers on the gun.
+     */
+    public ArrayList<MagazineModifier> getMagazineModifiers()
+    {
+        ArrayList<MagazineModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof MagazineModifier)
+                mods.add((MagazineModifier)mod);
+        }
+        return mods;
+    }
+    
+    /**
+     * @return Returns all ProjectileAmountModifiers on the gun.
+     */
+    public ArrayList<ProjectileAmountModifier> getProjectileAmountModifiers()
+    {
+        ArrayList<ProjectileAmountModifier> mods = new ArrayList<>();
+        for (GunModifier mod : getCraftableModifiers())
+        {
+            if (mod instanceof ProjectileAmountModifier)
+                mods.add((ProjectileAmountModifier)mod);
+        }
+        return mods;
     }
 }

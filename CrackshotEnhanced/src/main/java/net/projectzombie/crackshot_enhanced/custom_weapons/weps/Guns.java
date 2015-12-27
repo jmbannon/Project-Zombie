@@ -7,12 +7,8 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableItems;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 /**
  *

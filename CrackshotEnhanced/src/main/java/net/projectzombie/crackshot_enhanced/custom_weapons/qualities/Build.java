@@ -19,9 +19,9 @@ public enum Build implements Type
     TEMPERED (1, 0.96, ChatColor.GREEN,  "Tempered"),
     MODIFIED (2, 0.91, ChatColor.GOLD,   "Modified"),
     ENHANCED (3, 0.85, ChatColor.RED,    "Enhanced"),
-    SUPERIOR (3, 0.78, ChatColor.RED,    "Superior"),
-    RARE     (3, 0.71, ChatColor.RED,    "Rare"),
-    UNIQUE   (3, 0.65, ChatColor.RED,    "Unique");
+    SUPERIOR (4, 0.78, ChatColor.RED,    "Superior"),
+    RARE     (5, 0.71, ChatColor.RED,    "Rare"),
+    UNIQUE   (6, 0.65, ChatColor.RED,    "Unique");
     
     private static final String TITLE = "Build: ";
     

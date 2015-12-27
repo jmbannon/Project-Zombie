@@ -55,34 +55,29 @@ public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier,
         return displayName;
     }
 
-    @Override
-    public double getBulletSpreadBoost(double baseBulletSpread)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getBulletSpreadModifyPercentage(double baseBulletSpread)
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public double getDamageBoost(double baseDamage)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 0.0;
     }
 
     @Override
     public double getDamageModifyPercentage(double baseDamage)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 1.0;
     }
 
     @Override
     public int getAdditionalProjectileAmount()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 0;
+    }
+
+    @Override
+    public double getBulletSpreadModifyPercentage()
+    {
+        return 1.0;
     }
     
 }

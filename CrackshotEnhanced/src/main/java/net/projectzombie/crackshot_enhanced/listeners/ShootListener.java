@@ -54,6 +54,7 @@ public class ShootListener implements Listener
     public void preDecayEvent(WeaponPreShootEvent event)
     {
         final Player shooter = event.getPlayer();
+        
         final double bulletSpread = shoot(event.getBulletSpread(), shooter.getItemInHand());
         
         if (bulletSpread <= -2)

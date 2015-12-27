@@ -26,78 +26,78 @@ public enum ModifierSet
      * Deagle, Colt 45
      */
     PISTOL_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY },
-                   new Barrel[]          { NULL_BARREL, THREADED, PRECISION },
-                   new Bolt[]             { NULL_BOLT },
-                   new FireMode[]     { SEMI },
-                   new Magazine[]     { NULL_MAG, MAG_QUICK, MAG_FAST },
-                   new Scope[]          { IRON, RED_IRON, ACOG },
-                   new Stock[]           { NULL_STOCK, IVORY_GRIP }),
+             new Barrel[]      { NULL_BARREL, THREADED, PRECISION },
+             new Bolt[]        { NULL_BOLT },
+             new FireMode[]    { SEMI },
+             new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST },
+             new Scope[]       { IRON, RED_IRON, ACOG },
+             new Stock[]       { NULL_STOCK, IVORY_GRIP }),
     
     /**
      * P228, USP
      */
     PISTOL_2(new Attatchment[] { NULL_ATTATCHMENT, SUPPRESOR, INCENDIARY },
-                   new Barrel[]          { NULL_BARREL, THREADED, PRECISION },
-                   new Bolt[]             { NULL_BOLT },
-                   new FireMode[]     { SEMI, BURST },
-                   new Magazine[]     { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                   new Scope[]          { IRON, RED_IRON, ACOG },
-                   new Stock[]           { NULL_STOCK, IVORY_GRIP, ST_FOLDING }),
+             new Barrel[]      { NULL_BARREL, THREADED, PRECISION },
+             new Bolt[]        { NULL_BOLT },
+             new FireMode[]    { SEMI, BURST },
+             new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+             new Scope[]       { IRON, RED_IRON, ACOG },
+             new Stock[]       { NULL_STOCK, IVORY_GRIP, ST_FOLDING }),
     
     /**
      * 44 Mag
      */
    REVOLVER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY },
-                      new Barrel[]          { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                      new Bolt[]             { NULL_BOLT },
-                      new FireMode[]     { SEMI },
-                      new Magazine[]     { NULL_MAG, MAG_QUICK, MAG_FAST },
-                      new Scope[]          { IRON, RED_IRON, ACOG },
-                      new Stock[]           { NULL_STOCK, IVORY_GRIP }),
+              new Barrel[]      { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+              new Bolt[]        { NULL_BOLT },
+              new FireMode[]    { SEMI },
+              new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST },
+              new Scope[]       { IRON, RED_IRON, ACOG },
+              new Stock[]       { NULL_STOCK, IVORY_GRIP }),
    
    /**
     * Dirty Frank
     */
    REVOLVER_2(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY },
-                      new Barrel[]          { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                      new Bolt[]             { NULL_BOLT },
-                      new FireMode[]     { SEMI },
-                      new Magazine[]     { NULL_MAG, MAG_QUICK, MAG_FAST },
-                      new Scope[]          { BROKEN, ACOG, TACT },
-                      new Stock[]           { NULL_STOCK, IVORY_GRIP }),
+              new Barrel[]      { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+              new Bolt[]        { NULL_BOLT },
+              new FireMode[]    { SEMI },
+              new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST },
+              new Scope[]       { BROKEN, ACOG, TACT },
+              new Stock[]       { NULL_STOCK, IVORY_GRIP }),
    
    /**
     * Scout, AWP, Remington, Springfield, Winchester
     */
 BOLT_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]           { NULL_BARREL, BARTLEIN, KRIEGER, BRUX },
-                       new Bolt[]              { NULL_BOLT, BO_LUBED, BO_POLISHED },
-                       new FireMode[]      { BOLT },
-                       new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                       new Scope[]           { BROKEN, ACOG, TACT, LONG },
-                       new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+              new Barrel[]      { NULL_BARREL, BARTLEIN, KRIEGER, BRUX },
+              new Bolt[]        { NULL_BOLT, BO_LUBED, BO_POLISHED },
+              new FireMode[]    { BOLT },
+              new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+              new Scope[]       { BROKEN, ACOG, TACT, LONG },
+              new Stock[]       { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
    
 /**
  * G3, Dragonuv
  */
 SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
-                       new Barrel[]          { NULL_BARREL, BARTLEIN, KRIEGER, BRUX },
-                       new Bolt[]             { NULL_BOLT },
-                       new FireMode[]     { SEMI },
-                       new Magazine[]     { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                       new Scope[]          { BROKEN, ACOG, TACT, LONG },
-                       new Stock[]           { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+              new Barrel[]      { NULL_BARREL, BARTLEIN, KRIEGER, BRUX },
+              new Bolt[]        { NULL_BOLT },
+              new FireMode[]    { SEMI },
+              new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+              new Scope[]       { BROKEN, ACOG, TACT, LONG },
+              new Stock[]       { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
 
            /**
             * Mac10, Ump45, TMP
             */
            SMG_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
-                       new Barrel[]           { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]              { NULL_BOLT },
-                       new FireMode[]      { AUTO, BURST, SEMI },
-                       new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                       new Scope[]           { IRON, RED_IRON, ACOG },
-                       new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
+                 new Barrel[]           { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+                 new Bolt[]              { NULL_BOLT },
+                 new FireMode[]      { AUTO, BURST, SEMI },
+                 new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+                 new Scope[]           { IRON, RED_IRON, ACOG },
+                 new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
            
            /**
             * MP5, 

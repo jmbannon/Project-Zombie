@@ -6,13 +6,8 @@
 
 import java.util.ArrayList;
 import junit.framework.TestCase;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -25,21 +20,6 @@ public class TestCrackshotGun extends TestCase
         
     }
     
-    public void testMethd()
-    {
-        for (Material mat : Material.values())
-        {
-            ItemStack temp = new ItemStack(mat);
-            
-            System.out.println(mat.name());
-            System.out.println("Has meta: " + String.valueOf(temp.hasItemMeta()));
-            if (temp.hasItemMeta())
-                System.out.println("Has lore: " + String.valueOf(temp.getItemMeta().hasLore()));
-            System.out.println("---------------------------");
-        }
-        
-        assertTrue(true);
-    }
     
     public void testGunAccess2()
     {

@@ -52,7 +52,6 @@ public class YAMLGenerator
         gunGen.writeItemInformation();
         gunGen.writeShooting();
         gunGen.writeScope();
-        gunGen.writeSneak();
         gunGen.writeBurstfire();
         gunGen.writeFullyAutomatic();
         gunGen.writeReload();
@@ -116,7 +115,7 @@ public class YAMLGenerator
         wepsYAML.set(path + "Projectile_Speed",                gen.getProjectileSpeed());
         wepsYAML.set(path + "Projectile_Damage",               gen.getDamage());
         wepsYAML.set(path + "Removal_Or_Drag_Delay",           gen.getRemovalOrDragDelay());
-        wepsYAML.set(path + "Bullet_Spread",                   gen.getGun().getCSBulletSpread());
+        wepsYAML.set(path + "Bullet_Spread",                   gen.getGun().getSkeleton().getBulletSpread());
         wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
         
         if (gen.getGun().getAttatchment().equals(INCENDIARY))
@@ -133,17 +132,6 @@ public class YAMLGenerator
         wepsYAML.set(path + "Zoom_Amount",        gen.getGun().getScope().getZoomAmount());
         wepsYAML.set(path + "Zoom_Bullet_Spread", gen.getGun().getInitBulletSpread());
         wepsYAML.set(path + "Sounds_Toggle_Zoom", "NOTE_STICKS-1-2-0");
-    }
-    
-    
-    private void writeSneak()
-    {
-        if (GunUtils.hasScope(gen.getGun())) return;
-        
-        final String path = gen.getCSWeaponName() + ".Sneak.";
-        
-        wepsYAML.set(path + "Enable",        true);
-        wepsYAML.set(path + "Bullet_Spread", gen.getGun().getSneakCSBulletSpread());
     }
     
     private void writeBurstfire()

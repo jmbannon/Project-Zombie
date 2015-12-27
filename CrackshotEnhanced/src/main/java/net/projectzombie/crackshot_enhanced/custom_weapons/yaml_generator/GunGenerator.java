@@ -5,15 +5,11 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INCENDIARY;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
@@ -79,7 +75,15 @@ public class GunGenerator
         if (action != null)
         {
             final int openDuration = action.getOpenDuration();
-            return (gun.getAttatchment().equals(LUB)) ? openDuration/2 : openDuration;
+            int modifiedOpenDuration = openDuration;
+            
+            for (BoltModifier mod : gun.getBoltModifiers())
+                modifiedOpenDuration -= Math.floor(openDuration * mod.getDurationMultiplier());
+            
+            if (modifiedOpenDuration <= 1)
+                return 1;
+            else
+                return modifiedOpenDuration;
         }
         else
             return 0;
@@ -91,7 +95,15 @@ public class GunGenerator
         if (action != null)
         {
             final int closeDuration = action.getCloseDuration();
-            return (gun.getAttatchment().equals(LUB)) ? closeDuration/2 : closeDuration;
+            int modifiedCloseDuration = closeDuration;
+            
+            for (BoltModifier mod : gun.getBoltModifiers())
+                modifiedCloseDuration -= Math.floor(closeDuration * mod.getDurationMultiplier());
+            
+            if (modifiedCloseDuration <= 1)
+                return 1;
+            else
+                return modifiedCloseDuration;
         }
         else
             return 0;
@@ -103,7 +115,15 @@ public class GunGenerator
         if (action != null)
         {
             final int closeShootDelay = action.getCloseShootDelay();
-            return (gun.getAttatchment().equals(LUB)) ? closeShootDelay/2 : closeShootDelay;
+            int modifiedCloseShootDelay = closeShootDelay;
+            
+            for (BoltModifier mod : gun.getBoltModifiers())
+                modifiedCloseShootDelay -= Math.floor(closeShootDelay * mod.getDurationMultiplier());
+            
+            if (modifiedCloseShootDelay <= 1)
+                return 1;
+            else
+                return modifiedCloseShootDelay;
         }
         else
             return 0;
@@ -166,14 +186,21 @@ public class GunGenerator
     
     public int getReloadAmount()
     {
-        final int reloadAmount = gun.getSkeleton().getReloadAmount();
-        return (gun.getAttatchment().equals(EXT)) ? (reloadAmount*5)/3 : reloadAmount;
+        int reloadAmount = gun.getSkeleton().getReloadAmount();
+        for (MagazineModifier mod : gun.getMagazineModifiers())
+            reloadAmount += mod.getMagazineBoost();
+        
+        return reloadAmount;
     }
     
     public int getReloadDuration()
     {
         final int reloadDuration = gun.getSkeleton().getReloadDuration();
-        return (gun.getAttatchment().equals(REL)) ? reloadDuration/2 : reloadDuration;
+        int modifiedReloadDuration = reloadDuration;
+        for (MagazineModifier mod : gun.getMagazineModifiers())
+            modifiedReloadDuration -= Math.floor(reloadDuration * mod.getReloadSpeedMultiplier());
+        
+        return modifiedReloadDuration;
     }
     
     public Boolean reloadBulletsIndividually()
@@ -218,15 +245,18 @@ public class GunGenerator
     
     public int getProjectileAmount()
     {
-        final int projectileAmount = gun.getWeaponType().getProjectileAmount();
-        return (GunUtils.isShotgun(gun) && gun.getAttatchment().equals(SO)) ?
-            projectileAmount*2 : projectileAmount;
+        int projectileAmount = gun.getWeaponType().getProjectileAmount();
+        for (ProjectileAmountModifier mod : gun.getProjectileAmountModifiers())
+        {
+            projectileAmount += mod.getAdditionalProjectileAmount();
+        }
+        return projectileAmount;
     }
     
     public String getRemovalOrDragDelay()
     {
         if (GunUtils.isShotgun(gun))
-            return (gun.getAttatchment().equals(SO)) ? "7-true" : "13-true";
+            return (gun.getBarrel().equals(Barrel.SAWED_OFF)) ? "7-true" : "13-true";
         else
             return null;
     }
