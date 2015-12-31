@@ -15,13 +15,13 @@ import org.bukkit.ChatColor;
 public enum Build implements Type
 {
     
-    STOCK    (0, 1.0, ChatColor.YELLOW,  "Stock"),
-    TEMPERED (1, 0.96, ChatColor.GREEN,  "Tempered"),
-    MODIFIED (2, 0.91, ChatColor.GOLD,   "Modified"),
-    ENHANCED (3, 0.85, ChatColor.RED,    "Enhanced"),
-    SUPERIOR (4, 0.78, ChatColor.RED,    "Superior"),
-    RARE     (5, 0.71, ChatColor.RED,    "Rare"),
-    UNIQUE   (6, 0.65, ChatColor.RED,    "Unique");
+    STOCK    (0, 1.0,  ChatColor.YELLOW,       "Stock"),
+    TEMPERED (1, 0.96, ChatColor.GREEN,        "Tempered"),
+    MODIFIED (2, 0.91, ChatColor.DARK_GREEN,   "Modified"),
+    ENHANCED (3, 0.85, ChatColor.AQUA,         "Enhanced"),
+    SUPERIOR (4, 0.78, ChatColor.DARK_AQUA,    "Superior"),
+    RARE     (5, 0.71, ChatColor.LIGHT_PURPLE, "Rare"),
+    UNIQUE   (6, 0.65, ChatColor.GOLD,         "Unique");
     
     private static final String TITLE = "Build: ";
     

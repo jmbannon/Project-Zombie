@@ -10,7 +10,8 @@ import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
+import org.bukkit.Bukkit;
+//import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Vector;
 
 /**
  *
@@ -126,11 +126,9 @@ public class ShootListener implements Listener
         
         List<String> lore = item.getItemMeta().getLore();
         
-        if (CrackshotLore.isUnencrypted(lore))
-            return UNENCRYPTED;
         if (CrackshotLore.isPreShotWeapon(lore))
             bulletSpread = CrackshotLore.initializeGun(eventBulletSpread, lore);
-        else if (lore.size() == LORE_SIZE)
+        else// if (lore.size() == LORE_SIZE)
             bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
         
         gunMeta.setLore(lore);

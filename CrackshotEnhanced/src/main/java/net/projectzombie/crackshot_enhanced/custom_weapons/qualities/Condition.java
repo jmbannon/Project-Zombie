@@ -15,12 +15,12 @@ import org.bukkit.ChatColor;
  */
 public enum Condition implements Type
 {
-    NEW     (5, ChatColor.RED,        "Factory New"),
-    MINT    (4, ChatColor.AQUA,       "Mint"),
-    FINE    (3, ChatColor.DARK_AQUA,  "Scarred"),
-    WORN    (2, ChatColor.GREEN,      "Worn"),
-    RUSTY   (1, ChatColor.GOLD,       "Rusty"),
-    BROKEN  (0, ChatColor.GRAY,       "Broken");
+    NEW     (5, ChatColor.GREEN, "Factory New"),
+    MINT    (4, ChatColor.DARK_AQUA,      "Mint"),
+    FINE    (3, ChatColor.YELLOW,     "Scarred"),
+    WORN    (2, ChatColor.GOLD,       "Worn"),
+    RUSTY   (1, ChatColor.RED,        "Rusty"),
+    BROKEN  (0, ChatColor.DARK_RED,   "Broken");
     
     public static final String TITLE = "Condition: ";
     

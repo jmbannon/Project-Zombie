@@ -13,7 +13,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -25,29 +24,26 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class CrackshotLore
 {
-    public static final int INFO_IDX = 0;
-    public static final int AMMO_IDX = 1;
-    public static final int ACCURACY_IDX = 2;
-    public static final int CONDITION_IDX = 3;
-    public static final int BUILD_IDX = 4;
-    public static final int FIRE_MODE_IDX = 5;
-    public static final int SCOPE_IDX = 6;
-    public static final int ATT_IDX = 7;
-    public static final int LORE_SIZE = 8;
+    private static final int INFO_IDX = 0;
+    private static final int ACCURACY_IDX = 1;
+    private static final int CONDITION_IDX = 2;
+    private static final int BUILD_IDX = 3;
+    private static final int FIRE_MODE_IDX = 4;
+    //public static final int SCOPE_IDX = 6;
     
     // PZ`gunID`durability`ConditionType`BuildType
-    public static final int INFO_VERIFY_IDX = 0;
-    public static final int INFO_ID_IDX = 1;
-    public static final int INFO_DUR_IDX = 2;
-    public static final int INFO_COND_IDX = 3;
-    public static final int INFO_BUILD_IDX = 4;
-    public static final int INFO_SIZE = 5;
+    private static final int INFO_VERIFY_IDX = 0;
+    private static final int INFO_ID_IDX = 1;
+    private static final int INFO_DUR_IDX = 2;
+    private static final int INFO_COND_IDX = 3;
+    private static final int INFO_BUILD_IDX = 4;
+    private static final int INFO_SIZE = 5;
     
-    public static final int PRE_SHOT_VERIFICATION_IDX = 1;
+    private static final int PRE_SHOT_VERIFICATION_IDX = 1;
     
     public static final ChatColor ITEM_COLOR  = ChatColor.YELLOW;
-    public static final ChatColor TITLE_COLOR = ChatColor.DARK_RED;
-    public static final ChatColor VALUE_COLOR = ChatColor.GOLD;
+    public static final ChatColor TITLE_COLOR = ChatColor.DARK_GREEN;
+    public static final ChatColor VALUE_COLOR = ChatColor.GRAY;
     
     public static final String preShotVerification = TITLE_COLOR + "Shoot to unviel stats.";
     public static final String verification = "PZ";
@@ -74,13 +70,11 @@ public class CrackshotLore
     {
         lore.clear();
         lore.add(INFO_IDX,       buildStatLore(gun, initialDurability));
-        lore.add(AMMO_IDX,       buildAmmoLore(gun));
         lore.add(ACCURACY_IDX,   buildAccuracyLore(gun, Build.STOCK.getEnumValue(), initialDurability));
         lore.add(CONDITION_IDX,  buildConditionLore(initialCondition));
         lore.add(BUILD_IDX,      buildBuildLore(Build.STOCK.getEnumValue()));
         lore.add(FIRE_MODE_IDX,  buildFireModeLore(gun));
-        lore.add(SCOPE_IDX,      buildScopeLore(gun));
-        lore.add(ATT_IDX,        buildAttatchmentLore(gun));
+        lore.addAll(ModifierLoreBuilder.buildModifierLore(gun));
     }
     
     static
@@ -179,13 +173,6 @@ public class CrackshotLore
             return -1;
         
         return getWeaponId(item.getItemMeta().getLore());
-    }
-    
-    static
-    public boolean isUnencrypted(final List<String> lore)
-    {
-        final String firstLine = line + seperator + verification + seperator;
-        return lore.size() > 0  && lore.get(0).startsWith(firstLine);
     }
     
     static
@@ -327,14 +314,8 @@ public class CrackshotLore
     }
     
     static
-    private String buildAttatchmentLore(final CrackshotGun gun)
-    {
-        return buildLoreString(Attatchment.getTitle(), gun.getAttatchment().toString());
-    }
-    
-    static
     private String buildStatLore(final CrackshotGun gun,
-                                      final int durability)
+                                 final int durability)
     {
         // PZ`gunID`durability`maxDurability`ConditionTypeBuildType
         StringBuilder stb = new StringBuilder();

@@ -18,7 +18,6 @@ public class Guns
 {
     private static final ArrayList<CrackshotGun> guns = initializeGuns();
     
-    
     static
     private ArrayList<CrackshotGun> initializeGuns()
     {

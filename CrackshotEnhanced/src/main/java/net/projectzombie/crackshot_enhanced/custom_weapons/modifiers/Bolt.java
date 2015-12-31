@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -41,6 +42,17 @@ public enum Bolt implements GunModifier, BoltModifier
     public double getDurationMultiplier()
     {
         return 0.5;
+    }
+
+    @Override
+    public boolean isNull()
+    {
+        return this.equals(NULL_BOLT);
+    }
+    
+    @Override
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
     }
 
 }

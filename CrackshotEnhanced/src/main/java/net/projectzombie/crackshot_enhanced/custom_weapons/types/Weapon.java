@@ -105,9 +105,11 @@ public enum Weapon implements Type
     public String getAccuracyValue(final double CSBulletSpread,
                                    final int condition)
     {
-        return (this.equals(SH_BREAK) || this.equals(SH_SLIDE)) ?
-            String.format("%.1f", getAccuracyPercentage(CSBulletSpread, condition)/2)
-                : String.format("%.2f%%", getAccuracyPercentage(CSBulletSpread, condition));
+        double eventBulletSpread = getBulletSpread(CSBulletSpread, condition);
+        return String.valueOf(Math.round(10 * eventBulletSpread / Math.pow(eventBulletSpread, 2.0)));
+//        return (this.equals(SH_BREAK) || this.equals(SH_SLIDE)) ?
+//            String.format("%.1f", getAccuracyPercentage(CSBulletSpread, condition)/2)
+//                : String.format("%.2f%%", getAccuracyPercentage(CSBulletSpread, condition));
     }
    
     private double getAccuracyPercentage(final double CSBulletSpread,

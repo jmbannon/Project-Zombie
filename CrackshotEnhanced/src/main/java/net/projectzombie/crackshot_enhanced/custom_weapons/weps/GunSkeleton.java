@@ -75,6 +75,7 @@ public enum GunSkeleton
     private final String weaponName;
     private final Weapon weaponType;
     private final double bulletSpread;
+    private final double damage;
     private final ModifierSet modSet;
     private final Particles particleShoot;
     
@@ -82,8 +83,7 @@ public enum GunSkeleton
             itemID, 
             itemData, 
             shootDelay, 
-            maxDurability, 
-            damage, 
+            maxDurability,  
             recoilAmount, 
             reloadAmount, 
             reloadDuration;
@@ -100,7 +100,7 @@ public enum GunSkeleton
                           final double initialBulletSpread,
                           final int delay_between_shots,
                           final int maxDurability,
-                          final int damage,
+                          final double damage,
                           final int recoilAmount,
                           
                           final Sounds sounds_shoot,
@@ -139,7 +139,7 @@ public enum GunSkeleton
     public Material      getItemMaterial()   { return Material.getMaterial(itemID); }
     public int           getShootDelay()     { return shootDelay;     }
     public int           getMaxDurability()  { return maxDurability;  }
-    public int           getDamage()         { return damage;         }
+    public double        getDamage()         { return damage;         }
     public int           getRecoil()         { return recoilAmount;   }
     public String        getShootSound()     { return soundShoot;    }
     public String        getSilencedSound()  { return soundSilenced; }

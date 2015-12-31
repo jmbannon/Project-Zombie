@@ -11,6 +11,15 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  */
 public interface CritModifier
 {
-    public double getCritChanceIncrease(final double baseCritChance);
-    public double getCritMultiplier(final double baseCritMultiplier);
+    /**
+     * Returns the crit chance percentage modifier.
+     * @return Percent modifier of crit chance (0, inf).
+     */
+    public double getCritChance();
+    
+    /**
+     * Returns the crit strike percentage modifier.
+     * @return Percent modifier of crit strike (0, inf).
+     */
+    public double getCritStrike();
 }

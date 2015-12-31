@@ -100,6 +100,19 @@ public class YAMLGenerator
         wepsYAML.set(path + "Remove_Unused_Tag",  true);
     }
     
+    private void writeCritical()
+    {
+        final String path = gen.getCSWeaponName() + ".Critical_Hits.";
+        final double criticalChance = gen.getCritChance();
+        final double criticalStrike = gen.getCritStrike();
+        
+        if (criticalChance > 0 && criticalStrike > 0)
+        {
+            wepsYAML.set(path + "Enable", true);
+            wepsYAML.set(path + "Bonus_Damage", criticalStrike);
+            wepsYAML.set(path + "Chance", criticalChance);
+        }
+    }
     
     private void writeShooting()
     {
@@ -115,7 +128,7 @@ public class YAMLGenerator
         wepsYAML.set(path + "Projectile_Speed",                gen.getProjectileSpeed());
         wepsYAML.set(path + "Projectile_Damage",               gen.getDamage());
         wepsYAML.set(path + "Removal_Or_Drag_Delay",           gen.getRemovalOrDragDelay());
-        wepsYAML.set(path + "Bullet_Spread",                   gen.getGun().getSkeleton().getBulletSpread());
+        wepsYAML.set(path + "Bullet_Spread",                   gen.getBulletSpread());
         wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
         
         if (gen.getGun().getAttatchment().equals(INCENDIARY))

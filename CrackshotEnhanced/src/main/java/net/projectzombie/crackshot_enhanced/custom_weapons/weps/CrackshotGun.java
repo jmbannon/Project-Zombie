@@ -17,7 +17,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
@@ -25,7 +24,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Bulle
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.inventory.ItemStack;
@@ -109,37 +108,6 @@ public class CrackshotGun
     }
     
     @Override public String toString()       { return csWeaponName;  }
-
-    public double getEventBulletSpread(final boolean isScoped,
-                                       final boolean isCrouch)
-    {
-        final double initialBulletSpread = skeleton.getBulletSpread();
-        BulletSpreadModifier bulletSpreadModifier;
-        
-        double percentModifier = 1.0;
-        
-        for (GunModifier mod : getCraftableModifiers())
-        {
-            if (mod instanceof BulletSpreadModifier && !(mod instanceof Scope))
-            {
-                bulletSpreadModifier = (BulletSpreadModifier)mod;
-                percentModifier += bulletSpreadModifier.getBulletSpreadModifyPercentage();
-            }
-        }
-        
-        if (isCrouch)
-        {
-            percentModifier += CROUCH_BULLET_SPREAD_MODIFIER;
-        }
-        
-        percentModifier += (isScoped) ?
-                this.scopeType.getZoomedBulletSpreadPercentModifier()
-              : this.scopeType.getBulletSpreadModifyPercentage();
-        
-        return (percentModifier < BULLET_SPREAD_MODIFIER_CAP) ? 
-                initialBulletSpread * BULLET_SPREAD_MODIFIER_CAP
-              : initialBulletSpread * percentModifier;
-    }
     
     
     public int getInitialDurability()
@@ -210,19 +178,9 @@ public class CrackshotGun
         return toReturn;
     }
     
-    public boolean containsMods(final FireMode firemode,
-                                final Scope scope,
-                                final Attatchment attatchment)
-    {
-        return this.firemodeType == firemode 
-                && this.scopeType == scope 
-                && this.attatchment == attatchment;
-    }
-    
     private ArrayList<GunModifier> getModifiedIDs()
     {
         final ArrayList<GunModifier> mods = new ArrayList<>();
-        
         for (GunModifier modifier : skeleton.getModifiers())
         {
             if (this.attatchment != modifier
@@ -242,7 +200,7 @@ public class CrackshotGun
      */
     public ArrayList<BleedoutModifier> getBleedoutModifiers()
     {
-        ArrayList<BleedoutModifier> mods = new ArrayList<>();
+        final ArrayList<BleedoutModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof BleedoutModifier)
@@ -256,7 +214,7 @@ public class CrackshotGun
      */
     public ArrayList<BoltModifier> getBoltModifiers()
     {
-        ArrayList<BoltModifier> mods = new ArrayList<>();
+        final ArrayList<BoltModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof BoltModifier)
@@ -270,7 +228,7 @@ public class CrackshotGun
      */
     public ArrayList<BulletSpreadModifier> getBulletSpreadModifiers()
     {
-        ArrayList<BulletSpreadModifier> mods = new ArrayList<>();
+        final ArrayList<BulletSpreadModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof BulletSpreadModifier)
@@ -284,7 +242,7 @@ public class CrackshotGun
      */
     public ArrayList<CritModifier> getCritModifiers()
     {
-        ArrayList<CritModifier> mods = new ArrayList<>();
+        final ArrayList<CritModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof CritModifier)
@@ -298,7 +256,7 @@ public class CrackshotGun
      */
     public ArrayList<DamageModifier> getDamageModifiers()
     {
-        ArrayList<DamageModifier> mods = new ArrayList<>();
+        final ArrayList<DamageModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof DamageModifier)
@@ -312,7 +270,7 @@ public class CrackshotGun
      */
     public ArrayList<MagazineModifier> getMagazineModifiers()
     {
-        ArrayList<MagazineModifier> mods = new ArrayList<>();
+        final ArrayList<MagazineModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
             if (mod instanceof MagazineModifier)
@@ -324,13 +282,13 @@ public class CrackshotGun
     /**
      * @return Returns all ProjectileAmountModifiers on the gun.
      */
-    public ArrayList<ProjectileAmountModifier> getProjectileAmountModifiers()
+    public ArrayList<ProjectileModifier> getProjectileAmountModifiers()
     {
-        ArrayList<ProjectileAmountModifier> mods = new ArrayList<>();
+        final ArrayList<ProjectileModifier> mods = new ArrayList<>();
         for (GunModifier mod : getCraftableModifiers())
         {
-            if (mod instanceof ProjectileAmountModifier)
-                mods.add((ProjectileAmountModifier)mod);
+            if (mod instanceof ProjectileModifier)
+                mods.add((ProjectileModifier)mod);
         }
         return mods;
     }

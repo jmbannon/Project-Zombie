@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -63,5 +64,15 @@ public enum Magazine implements GunModifier, MagazineModifier
     {
         return 1.0;
     }
+
+    @Override
+    public boolean isNull()
+    {
+        return this.equals(NULL_MAG);
+    }
     
+    @Override
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
+    }
 }

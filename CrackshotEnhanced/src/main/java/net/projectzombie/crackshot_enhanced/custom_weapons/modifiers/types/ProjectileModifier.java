@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  *
  * @author jesse
  */
-public interface RangeModifier
+public interface ProjectileModifier
 {
-    
+    public int getAdditionalProjectileAmount();
 }

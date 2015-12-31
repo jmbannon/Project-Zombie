@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -42,5 +43,19 @@ public enum FireMode implements Type, GunModifier
     {
         return displayName;
     }
+    
+    /**
+     * FireMode can never be null - all guns have one!
+     * @return False.
+     */
+    @Override
+    public boolean isNull()
+    {
+        return false;
+    }
 
+    @Override
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
+    }
 }

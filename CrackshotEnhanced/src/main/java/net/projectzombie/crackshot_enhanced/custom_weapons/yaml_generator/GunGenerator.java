@@ -6,12 +6,14 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INCENDIARY;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.PISTOL;
@@ -69,16 +71,46 @@ public class GunGenerator
         }
     }
     
+    /**
+     * Gets the bullet spread. Takes the skeleton's base bullet spread and multiplies
+     * it by the sum of all bulletSpreadModifiers.
+     * @return Bullet spread after modifiers.
+     */
+    public double getBulletSpread()
+    {
+        final double baseBulletSpread = gun.getSkeleton().getBulletSpread();
+        final double modifiedBulletSpread;
+        double bulletSpreadModifier = 1.0;
+        
+        for (BulletSpreadModifier mod : gun.getBulletSpreadModifiers())
+            bulletSpreadModifier += mod.getBulletSpreadMultiplier();
+        
+        modifiedBulletSpread = (int)Math.round(baseBulletSpread * bulletSpreadModifier);
+        
+        if (modifiedBulletSpread < .01)
+            return 0.1;
+        else
+            return modifiedBulletSpread;
+    }
+    
+    /**
+     * Gets the open duration in ticks. Takes the action's duration and multiplies
+     * it by the sum of all duration multipliers.
+     * @return Open duration in ticks after multipliers taken into account.
+     */
     public int getOpenDuration()
     {
         final FirearmAction action = gun.getWeaponType().getAction();
         if (action != null)
         {
             final int openDuration = action.getOpenDuration();
-            int modifiedOpenDuration = openDuration;
+            final int modifiedOpenDuration;
+            double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                modifiedOpenDuration -= Math.floor(openDuration * mod.getDurationMultiplier());
+                durationMultiplier += mod.getDurationMultiplier();
+            
+            modifiedOpenDuration = (int)Math.round(openDuration * durationMultiplier);
             
             if (modifiedOpenDuration <= 1)
                 return 1;
@@ -89,16 +121,24 @@ public class GunGenerator
             return 0;
     }
     
+    /**
+     * Gets the close duration in ticks. Takes the action's duration and multiplies
+     * it by the sum of all duration multipliers.
+     * @return Close duration in ticks after multipliers taken into account.
+     */
     public int getCloseDuration()
     {
         final FirearmAction action = gun.getWeaponType().getAction();
         if (action != null)
         {
             final int closeDuration = action.getCloseDuration();
-            int modifiedCloseDuration = closeDuration;
+            final int modifiedCloseDuration;
+            double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                modifiedCloseDuration -= Math.floor(closeDuration * mod.getDurationMultiplier());
+                durationMultiplier += mod.getDurationMultiplier();
+           
+            modifiedCloseDuration = (int)Math.round(closeDuration * durationMultiplier);
             
             if (modifiedCloseDuration <= 1)
                 return 1;
@@ -109,16 +149,24 @@ public class GunGenerator
             return 0;
     }
     
+    /**
+     * Gets the close shoot delay duration in ticks. Takes the action's duration and multiplies
+     * it by the sum of all duration multipliers.
+     * @return Close shoot delay in ticks after multipliers taken into account.
+     */
     public int getCloseShootDelay()
     {
         final FirearmAction action = gun.getWeaponType().getAction();
         if (action != null)
         {
             final int closeShootDelay = action.getCloseShootDelay();
-            int modifiedCloseShootDelay = closeShootDelay;
+            final int modifiedCloseShootDelay;
+            double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                modifiedCloseShootDelay -= Math.floor(closeShootDelay * mod.getDurationMultiplier());
+                durationMultiplier += mod.getDurationMultiplier();
+            
+            modifiedCloseShootDelay = (int)Math.round(closeShootDelay * durationMultiplier);
             
             if (modifiedCloseShootDelay <= 1)
                 return 1;
@@ -184,23 +232,43 @@ public class GunGenerator
             "Group_Sidearm" : "Group_Primary";
     }
     
+    /**
+     * Gets the mag size by adding the skeleton amount with the sum
+     * of all magazineModifier's magazine boost.
+     * @return Mag size after all modifiers have been added to it.
+     */
     public int getReloadAmount()
     {
         int reloadAmount = gun.getSkeleton().getReloadAmount();
         for (MagazineModifier mod : gun.getMagazineModifiers())
             reloadAmount += mod.getMagazineBoost();
         
-        return reloadAmount;
+        if (reloadAmount < 1)
+            return 1;
+        else
+            return reloadAmount;
     }
     
+    /**
+     * Gets the reload duration in ticks by multiplying the skeleton amount with the sum
+     * of all magazineModifier's reload multipliers.
+     * @return Reload duration in ticks after modifiers.
+     */
     public int getReloadDuration()
     {
         final int reloadDuration = gun.getSkeleton().getReloadDuration();
-        int modifiedReloadDuration = reloadDuration;
-        for (MagazineModifier mod : gun.getMagazineModifiers())
-            modifiedReloadDuration -= Math.floor(reloadDuration * mod.getReloadSpeedMultiplier());
+        final int modifiedReloadDuration;
+        double reloadMultiplier = 1.0;
         
-        return modifiedReloadDuration;
+        for (MagazineModifier mod : gun.getMagazineModifiers())
+            reloadMultiplier += mod.getReloadSpeedMultiplier();
+                    
+        modifiedReloadDuration = (int)Math.round(reloadDuration * reloadMultiplier);
+        
+        if (modifiedReloadDuration < 1)
+            return 1;
+        else
+            return modifiedReloadDuration;
     }
     
     public Boolean reloadBulletsIndividually()
@@ -243,14 +311,22 @@ public class GunGenerator
         return (GunUtils.isShotgun(gun)) ? 35 : 1000;
     }
     
+    /**
+     * Gets the projectile amount by adding all projectileModifiers.
+     * @return Projectile amount after modifiers.
+     */
     public int getProjectileAmount()
     {
         int projectileAmount = gun.getWeaponType().getProjectileAmount();
-        for (ProjectileAmountModifier mod : gun.getProjectileAmountModifiers())
+        for (ProjectileModifier mod : gun.getProjectileAmountModifiers())
         {
             projectileAmount += mod.getAdditionalProjectileAmount();
         }
-        return projectileAmount;
+        
+        if (projectileAmount < 1)
+            return 1;
+        else
+            return projectileAmount;
     }
     
     public String getRemovalOrDragDelay()
@@ -261,9 +337,62 @@ public class GunGenerator
             return null;
     }
     
-    public int getDamage()
+    /**
+     * Gets the damage by first taking the skeleton's base damage, adding all additional damage boosts,
+     * then multiplying that by the sum of all multipliers.
+     * @return Damage after multipliers.
+     */
+    public double getDamage()
     {
-        final int damage = gun.getSkeleton().getDamage();
-        return (gun.getAttatchment().equals(INCENDIARY)) ? (damage * 4)/3 : damage;
+        final double modifiedDamage;
+        double baseDamage = gun.getSkeleton().getDamage();
+        double damageModifier = 1.0;
+        for (DamageModifier mod : gun.getDamageModifiers())
+        {
+           baseDamage += mod.getDamageValue();
+           damageModifier += mod.getDamageMultiplier();
+        }
+        
+        modifiedDamage = baseDamage * damageModifier;
+        
+        if (modifiedDamage < 1.0)
+            return 1.0;
+        else
+            return modifiedDamage;
+    }
+    
+    /**
+     * Gets the critical chance by summing all critChance modifiers.
+     * @return Critical chance [0, 1].
+     */
+    public double getCritChance()
+    {
+        double critChance = 0.0;
+        for (CritModifier mod : gun.getCritModifiers())
+            critChance += mod.getCritChance();
+        
+        if (critChance < 0)
+            return 0.0;
+        else if (critChance > 1.0)
+            return 1.0;
+        else
+            return critChance;
+    }
+    
+    /**
+     * Gets the critical strike by summing all critStrike modifiers and multiplying
+     * it by the damage (after modifiers).
+     * @return Critical strike after modifiers (to be added to damage after modifiers on crit).
+     */
+    public double getCritStrike()
+    {
+        double critStrikeModifier = 0.0;
+        for (CritModifier mod : gun.getCritModifiers())
+            critStrikeModifier += mod.getCritStrike();
+        
+        if (critStrikeModifier < 0.0)
+            return 0.0;
+        else
+            return this.getDamage() * critStrikeModifier;
     }
 }

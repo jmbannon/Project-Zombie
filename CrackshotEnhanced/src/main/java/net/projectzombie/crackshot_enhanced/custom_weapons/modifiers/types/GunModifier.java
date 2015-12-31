@@ -5,6 +5,8 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
+import org.bukkit.ChatColor;
+
 
 /**
  *
@@ -21,6 +23,7 @@ public interface GunModifier
      * @return Name of gun modification.
      */
     public String getDisplayName();
+    public ChatColor getColor();
     
-    
+    public boolean isNull();
 }

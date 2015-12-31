@@ -5,65 +5,63 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import org.bukkit.ChatColor;
 
 /**
  *
  * @author jbannon
  */
-public enum Attatchment implements Type, GunModifier, BulletSpreadModifier, DamageModifier
+public enum Attatchment implements GunModifier, 
+                                   BulletSpreadModifier, 
+                                   DamageModifier,
+                                   CritModifier,
+                                   BleedoutModifier
 {
-    NULL_ATTATCHMENT(0, null),
-    SUPPRESOR  (10, "Suppressor"),
-    INCENDIARY  (10, "Incendiary Rounds"),
-    CRIT_CHANCE(20, "Critical Chance Increase"),
-    CRIT_STRIKE  (20, "Critical Strike Multiplier"),
-    BLEEDOUT_INCREASE(20, "Bleedout Time Increase"),
-    BLEEDOUT_DAMAGE_INCREASE(20, "Bleedout Damage Increase");
+    NULL_ATTATCHMENT        (0,  null,                          1.0,  0, 0,  0,  0, 0),
+    SUPPRESOR               (10, "Suppressor",                  1.2, -2, 0,  0,  0, 0),
+    INCENDIARY              (10, "Incendiary Rounds",           1.0,  0, 0,  0,  0, 0),
+    CRIT_CHANCE             (20, "Crit Chance Increase",        1.0,  0, .3, 0,  0, 0),
+    CRIT_STRIKE             (20, "Crit Strike Multiplier",      1.0,  0, 0,  .3, 0, 0),
+    BLEEDOUT_INCREASE       (20, "Bleedout Time Increase",      0,    0, 0,  0,  2, 0),
+    BLEEDOUT_DAMAGE_INCREASE(20, "Bleedout Damage Increase",    0,    0, 0,  0,  0, 2);
     
     private final int price;
     private final String displayName;
-    private static final String title = "Attatchment: ";
     
     Attatchment(final int price,
-                       final String displayname)
+                final String displayname,
+                final double bulletSpreadPercentModifier,
+                final double damageModifier,
+                final double critChanceBoost,
+                final double critMultiplierBoost,
+                final double bleedoutDurationSeconds,
+                final double bleedoutDamageBoost)
     {
         this.price = price;
         this.displayName = displayname;
     }
     
     
-    static public String getTitle()     { return title;     }
-    @Override public String toString()  { return displayName;     }
-    @Override public int price()        { return price;     }
-    @Override public String title()     { return title;     }
+    @Override public String toString()                  { return displayName; }
+    @Override public int    price()                     { return price;       }
+    @Override public String getDisplayName()            { return displayName; }
+    @Override public double getDamageValue()            { return 0;           }
+    @Override public double getDamageMultiplier()       { return 1.0;         }
+    @Override public double getBulletSpreadMultiplier() { return 1.0; }
+    @Override public double getCritChance()             { return 1.2; }
+    @Override public double getCritStrike()             { return 1.1; }
+    @Override public double getBleedoutDurationValue()  { return 1.0; }
+    @Override public double getBleedoutDamageValue()    { return 1;  }
+    @Override public boolean isNull() { return this.equals(NULL_ATTATCHMENT); }
 
     @Override
-    public String getDisplayName()
-    {
-        return displayName;
-    }
-
-
-    @Override
-    public double getDamageBoost(double baseDamage)
-    {
-        return 0;
-    }
-
-    @Override
-    public double getDamageModifyPercentage(double baseDamage)
-    {
-        return 1.0;
-    }
-
-    @Override
-    public double getBulletSpreadModifyPercentage()
-    {
-        return 1.0;
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
     }
     
 }

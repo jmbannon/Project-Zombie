@@ -12,12 +12,14 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 public interface DamageModifier
 {
     /**
-     * Calculates an int based on a Crackshot gun's base damage to be added to
-     * the modified bullet spread.
-     * @param baseDamage Initial damage from a Crackshot gun.
+     * Value - increase or decrease to base damage.
      * @return Double to be added to damage.
      */
-    public double getDamageBoost(final double baseDamage);
+    public double getDamageValue();
     
-    public double getDamageModifyPercentage(final double baseDamage);
+    /**
+     * Multiplier - percentage to modify base damage.
+     * @return Percentage to be multiplied to base damage (0, inf).
+     */
+    public double getDamageMultiplier();
 }

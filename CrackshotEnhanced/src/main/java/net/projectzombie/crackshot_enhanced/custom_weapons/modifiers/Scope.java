@@ -8,6 +8,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import org.bukkit.ChatColor;
 
 /**
  *
@@ -70,8 +71,23 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
     }
 
     @Override
-    public double getBulletSpreadModifyPercentage()
+    public double getBulletSpreadMultiplier()
     {
         return 1.0;
+    }
+
+    /**
+     * A sight can never be null - every gun needs one!
+     * @return False.
+     */
+    @Override
+    public boolean isNull()
+    {
+        return false;
+    }
+    
+    @Override
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
     }
 }

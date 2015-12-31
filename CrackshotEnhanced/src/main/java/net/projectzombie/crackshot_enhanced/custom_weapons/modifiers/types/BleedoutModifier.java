@@ -11,6 +11,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  */
 public interface BleedoutModifier
 {
-    public double getBleedoutDurationIncrease(double baseBleedoutSeconds);
-    public double getBleedoutDamageModifier(double baseBleedoutDamage);
+    public double getBleedoutDurationValue();
+    public double getBleedoutDamageValue();
 }

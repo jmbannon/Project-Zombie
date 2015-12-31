@@ -8,13 +8,14 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileAmountModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
+import org.bukkit.ChatColor;
 
 /**
  *
  * @author jesse
  */
-public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier, ProjectileAmountModifier
+public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier, ProjectileModifier
 {
     NULL_BARREL(null),
     
@@ -57,13 +58,13 @@ public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier,
 
     
     @Override
-    public double getDamageBoost(double baseDamage)
+    public double getDamageValue()
     {
         return 0.0;
     }
 
     @Override
-    public double getDamageModifyPercentage(double baseDamage)
+    public double getDamageMultiplier()
     {
         return 1.0;
     }
@@ -75,9 +76,20 @@ public enum Barrel implements GunModifier, BulletSpreadModifier, DamageModifier,
     }
 
     @Override
-    public double getBulletSpreadModifyPercentage()
+    public double getBulletSpreadMultiplier()
     {
         return 1.0;
+    }
+
+    @Override
+    public boolean isNull()
+    {
+        return this.equals(NULL_BARREL);
+    }
+    
+    @Override
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
     }
     
 }
