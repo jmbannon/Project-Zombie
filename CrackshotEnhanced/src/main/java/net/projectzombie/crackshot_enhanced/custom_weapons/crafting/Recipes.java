@@ -6,9 +6,15 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.crafting;
 
 
+import java.util.HashMap;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
@@ -25,6 +31,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -32,7 +39,7 @@ import org.bukkit.inventory.ShapedRecipe;
  */
 public class Recipes implements Listener
 {
-    static ItemStack test;
+    static private final HashMap<MaterialData, GunModifier> craftingSet = createCraftingHashMap();
     
     public Recipes()
     {
@@ -61,9 +68,9 @@ public class Recipes implements Listener
             {
                 currentGunItem = item;
             }
-            if (ModifierSet.getCraftingMap().containsKey(item.getData()))
+            if (craftingSet.containsKey(item.getData()))
             {
-                mod = ModifierSet.getCraftingMap().get(item.getData());
+                mod = craftingSet.get(item.getData());
             }
         }
         
@@ -152,6 +159,26 @@ public class Recipes implements Listener
         }  
     }
     
-    
+    static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
+    {
+        final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
+        for (Attatchment mod : Attatchment.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Barrel mod : Barrel.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Bolt mod : Bolt.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (FireMode mod : FireMode.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Magazine mod : Magazine.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Scope mod : Scope.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Stock mod : Stock.values())
+            hash.put(mod.getMaterialData(), mod);
+        
+        hash.remove(null);
+        return hash;
+    }
     
 }

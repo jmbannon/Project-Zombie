@@ -15,7 +15,7 @@ import org.bukkit.material.MaterialData;
  *
  * @author jbannon
  */
-public enum Scope implements Type, GunModifier, BulletSpreadModifier
+public enum Scope implements GunModifier, BulletSpreadModifier
 {
     
     BROKEN   ("Broken",             0),
@@ -24,8 +24,6 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
     ACOG     ("ACOG Scope",         4),
     TACT     ("Tactical Scope",     5),
     LONG     ("Sniper Scope",       10);
-    
-    private static final String TITLE = "Sight: ";
 
     private final int zoomAmount;
     private final String displayName;
@@ -37,32 +35,12 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
         this.zoomAmount = crackshotZoomAmount;
     }
     
-    public static String getTitle()         { return TITLE;       }
     public int getZoomAmount()              { return zoomAmount;  }
-    @Override public String toString()      { return displayName; }
-    @Override public String title()         {  return TITLE;      }
 
     @Override
     public int price()
     {
         return 20;
-    }
-
-    
-    public double getZoomedBulletSpreadPercentModifier()
-    {
-        return -0.20;
-    }
-    
-    /**
-     * Calculates a double based on a Crackshot gun's bullet spread to be subtracted
-     * from the modified bullet spread when zoomed in. Applicable for scopes.
-     * @param baseBullsetSpread 
-     * @return 
-     */
-    public double getZoomBullsetSpreadBoost(final int baseBullsetSpread)
-    {
-        return 0;
     }
 
     @Override

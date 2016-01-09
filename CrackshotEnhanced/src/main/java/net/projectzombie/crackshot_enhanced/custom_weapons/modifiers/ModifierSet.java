@@ -204,7 +204,6 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
                        new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC });
 
 
-    static private final HashMap<MaterialData, GunModifier> craftingSet = createCraftingHashMap();
     private final Attatchment[] attatchments;
     private final Barrel[] barrels;
     private final Bolt[] bolts;
@@ -215,12 +214,12 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
     private final GunModifier[] modifiers;
     
     private ModifierSet(final Attatchment[] attatchments,
-                                 final Barrel[] barrels,
-                                 final Bolt[] bolts,
-                                 final FireMode[] fireModes,
-                                 final Magazine[] magazines,
-                                 final Scope[] scopes,
-                                 final Stock[] stocks)
+                        final Barrel[] barrels,
+                        final Bolt[] bolts,
+                        final FireMode[] fireModes,
+                        final Magazine[] magazines,
+                        final Scope[] scopes,
+                        final Stock[] stocks)
     {
         this.attatchments = attatchments;
         this.barrels = barrels;
@@ -272,32 +271,5 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
         
         GunModifier toReturn[] = new GunModifier[mods.size()];
         return mods.toArray(toReturn);
-    }
-    
-    static public HashMap<MaterialData, GunModifier> getCraftingMap()
-    {
-        return craftingSet;
-    }
-    
-    static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
-    {
-        final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
-        for (Attatchment mod : Attatchment.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (Barrel mod : Barrel.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (Bolt mod : Bolt.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (FireMode mod : FireMode.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (Magazine mod : Magazine.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (Scope mod : Scope.values())
-            hash.put(mod.getMaterialData(), mod);
-        for (Stock mod : Stock.values())
-            hash.put(mod.getMaterialData(), mod);
-        
-        hash.remove(null);
-        return hash;
     }
 }

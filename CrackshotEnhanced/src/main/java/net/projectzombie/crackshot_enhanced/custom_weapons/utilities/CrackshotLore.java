@@ -308,12 +308,6 @@ public class CrackshotLore
     }
     
     static
-    private String buildScopeLore(final CrackshotGun gun)
-    {
-        return buildLoreString(Scope.getTitle(), gun.getScope().toString());
-    }
-    
-    static
     private String buildStatLore(final CrackshotGun gun,
                                  final int durability)
     {

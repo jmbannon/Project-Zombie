@@ -34,7 +34,7 @@ import org.bukkit.material.MaterialData;
  */
 public enum GunSkeleton
 {
-    //      Name,                   Type,    Id/byt, BS, Delay,Dur,Dmg,Recoil,Shoot,   Sil,  Part,  Mag, RelDur, ReloadSound
+    //      Name,                   Type,    Id/byt, BS, Delay,Dur,Dmg,Recoil,Shoot,   Sil,  Part,  Mag, RelDur, ReloadSound, ModifierSet
     DEAGLE ("Desert Eagle",        PISTOL,   293, 0, 1.101, 6,  120, 8,  0,  FIRE_DEAGLE, null,  null, 7,  40,  REL_DEG, PISTOL_1),
     COLT45 ("Colt 45"     ,        PISTOL,   338, 0, 1.40,  5,  120, 8,  0,  FIRE_COLT45, null,  null, 7,  30,  REL_SMALLMAG, PISTOL_1),
     P228   ("P228"        ,        PISTOL,   351, 8, 1.19,  5,  120, 8,  0,  FIRE_P228,   SIL_1, null, 15, 30,  REL_SMALLMAG, PISTOL_2),
