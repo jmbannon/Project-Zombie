@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt.*;
@@ -15,6 +16,7 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Maga
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -22,6 +24,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunMo
  */
 public enum ModifierSet
 {
+    
     /** 
      * Deagle, Colt 45
      */
@@ -201,7 +204,7 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
                        new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC });
 
 
-    
+    static private final HashMap<MaterialData, GunModifier> craftingSet = createCraftingHashMap();
     private final Attatchment[] attatchments;
     private final Barrel[] barrels;
     private final Bolt[] bolts;
@@ -230,13 +233,13 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
     }
     
     public Attatchment[] getAttatchments() { return attatchments; }
-    public Barrel[]          getBarrels()          { return barrels;          }
-    public Bolt[]             getBolts()             { return bolts;             } 
-    public FireMode[]     getFireModes()     { return fireModes;      }
-    public Magazine[]     getMagazines()     { return magazines;      }
-    public Scope[]          getScopes()          { return scopes;           }
-    public Stock[]           getStocks()           { return stocks;            }
-    public GunModifier[] getModifiers()      { return modifiers;       }
+    public Barrel[]          getBarrels()  { return barrels;      }
+    public Bolt[]             getBolts()   { return bolts;        } 
+    public FireMode[]     getFireModes()   { return fireModes;    }
+    public Magazine[]     getMagazines()   { return magazines;    }
+    public Scope[]          getScopes()    { return scopes;       }
+    public Stock[]           getStocks()   { return stocks;       }
+    public GunModifier[] getModifiers()    { return modifiers;    }
     
     public int getCombinationCount()
     {
@@ -269,5 +272,32 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
         
         GunModifier toReturn[] = new GunModifier[mods.size()];
         return mods.toArray(toReturn);
+    }
+    
+    static public HashMap<MaterialData, GunModifier> getCraftingMap()
+    {
+        return craftingSet;
+    }
+    
+    static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
+    {
+        final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
+        for (Attatchment mod : Attatchment.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Barrel mod : Barrel.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Bolt mod : Bolt.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (FireMode mod : FireMode.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Magazine mod : Magazine.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Scope mod : Scope.values())
+            hash.put(mod.getMaterialData(), mod);
+        for (Stock mod : Stock.values())
+            hash.put(mod.getMaterialData(), mod);
+        
+        hash.remove(null);
+        return hash;
     }
 }

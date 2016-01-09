@@ -9,32 +9,47 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
  * @author jbannon
  */
-public class CSVReader
+public final class CSVReader
 {
+    private static Plugin plugin = null;
+    
     private final File file;
     private final String[] values;
     private final ArrayList<ArrayList<String>> data;
     private final int rowCount;
     
-    public CSVReader(final File file,
+    
+    static public void initializePlugin(final Plugin pl)
+    {
+        plugin = pl;
+        if (!pl.getDataFolder().exists())
+            pl.getDataFolder().mkdir();
+    }
+    
+    public CSVReader(final String fileName,
                      final String[] values)
     {
-        this.file = file;
+        this.file = new File(plugin.getDataFolder(), fileName);
         this.values = values;
         this.data = readData();
         if (data != null && data.get(0) != null)
             rowCount = data.get(0).size();
         else
+        {
+            writeBlankCSV();
             rowCount = 0;
+        }
     }
     
     public int getRowCount()
@@ -46,6 +61,9 @@ public class CSVReader
     {
         try
         {
+            if (file == null || !file.exists() || !file.canRead())
+                return null;
+            
             final BufferedReader reader = new BufferedReader(new FileReader(file));
             final ArrayList<ArrayList<String>> toRet = new ArrayList<>();
             boolean firstLine = true;
@@ -129,9 +147,29 @@ public class CSVReader
     private boolean isValidColumn(final int columnNumber)
     {
         return data != null
-                && columnNumber > 0 
-                && columnNumber >= values.length
+                && columnNumber >= 0 
+                && columnNumber < values.length
                 && data.get(columnNumber) != null;
+    }
+    
+    public boolean writeBlankCSV()
+    {
+        try {
+            final FileWriter fw = new FileWriter(file);
+            for (String str : values)
+            {
+                fw.write(str);
+                fw.write(",");
+            }
+            fw.flush();
+            fw.close();
+            return true;
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(CSVReader.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
         
 }

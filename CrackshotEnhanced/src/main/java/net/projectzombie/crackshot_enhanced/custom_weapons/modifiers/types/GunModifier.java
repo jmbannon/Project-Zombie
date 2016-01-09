@@ -6,6 +6,7 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
 import org.bukkit.ChatColor;
+import org.bukkit.material.MaterialData;
 
 
 /**
@@ -23,7 +24,16 @@ public interface GunModifier
      * @return Name of gun modification.
      */
     public String getDisplayName();
+    
+    /**
+     * @return Color of the GunModifier in lore based on rarity.
+     */
     public ChatColor getColor();
+    
+    /**
+     * @return MaterialData of item if craftable. Null otherwise.
+     */
+    public MaterialData getMaterialData();
     
     public boolean isNull();
 }

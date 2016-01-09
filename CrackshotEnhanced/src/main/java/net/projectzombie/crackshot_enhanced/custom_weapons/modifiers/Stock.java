@@ -8,6 +8,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import org.bukkit.ChatColor;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -57,6 +58,11 @@ public enum Stock implements GunModifier, BulletSpreadModifier
     @Override
     public ChatColor getColor() {
         return ChatColor.GREEN;
+    }
+
+    @Override
+    public MaterialData getMaterialData() {
+        return null;
     }
     
 }

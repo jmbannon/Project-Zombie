@@ -9,6 +9,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Bulle
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 import org.bukkit.ChatColor;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -89,5 +90,10 @@ public enum Scope implements Type, GunModifier, BulletSpreadModifier
     @Override
     public ChatColor getColor() {
         return ChatColor.GREEN;
+    }
+
+    @Override
+    public MaterialData getMaterialData() {
+        return null;
     }
 }

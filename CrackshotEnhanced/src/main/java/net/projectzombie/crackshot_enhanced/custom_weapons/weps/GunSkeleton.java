@@ -24,6 +24,7 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Soun
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -136,7 +137,8 @@ public enum GunSkeleton
     public double        getBulletSpread()   { return bulletSpread;   }
     public int           getItemID()         { return itemID;         }
     public int           getItemData()       { return itemData;       }
-    public Material      getItemMaterial()   { return Material.getMaterial(itemID); }
+    public Material      getMaterial()       { return Material.getMaterial(itemID); }
+    public MaterialData  getMaterialData()   { return new MaterialData(itemID, (byte)itemData); }
     public int           getShootDelay()     { return shootDelay;     }
     public int           getMaxDurability()  { return maxDurability;  }
     public double        getDamage()         { return damage;         }

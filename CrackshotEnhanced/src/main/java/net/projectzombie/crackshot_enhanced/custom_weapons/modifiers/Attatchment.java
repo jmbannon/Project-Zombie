@@ -11,6 +11,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritM
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import static org.bukkit.Material.MONSTER_EGG;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -22,18 +25,21 @@ public enum Attatchment implements GunModifier,
                                    CritModifier,
                                    BleedoutModifier
 {
-    NULL_ATTATCHMENT        (0,  null,                          1.0,  0, 0,  0,  0, 0),
-    SUPPRESOR               (10, "Suppressor",                  1.2, -2, 0,  0,  0, 0),
-    INCENDIARY              (10, "Incendiary Rounds",           1.0,  0, 0,  0,  0, 0),
-    CRIT_CHANCE             (20, "Crit Chance Increase",        1.0,  0, .3, 0,  0, 0),
-    CRIT_STRIKE             (20, "Crit Strike Multiplier",      1.0,  0, 0,  .3, 0, 0),
-    BLEEDOUT_INCREASE       (20, "Bleedout Time Increase",      0,    0, 0,  0,  2, 0),
-    BLEEDOUT_DAMAGE_INCREASE(20, "Bleedout Damage Increase",    0,    0, 0,  0,  0, 2);
+    NULL_ATTATCHMENT        (null,        0,  0,  null,                          1.0,  0, 0,  0,  0, 0),
+    SUPPRESOR               (MONSTER_EGG, 50, 10, "Suppressor",                  1.2, -2, 0,  0,  0, 0),
+    INCENDIARY              (MONSTER_EGG, 51, 10, "Incendiary Rounds",           1.0,  0, 0,  0,  0, 0),
+    CRIT_CHANCE             (MONSTER_EGG, 52, 10, "Crit Chance Increase",        1.0,  0, .3, 0,  0, 0),
+    CRIT_STRIKE             (MONSTER_EGG, 54, 20, "Crit Strike Multiplier",      1.0,  0, 0,  .3, 0, 0),
+    BLEEDOUT_INCREASE       (MONSTER_EGG, 55, 20, "Bleedout Time Increase",      0,    0, 0,  0,  2, 0),
+    BLEEDOUT_DAMAGE_INCREASE(MONSTER_EGG, 56, 20, "Bleedout Damage Increase",    0,    0, 0,  0,  0, 2);
     
     private final int price;
     private final String displayName;
+    private final MaterialData materialData;
     
-    Attatchment(final int price,
+    Attatchment(final Material material,
+                final int materialByte,
+                final int price,
                 final String displayname,
                 final double bulletSpreadPercentModifier,
                 final double damageModifier,
@@ -44,6 +50,10 @@ public enum Attatchment implements GunModifier,
     {
         this.price = price;
         this.displayName = displayname;
+        if (material == null)
+            materialData = null;
+        else
+            materialData = new MaterialData(material, (byte)materialByte);
     }
     
     
@@ -57,11 +67,8 @@ public enum Attatchment implements GunModifier,
     @Override public double getCritStrike()             { return 1.1; }
     @Override public double getBleedoutDurationValue()  { return 1.0; }
     @Override public double getBleedoutDamageValue()    { return 1;  }
-    @Override public boolean isNull() { return this.equals(NULL_ATTATCHMENT); }
-
-    @Override
-    public ChatColor getColor() {
-        return ChatColor.GREEN;
-    }
+    @Override public boolean isNull()                   { return this.equals(NULL_ATTATCHMENT); }
+    @Override public ChatColor getColor()               { return ChatColor.GREEN; }
+    @Override public MaterialData getMaterialData()     { return materialData; }
     
 }

@@ -5,8 +5,10 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.crafting;
 
-import java.util.ArrayList;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.CraftableItems;
+
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
@@ -34,48 +36,57 @@ public class Recipes implements Listener
     
     public Recipes()
     {
-        Bukkit.resetRecipes();
+        
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onGunCraft(PrepareItemCraftEvent event)
     {
-        CraftingInventory inv = event.getInventory();
-        GunSkeleton skele = getSkeleton(inv.getResult());
+        System.out.println("is recipe?");
+        
+        CraftingInventory inv    = event.getInventory();
+        GunSkeleton skele        = getSkeleton(inv.getResult());
+        CrackshotGun currentGun  = null;
+        CrackshotGun newGun      = null;
         ItemStack currentGunItem = null;
-        GunModifier mod = null;
-
+        ItemStack newGunItem     = null;
+        GunModifier mod          = null;
+        
         if (skele == null)
             return;
         
         for (ItemStack item : inv.getContents())
         {
-            if (CrackshotLore.isPostShotWeapon(item)
-                || CrackshotLore.isPreShotWeapon(item))
+            if (CrackshotLore.isPostShotWeapon(item) || CrackshotLore.isPreShotWeapon(item))
             {
                 currentGunItem = item;
             }
-            if (CraftableItems.contains(item.getData()))
+            if (ModifierSet.getCraftingMap().containsKey(item.getData()))
             {
-                mod = CraftableItems.getGunModifier(item.getData());
+                mod = ModifierSet.getCraftingMap().get(item.getData());
             }
         }
         
         if (currentGunItem == null || mod == null)
             return;
         
-        CrackshotGun currentGun = Guns.get(currentGunItem);
+        currentGun = Guns.get(currentGunItem);
         if (currentGun == null)
             return;
         
-        CrackshotGun newGun = currentGun.getModifiedGun(mod);
+        newGun = currentGun.getModifiedGun(mod);
         if (newGun == null)
             return;
         
-        ItemStack newGunItem = CrackshotLore.getModifiedGunItem(currentGunItem, newGun);
+        newGunItem = CrackshotLore.getModifiedGunItem(currentGunItem, newGun);
         event.getInventory().setResult(newGunItem);
     }
     
+    /**
+     * Checks to see if the result of the recipe is a skeleton bare ItemStack.
+     * @param result ItemStack in result of crafting inventory.
+     * @return Skeleton if ItemStack is skeleton's bare ItemStack.
+     */
     private GunSkeleton getSkeleton(final ItemStack result)
     {
         for (GunSkeleton skele : GunSkeleton.values())
@@ -100,29 +111,47 @@ public class Recipes implements Listener
     
     
     
-    private void addSkeletonRecipe(final GunSkeleton skele,
-                                   final ArrayList<GunModifier> mods,
-                                   final String shapeTop,
-                                   final String shapeMid,
-                                   final String shapeBot)
+    static public void initializeCraftingRecipes()
     {
-        for (GunModifier mod : mods)
+        for (GunSkeleton skele : GunSkeleton.values())
         {
-            if (!CraftableItems.contains(mod))
-                mods.remove(mod);
-        }
-        
-        if (mods.size() >= 2)
-        {
-            for (GunModifier mod : mods)
-            {
-                ShapedRecipe rec = new ShapedRecipe(skele.getBareItemStack());
-                rec.shape(shapeTop, shapeMid, shapeBot);
-                rec.setIngredient('G', skele.getItemMaterial(), skele.getItemData());
-                rec.setIngredient('X', CraftableItems.getMaterial(mod));
-                Bukkit.getServer().addRecipe(rec);
-            }
+            //intializeScopes(skele);
+            intializeAttatchments(skele);
         }
     }
+    
+    static private void intializeScopes(final GunSkeleton skele)
+    {
+        final ItemStack bareSkeleItemStack = skele.getBareItemStack();
+        for (Scope scope : skele.getModifierSet().getScopes())
+        {
+            if (scope.getMaterialData() != null)
+            {
+                ShapedRecipe scopeRecipe = new ShapedRecipe(bareSkeleItemStack);
+                scopeRecipe.shape(" S ", " G ", "   ")
+                        .setIngredient('S', scope.getMaterialData())
+                        .setIngredient('G', skele.getMaterialData());
+                Bukkit.getServer().addRecipe(scopeRecipe);
+            }
+        }  
+    }
+    
+    static private void intializeAttatchments(final GunSkeleton skele)
+    {
+        final ItemStack bareSkeleItemStack = skele.getBareItemStack();
+        for (Attatchment att : skele.getModifierSet().getAttatchments())
+        {
+            if (att.getMaterialData() != null)
+            {
+                ShapedRecipe attRecipe = new ShapedRecipe(bareSkeleItemStack);
+                attRecipe.shape("   ", " G ", "A  ")
+                        .setIngredient('A', att.getMaterialData())
+                        .setIngredient('G', skele.getMaterialData());
+                Bukkit.getServer().addRecipe(attRecipe);
+            }
+        }  
+    }
+    
+    
     
 }

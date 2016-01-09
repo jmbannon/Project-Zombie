@@ -1,7 +1,8 @@
 package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.crafting.Recipes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment2;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
@@ -19,6 +20,10 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable()
     {
+        // CSVReader.initializePlugin(this);
+        // Attatchment2.buildAttatchments();
+        
+        
         this.windowListener = new BlockBreakListener();
         this.OPexec = new OPCommandExec(this);
         this.getCommand("bw").setExecutor(OPexec);
@@ -36,6 +41,7 @@ public class Main extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(shootListener, this);
         this.getServer().getPluginManager().registerEvents(recipes, this);
 
+        Recipes.initializeCraftingRecipes();
         this.getLogger().info("CrackshotEnhanced enabled!");
 
     }

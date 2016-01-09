@@ -8,6 +8,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import static org.bukkit.Material.MONSTER_EGG;
+import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -15,21 +18,28 @@ import org.bukkit.ChatColor;
  */
 public enum FireMode implements Type, GunModifier
 {
-    SEMI    ("Semi-Auto"),
-    BURST   ("Burst"),
-    AUTO    ("Automatic"),
-    SING    ("Single Shot"),
-    BOLT    ("Bolt-Action"),
-    PUMP    ("Pump-Action"),
-    OVER    ("Over/Under");
+    SEMI    (MONSTER_EGG, 92, "Semi-Auto"),
+    BURST   (MONSTER_EGG, 93, "Burst"),
+    AUTO    (MONSTER_EGG, 94, "Automatic"),
+    SING    (null, 0, "Single Shot"),
+    BOLT    (null, 0, "Bolt-Action"),
+    PUMP    (null, 0, "Pump-Action"),
+    OVER    (null, 0, "Over/Under");
     
     private static final String TITLE = "Fire Mode: ";
 
     private final String displayName;
+    private final MaterialData materialData;
     
-    private FireMode(final String displayName) 
+    private FireMode(final Material material,
+                     final int materialByte,
+                     final String displayName) 
     {
         this.displayName = displayName;
+        if (material == null)
+            this.materialData = null;
+        else
+            this.materialData = new MaterialData(material, (byte)materialByte);
     }
     
     
@@ -57,5 +67,10 @@ public enum FireMode implements Type, GunModifier
     @Override
     public ChatColor getColor() {
         return ChatColor.GREEN;
+    }
+
+    @Override
+    public MaterialData getMaterialData() {
+        return null;
     }
 }
