@@ -7,7 +7,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.material.MaterialData;
 

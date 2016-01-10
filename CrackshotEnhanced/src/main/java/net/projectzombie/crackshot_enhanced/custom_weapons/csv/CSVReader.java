@@ -66,7 +66,8 @@ public final class CSVReader
      * @param linesToSkip Number of lines to skip when reading the CSV.
      */
     public CSVReader(final String fileName,
-                     final int linesToSkip)
+                     final int linesToSkip,
+                     final String template)
     {
         this.file = new File(plugin.getDataFolder(), fileName);
         this.data = readData(false, linesToSkip, null);
@@ -77,8 +78,8 @@ public final class CSVReader
         }
         else
         {
+            writeBlankCSV(template);
             this.rowCount = 0;
-
         }
     }
     
@@ -149,11 +150,15 @@ public final class CSVReader
     {
         final ArrayList<ArrayList<String>> toRet = new ArrayList<>();
         String lineValues[];
+        String line;
         
         for (int i = 0; i < lines.size(); i++)
         {
             toRet.add(new ArrayList<String>());
-            lineValues = lines.get(i).split(",");
+            line = lines.get(i);
+            
+            // Removes the first cell of the CSV
+            lineValues = line.substring(line.indexOf(",")+1, line.length()).split(",");
             toRet.get(i).addAll(Arrays.asList(lineValues));
         }
         
@@ -199,6 +204,19 @@ public final class CSVReader
         return toRet;
     }
     
+    public boolean[] getColumnBoolean(final int columnNumber)
+    {
+        if (!isValidColumn(columnNumber))
+            return null;
+        
+        final boolean[] toRet = new boolean[rowCount];
+        for (int i = 0; i < rowCount; i++)
+        {
+            toRet[i] = Boolean.valueOf(data.get(columnNumber).get(i));
+        }
+        return toRet;
+    }
+    
     public String[] getRowData(final int rowNumber)
     {
         if (!isValidRow(rowNumber))
@@ -238,6 +256,22 @@ public final class CSVReader
                 fw.write(str);
                 fw.write(",");
             }
+            fw.flush();
+            fw.close();
+            return true;
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(CSVReader.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    public boolean writeBlankCSV(final String template)
+    {
+        try {
+            final FileWriter fw = new FileWriter(file);
+            fw.write(template);
             fw.flush();
             fw.close();
             return true;

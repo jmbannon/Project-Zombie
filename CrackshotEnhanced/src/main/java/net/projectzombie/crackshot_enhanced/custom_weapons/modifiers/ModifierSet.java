@@ -7,7 +7,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt.*;
@@ -16,7 +15,6 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Maga
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope.*;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -94,114 +92,114 @@ SEMI_SNIPER_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
            /**
             * Mac10, Ump45, TMP
             */
-           SMG_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
-                 new Barrel[]           { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                 new Bolt[]              { NULL_BOLT },
-                 new FireMode[]      { AUTO, BURST, SEMI },
-                 new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                 new Scope[]           { IRON, RED_IRON, ACOG },
-                 new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
-           
-           /**
-            * MP5, 
-            */
-           SMG_2(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
-                       new Barrel[]           { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]              { NULL_BOLT },
-                       new FireMode[]      { AUTO, BURST, SEMI },
-                       new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                       new Scope[]           { IRON, RED_IRON, ACOG, TACT },
-                       new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
-           
-           /**
-            * P90
-            */
-           SMG_3(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]           { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]              { NULL_BOLT },
-                       new FireMode[]      { AUTO, BURST, SEMI },
-                       new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM, MAG_BAND },
-                       new Scope[]           { IRON, RED_IRON, ACOG },
-                       new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
-           
+SMG_1(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
+      new Barrel[]      { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+      new Bolt[]        { NULL_BOLT },
+      new FireMode[]    { AUTO, BURST, SEMI },
+      new Magazine[]    { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+      new Scope[]       { IRON, RED_IRON, ACOG },
+      new Stock[]       { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
+
+/**
+ * MP5, 
+ */
+SMG_2(new Attatchment[] { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
+            new Barrel[] { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+            new Bolt[]   { NULL_BOLT },
+            new FireMode[]  { AUTO, BURST, SEMI },
+            new Magazine[]  { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+            new Scope[]     { IRON, RED_IRON, ACOG, TACT },
+            new Stock[]    { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
+
+/**
+ * P90
+ */
+SMG_3(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
+            new Barrel[] { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+            new Bolt[]              { NULL_BOLT },
+            new FireMode[]      { AUTO, BURST, SEMI },
+            new Magazine[]      { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM, MAG_BAND },
+            new Scope[]           { IRON, RED_IRON, ACOG },
+            new Stock[]            { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC, ST_FOLDING }),
+
            /**
             * US Assualt Rifles
             * AUG, M16, FAMAS, M4A1
             */
-      ASSUALT_1(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
-                       new Barrel[]             { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { AUTO, BURST, SEMI },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
-                       new Scope[]             { IRON, RED_IRON, ACOG, TACT, LONG },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
-      
-           /**
-            * Foreign
-            * SG, AK, Galil
-            */
-      ASSUALT_2(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { AUTO, BURST, SEMI },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM },
-                       new Scope[]             { IRON, RED_IRON, ACOG, TACT },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
-      
-          /**
-            * SAW
-            */
-      ASSUALT_3(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             {NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { AUTO, BURST, SEMI },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM, MAG_BAND },
-                       new Scope[]             { IRON, RED_IRON, ACOG, TACT },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+ASSUALT_1(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY, SUPPRESOR },
+                 new Barrel[] { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+                 new Bolt[]   { NULL_BOLT },
+                 new FireMode[] { AUTO, BURST, SEMI },
+                 new Magazine[] { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED },
+                 new Scope[]    { IRON, RED_IRON, ACOG, TACT, LONG },
+                 new Stock[]  { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+
+     /**
+      * Foreign
+      * SG, AK, Galil
+      */
+ASSUALT_2(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
+                 new Barrel[] { NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+                 new Bolt[]    { NULL_BOLT },
+                 new FireMode[] { AUTO, BURST, SEMI },
+                 new Magazine[] { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM },
+                 new Scope[]    { IRON, RED_IRON, ACOG, TACT },
+                 new Stock[]  { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+
+    /**
+      * SAW
+      */
+ASSUALT_3(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
+                 new Barrel[]             {NULL_BARREL, THREADED, PRECISION, EXTENDED, SHORT },
+                 new Bolt[]                { NULL_BOLT },
+                 new FireMode[]        { AUTO, BURST, SEMI },
+                 new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM, MAG_BAND },
+                 new Scope[]             { IRON, RED_IRON, ACOG, TACT },
+                 new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
       
       /**
        * Olympia
        */
     SHOTGUN_1(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
+                       new Barrel[] { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
                        new Bolt[]                { NULL_BOLT },
                        new FireMode[]        { SING },
                        new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST },
                        new Scope[]             { IRON, RED_IRON },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+                       new Stock[] { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
     
     /**
      * AA12
      */
     SHOTGUN_2(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { SEMI },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM },
-                       new Scope[]             { IRON, RED_IRON, ACOG },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+                       new Barrel[] { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
+                       new Bolt[]   { NULL_BOLT },
+                       new FireMode[] { SEMI },
+                       new Magazine[] { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_ALTERED, MAG_EXTENDED, MAG_DRUM },
+                       new Scope[]   { IRON, RED_IRON, ACOG },
+                       new Stock[] { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
           
     /**
      * M3
      */
     SHOTGUN_3(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { PUMP },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_UNPLUGGED },
-                       new Scope[]             { IRON, RED_IRON, ACOG },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
+                       new Barrel[] { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
+                       new Bolt[]   { NULL_BOLT },
+                       new FireMode[] { PUMP },
+                       new Magazine[] { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_UNPLUGGED },
+                       new Scope[]  { IRON, RED_IRON, ACOG },
+                       new Stock[] { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC }),
     
     /**
      * XM
      */
     SHOTGUN_4(new Attatchment[]  { NULL_ATTATCHMENT, INCENDIARY },
-                       new Barrel[]             { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
-                       new Bolt[]                { NULL_BOLT },
-                       new FireMode[]        { SEMI },
-                       new Magazine[]        { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_UNPLUGGED },
-                       new Scope[]             { IRON, RED_IRON, ACOG },
-                       new Stock[]              { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC });
+                       new Barrel[] { NULL_BARREL, SMOOTH_BORE, RIFLED, SAWED_OFF },
+                       new Bolt[]    { NULL_BOLT },
+                       new FireMode[] { SEMI },
+                       new Magazine[] { NULL_MAG, MAG_QUICK, MAG_FAST, MAG_UNPLUGGED },
+                       new Scope[]    { IRON, RED_IRON, ACOG },
+                       new Stock[]  { NULL_STOCK, RECOIL_ABS, TACTICAL, FIBERGLASS, SYNTHETIC });
 
 
     private final Attatchment[] attatchments;

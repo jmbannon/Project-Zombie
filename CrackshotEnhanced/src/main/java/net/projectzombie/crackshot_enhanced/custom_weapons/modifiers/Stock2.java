@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
@@ -15,8 +16,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunMo
  */
 public class Stock2 extends GunModifier2 implements BulletSpreadModifier
 {
-    static private final Stock2[] stocks = buildStocks();
-    static private final String STOCK_CSV_NAME = "Scopes.csv";
+    static private Stock2[] stocks = null;
+    static private final String STOCK_CSV_NAME = "Stocks.csv";
     static private final String[] STOCK_VALUES = {
         "display name",
         "material",
@@ -39,25 +40,15 @@ public class Stock2 extends GunModifier2 implements BulletSpreadModifier
         this.bulletSpreadMultiplier = bulletSpreadMultiplier;
     }
 
-    public Stock2()
+    public Stock2() { this(null, null, 0, 0, null, 0); }
+    @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
+    @Override public Stock2[] getAll()        { return stocks; }
+    @Override public Stock2 getNullModifier() { return new Stock2(); }
+    
+    static public void initializeStocks()
     {
-        this(null, null, 0, 0, null, 0);
-    }
-
-    @Override
-    public double getBulletSpreadMultiplier()
-    {
-        return bulletSpreadMultiplier;
-    }
-
-    @Override
-    public GunModifier2[] getAll() {
-        return stocks;
-    }
-
-    @Override
-    public GunModifier2 getNullModifier() {
-        return new Stock2();
+        if (stocks == null)
+            stocks = buildStocks();
     }
     
     static private Stock2[] buildStocks()
@@ -88,7 +79,43 @@ public class Stock2 extends GunModifier2 implements BulletSpreadModifier
                                       colors[i],
                                       bulletSpreadModifier[i]);
         }
-        System.out.println("Initialized " + rowCount + " scopes.");
+        System.out.println("Initialized " + rowCount + " stocks.");
         return toReturn;
+    }
+    
+    @Override
+    public Stock2[] valueOf(final String[] names,
+                               final boolean includeNull)
+    {
+        final Stock2[] values = this.getAll();
+        final Stock2[] toReturn;
+        final ArrayList<Integer> indexes = this.getIndexes(names);
+        final int size = indexes.size();
+        int j = 0;
+        
+        if (size < 1)
+        {
+            if (includeNull)
+                return new Stock2[] { this.getNullModifier() };
+            else
+                return null;
+        }
+        else
+        {
+            if (includeNull)
+            {
+                toReturn = new Stock2[size+1];
+                toReturn[size] = this.getNullModifier();
+            }
+            else
+            {
+                toReturn = new Stock2[size];
+            }
+            for (Integer i : indexes)
+            {
+                toReturn[j++] = values[i];
+            }
+            return toReturn;
+        }
     }
 }

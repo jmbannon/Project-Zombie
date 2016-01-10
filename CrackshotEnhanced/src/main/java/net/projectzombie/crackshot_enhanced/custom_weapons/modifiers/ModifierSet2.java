@@ -6,8 +6,8 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 
 /**
@@ -16,27 +16,29 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunMo
  */
 public class ModifierSet2
 {
+    static private final String MODIFIER_SET_CSV_TEMPLATE = "Example Set\nAttatchments:,someAttatchment\nBarrels:\nBolts:\nFireModes:\nMagazines:\nScopes:\nStocks\n---------";
     static private final String MODIFIER_SET_CSV_NAME = "ModifierSet.csv";
     static private final int LINES_PER_SET = 9;
+    private static ModifierSet2[] modifierSets = null;
     
     private final String name;
-    private final ArrayList<Attatchment> attatchments;
-    private final ArrayList<Barrel> barrels;
-    private final ArrayList<Bolt> bolts;
-    private final ArrayList<FireMode> fireModes;
-    private final ArrayList<Magazine> magazines;
-    private final ArrayList<Scope> scopes;
-    private final ArrayList<Stock> stocks;
-    private final GunModifier[] modifiers;
+    private final Attatchment2[] attatchments;
+    private final Barrel2[] barrels;
+    private final Bolt2[] bolts;
+    private final FireMode2[] fireModes;
+    private final Magazine2[] magazines;
+    private final Scope2[] scopes;
+    private final Stock2[] stocks;
+    private final GunModifier2[] modifiers;
     
     private ModifierSet2(final String name,
-                        final ArrayList<Attatchment> attatchments,
-                        final ArrayList<Barrel> barrels,
-                        final ArrayList<Bolt> bolts,
-                        final ArrayList<FireMode> fireModes,
-                        final ArrayList<Magazine> magazines,
-                        final ArrayList<Scope> scopes,
-                        final ArrayList<Stock> stocks)
+                        final Attatchment2[] attatchments,
+                        final Barrel2[] barrels,
+                        final Bolt2[] bolts,
+                        final FireMode2[] fireModes,
+                        final Magazine2[] magazines,
+                        final Scope2[] scopes,
+                        final Stock2[] stocks)
     {
         this.name = name;
         this.attatchments = attatchments;
@@ -49,19 +51,19 @@ public class ModifierSet2
         this.modifiers = constructGunModifierArray();
     }
     
-    public ArrayList<Attatchment> getAttatchments() { return attatchments; }
-    public ArrayList<Barrel>          getBarrels()  { return barrels;      }
-    public ArrayList<Bolt>             getBolts()   { return bolts;        } 
-    public ArrayList<FireMode>     getFireModes()   { return fireModes;    }
-    public ArrayList<Magazine>     getMagazines()   { return magazines;    }
-    public ArrayList<Scope>          getScopes()    { return scopes;       }
-    public ArrayList<Stock>           getStocks()   { return stocks;       }
-    public GunModifier[] getModifiers()    { return modifiers;    }
+    public Attatchment2[] getAttatchments() { return attatchments; }
+    public Barrel2[]          getBarrels()  { return barrels;      }
+    public Bolt2[]             getBolts()   { return bolts;        } 
+    public FireMode2[]     getFireModes()   { return fireModes;    }
+    public Magazine2[]     getMagazines()   { return magazines;    }
+    public Scope2[]          getScopes()    { return scopes;       }
+    public Stock2[]           getStocks()   { return stocks;       }
+    public GunModifier2[] getModifiers()    { return modifiers;    }
     
     public int getCombinationCount()
     {
-        return attatchments.size() * barrels.size() * bolts.size() * fireModes.size() 
-                * magazines.size() * scopes.size() * stocks.size();
+        return attatchments.length * barrels.length * bolts.length * fireModes.length
+                * magazines.length * scopes.length * stocks.length;
     }
     
     /**
@@ -76,36 +78,41 @@ public class ModifierSet2
     /**
      * @return An array of all the modifiers within the set.
      */   
-    private GunModifier[] constructGunModifierArray()
+    private GunModifier2[] constructGunModifierArray()
     {
-        final ArrayList<GunModifier> mods = new ArrayList<>();
-        mods.addAll(attatchments);
-        mods.addAll(barrels);
-        mods.addAll(bolts);
-        mods.addAll(fireModes);
-        mods.addAll(magazines);
-        mods.addAll(scopes);
-        mods.addAll(stocks);
+        final ArrayList<GunModifier2> mods = new ArrayList<>();
+        mods.addAll(Arrays.asList(attatchments));
+        mods.addAll(Arrays.asList(barrels));
+        mods.addAll(Arrays.asList(bolts));
+        mods.addAll(Arrays.asList(fireModes));
+        mods.addAll(Arrays.asList(magazines));
+        mods.addAll(Arrays.asList(scopes));
+        mods.addAll(Arrays.asList(stocks));
         
-        GunModifier toReturn[] = new GunModifier[mods.size()];
-        return mods.toArray(toReturn);
+        return mods.toArray(new GunModifier2[mods.size()]);
     }
     
-    
-    static public ModifierSet2[] initializeModifierSet()
+    static public void initializeModifierSets()
     {
-        final CSVReader csv = new CSVReader(MODIFIER_SET_CSV_NAME, LINES_PER_SET);
+        if (modifierSets == null)
+            modifierSets = initializeModifierSet();
+    }
+    
+    static private ModifierSet2[] initializeModifierSet()
+    {
+        final CSVReader csv = new CSVReader(MODIFIER_SET_CSV_NAME, LINES_PER_SET, MODIFIER_SET_CSV_TEMPLATE);
         final int rowCount = csv.getRowCount();
-        GunModifier2 temp;
+        final ArrayList<ModifierSet2> toReturn = new ArrayList<>();
+        ModifierSet2 temp;
         
         String[]       name;
         Attatchment2[] attatchments;
         Barrel2[]      barrels;
         Bolt2[]        bolts;
-        FireMode[]     fireModes;
-        Magazine[]     magazines;
-        Scope[]        scopes;
-        Stock[]        stocks;
+        FireMode2[]    fireModes;
+        Magazine2[]    magazines;
+        Scope2[]       scopes;
+        Stock2[]       stocks;
         
         if (rowCount % LINES_PER_SET != 0)
             return null;
@@ -113,29 +120,53 @@ public class ModifierSet2
         for (int i = 0; i < rowCount; i += 9)
         {
             name         = csv.getRowData(i);
-            attatchments = (Attatchment2[])new Attatchment2().valueOf(csv.getRowData(i+1));
-            barrels      = (Barrel2[])new Barrel2().valueOf(csv.getRowData(i+2));
-            bolts        = (Bolt2[])new Bolt2().valueOf(csv.getRowData(i+3));
-            fireModes    = csv.getRowData(i+4);
-            magazines    = csv.getRowData(i+5);
-            scopes       = csv.getRowData(i+6);
-            stocks       = csv.getRowData(i+7);
+            attatchments = new Attatchment2().valueOf(csv.getRowData(i+1), true);
+            barrels      = new Barrel2().valueOf(csv.getRowData(i+2), true);
+            bolts        = new Bolt2().valueOf(csv.getRowData(i+3), true);
+            fireModes    = new FireMode2().valueOf(csv.getRowData(i+4), false);
+            magazines    = new Magazine2().valueOf(csv.getRowData(i+5), true);
+            scopes       = new Scope2().valueOf(csv.getRowData(i+6), true);
+            stocks       = new Stock2().valueOf(csv.getRowData(i+7), true);
+            
+            temp = createModifierSet(name, attatchments, barrels, bolts, fireModes, magazines, scopes, stocks);
+            if (temp != null)
+                toReturn.add(temp);
         }
+        
+        System.out.println("Initialized " + toReturn.size() + " modifier sets");
+        return toReturn.toArray(new ModifierSet2[toReturn.size()]);
     }
     
-    static private ModifierSet2 createModifierSet(String[] name,
-                                                  String[] attatchments,
-                                                  String[] barrels,
-                                                  String[] bolts,
-                                                  String[] fireModes,
-                                                  String[] magazines,
-                                                  String[] scopes,
-                                                  String[] stocks)
+    static private ModifierSet2 createModifierSet(String[] nameArray,
+                                                  Attatchment2[] attatchments,
+                                                  Barrel2[] barrels,
+                                                  Bolt2[] bolts,
+                                                  FireMode2[] fireModes,
+                                                  Magazine2[] magazines,
+                                                  Scope2[] scopes,
+                                                  Stock2[] stocks)
     {
-        final String setName;
-        if (name.length != 1)
+        if (nameArray.length != 1
+                || attatchments.length < 1
+                || barrels.length < 1
+                || bolts.length < 1
+                || fireModes.length < 1
+                || magazines.length < 1
+                || scopes.length < 1
+                || stocks.length < 1)
+        {
             return null;
-        
-        setName = name[0];
+        }
+        else
+        {
+            return new ModifierSet2(nameArray[0],
+                                    attatchments,
+                                    barrels,
+                                    bolts,
+                                    fireModes,
+                                    magazines,
+                                    scopes,
+                                    stocks);
+        }
     }
 }

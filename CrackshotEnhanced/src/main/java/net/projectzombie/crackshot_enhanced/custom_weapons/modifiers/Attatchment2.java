@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
@@ -21,7 +22,7 @@ public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier,
                                                           BleedoutModifier
 {
     
-    static private final Attatchment2[] attatchments = buildAttatchments();
+    static private Attatchment2[] attatchments = null;
     static private final String ATTATCHMENT_CSV_NAME = "Attatchments.csv";
     static private final String[] ATTATCHMENT_VALUES = {
         "display name",
@@ -37,20 +38,32 @@ public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier,
         "bleedout damage"
     };
     
+    private final double bulletSpreadMultiplier;
+    private final double damageMultiplier;
+    private final double critChanceBoost;
+    private final double critStrikeMultiplier;
+    private final double bleedoutDurationSeconds;
+    private final double bleedoutDamageBoost;
     
     public Attatchment2(final String displayname,
                  final String materialName,
                  final int materialByte,
                  final int price,
                  final String color,
-                 final double bulletSpreadPercentModifier,
-                 final double damageModifier,
+                 final double bulletSpreadMultiplier,
+                 final double damageMultiplier,
                  final double critChanceBoost,
-                 final double critMultiplierBoost,
+                 final double critStrikeMultiplier,
                  final double bleedoutDurationSeconds,
                  final double bleedoutDamageBoost)
     {        
         super(displayname, materialName, materialByte, price, color);
+        this.bulletSpreadMultiplier = bulletSpreadMultiplier;
+        this.damageMultiplier = damageMultiplier;
+        this.critChanceBoost = critChanceBoost;
+        this.critStrikeMultiplier = critStrikeMultiplier;
+        this.bleedoutDurationSeconds = bleedoutDurationSeconds;
+        this.bleedoutDamageBoost = bleedoutDamageBoost;
     }
     
     /**
@@ -62,14 +75,20 @@ public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier,
     }
     
     @Override public double getDamageValue()            { return 0;           }
-    @Override public double getDamageMultiplier()       { return 1.0;         }
-    @Override public double getBulletSpreadMultiplier() { return 1.0; }
-    @Override public double getCritChance()             { return 1.2; }
-    @Override public double getCritStrike()             { return 1.1; }
-    @Override public double getBleedoutDurationValue()  { return 1.0; }
-    @Override public double getBleedoutDamageValue()    { return 1;  }
+    @Override public double getDamageMultiplier()       { return damageMultiplier; }
+    @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
+    @Override public double getCritChance()             { return critChanceBoost; }
+    @Override public double getCritStrike()             { return critStrikeMultiplier; }
+    @Override public double getBleedoutDurationValue()  { return bleedoutDurationSeconds; }
+    @Override public double getBleedoutDamageValue()    { return bleedoutDamageBoost;  }
     @Override public Attatchment2[] getAll()            { return attatchments; }
     @Override public Attatchment2 getNullModifier()     { return new Attatchment2(); }
+    
+    static public void initializeAttatchments()
+    {
+        if (attatchments == null)
+            attatchments = buildAttatchments();
+    }
     
     static private Attatchment2[] buildAttatchments()
     {
@@ -113,7 +132,39 @@ public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier,
         return toReturn;
     }
 
-
-
-    
+    @Override
+    public Attatchment2[] valueOf(final String[] names,
+                                  final boolean includeNull)
+    {
+        final Attatchment2[] values = this.getAll();
+        final Attatchment2[] toReturn;
+        final ArrayList<Integer> indexes = this.getIndexes(names);
+        final int size = indexes.size();
+        int j = 0;
+        
+        if (size < 1)
+        {
+            if (includeNull)
+                return new Attatchment2[] { this.getNullModifier() };
+            else
+                return null;
+        }
+        else
+        {
+            if (includeNull)
+            {
+                toReturn = new Attatchment2[size+1];
+                toReturn[size] = this.getNullModifier();
+            }
+            else
+            {
+                toReturn = new Attatchment2[size];
+            }
+            for (Integer i : indexes)
+            {
+                toReturn[j++] = values[i];
+            }
+            return toReturn;
+        }
+    }
 }

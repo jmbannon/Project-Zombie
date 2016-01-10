@@ -3,6 +3,13 @@ package net.projectzombie.crackshot_enhanced.main;
 import net.projectzombie.crackshot_enhanced.custom_weapons.crafting.Recipes;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock2;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
@@ -20,8 +27,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable()
     {
-        // CSVReader.initializePlugin(this);
-        // Attatchment2.buildAttatchments();
+        initializeGuns();
         
         
         this.windowListener = new BlockBreakListener();
@@ -51,5 +57,18 @@ public class Main extends JavaPlugin {
     {
         this.scopeListener.disable();
         this.getLogger().info("CrackshotEnhanced disabled.");
+    }
+    
+    private void initializeGuns()
+    {
+        CSVReader.initializePlugin(this);
+        Attatchment2.initializeAttatchments();
+        Barrel2.initializeBarrels();
+        Bolt2.initializeBolts();
+        FireMode2.initializeFireModes();
+        Magazine2.initializeFireModes();
+        Scope2.initializeScopes();
+        Stock2.initializeStocks();
+        ModifierSet2.initializeModifierSets();
     }
 }

@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
@@ -15,7 +16,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Magaz
  */
 public class Magazine2 extends GunModifier2 implements MagazineModifier
 {
-    static private final Magazine2[] magazines = buildMagazines();
+    static private Magazine2[] magazines = null;
     static private final String MAGAZINES_CSV_NAME = "Magazines.csv";
     static private final String[] MAGAZINE_VALUES = {
         "display name",
@@ -50,8 +51,14 @@ public class Magazine2 extends GunModifier2 implements MagazineModifier
     
     @Override public int getMagazineBoost()            { return magazineBoost; }
     @Override public double getReloadSpeedMultiplier() { return reloadSpeedMultiplier; }
-    @Override public GunModifier2[] getAll() { return magazines; }
-    @Override public GunModifier2 getNullModifier() { return new Magazine2(); }
+    @Override public Magazine2[] getAll() { return magazines; }
+    @Override public Magazine2 getNullModifier() { return new Magazine2(); }
+    
+    static public void initializeFireModes()
+    {
+        if (magazines == null)
+            magazines = buildMagazines();
+    }
     
     static private Magazine2[] buildMagazines()
     {
@@ -85,5 +92,41 @@ public class Magazine2 extends GunModifier2 implements MagazineModifier
         }
         System.out.println("Initialized " + rowCount + " magazines.");
         return toReturn;
+    }
+    
+    @Override
+    public Magazine2[] valueOf(final String[] names,
+                               final boolean includeNull)
+    {
+        final Magazine2[] values = this.getAll();
+        final Magazine2[] toReturn;
+        final ArrayList<Integer> indexes = this.getIndexes(names);
+        final int size = indexes.size();
+        int j = 0;
+        
+        if (size < 1)
+        {
+            if (includeNull)
+                return new Magazine2[] { this.getNullModifier() };
+            else
+                return null;
+        }
+        else
+        {
+            if (includeNull)
+            {
+                toReturn = new Magazine2[size+1];
+                toReturn[size] = this.getNullModifier();
+            }
+            else
+            {
+                toReturn = new Magazine2[size];
+            }
+            for (Integer i : indexes)
+            {
+                toReturn[j++] = values[i];
+            }
+            return toReturn;
+        }
     }
 }

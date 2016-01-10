@@ -5,18 +5,18 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ScopeModifier;
 
 /**
  *
  * @author jbannon
  */
-public class Scope2 extends GunModifier2 implements BulletSpreadModifier, ScopeModifier
+public class Scope2 extends GunModifier2 implements BulletSpreadModifier
 {
-    static private final Scope2[] scopes = buildScopes();
+    static private Scope2[] scopes = null;
     static private final String SCOPE_CSV_NAME = "Scopes.csv";
     static private final String[] SCOPE_VALUES = {
         "display name",
@@ -49,10 +49,16 @@ public class Scope2 extends GunModifier2 implements BulletSpreadModifier, ScopeM
         this(null, null, 0, 0, null, 0, 0);
     }
     
-    @Override public int getZoomAmount()                { return zoomAmount;  }
+    public int getZoomAmount()                { return zoomAmount;  }
     @Override public double getBulletSpreadMultiplier() { return 1.0; }
-    @Override public GunModifier2[] getAll() { return scopes;  }
-    @Override  public GunModifier2 getNullModifier() { return new Scope2(); }
+    @Override public Scope2[] getAll() { return scopes;  }
+    @Override  public Scope2 getNullModifier() { return new Scope2(); }
+    
+    static public void initializeScopes()
+    {
+        if (scopes == null)
+            scopes = buildScopes();
+    }
     
     static private Scope2[] buildScopes()
     {
@@ -86,5 +92,41 @@ public class Scope2 extends GunModifier2 implements BulletSpreadModifier, ScopeM
         }
         System.out.println("Initialized " + rowCount + " scopes.");
         return toReturn;
+    }
+    
+    @Override
+    public Scope2[] valueOf(final String[] names,
+                               final boolean includeNull)
+    {
+        final Scope2[] values = this.getAll();
+        final Scope2[] toReturn;
+        final ArrayList<Integer> indexes = this.getIndexes(names);
+        final int size = indexes.size();
+        int j = 0;
+        
+        if (size < 1)
+        {
+            if (includeNull)
+                return new Scope2[] { this.getNullModifier() };
+            else
+                return null;
+        }
+        else
+        {
+            if (includeNull)
+            {
+                toReturn = new Scope2[size+1];
+                toReturn[size] = this.getNullModifier();
+            }
+            else
+            {
+                toReturn = new Scope2[size];
+            }
+            for (Integer i : indexes)
+            {
+                toReturn[j++] = values[i];
+            }
+            return toReturn;
+        }
     }
 }
