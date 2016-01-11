@@ -14,12 +14,12 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Soun
  */
 public enum FirearmAction
 {
-    SNIPER_BOLT  ("bolt",  BOLT_OPEN, BOLT_CLOSE,    20, 16, 6,  false),
+    SNIPER_BOLT  ("bolt",  BOLT_OPEN, BOLT_CLOSE,  20, 16, 6,  false),
     HUNTING_BOLT ("bolt",  BOLT_OPEN, BOLT_CLOSE,  20, 16, 6,  true),
-    SMG_SLIDE    ("slide", null,      null,                           0,  7,  11, false),
-    SLIDE        ("slide", null,      null,                                0,  10, 12, false),
-    BREAK        ("break", REL_BREAK, REL_BREAK,          0,  12, 12, true),
-    PUMP         ("pump",  REL_BREAK, REL_PUMP,           0,  12, 12, true);
+    SMG_SLIDE    ("slide", null,      null,        0,  7,  11, false),
+    SLIDE        ("slide", null,      null,        0,  10, 12, false),
+    BREAK        ("break", REL_BREAK, REL_BREAK,   0,  12, 12, true),
+    PUMP         ("pump",  REL_BREAK, REL_PUMP,    0,  12, 12, true);
     
     //Action, SoundOpen, SoundClose, delay, open, close
     private final String soundOpen, soundClose;

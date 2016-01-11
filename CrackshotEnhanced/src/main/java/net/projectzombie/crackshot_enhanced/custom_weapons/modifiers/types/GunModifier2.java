@@ -5,7 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
-import java.util.ArrayList;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
@@ -14,9 +14,8 @@ import org.bukkit.material.MaterialData;
  *
  * @author jesse
  */
-public abstract class GunModifier2
+public abstract class GunModifier2 extends CSVValue
 {
-    private final String name;
     private final Material material;
     private final int materialData;
     private final int price;
@@ -28,17 +27,12 @@ public abstract class GunModifier2
                         final int price,
                         final String color)
     {
-        this.name = name;
+        super(name);
         this.materialData = materialData;
         this.price = price;
-        this.material = matchMaterial(material);
-        this.color = matchChatColor(color);
+        this.material = GunUtils.matchMaterial(material);
+        this.color = GunUtils.matchChatColor(color);
     }
-    
-    /**
-     * @return Returns all values of the associated gun modifier. 
-     */
-    abstract public GunModifier2[] getAll();
     
     /**
      * @return Returns the null modifier.
@@ -51,14 +45,6 @@ public abstract class GunModifier2
     public int price()
     {
         return price;
-    }
-    
-    /**
-     * @return Name of gun modification.
-     */
-    public String getDisplayName()
-    {
-        return name;
     }
     
     /**
@@ -83,70 +69,5 @@ public abstract class GunModifier2
     public boolean isNull()
     {
         return this.equals(this.getNullModifier());
-    }
-    
-    public boolean isModifier(final String name)
-    {
-        if (name == null)
-            return false;
-        
-        for (GunModifier2 mod : getAll())
-        {
-            if (mod == null || mod.name == null)
-                continue;
-            
-            if (mod.name.equalsIgnoreCase(name))
-                return true;
-        }
-        return false;
-    }
-    
-    public abstract GunModifier2[] valueOf(final String names[],
-                                           final boolean includeNull);
-    
-    /**
-     * @param names Names to retrieve.
-     * @return ArrayList of the indexes at which they appear in the child's set of modifiers.
-     */
-    public ArrayList<Integer> getIndexes(final String names[])
-    {
-        final ArrayList<Integer> toReturn = new ArrayList<>();
-        int validModifiers = 0;
-        GunModifier2 temp;
-        
-        for (int i = 0; i < names.length; i++)
-        {
-            if (isModifier(names[i]))
-                toReturn.add(i);
-            else
-            {
-                System.out.println("Could not find modifier '" + names[i] + "'");
-            }
-        }
-        return toReturn;
-    }
-    
-    static private ChatColor matchChatColor(final String string)
-    {
-        if (string == null)
-            return null;
-        
-        ChatColor colors[] = ChatColor.values();
-        for (ChatColor color : colors)
-        {
-            if (color.toString().equalsIgnoreCase(string))
-            {
-                return color;
-            }
-        }
-        return null;
-    }
-    
-    static private Material matchMaterial(final String string)
-    {
-        if (string == null)
-            return null;
-        
-        return Material.matchMaterial(string);
     }
 }

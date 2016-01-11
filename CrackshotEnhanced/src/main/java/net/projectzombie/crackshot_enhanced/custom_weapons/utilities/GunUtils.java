@@ -11,6 +11,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
 /**
  *
@@ -82,5 +84,63 @@ public class GunUtils
             }
         }
         return mods;
+    }
+    
+    /**
+     * Attempts to match a string with a ChatColor enum.
+     * @param string Name of ChatColor.
+     * @return ChatColor if matches. Null otherwise.
+     */
+    static
+    public ChatColor matchChatColor(final String string)
+    {
+        if (string == null)
+            return null;
+        
+        ChatColor colors[] = ChatColor.values();
+        for (ChatColor color : colors)
+        {
+            if (color.toString().equalsIgnoreCase(string))
+            {
+                return color;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Attempts to match a string with a Material enum.
+     * @param string Name of Material.
+     * @return Material if matches. Null otherwise.
+     */
+    static
+    public Material matchMaterial(final String string)
+    {
+        if (string == null)
+            return null;
+        
+        return Material.matchMaterial(string);
+    }
+    
+    /**
+     * Attempts to match a string with a Sounds enum.
+     * @param string Name of Sounds enum.
+     * @return Sounds enum if matches. Null otherwise.
+     */
+    static
+    public Sounds matchSound(final String string)
+    {
+        if (string == null)
+            return null;
+        
+        Sounds sounds[] = Sounds.values();
+        for (Sounds sound : sounds)
+        {
+            if (sound.toString().equalsIgnoreCase(string))
+            {
+                return sound;
+            }
+        }
+        return null;
     }
 }

@@ -272,7 +272,7 @@ public class CrackshotLore
     static
     private String buildAmmoLore(final CrackshotGun gun)
     {
-        return buildLoreString(Weapon.getTitle(), gun.getWeaponType().toString());
+        return buildLoreString("Ammo: ", gun.getWeaponType().toString());
     }
     
     static
@@ -285,7 +285,7 @@ public class CrackshotLore
                 wepType.getAccuracyValue(gun.getInitBulletSpread() * Build.getBuildType(build).getScalar(),
                                                         gun.getConditionInt(durability)) : "n/a";
         
-        return buildLoreString(wepType.getAccuracyTitle(), accuracyString);
+        return buildLoreString("Accuracy: ", accuracyString);
     }
     
     static

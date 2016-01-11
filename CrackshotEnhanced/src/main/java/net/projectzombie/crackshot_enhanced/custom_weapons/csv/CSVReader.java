@@ -64,6 +64,7 @@ public final class CSVReader
      * Reads a CSV in the plugin data folder row-wise.
      * @param fileName Name of the file.
      * @param linesToSkip Number of lines to skip when reading the CSV.
+     * @param template If the file doesn't exist, use template to write the default CSV.
      */
     public CSVReader(final String fileName,
                      final int linesToSkip,
@@ -150,15 +151,12 @@ public final class CSVReader
     {
         final ArrayList<ArrayList<String>> toRet = new ArrayList<>();
         String lineValues[];
-        String line;
         
         for (int i = 0; i < lines.size(); i++)
         {
             toRet.add(new ArrayList<String>());
-            line = lines.get(i);
             
-            // Removes the first cell of the CSV
-            lineValues = line.substring(line.indexOf(",")+1, line.length()).split(",");
+            lineValues = lines.get(i).split(",");
             toRet.get(i).addAll(Arrays.asList(lineValues));
         }
         
@@ -217,16 +215,16 @@ public final class CSVReader
         return toRet;
     }
     
-    public String[] getRowData(final int rowNumber)
+    public String[] getRowString(final int rowNumber)
     {
         if (!isValidRow(rowNumber))
             return null;
         
         final ArrayList<String> rowData = data.get(rowNumber);
-        final String[] toRet = new String[rowData.size()];
-        for (int i = 0; i < rowData.size(); i++)
+        final String[] toRet = new String[rowData.size() - 1];
+        for (int i = 0; i < rowData.size() - 1; i++)
         {
-            toRet[i] = rowData.get(i);
+            toRet[i] = rowData.get(i + 1);
         }
         return toRet;
     }
@@ -244,7 +242,8 @@ public final class CSVReader
         return data != null
                 && rowNumber >= 0
                 && rowNumber < rowCount
-                && data.get(rowNumber) != null;
+                && data.get(rowNumber) != null
+                && data.get(rowNumber).size() >= 1;
     }
     
     public boolean writeBlankCSV(final String[] values)

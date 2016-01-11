@@ -6,7 +6,6 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
 import static net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction.*;
-import org.bukkit.ChatColor;
 
 /**
  *
@@ -14,7 +13,7 @@ import org.bukkit.ChatColor;
  * 
  * 
  */
-public enum Weapon implements Type
+public enum Weapon
 {
     PISTOL    (null,         2,  1.1, 90,  0.450, "Pistol Bullets",        372, 0),
     REVOLVER  (null,         2,  1.3, 150, 1.376, "Revolver Rounds",       351, 0),
@@ -26,18 +25,16 @@ public enum Weapon implements Type
     ASSAULT   (SLIDE,        2, 1.6, 180, 0.846, "Assault Rifle Bullets", 361, 0),
     AUTO_S    (SLIDE,        2, 2.4, 230, 1.124, "Auto-Sniper Rounds",    351, 1),
     SNIPER    (SNIPER_BOLT,  3, 2.7, 250, 2.105, "Sniper Bullets",        337, 0);
-    
-    private static final String TITLE = "Ammo: ";
-    
-    protected static final ChatColor STAT_COLOR = ChatColor.DARK_RED;
-    protected static final ChatColor VALUE_COLOR = ChatColor.GOLD;
-    
-    private final int projectileAmount, ammoID, ammoData;
-    private final double repairPriceWeight, upgradePriceWeight, bulletSpreadWeight;
-    private final String ammoValue;
+
     private final FirearmAction action;
+    private final int projectileAmount;
+    private final int ammoID;
+    private final int ammoData;
+    private final double repairPriceWeight;
+    private final double upgradePriceWeight;
+    private final double bulletSpreadWeight;
+    private final String ammoValue;
     
-    private static final Double ACCURACY_WEIGHT = 25.3487;
     
     /**
      * Initializes the weapon type and numbers needed for bullet spread
@@ -67,15 +64,12 @@ public enum Weapon implements Type
         this.ammoData = ammoData;
     }
     
-    public static String getTitle()              { return TITLE;              }
     public FirearmAction getAction()             { return action;             }
     public int           getProjectileAmount()   { return projectileAmount;   }
     public double        getRepairPriceWeight()  { return repairPriceWeight;  }
     public double        getUpgradePriceWeight() { return upgradePriceWeight; }
     public int           getAmmoID()             { return ammoID;             }
     public int           getAmmoData()           { return ammoData;           }
-    
-    @Override public String toString()           { return ammoValue;          }
     
     /**
      * Gets the bullet spread to be set for the event.
@@ -90,11 +84,6 @@ public enum Weapon implements Type
         return eventBulletSpread + (eventBulletSpread * bulletSpreadWeight/(double)condition);
     }
     
-    public String getAccuracyTitle()
-    {
-        return (this.equals(SH_BREAK) || this.equals(SH_SLIDE)) ? "BB Spread: " : "Accuracy: ";
-    }
-    
     /**
      * Returns the accuracy to be shown in the lore for the weapon.
      * 
@@ -107,19 +96,6 @@ public enum Weapon implements Type
     {
         double eventBulletSpread = getBulletSpread(CSBulletSpread, condition);
         return String.valueOf(Math.round(10 * eventBulletSpread / Math.pow(eventBulletSpread, 2.0)));
-//        return (this.equals(SH_BREAK) || this.equals(SH_SLIDE)) ?
-//            String.format("%.1f", getAccuracyPercentage(CSBulletSpread, condition)/2)
-//                : String.format("%.2f%%", getAccuracyPercentage(CSBulletSpread, condition));
     }
    
-    private double getAccuracyPercentage(final double CSBulletSpread,
-                                         final int condition)
-    {
-        return ((double)100 - (ACCURACY_WEIGHT * getBulletSpread(CSBulletSpread, condition)));
-    }
-
-    @Override
-    public String title() {
-        return TITLE;
-    }
 }
