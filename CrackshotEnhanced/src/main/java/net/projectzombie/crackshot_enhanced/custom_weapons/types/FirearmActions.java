@@ -5,11 +5,9 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
 
 
 /**
@@ -38,57 +36,12 @@ public class FirearmActions extends CSVInput
         "Individual Bullets (T/F)",
     };
     
-    private final FirearmAction2[] firearmActions;
     private FirearmActions()
     {
-        super(ACTIONS_CSV_NAME, ACTION_VALUES);
-        this.firearmActions = buildFirearmActions();
+        super(ACTIONS_CSV_NAME, buildFirearmActions(), ACTION_VALUES);
     }
     
-    @Override
-    public FirearmAction2[] getAll()
-    {
-        return firearmActions;
-    }
-
-    @Override
-    public FirearmAction2[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public FirearmAction2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return firearmActions[index];
-    }
-
-    @Override
-    public FirearmAction2[] get(final String[] names,
-                        final boolean includeNull)
-    {
-        final FirearmAction2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            toReturn = new FirearmAction2[indexes.size()];
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = firearmActions[i];
-            }
-            return toReturn;
-        }
-    }
-    
-    private FirearmAction2[] buildFirearmActions()
+    static private FirearmAction2[] buildFirearmActions()
     {
         final CSVReader csv = new CSVReader(ACTIONS_CSV_NAME, ACTION_VALUES);
         final int rowCount = csv.getRowCount();
@@ -124,7 +77,7 @@ public class FirearmActions extends CSVInput
         return toReturn;
     }
 
-    public class FirearmAction2 extends CSVValue
+    static public class FirearmAction2 extends CSVValue
     {
         private final String type;
         private final String soundOpen;

@@ -5,11 +5,9 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 
 /**
@@ -36,62 +34,22 @@ public class Stocks extends CSVInput
         "bullet spread multiplier"
     };
     
-    private Stock2[] stocks;
-    
     private Stocks()
     {
-        super(STOCK_CSV_NAME, STOCK_VALUES);
-        this.stocks = buildStocks();
+        super(STOCK_CSV_NAME, buildStocks(), STOCK_VALUES);
     }
     
     @Override
-    public Stock2[] getAll()
+    public Stock2 getNullValue()
     {
-        return stocks;
-    }
-
-    @Override
-    public Stock2[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public Stock2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return stocks[index];
-    }
-
-    @Override
-    public Stock2[] get(final String[] names,
-                        final boolean includeNull)
-    {
-        final Stock2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            toReturn = new Stock2[indexes.size()];
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = stocks[i];
-            }
-            return toReturn;
-        }
+        return new Stock2();
     }
     
     /**
      * Builds all stocks, if any. Allowed to not have any in CSV.
      * @return Array of all stocks (including null stock).
      */
-    private Stock2[] buildStocks()
+    static private Stock2[] buildStocks()
     {
         final CSVReader csv = new CSVReader(STOCK_CSV_NAME, STOCK_VALUES);
         final int rowCount = csv.getRowCount();
@@ -124,10 +82,8 @@ public class Stocks extends CSVInput
         return toReturn;
     }
     
-    public class Stock2 extends GunModifier2 implements BulletSpreadModifier
+    static public class Stock2 extends GunModifier2 implements BulletSpreadModifier
     {
-        
-
         private final double bulletSpreadMultiplier;
 
         private Stock2(final String displayName,
@@ -141,8 +97,9 @@ public class Stocks extends CSVInput
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
         }
 
-        public Stock2() { this(null, null, 0, 0, null, 0); }
+        private Stock2() { this(null, null, 0, 0, null, 0); }
+        
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
-        @Override public Stock2 getNullModifier() { return new Stock2(); }
+        @Override public Stock2 getNullModifier() { return singleton.getNullValue(); }
     }
 }

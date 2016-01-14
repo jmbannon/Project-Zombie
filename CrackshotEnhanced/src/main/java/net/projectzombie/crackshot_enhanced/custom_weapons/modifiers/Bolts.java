@@ -5,17 +5,17 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 
 /**
  *
  * @author jesse
  */
-public class Bolts extends CSVInput
+public class Bolts extends CSVInput<Bolt2>
 {
     static private Bolts singleton = null;
     static public Bolts getInstance()
@@ -35,70 +35,22 @@ public class Bolts extends CSVInput
         "duration multiplier"
     };
     
-    private final Bolt2[] bolts;
-    
     private Bolts()
     {
-        super(BOLTS_CSV_NAME, BOLT_VALUES);
-        bolts = buildBolts();
+        super(BOLTS_CSV_NAME, buildBolts(), BOLT_VALUES);
     }
     
     @Override
-    public Bolt2[] getAll()
+    public Bolt2 getNullValue()
     {
-        return bolts;
-    }
-
-    @Override
-    public Bolt2[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public Bolt2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return bolts[index];
-    }
-
-    @Override
-    public Bolt2[] get(final String[] names,
-                       final boolean includeNull)
-    {
-        final Bolt2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return new Bolt2[] { new Bolt2() };
-        else
-        {
-            if (includeNull)
-            {
-                toReturn = new Bolt2[indexes.size() + 1];
-                toReturn[indexes.size()] = new Bolt2();
-            }
-            else
-            {
-                toReturn = new Bolt2[indexes.size()];
-            }
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = bolts[i];
-            }
-            return toReturn;
-        }
+        return new Bolt2();
     }
     
     /**
     * Builds all bolts, if any. Allowed to not have any in CSV.
     * @return Array of all bolts (including null bolt).
     */
-    private Bolt2[] buildBolts()
+    static private Bolt2[] buildBolts()
     {
         final CSVReader csv = new CSVReader(BOLTS_CSV_NAME, BOLT_VALUES);
         final int rowCount = csv.getRowCount();
@@ -131,7 +83,7 @@ public class Bolts extends CSVInput
         return toReturn;
     }
     
-    public class Bolt2 extends GunModifier2 implements BoltModifier
+    static public class Bolt2 extends GunModifier2 implements BoltModifier
     {
         private final double durationMultiplier;
 
@@ -152,6 +104,6 @@ public class Bolts extends CSVInput
         }
 
         @Override public double getDurationMultiplier() { return durationMultiplier; }
-        @Override public Bolt2 getNullModifier()        { return new Bolt2(); }
+        @Override public Bolt2 getNullModifier()        { return singleton.getNullValue(); }
     }
 }

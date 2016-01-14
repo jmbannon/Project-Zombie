@@ -7,8 +7,8 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.types;
 
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmActions.FirearmAction2;
 
 /**
@@ -40,58 +40,13 @@ public class WeaponTypes extends CSVInput
         "Bullet Spread Weight (DBL)"
     }; 
     
-    private final WeaponType[] weaponTypes;
-    
     private WeaponTypes()
     {
-        super(WEAPON_TYPE_CSV_NAME, WEAPON_TYPE_VALUES);
-        this.weaponTypes = buildWeaponTypes();
+        super(WEAPON_TYPE_CSV_NAME, buildWeaponTypes(), WEAPON_TYPE_VALUES);
     }
 
-    @Override
-    public WeaponType[] getAll()
-    {
-        return weaponTypes;
-    }
 
-    @Override
-    public WeaponType[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public WeaponType get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return weaponTypes[index];
-    }
-
-    @Override
-    public WeaponType[] get(final String[] names,
-                        final boolean includeNull)
-    {
-        final WeaponType toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            toReturn = new WeaponType[indexes.size()];
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = weaponTypes[i];
-            }
-            return toReturn;
-        }
-    }
-
-    private WeaponType[] buildWeaponTypes()
+    static private WeaponType[] buildWeaponTypes()
     {
         final CSVReader csv = new CSVReader(WEAPON_TYPE_CSV_NAME, WEAPON_TYPE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -104,7 +59,7 @@ public class WeaponTypes extends CSVInput
         int j = 0;
         final WeaponType[] toReturn          = new WeaponType[rowCount];
         final String[] displayNames       = csv.getColumnString(j++);
-        final FirearmAction2[] firearmActions = FirearmActions.getInstance().get(csv.getColumnString(j++));
+        final ArrayList<FirearmAction2> firearmActions = FirearmActions.getInstance().get(csv.getColumnString(j++));
         final String[] ammoNames          = csv.getColumnString(j++);
         final int[]    ammoIDs            = csv.getColumnInt(j++);
         final int[]    ammoDatas          = csv.getColumnInt(j++);
@@ -113,13 +68,13 @@ public class WeaponTypes extends CSVInput
         final double[] upgradePriceWeight = csv.getColumnDouble(j++);
         final double[] bulletSpreadWeight = csv.getColumnDouble(j++);
         
-        if (firearmActions == null || firearmActions.length != ammoNames.length)
+        if (firearmActions == null || firearmActions.size() != ammoNames.length)
             return null;
 
         for (int i = 0; i < rowCount; i++)
         {
             toReturn[i] = new WeaponType(displayNames[i],
-                                      firearmActions[i],
+                                      firearmActions.get(i),
                                       ammoNames[i],
                                       ammoIDs[i],
                                       ammoDatas[i],
@@ -132,9 +87,7 @@ public class WeaponTypes extends CSVInput
         return toReturn;
     }
 
-    
-
-    public class WeaponType extends CSVValue
+    static public class WeaponType extends CSVValue
     {
         private final FirearmAction2 firearmAction;
         private final String ammoName;

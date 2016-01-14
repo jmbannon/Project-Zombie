@@ -5,6 +5,7 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

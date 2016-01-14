@@ -5,10 +5,10 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
@@ -17,7 +17,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Proje
  *
  * @author jesse
  */
-public class Barrels extends CSVInput
+public class Barrels extends CSVInput<Barrel2>
 {
     static private Barrels singleton = null;
     static public Barrels getInstance()
@@ -39,68 +39,23 @@ public class Barrels extends CSVInput
         "additional projectiles",
         "bulletSpread modifier",
     };
-    
-    private final Barrel2[] barrels;
 
     private Barrels()
     {
-        super(BARREL_CSV_NAME, BARREL_VALUES);
-        this.barrels = buildBarrels();
+        super(BARREL_CSV_NAME, buildBarrels(), BARREL_VALUES);
     }
     
     @Override
-    public Barrel2[] getAll() { return barrels; }
-    
-    @Override
-    public Barrel2[] get(final String[] names)
+    public Barrel2 getNullValue()
     {
-        return get(names, false);
-    }
-    
-    @Override
-    public Barrel2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return barrels[index];
-    }
-
-    @Override
-    public Barrel2[] get(final String[] names,
-                         final boolean includeNull)
-    {
-        final Barrel2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            if (includeNull)
-            {
-                toReturn = new Barrel2[indexes.size() + 1];
-                toReturn[indexes.size()] = new Barrel2();
-            }
-            else
-            {
-                toReturn = new Barrel2[indexes.size()];
-            }
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = barrels[i];
-            }
-            return toReturn;
-        }
+        return new Barrel2();
     }
     
     /**
     * Builds all barrels, if any. Allowed to not have any in CSV.
     * @return Array of all barrels (including null barrel).
     */
-    private Barrel2[] buildBarrels()
+    static private Barrel2[] buildBarrels()
     {
         final CSVReader csv = new CSVReader(BARREL_CSV_NAME, BARREL_VALUES);
         final int rowCount = csv.getRowCount();
@@ -140,7 +95,7 @@ public class Barrels extends CSVInput
     }
     
 
-    public class Barrel2 extends GunModifier2 implements BulletSpreadModifier, DamageModifier, ProjectileModifier
+    static public class Barrel2 extends GunModifier2 implements BulletSpreadModifier, DamageModifier, ProjectileModifier
     {
         private final double damageValue;
         private final double damageMultiplier;
@@ -173,6 +128,6 @@ public class Barrels extends CSVInput
         @Override public double getDamageMultiplier()        { return damageMultiplier; }
         @Override public int getAdditionalProjectileAmount() { return additionalProjectiles; }
         @Override public double getBulletSpreadMultiplier()  { return bulletSpreadModifier; }
-        @Override public Barrel2   getNullModifier()         { return new Barrel2(); }
+        @Override public Barrel2 getNullModifier()      { return singleton.getNullValue(); }
     }
 }

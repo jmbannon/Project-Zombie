@@ -5,9 +5,9 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 
@@ -15,7 +15,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
  *
  * @author jbannon
  */
-public class FireModes extends CSVInput
+public class FireModes extends CSVInput<FireMode2>
 {
     static private FireModes singleton = null;
     static public FireModes getInstance()
@@ -37,62 +37,22 @@ public class FireModes extends CSVInput
         "is automatic"
     };
     
-    private FireMode2[] firemodes;
-    
     private FireModes()
     {
-        super(FIREMODE_CSV_NAME, FIREMODE_VALUES);
-        this.firemodes = buildFireModes();
+        super(FIREMODE_CSV_NAME, buildFireModes(), FIREMODE_VALUES);
     }
     
     @Override
-    public FireMode2[] getAll()
+    public FireMode2 getNullValue()
     {
-        return firemodes;
-    }
-
-    @Override
-    public FireMode2[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public FireMode2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return firemodes[index];
-    }
-
-    @Override
-    public FireMode2[] get(final String[] names,
-                           final boolean includeNull)
-    {
-        final FireMode2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            toReturn = new FireMode2[indexes.size()];
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = firemodes[i];
-            }
-            return toReturn;
-        }
+        return null;
     }
     
     /**
      * Builds all FireModes, if any. Must have at least one in CSV.
      * @return Array of all FireModes. Null otherwise.
      */
-    private FireMode2[] buildFireModes()
+    static private FireMode2[] buildFireModes()
     {
         final CSVReader csv = new CSVReader(FIREMODE_CSV_NAME, FIREMODE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -129,7 +89,7 @@ public class FireModes extends CSVInput
     }
     
     
-    public class FireMode2 extends GunModifier2 implements Type
+    static public class FireMode2 extends GunModifier2 implements Type
     {
         private static final String TITLE = "Fire Mode: ";
 
@@ -154,6 +114,6 @@ public class FireModes extends CSVInput
 
         @Override public int price()                 { return 40;       }
         @Override public String title()              { return TITLE;    }
-        @Override public FireMode2 getNullModifier() { return null;     }
+        @Override  public FireMode2 getNullModifier() { return singleton.getNullValue(); }
     }
 }

@@ -5,11 +5,11 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
@@ -17,7 +17,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunMo
  *
  * @author jbannon
  */
-public class Attatchments extends CSVInput
+public class Attatchments extends CSVInput<Attatchment2>
 {
     static private Attatchments singleton = null;
     
@@ -43,66 +43,22 @@ public class Attatchments extends CSVInput
         "bleedout damage"
     };
     
-    private final Attatchment2[] attatchments;
-    
     private Attatchments()
     {
-        super(ATTATCHMENT_CSV_NAME, ATTATCHMENT_VALUES);
-        this.attatchments = buildAttatchments();
+        super(ATTATCHMENT_CSV_NAME, buildAttatchments(), ATTATCHMENT_VALUES);
     }
     
     @Override
-    public Attatchment2[] getAll() { return attatchments; }
-
-    @Override
-    public Attatchment2 get(String name)
+    public Attatchment2 getNullValue()
     {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return attatchments[index];
-    }
-
-    @Override
-    public Attatchment2[] get(String[] names)
-    {
-        return get(names, false);
-    }
-
-    @Override
-    public Attatchment2[] get(String[] names, boolean includeNull)
-    {
-        final Attatchment2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            if (includeNull)
-            {
-                toReturn = new Attatchment2[indexes.size() + 1];
-                toReturn[indexes.size()] = new Attatchment2();
-            }
-            else
-            {
-                toReturn = new Attatchment2[indexes.size()];
-            }
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = attatchments[i];
-            }
-            return toReturn;
-        }
+        return new Attatchment2();
     }
     
     /**
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    private Attatchment2[] buildAttatchments()
+    static private Attatchment2[] buildAttatchments()
     {
         final CSVReader csv = new CSVReader(ATTATCHMENT_CSV_NAME, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
@@ -144,7 +100,7 @@ public class Attatchments extends CSVInput
         return toReturn;
     }
 
-    public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier, 
+    static public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier, 
                                                               DamageModifier,
                                                               CritModifier,
                                                               BleedoutModifier
@@ -192,6 +148,6 @@ public class Attatchments extends CSVInput
         @Override public double getCritStrike()             { return critStrikeMultiplier; }
         @Override public double getBleedoutDurationValue()  { return bleedoutDurationSeconds; }
         @Override public double getBleedoutDamageValue()    { return bleedoutDamageBoost;  }
-        @Override public Attatchment2   getNullModifier()   { return new Attatchment2(); }
+        @Override public Attatchment2 getNullModifier()     { return singleton.getNullValue(); }
     }
 }

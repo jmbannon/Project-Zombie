@@ -5,9 +5,9 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
-import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 
@@ -15,7 +15,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Magaz
  *
  * @author jesse
  */
-public class Magazines extends CSVInput
+public class Magazines extends CSVInput<Magazine2>
 {
     static private Magazines singleton = null;
     static public Magazines getInstance()
@@ -40,58 +40,20 @@ public class Magazines extends CSVInput
     
     private Magazines()
     {
-        super(MAGAZINES_CSV_NAME, MAGAZINE_VALUES);
-        this.magazines = buildMagazines();
+        super(MAGAZINES_CSV_NAME,  buildMagazines(), MAGAZINE_VALUES);
     }
     
     @Override
-    public Magazine2[] getAll()
+    public Magazine2 getNullValue()
     {
-        return magazines;
-    }
-
-    @Override
-    public Magazine2[] get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
-    @Override
-    public Magazine2 get(String name)
-    {
-        final int index = super.getIndex(name);
-        if (index == -1)
-            return null;
-        else
-            return magazines[index];
-    }
-
-    @Override
-    public Magazine2[] get(final String[] names,
-                           final boolean includeNull)
-    {
-        final Magazine2 toReturn[];
-        final ArrayList<Integer> indexes = super.getIndexes(names);
-        int j = 0;
-        
-        if (indexes == null || indexes.isEmpty())
-            return null;
-        else
-        {
-            toReturn = new Magazine2[indexes.size()];
-            for (Integer i : indexes)
-            {
-                toReturn[j++] = magazines[i];
-            }
-            return toReturn;
-        }
+        return new Magazine2();
     }
     
     /**
      * Builds all magazines, if any. Allowed to not have any in CSV.
      * @return Array of all magazines (including null magazine).
      */
-    private Magazine2[] buildMagazines()
+    static private Magazine2[] buildMagazines()
     {
         final CSVReader csv = new CSVReader(MAGAZINES_CSV_NAME, MAGAZINE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -126,7 +88,7 @@ public class Magazines extends CSVInput
         return toReturn;
     }
     
-    public class Magazine2 extends GunModifier2 implements MagazineModifier
+    static public class Magazine2 extends GunModifier2 implements MagazineModifier
     {
         private final int magazineBoost;
         private final double reloadSpeedMultiplier;
@@ -151,6 +113,6 @@ public class Magazines extends CSVInput
 
         @Override public int getMagazineBoost()            { return magazineBoost; }
         @Override public double getReloadSpeedMultiplier() { return reloadSpeedMultiplier; }
-        @Override public Magazine2 getNullModifier()       { return new Magazine2(); }
+        @Override public GunModifier2 getNullModifier() { return singleton.getNullValue(); }
     }
 }
