@@ -94,26 +94,26 @@ public enum GunSkeleton
             soundSilenced,
             soundReload;
     
-    private GunSkeleton(final String name,
-                          final Weapon weaponType,
-                          final int materialID,
-                          final int materialData,
-                          final double initialBulletSpread,
-                          final int delay_between_shots,
-                          final int maxDurability,
-                          final double damage,
-                          final int recoilAmount,
-                          
-                          final Sounds sounds_shoot,
-                          final Sounds sounds_silenced,
-                          final Particles particle_shoot,
-                          
-                          final int reload_amount,
-                          final int reload_duration,
-                          final Sounds sounds_reloading,
-                          final ModifierSet set)
+    private GunSkeleton(final String weaponName,
+                        final Weapon weaponType,
+                        final int materialID,
+                        final int materialData,
+                        final double initialBulletSpread,
+                        final int delay_between_shots,
+                        final int maxDurability,
+                        final double damage,
+                        final int recoilAmount,
+                        
+                        final Sounds sounds_shoot,
+                        final Sounds sounds_silenced,
+                        final Particles particle_shoot,
+                        
+                        final int reload_amount,
+                        final int reload_duration,
+                        final Sounds sounds_reloading,
+                        final ModifierSet set)
     {
-        this.weaponName = name;
+        this.weaponName = weaponName;
         this.weaponType = weaponType;
         this.itemID = materialID;
         this.itemData = materialData;

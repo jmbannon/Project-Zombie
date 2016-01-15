@@ -12,6 +12,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmActions;
 import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponTypes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns2;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
@@ -84,7 +86,10 @@ public class Main extends JavaPlugin {
             return false;
         if (!isInitialized("Weapon Types", WeaponTypes.getInstance().initialize()))
             return false;
+        if (!isInitialized("Gun Skeletons", GunSkeletons.getInstance().initialize()))
+            return false;
         
+        Guns2.initialize();
         return true;
     }
     
