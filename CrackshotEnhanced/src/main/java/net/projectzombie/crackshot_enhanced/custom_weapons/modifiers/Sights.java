@@ -82,7 +82,6 @@ public class Sights extends CSVInput<Scope2>
                                       crackshotZoomAmount[i],
                                       bulletSpreadModifier[i]);
         }
-        System.out.println("Initialized " + rowCount + " scopes.");
         return toReturn;
     }
     

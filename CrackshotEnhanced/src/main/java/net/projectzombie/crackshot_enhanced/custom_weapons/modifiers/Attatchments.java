@@ -96,7 +96,6 @@ public class Attatchments extends CSVInput<Attatchment2>
                                            bleedoutDuration[i],
                                            bleedoutDamage[i]);
         }
-        System.out.println("Initialized " + rowCount + " attatchments.");
         return toReturn;
     }
 

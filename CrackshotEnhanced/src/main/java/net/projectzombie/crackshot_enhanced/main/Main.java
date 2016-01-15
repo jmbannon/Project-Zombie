@@ -89,8 +89,7 @@ public class Main extends JavaPlugin {
         if (!isInitialized("Gun Skeletons", GunSkeletons.getInstance().initialize()))
             return false;
         
-        Guns2.initialize();
-        return true;
+        return isInitialized("Guns", Guns2.initialize());
     }
     
     private boolean isInitialized(final String toInitialize,

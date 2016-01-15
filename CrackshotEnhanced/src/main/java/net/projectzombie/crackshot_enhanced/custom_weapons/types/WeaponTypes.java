@@ -83,7 +83,6 @@ public class WeaponTypes extends CSVInput
                                       upgradePriceWeight[i],
                                       bulletSpreadWeight[i]);
         }
-        System.out.println("Initialized " + rowCount + " weapon types.");
         return toReturn;
     }
 

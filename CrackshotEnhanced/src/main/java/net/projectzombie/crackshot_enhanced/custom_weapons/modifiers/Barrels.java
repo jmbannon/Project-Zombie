@@ -90,7 +90,6 @@ public class Barrels extends CSVInput<Barrel2>
                                       additionalProjectiles[i],
                                       bulletSpreadModifier[i]);
         }
-        System.out.println("Initialized " + rowCount + " barrels.");
         return toReturn;
     }
     

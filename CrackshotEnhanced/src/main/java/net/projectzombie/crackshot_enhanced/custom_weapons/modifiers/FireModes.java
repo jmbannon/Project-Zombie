@@ -84,7 +84,6 @@ public class FireModes extends CSVInput<FireMode2>
                                       shotsPerBurst[i],
                                       isAutomatic[i]);
         }
-        System.out.println("Initialized " + rowCount + " fire modes.");
         return toReturn;
     }
     

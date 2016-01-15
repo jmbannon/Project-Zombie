@@ -84,7 +84,6 @@ public class Magazines extends CSVInput<Magazine2>
                                       magazineBoost[i],
                                       reloadSpeedMultiplier[i]);
         }
-        System.out.println("Initialized " + rowCount + " magazines.");
         return toReturn;
     }
     

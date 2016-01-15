@@ -73,7 +73,6 @@ public class FirearmActions extends CSVInput
                                       closeShootDelay[i],
                                       individualBullets[i]);
         }
-        System.out.println("Initialized " + rowCount + " firearm actions.");
         return toReturn;
     }
 
@@ -113,7 +112,7 @@ public class FirearmActions extends CSVInput
         public int     getCloseDuration()     { return closeDuration;     }
         public int     getCloseShootDelay()   { return closeShootDelay;   }
         public Boolean getIndividualBullets() { return individualBullets; }
-        public String toString()    { return type;              }
+        @Override public String toString()    { return type;              }
 
     }
 }

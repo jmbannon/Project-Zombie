@@ -43,10 +43,11 @@ public class Guns2
     private Guns2() { /* Do nothing. */ }
     
     static
-    public void initialize()
+    public int initialize()
     {
         if (guns == null)
             guns = initializeGuns();
+        return guns.size();
     }
     
     static
@@ -66,8 +67,6 @@ public class Guns2
                 id += skeleGuns.length;
             }
         }
-        
-        System.out.println("Initialized " + gunArray.size() + " guns.");
         return gunArray;
     }
     

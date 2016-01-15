@@ -79,7 +79,6 @@ public class Bolts extends CSVInput<Bolt2>
                                       colors[i],
                                       durationMultiplie[i]);
         }
-        System.out.println("Initialized " + rowCount + " bolts.");
         return toReturn;
     }
     

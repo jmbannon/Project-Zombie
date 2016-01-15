@@ -82,7 +82,6 @@ public class ModifierSets extends CSVInput<ModifierSet2>
                 toReturn.add(temp);
         }
         
-        System.out.println("Initialized " + toReturn.size() + " modifier sets");
         return toReturn.toArray(new ModifierSet2[toReturn.size()]);
     }
     

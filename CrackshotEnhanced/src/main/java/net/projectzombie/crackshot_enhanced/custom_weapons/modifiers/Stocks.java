@@ -78,7 +78,6 @@ public class Stocks extends CSVInput
                                       colors[i],
                                       bulletSpreadModifier[i]);
         }
-        System.out.println("Initialized " + rowCount + " stocks.");
         return toReturn;
     }
     
