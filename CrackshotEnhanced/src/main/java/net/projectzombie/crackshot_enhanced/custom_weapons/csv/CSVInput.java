@@ -29,6 +29,11 @@ public abstract class CSVInput<T extends CSVValue>
         this.template = null;
     }
     
+    public String getCSVName()
+    {
+        return CSVName;
+    }
+    
     /**
      * CSVInput constructor for row-wise spreadsheets.
      * @param CSVName Name of the CSV file.

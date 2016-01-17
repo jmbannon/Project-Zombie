@@ -13,6 +13,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 /**
  *
  * @author jbannon
@@ -45,8 +47,8 @@ public class Attatchments extends CSVInput<Attatchment>
         "Bleedout Duration Seconds (DBL)",
         "Bleedout Duration Multiplier (DBL)",
         "Bleedout Damage (DBL)",
-        "Bleedout Damage Multiplier from Base Damage",
-        "Bleedout Damage Multiplier from Shrapnel",
+        "Bleedout Damage Multiplier from Base Damage (DBL)",
+        "Bleedout Damage Multiplier from Shrapnel (DBL)",
         "Is Silencer (T/F)"
     };
     
@@ -98,24 +100,25 @@ public class Attatchments extends CSVInput<Attatchment>
         toReturn[rowCount] = new Attatchment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Attatchment(displayNames[i],
-                                           materialNames[i],
-                                           materialBytes[i],
-                                           price[i],
-                                           colors[i],
-                                           bsMultiplier[i],
-                                           damageModifier[i],
-                                           damageMultiplier[i],
-                                           headshotModifier[i],
-                                           headshotMultiplier[i],
-                                           critChanceBoost[i],
-                                           critMultiplierBoost[i],
-                                           bleedoutDuration[i],
-                                           bleedoutDurationMultiplier[i],
-                                           bleedoutDamage[i],
-                                           bleedoutDamageFromBase[i],
-                                           bleedoutDamageFromShrap[i],
-                                           isSilencer[i]);
+            toReturn[i] = new Attatchment(
+                displayNames[i],
+                materialNames[i],
+                materialBytes[i],
+                price[i],
+                colors[i],
+                bsMultiplier[i],
+                damageModifier[i],
+                damageMultiplier[i],
+                headshotModifier[i],
+                headshotMultiplier[i],
+                critChanceBoost[i],
+                critMultiplierBoost[i],
+                bleedoutDuration[i],
+                bleedoutDurationMultiplier[i],
+                bleedoutDamage[i],
+                bleedoutDamageFromBase[i],
+                bleedoutDamageFromShrap[i],
+                isSilencer[i]);
         }
         return toReturn;
     }
@@ -123,20 +126,24 @@ public class Attatchments extends CSVInput<Attatchment>
     static public class Attatchment extends GunModifier implements BulletSpreadModifier, 
                                                               DamageModifier,
                                                               CritModifier,
-                                                              BleedoutModifier
+                                                              BleedoutModifier,
+                                                              IncendiaryModifier,
+                                                              Shrapnel
     {
-        private final double bulletSpreadMultiplier;
-        private final double damageModifier;
-        private final double damageMultiplier;
-        private final double headshotDamageModifier;
-        private final double headshotDamageMultiplier;
-        private final double critChanceBoost;
-        private final double critStrikeMultiplier;
-        private final double bleedoutDurationSeconds;
-        private final double bleedoutDurationMultiplier;
-        private final double bleedoutDamageBoost;
-        private final double bleedoutDamageMultiplierFromBase;
-        private final double bleedoutDamageMultiplierFromShrap;
+        private final double 
+            bulletSpreadMultiplier,
+            damageModifier,
+            damageMultiplier,
+            headshotDamageModifier,
+            headshotDamageMultiplier,
+            critChanceBoost,
+            critStrikeMultiplier,
+            bleedoutDurationSeconds,
+            bleedoutDurationMultiplier,
+            bleedoutDamageBoost,
+            bleedoutDamageMultiplierFromBase,
+            bleedoutDamageMultiplierFromShrap;
+        
         private final boolean isSilencer;
 
         private Attatchment(final String displayname,
@@ -183,18 +190,66 @@ public class Attatchments extends CSVInput<Attatchment>
         }
 
         public boolean isSilencer()                         { return isSilencer; }
-        @Override public double getDamageValue()            { return 0;           }
+        @Override public double getDamageValue()            { return damageModifier;   }
         @Override public double getDamageMultiplier()       { return damageMultiplier; }
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
         @Override public double getCritChance()             { return critChanceBoost; }
         @Override public double getCritStrike()             { return critStrikeMultiplier; }
         @Override public double getBleedoutDurationValue()  { return bleedoutDurationSeconds; }
-        @Override public double getBleedoutDamageValuePerSecond()    { return bleedoutDamageBoost;  }
-        @Override public Attatchment getNullModifier()     { return singleton.getNullValue(); }
-        @Override public double getHeadshotDamageValue() { return headshotDamageModifier; }
-        @Override public double getHeadshotDamageMultiplier() { return headshotDamageMultiplier; }
-        @Override public double getBleedoutDurationMultiplier() { return bleedoutDurationMultiplier; }
-        @Override public double getBleedoutDamageMultiplierFromDamage() { return bleedoutDamageMultiplierFromBase; }
+        @Override public double getBleedoutDamageValuePerSecond() { return bleedoutDamageBoost;  }
+        @Override public double getHeadshotDamageValue()          { return headshotDamageModifier; }
+        @Override public double getHeadshotDamageMultiplier()     { return headshotDamageMultiplier; }
+        @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }
+        @Override public double getBleedoutDamageMultiplierFromDamage()  { return bleedoutDamageMultiplierFromBase; }
         @Override public double getBleedoutDamageMultiplerFromShrapnel() { return bleedoutDamageMultiplierFromShrap; }
+        @Override public Attatchment getNullModifier()                   { return singleton.getNullValue(); }
+
+        @Override
+        public double getFireDamageValue()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getFireDamageMultiplier()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getIgniteChance()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getIgniteDuration()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getShrapnelDamageValue()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getShrapnelDamageMultiplier()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getStunChance()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public double getStunDuration()
+        {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 }

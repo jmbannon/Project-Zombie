@@ -7,7 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
 /**
  *
- * @author jesse
+ * @author jb
  */
 public interface BoltModifier
 {

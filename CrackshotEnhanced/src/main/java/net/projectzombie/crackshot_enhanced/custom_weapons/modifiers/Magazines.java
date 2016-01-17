@@ -8,8 +8,12 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 
 /**
  *
@@ -87,7 +91,11 @@ public class Magazines extends CSVInput<Magazine>
         return toReturn;
     }
     
-    static public class Magazine extends GunModifier implements MagazineModifier
+    static public class Magazine extends GunModifier implements MagazineModifier,
+                                                                ProjectileModifier,
+                                                                Shrapnel,
+                                                                IncendiaryModifier,
+                                                                DamageModifier
     {
         private final int magazineBoost;
         private final double reloadSpeedMultiplier;
@@ -112,6 +120,25 @@ public class Magazines extends CSVInput<Magazine>
 
         @Override public int getMagazineValue()            { return magazineBoost; }
         @Override public double getReloadSpeedMultiplier() { return reloadSpeedMultiplier; }
-        @Override public GunModifier getNullModifier() { return singleton.getNullValue(); }
+        @Override public GunModifier getNullModifier()     { return singleton.getNullValue(); }
+
+        @Override public double getMagazineSizeMultiplier()    { return 0; }
+        @Override public int    getProjectileValue()           { return 0; }
+        @Override public double getProjectileSpeedMultiplier() { return 0; }
+        @Override public int    getProjectileRangeValue()      { return 0; }
+        @Override public double getProjectileRangeModifier()   { return 0; }
+        @Override public double getIntervalBetweenShotModifier() { return 0; }
+        @Override public double getShrapnelDamageValue()         { return 0; }
+        @Override public double getShrapnelDamageMultiplier()  { return 0; }
+        @Override public double getStunChance()                { return 0; }
+        @Override public double getStunDuration()              { return 0; }
+        @Override public double getFireDamageValue()           { return 0; }
+        @Override public double getFireDamageMultiplier()      { return 0; }
+        @Override public double getIgniteChance()              { return 0; }
+        @Override public double getIgniteDuration()            { return 0; }
+        @Override public double getDamageValue()               { return 0; }
+        @Override public double getDamageMultiplier()          { return 0; }
+        @Override public double getHeadshotDamageValue()       { return 0; }
+        @Override public double getHeadshotDamageMultiplier()  { return 0; }
     }
 }
