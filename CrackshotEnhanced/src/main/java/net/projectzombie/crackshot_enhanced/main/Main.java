@@ -10,10 +10,11 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmActions;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponTypes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import net.projectzombie.crackshot_enhanced.listeners.ScopeZoomListener;
@@ -89,7 +90,12 @@ public class Main extends JavaPlugin {
         if (!isInitialized("Gun Skeletons", GunSkeletons.getInstance().initialize()))
             return false;
         
-        return isInitialized("Guns", Guns2.initialize());
+        for (Weapon type : WeaponTypes.getInstance().getAll())
+        {
+            System.out.println(type == null ? "null" : type.toString());
+        }
+        
+        return isInitialized("Guns", Guns.initialize());
     }
     
     private boolean isInitialized(final String toInitialize,

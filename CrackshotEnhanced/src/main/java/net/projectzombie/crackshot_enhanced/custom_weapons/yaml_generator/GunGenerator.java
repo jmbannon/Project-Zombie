@@ -5,24 +5,19 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.PISTOL;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon.REVOLVER;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
-import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.HiddenStringUtils;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
 import org.bukkit.ChatColor;
 
 /**
@@ -108,7 +103,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getDurationMultiplier();
+                durationMultiplier += mod.getBoltActionDurationMultiplier();
             
             modifiedOpenDuration = (int)Math.round(openDuration * durationMultiplier);
             
@@ -136,7 +131,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getDurationMultiplier();
+                durationMultiplier += mod.getBoltActionDurationMultiplier();
            
             modifiedCloseDuration = (int)Math.round(closeDuration * durationMultiplier);
             
@@ -164,7 +159,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getDurationMultiplier();
+                durationMultiplier += mod.getBoltActionDurationMultiplier();
             
             modifiedCloseShootDelay = (int)Math.round(closeShootDelay * durationMultiplier);
             
@@ -227,9 +222,7 @@ public class GunGenerator
     
     public String getInventoryControl()
     {
-        return (gun.getSkeleton().getWeaponType().equals(PISTOL)
-                || gun.getSkeleton().getWeaponType().equals(REVOLVER)) ? 
-            "Group_Sidearm" : "Group_Primary";
+        return gun.getWeaponType().getInventoryControl();
     }
     
     /**
@@ -241,7 +234,7 @@ public class GunGenerator
     {
         int reloadAmount = gun.getSkeleton().getReloadAmount();
         for (MagazineModifier mod : gun.getMagazineModifiers())
-            reloadAmount += mod.getMagazineBoost();
+            reloadAmount += mod.getMagazineValue();
         
         if (reloadAmount < 1)
             return 1;
@@ -271,21 +264,10 @@ public class GunGenerator
             return modifiedReloadDuration;
     }
     
-    public Boolean reloadBulletsIndividually()
-    {
-        final FirearmAction action = gun.getSkeleton().getWeaponType().getAction();
-        return action != null &&
-                (  action.equals(FirearmAction.HUNTING_BOLT)
-                || action.equals(FirearmAction.PUMP)
-                || action.equals(FirearmAction.BREAK));
-    }
-    
-    
-    
     public String getSoundsShoot()
     {
         final GunSkeleton base = gun.getSkeleton();
-        return (gun.getAttatchment().equals(Attatchment.SUPPRESOR)) ? 
+        return (gun.getAttatchment().isSilencer()) ? 
                 base.getSilencedSound() : base.getShootSound();
     }
     
@@ -295,12 +277,10 @@ public class GunGenerator
         final FireMode fireMode = gun.getFireMode();
         final Weapon weaponType = gun.getSkeleton().getWeaponType();
         
-        if (shootDelay == 0 || fireMode.equals(FireMode.AUTO)
-                || weaponType.equals(Weapon.SNIPER)
-                || weaponType.equals(Weapon.HUNTING))
+        if (shootDelay == 0 || fireMode.isAutomatic())
             return 0;
         
-        else if (fireMode.equals(FireMode.BURST))
+        else if (fireMode.isBurstFire())
             return 9 + shootDelay;
         else
             return shootDelay;
@@ -308,7 +288,7 @@ public class GunGenerator
     
     public int getProjectileSpeed()
     {
-        return (GunUtils.isShotgun(gun)) ? 35 : 1000;
+        return gun.getWeaponType().getProjectileSpeed();
     }
     
     /**
@@ -320,7 +300,7 @@ public class GunGenerator
         int projectileAmount = gun.getWeaponType().getProjectileAmount();
         for (ProjectileModifier mod : gun.getProjectileAmountModifiers())
         {
-            projectileAmount += mod.getAdditionalProjectileAmount();
+            projectileAmount += mod.getProjectileValue();
         }
         
         if (projectileAmount < 1)
@@ -331,10 +311,7 @@ public class GunGenerator
     
     public String getRemovalOrDragDelay()
     {
-        if (GunUtils.isShotgun(gun))
-            return (gun.getBarrel().equals(Barrel.SAWED_OFF)) ? "7-true" : "13-true";
-        else
-            return null;
+        return gun.getWeaponType().getRemovalDragDelay();
     }
     
     /**

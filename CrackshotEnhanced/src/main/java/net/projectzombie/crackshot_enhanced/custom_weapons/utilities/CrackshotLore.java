@@ -10,10 +10,9 @@ import com.shampaggon.crackshot.CSUtility;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -112,15 +111,15 @@ public class CrackshotLore
     }
     
     static
-    public boolean isPostShotWeapon(final ItemStack item)
-    {
-        return item.hasItemMeta() && item.getItemMeta().hasLore() && isPostShotWeapon(item.getItemMeta().getLore());
-    }
-    
-    static
     public boolean isPreShotWeapon(final List<String> lore)
     {
         return lore.size() == 2 && lore.get(PRE_SHOT_VERIFICATION_IDX).equalsIgnoreCase(preShotVerification);
+    }
+    
+    static
+    public boolean isPostShotWeapon(final ItemStack item)
+    {
+        return item.hasItemMeta() && item.getItemMeta().hasLore() && isPostShotWeapon(item.getItemMeta().getLore());
     }
     
     static
@@ -252,19 +251,21 @@ public class CrackshotLore
         final int durability, condition;
         
         if (isPostShotWeapon(originalGunItem))
+        {
             durability = CrackshotLore.getDurability(originalGunItem);
+            condition = newGun.getConditionInt(durability);
+            CrackshotLore.generateLore(newGun, newLore, durability, condition);
+            newMeta.setLore(newLore);
+            newMeta.setDisplayName(adjustedAmmoDisplayName);
+            newGunItem.setItemMeta(newMeta);
+            return newGunItem;
+        }
         else if (isPreShotWeapon(originalGunItem))
-            durability = newGun.getInitialDurability();
+        {
+            return newGunItem;
+        }
         else
             return null;
-        
-        
-        condition = newGun.getConditionInt(durability);
-        CrackshotLore.generateLore(newGun, newLore, durability, condition);
-        newMeta.setLore(newLore);
-        newMeta.setDisplayName(adjustedAmmoDisplayName);
-        newGunItem.setItemMeta(newMeta);
-        return newGunItem;
     }
     
     /* PRIVATE METHODS */
@@ -304,7 +305,7 @@ public class CrackshotLore
     private String buildFireModeLore(final CrackshotGun gun)
     {
         final FireMode gunFireMode = gun.getFireMode();
-        return buildLoreString(gunFireMode.title(), gunFireMode.toString());
+        return buildLoreString(FireMode.getTitle(), gunFireMode.toString());
     }
     
     static

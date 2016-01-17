@@ -22,4 +22,8 @@ public interface DamageModifier
      * @return Percentage to be multiplied to base damage (0, inf).
      */
     public double getDamageMultiplier();
+    
+    public double getHeadshotDamageValue();
+    
+    public double getHeadshotDamageMultiplier();
 }

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmActions.FirearmAction2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 
 /**
  *
@@ -17,7 +18,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmActions.
  * 
  * 
  */
-public class WeaponTypes extends CSVInput
+public class WeaponTypes extends CSVInput<Weapon>
 {  
     static private WeaponTypes singleton = null;
     static public WeaponTypes getInstance()
@@ -35,6 +36,9 @@ public class WeaponTypes extends CSVInput
         "Ammo ID (INT)",
         "Ammo Data (INT)",
         "Projectile Amount (INT)",
+        "Projectile Speed (INT)",
+        "Removal/Drag Delay (STR)",
+        "Inventory Control (STR)",
         "Repair Price Weight (DBL)",
         "Upgrade Price Weight (DBL)",
         "Bullet Spread Weight (DBL)"
@@ -46,7 +50,7 @@ public class WeaponTypes extends CSVInput
     }
 
 
-    static private WeaponType[] buildWeaponTypes()
+    static private Weapon[] buildWeaponTypes()
     {
         final CSVReader csv = new CSVReader(WEAPON_TYPE_CSV_NAME, WEAPON_TYPE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -57,28 +61,37 @@ public class WeaponTypes extends CSVInput
         }
         
         int j = 0;
-        final WeaponType[] toReturn          = new WeaponType[rowCount];
+        final Weapon[] toReturn          = new Weapon[rowCount];
         final String[] displayNames       = csv.getColumnString(j++);
-        final ArrayList<FirearmAction2> firearmActions = FirearmActions.getInstance().get(csv.getColumnString(j++));
+        final ArrayList<FirearmAction> firearmActions = FirearmActions.getInstance().get(csv.getColumnString(j++), false);
         final String[] ammoNames          = csv.getColumnString(j++);
         final int[]    ammoIDs            = csv.getColumnInt(j++);
         final int[]    ammoDatas          = csv.getColumnInt(j++);
         final int[]    projectileAmounts  = csv.getColumnInt(j++);
+        final int[]    projectileSpeeds   = csv.getColumnInt(j++);
+        final String[] removalDragDelays  = csv.getColumnString(j++);
+        final String[] inventoryControls  = csv.getColumnString(j++);
         final double[] repairPriceWeight  = csv.getColumnDouble(j++);
         final double[] upgradePriceWeight = csv.getColumnDouble(j++);
         final double[] bulletSpreadWeight = csv.getColumnDouble(j++);
+        
+        for (FirearmAction act : firearmActions)
+            System.out.println(act == null ? "null" : act.getName());
         
         if (firearmActions == null || firearmActions.size() != ammoNames.length)
             return null;
 
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new WeaponType(displayNames[i],
+            toReturn[i] = new Weapon(displayNames[i],
                                       firearmActions.get(i),
                                       ammoNames[i],
                                       ammoIDs[i],
                                       ammoDatas[i],
                                       projectileAmounts[i],
+                                      projectileSpeeds[i],
+                                      removalDragDelays[i],
+                                      inventoryControls[i],
                                       repairPriceWeight[i],
                                       upgradePriceWeight[i],
                                       bulletSpreadWeight[i]);
@@ -86,13 +99,16 @@ public class WeaponTypes extends CSVInput
         return toReturn;
     }
 
-    static public class WeaponType extends CSVValue
+    static public class Weapon extends CSVValue
     {
-        private final FirearmAction2 firearmAction;
+        private final FirearmAction firearmAction;
         private final String ammoName;
         private final int ammoID;
         private final int ammoData;
         private final int projectileAmount;
+        private final int projectileSpeed;
+        private final String removalDragDelay;
+        private final String inventoryControl;
         private final double repairPriceWeight;
         private final double upgradePriceWeight;
         private final double bulletSpreadWeight;
@@ -106,12 +122,15 @@ public class WeaponTypes extends CSVInput
          * @param upgradePriceWeight Weight for calculating upgrade price.
          * @param bulletSpreadWeight Weight for calculating current bullet spread based on tier.
          */
-        private WeaponType(final String displayName,
-                        final FirearmAction2 firearmAction,
+        private Weapon(final String displayName,
+                        final FirearmAction firearmAction,
                         final String ammoName,
                         final int ammoID,
                         final int ammoData,
                         final int projectileAmount,
+                        final int projectileSpeed,
+                        final String removalDragDelay,
+                        final String inventoryControl,
                         final double repairPriceWeight,
                         final double upgradePriceWeight,
                         final double bulletSpreadWeight)
@@ -122,16 +141,22 @@ public class WeaponTypes extends CSVInput
             this.ammoID = ammoID;
             this.ammoData = ammoData;
             this.projectileAmount = projectileAmount;
+            this.projectileSpeed = projectileSpeed;
+            this.removalDragDelay = removalDragDelay;
+            this.inventoryControl = inventoryControl;
             this.repairPriceWeight = repairPriceWeight;
             this.upgradePriceWeight = upgradePriceWeight;
             this.bulletSpreadWeight = bulletSpreadWeight;
         }
 
-        public FirearmAction2 getAction()            { return firearmAction;      }
+        public FirearmAction getAction()            { return firearmAction;      }
         public String        getAmmoName()           { return ammoName;           }
         public int           getAmmoID()             { return ammoID;             }
         public int           getAmmoData()           { return ammoData;           }
         public int           getProjectileAmount()   { return projectileAmount;   }
+        public int           getProjectileSpeed()    { return projectileSpeed;    }
+        public String        getRemovalDragDelay()   { return removalDragDelay;   }
+        public String        getInventoryControl()   { return inventoryControl;   }
         public double        getRepairPriceWeight()  { return repairPriceWeight;  }
         public double        getUpgradePriceWeight() { return upgradePriceWeight; }
         @Override public String toString()           { return ammoName;           }

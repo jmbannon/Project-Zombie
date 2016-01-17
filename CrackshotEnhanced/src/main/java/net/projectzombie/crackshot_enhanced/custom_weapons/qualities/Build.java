@@ -5,14 +5,13 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.qualities;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
 import org.bukkit.ChatColor;
 
 /**
  *
  * @author jbannon
  */
-public enum Build implements Type
+public enum Build
 {
     
     STOCK    (0, 1.0,  ChatColor.YELLOW,       "Stock"),
@@ -62,8 +61,4 @@ public enum Build implements Type
         return STOCK;
     }
 
-    @Override
-    public String title() {
-        return TITLE;
-    }
 }

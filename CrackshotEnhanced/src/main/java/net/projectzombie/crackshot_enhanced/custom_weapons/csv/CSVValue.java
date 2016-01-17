@@ -7,11 +7,10 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.csv;
 
 /**
  *
- * @author jesse
+ * @author Jesse Bannon
  */
 public abstract class CSVValue
 {
-    
     private final String name;
     
     public CSVValue(final String name)
@@ -20,6 +19,12 @@ public abstract class CSVValue
     }
     
     public String getName()
+    {
+        return name;
+    }
+    
+    @Override
+    public String toString()
     {
         return name;
     }

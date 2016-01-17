@@ -12,7 +12,7 @@ import org.bukkit.ChatColor;
  * 
  * Types of tiers for weapons. Contains display information for the weapon lore.
  */
-public enum Condition
+public enum Condition2
 {
     NEW     (5, ChatColor.GREEN,      "Factory New"),
     MINT    (4, ChatColor.DARK_AQUA,  "Mint"),
@@ -37,7 +37,7 @@ public enum Condition
      * @param color Color of the condition string in the lore.
      * @param condition Condition of the weapon to display in the lore.
      */
-    private Condition(final int enumValue,
+    private Condition2(final int enumValue,
                       final ChatColor color,
                       final String condition)
     {
@@ -58,7 +58,7 @@ public enum Condition
      */
     public static String getValue(final int tier)
     {
-        for (Condition condition : Condition.values())
+        for (Condition2 condition : Condition2.values())
             if (tier == condition.enumValue)
                 return condition.toString();
         

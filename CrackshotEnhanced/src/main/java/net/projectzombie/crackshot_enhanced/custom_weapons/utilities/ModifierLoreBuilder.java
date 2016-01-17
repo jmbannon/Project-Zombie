@@ -15,7 +15,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Damag
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.ChatColor;
 
 /**
@@ -91,7 +91,7 @@ public class ModifierLoreBuilder
         if (!stats.isEmpty())
         {
             Collections.shuffle(stats);
-            stats.add(0, mod.getColor() + mod.getDisplayName());
+            stats.add(0, mod.getColor() + mod.getName());
             return stats;
         }
         else
@@ -104,7 +104,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getBleedoutStats(final BleedoutModifier bleedoutMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String bleedDamage = getValueStat(bleedoutMod.getBleedoutDamageValue(), "bleed damage p/sec");
+        final String bleedDamage = getValueStat(bleedoutMod.getBleedoutDamageValuePerSecond(), "bleed damage p/sec");
         final String bleedDuration = getValueStat(bleedoutMod.getBleedoutDurationValue(), "bleed duration");
         
         if (bleedDamage != null)
@@ -120,7 +120,7 @@ public class ModifierLoreBuilder
     ArrayList<String> getBoltModifierStats(final BoltModifier boltMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String durationIncrease = getMultiplierStat(boltMod.getDurationMultiplier(), "bolt action speed");
+        final String durationIncrease = getMultiplierStat(boltMod.getBoltActionDurationMultiplier(), "bolt action speed");
         
         if (durationIncrease != null)
             stats.add(durationIncrease);
@@ -176,7 +176,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getMagazineModifierStats(final MagazineModifier magMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String magBoost = getValueStat(magMod.getMagazineBoost(), "mag size");
+        final String magBoost = getValueStat(magMod.getMagazineValue(), "mag size");
         final String reloadSpeed = getMultiplierStat(magMod.getReloadSpeedMultiplier(), "reload speed");
         
         if (magBoost != null)
@@ -192,7 +192,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getProjectileModifierStats(final ProjectileModifier projMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String projBoost = getValueStat(projMod.getAdditionalProjectileAmount(), "projectiles");
+        final String projBoost = getValueStat(projMod.getProjectileValue(), "projectiles");
         
         if (projBoost != null)
             stats.add(projBoost);

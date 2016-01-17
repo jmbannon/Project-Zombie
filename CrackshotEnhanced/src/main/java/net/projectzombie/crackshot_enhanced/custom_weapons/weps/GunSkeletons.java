@@ -11,20 +11,19 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets.ModifierSet2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponTypes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.WeaponTypes.WeaponType;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns2.CrackshotGun2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets.ModifierSet;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -35,7 +34,7 @@ import org.bukkit.material.MaterialData;
  * Contains standard Crackshot guns with no modifiers (i.e. scopes, 
  * 
  */
-public class GunSkeletons extends CSVInput<GunSkeleton2>
+public class GunSkeletons extends CSVInput<GunSkeleton>
 {
     static private GunSkeletons singleton = null;
     
@@ -50,20 +49,21 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
     static private final String[] SKELETON_VALUES = {
         "Skeleton Name (STR)",
         "Weapon Type (STR)",
+        "Modifier Set (STR)",
         "Material ID (INT)",
         "Material Data (INT)",
         "Initial Bullet Spread (DBL)",
         "Delay Between Shots (INT)",
         "Max Durability (INT)",
         "Damage (DBL)",
+        "Reload Amount (INT)",
+        "Reload Duration (INT)",
+        "Reload Bullets Individually (T/F)",
         "Recoil Amount (INT)",
         "Shoot Sound (STR)",
         "Silenced Sound (STR)",
         "Particle Shoot (STR)",
-        "Reload Amount (INT)",
-        "Reload Duration (INT)",
         "Reload Sound (STR)",
-        "Modifier Set (STR)"
     };
     
     public GunSkeletons()
@@ -71,7 +71,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
         super(SKELETONS_CSV_NAME, buildSkeletons(), SKELETON_VALUES);
     }
     
-    static private GunSkeleton2[] buildSkeletons()
+    static private GunSkeleton[] buildSkeletons()
     {
         final CSVReader csv = new CSVReader(SKELETONS_CSV_NAME, SKELETON_VALUES);
         final int rowCount = csv.getRowCount();
@@ -82,56 +82,61 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
         }
         
         int j = 0;
-        final GunSkeleton2[] toReturn       = new GunSkeleton2[rowCount];
+        final GunSkeleton[] toReturn       = new GunSkeleton[rowCount];
         final String[] skeletonNames        = csv.getColumnString(j++);
-        final ArrayList<WeaponType> wepTypes = WeaponTypes.getInstance().get(csv.getColumnString(j++));
+        final ArrayList<Weapon> wepTypes = WeaponTypes.getInstance().get(csv.getColumnString(j++), false);
+        final ArrayList<ModifierSet> modifierSets = ModifierSets.getInstance().get(csv.getColumnString(j++), false);
         final int[]    materialIDs          = csv.getColumnInt(j++);
         final int[]    materialData         = csv.getColumnInt(j++);
         final double[] initialBulletSpreads = csv.getColumnDouble(j++);
         final int[]    delayBetweenShots    = csv.getColumnInt(j++);
         final int[]    maxDurabilities      = csv.getColumnInt(j++);
         final double[] damages              = csv.getColumnDouble(j++);
-        final int[]    recoilAmounts        = csv.getColumnInt(j++);
-        final String[] shootSounds          = csv.getColumnString(j++);
-        final String[] silencedSounds       = csv.getColumnString(j++);
-        final String[] particleShoots       = csv.getColumnString(j++);
         final int[]    reloadAmounts        = csv.getColumnInt(j++);
         final int[]    reloadDurations      = csv.getColumnInt(j++);
+        final boolean[] reloadIndividually  = csv.getColumnBoolean(j++);
+        final int[]    recoilAmounts        = csv.getColumnInt(j++);
+        
+        final String[] shootSounds          = csv.getColumnString(j++);
+        final String[] silencedSounds       = csv.getColumnString(j++);
         final String[] reloadSounds         = csv.getColumnString(j++);
-        final ArrayList<ModifierSet2> modifierSets = ModifierSets.getInstance().get(csv.getColumnString(j++));
+        final String[] particleShoots       = csv.getColumnString(j++);
+        
+        
         
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new GunSkeleton2(
+            toReturn[i] = new GunSkeleton(
                     skeletonNames[i],
                     wepTypes.get(i),
+                    modifierSets.get(i),
                     materialIDs[i],
                     materialData[i],
                     initialBulletSpreads[i],
                     delayBetweenShots[i],
                     maxDurabilities[i],
-                    damages[i], 
+                    damages[i],
+                    reloadAmounts[i],
+                    reloadDurations[i],
+                    reloadIndividually[i],
                     recoilAmounts[i],
                     shootSounds[i],
                     silencedSounds[i],
                     particleShoots[i],
-                    reloadAmounts[i],
-                    reloadDurations[i],
-                    reloadSounds[i],
-                    modifierSets.get(i));
+                    reloadSounds[i]);
         }
-        System.out.println("Initialized " + rowCount + " gun skeletons.");
         return toReturn;
     }
     
-    static public class GunSkeleton2 extends CSVValue
+    static public class GunSkeleton extends CSVValue
     {   
-        private final WeaponType weaponType;
+        private final Weapon weaponType;
         private final double bulletSpread;
         private final double damage;
-        private final ModifierSet2 modSet;
+        private final ModifierSet modSet;
         private final String particleShoot;
-
+        private final boolean reloadBulletsIndividually;
+        
         private final int
                 itemID, 
                 itemData, 
@@ -146,24 +151,24 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
                 soundSilenced,
                 soundReload;
 
-        private GunSkeleton2(final String skeletonName,
-                            final WeaponType weaponType,
+        private GunSkeleton(final String skeletonName,
+                            final Weapon weaponType,
+                            final ModifierSet set,
                             final int materialID,
                             final int materialData,
                             final double initialBulletSpread,
                             final int delay_between_shots,
                             final int maxDurability,
                             final double damage,
+                            final int reload_amount,
+                            final int reload_duration,
+                            final boolean reloadBulletsIndividually,
                             final int recoilAmount,
-
+                            
                             final String sounds_shoot,
                             final String sounds_silenced,
                             final String particle_shoot,
-
-                            final int reload_amount,
-                            final int reload_duration,
-                            final String sounds_reloading,
-                            final ModifierSet2 set)
+                            final String sounds_reloading)
         {
             super(skeletonName);
             this.weaponType = weaponType;
@@ -181,10 +186,11 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
             this.reloadDuration = reload_duration;
             this.soundReload = sounds_reloading;
             this.modSet = set;
+            this.reloadBulletsIndividually = reloadBulletsIndividually;
         }
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
-        public WeaponType    getWeaponType()     { return weaponType;     }
+        public Weapon    getWeaponType()     { return weaponType;     }
         public double        getBulletSpread()   { return bulletSpread;   }
         public int           getItemID()         { return itemID;         }
         public int           getItemData()       { return itemData;       }
@@ -201,10 +207,11 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
         public int           getReloadDuration() { return reloadDuration; }
         public String        getReloadSound()    { return soundReload;   }
         public ItemStack     getBareItemStack()  { return new ItemStack(itemID, 1, (short)itemData); }
-        public ModifierSet2   getModifierSet()    { return modSet; }
-        public GunModifier2[] getModifiers()      { return modSet.getModifiers(); }
+        public ModifierSet   getModifierSet()    { return modSet; }
+        public boolean       reloadsBulletsIndividually() { return reloadBulletsIndividually; }
+        public GunModifier[] getModifiers()      { return modSet.getModifiers(); }
 
-        public CrackshotGun2[] getGuns(final int uniqueIDOffset)
+        public CrackshotGun[] getGuns(final int uniqueIDOffset)
         {
             final int combinationCount = modSet.getCombinationCount();
             int i = 0;
@@ -212,23 +219,23 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
             if (combinationCount <= 0)
                 return null;
 
-            CrackshotGun2 guns[] = new CrackshotGun2[combinationCount];
+            CrackshotGun guns[] = new CrackshotGun[combinationCount];
 
-            for (Attatchment2 attatchment : modSet.getAttatchments())
+            for (Attatchment attatchment : modSet.getAttatchments())
             {
-                for (Barrel2 barrel : modSet.getBarrels())
+                for (Barrel barrel : modSet.getBarrels())
                 {
-                    for (Bolt2 bolt : modSet.getBolts())
+                    for (Bolt bolt : modSet.getBolts())
                     {
-                        for (FireMode2 fireMode : modSet.getFireModes())
+                        for (FireMode fireMode : modSet.getFireModes())
                         {
-                            for (Magazine2 magazine : modSet.getMagazines())
+                            for (Magazine magazine : modSet.getMagazines())
                             {
-                                for (Scope2 scope : modSet.getScopes())
+                                for (Scope scope : modSet.getScopes())
                                 {
-                                    for (Stock2 stock : modSet.getStocks())
+                                    for (Stock stock : modSet.getStocks())
                                     {
-                                         guns[i] = new CrackshotGun2(uniqueIDOffset, uniqueIDOffset + i, this, attatchment, barrel, bolt, fireMode, magazine, scope, stock);
+                                         guns[i] = new CrackshotGun(uniqueIDOffset, uniqueIDOffset + i, this, attatchment, barrel, bolt, fireMode, magazine, scope, stock);
                                          ++i;
                                     }
                                 }
@@ -240,14 +247,14 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
             return guns;
         }
 
-        public CrackshotGun2 getModifiedGun(final CrackshotGun2 gun,
-                                            final GunModifier2 modifier)
+        public CrackshotGun getModifiedGun(final CrackshotGun gun,
+                                            final GunModifier modifier)
         {
             final int gunIDOffset = gun.getIDOffset();
             final int gunCombinationCount = gun.getSkeleton().getModifierSet().getCombinationCount();
             boolean containsModifier = false;
 
-            GunModifier2[] modifiedSet = gun.getCraftableModifiers();
+            GunModifier[] modifiedSet = gun.getCraftableModifiers();
             for (int i = 0; i < modifiedSet.length; i++)
             {
                 if (modifiedSet[i].getClass() == modifier.getClass())
@@ -264,7 +271,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
             for (int i = gunIDOffset; i < gunIDOffset + gunCombinationCount; i++)
             {
                 if (Arrays.equals(Guns.get(i).getCraftableModifiers(), modifiedSet))
-                    return Guns2.get(i);
+                    return Guns.get(i);
             }
 
             return null;
@@ -274,7 +281,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton2>
         private boolean containsMod(final GunModifier modifier)
         {
             boolean containsMod = false;
-            for (GunModifier2 mod : getModifiers())
+            for (GunModifier mod : getModifiers())
             {
                 if (mod.equals(modifier))
                     containsMod = true;

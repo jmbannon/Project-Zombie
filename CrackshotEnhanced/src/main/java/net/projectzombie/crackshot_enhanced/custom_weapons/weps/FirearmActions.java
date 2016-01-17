@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
 
 
 /**
  *
  * @author jbannon
  */
-public class FirearmActions extends CSVInput
+public class FirearmActions extends CSVInput<FirearmAction>
 {
     static private FirearmActions singleton = null;
     static public FirearmActions getInstance()
@@ -32,8 +33,7 @@ public class FirearmActions extends CSVInput
         "Sound Close (STR)",
         "Open Duration (INT)",
         "Close Duration (INT)",
-        "Close Shoot Delay (INT)",
-        "Individual Bullets (T/F)",
+        "Close Shoot Delay (INT)"
     };
     
     private FirearmActions()
@@ -41,17 +41,19 @@ public class FirearmActions extends CSVInput
         super(ACTIONS_CSV_NAME, buildFirearmActions(), ACTION_VALUES);
     }
     
-    static private FirearmAction2[] buildFirearmActions()
+    static private FirearmAction[] buildFirearmActions()
     {
         final CSVReader csv = new CSVReader(ACTIONS_CSV_NAME, ACTION_VALUES);
         final int rowCount = csv.getRowCount();
         
         if (rowCount <= 0)
         {
-            return new FirearmAction2[] { null };
+            return new FirearmAction[] { null };
         }
+        
+        
         int j = 0;
-        final FirearmAction2[] toReturn   = new FirearmAction2[rowCount + 1];
+        final FirearmAction[] toReturn   = new FirearmAction[rowCount + 1];
         final String[]  displayNames      = csv.getColumnString(j++);
         final String[]  type              = csv.getColumnString(j++);
         final String[]  soundOpen         = csv.getColumnString(j++);
@@ -59,24 +61,22 @@ public class FirearmActions extends CSVInput
         final int[]     openDuration      = csv.getColumnInt(j++);
         final int[]     closeDuration     = csv.getColumnInt(j++);
         final int[]     closeShootDelay   = csv.getColumnInt(j++);
-        final boolean[] individualBullets = csv.getColumnBoolean(j++);
         
         toReturn[rowCount] = null;
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new FirearmAction2(displayNames[i],
+            toReturn[i] = new FirearmAction(displayNames[i],
                                       type[i],
                                       soundOpen[i],
                                       soundClose[i],
                                       openDuration[i],
                                       closeDuration[i],
-                                      closeShootDelay[i],
-                                      individualBullets[i]);
+                                      closeShootDelay[i]);
         }
         return toReturn;
     }
 
-    static public class FirearmAction2 extends CSVValue
+    static public class FirearmAction extends CSVValue
     {
         private final String type;
         private final String soundOpen;
@@ -85,16 +85,14 @@ public class FirearmActions extends CSVInput
         private final int openDuration;
         private final int closeDuration;
         private final int closeShootDelay;
-        private final Boolean individualBullets;
 
-        private FirearmAction2(final String displayName,
+        private FirearmAction(final String displayName,
                                final String type,
                                final String soundOpen,
                                final String soundClose,
                                final int openDuration,
                                final int closeDuration,
-                               final int closeShootDelay,
-                               final boolean individualBullets)
+                               final int closeShootDelay)
         {
             super(displayName);
             this.type = type;
@@ -103,7 +101,6 @@ public class FirearmActions extends CSVInput
             this.openDuration = openDuration;
             this.closeDuration = closeDuration;
             this.closeShootDelay = closeShootDelay;
-            this.individualBullets = individualBullets;
         }
 
         public String  getSoundOpen()         { return soundOpen;         } 
@@ -111,7 +108,6 @@ public class FirearmActions extends CSVInput
         public int     getOpenDuration()      { return openDuration;      }
         public int     getCloseDuration()     { return closeDuration;     }
         public int     getCloseShootDelay()   { return closeShootDelay;   }
-        public Boolean getIndividualBullets() { return individualBullets; }
         @Override public String toString()    { return type;              }
 
     }

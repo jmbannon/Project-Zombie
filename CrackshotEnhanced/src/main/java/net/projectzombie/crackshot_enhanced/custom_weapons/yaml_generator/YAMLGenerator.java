@@ -9,11 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment.INCENDIARY;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.FirearmAction;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
-import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -130,14 +128,11 @@ public class YAMLGenerator
         wepsYAML.set(path + "Removal_Or_Drag_Delay",           gen.getRemovalOrDragDelay());
         wepsYAML.set(path + "Bullet_Spread",                   gen.getBulletSpread());
         wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
-        
-        if (gen.getGun().getAttatchment().equals(INCENDIARY))
-            this.writeProjectileIncendiary();
     }
     
     private void writeScope()
     {
-        if (!GunUtils.hasScope(gen.getGun())) return;
+        if (gen.getGun().getScope().getZoomAmount() <= 0) return;
         
         final String path = gen.getCSWeaponName() + ".Scope.";
         
@@ -149,7 +144,7 @@ public class YAMLGenerator
     
     private void writeBurstfire()
     {
-        if (!GunUtils.isBurstFire(gen.getGun())) return;
+        if (!gen.getGun().getFireMode().isBurstFire()) return;
         
         final String path = gen.getCSWeaponName() + ".Burstfire.";
         
@@ -161,7 +156,7 @@ public class YAMLGenerator
     
     private void writeFullyAutomatic()
     {
-        if (!GunUtils.isAutomatic(gen.getGun())) return;
+        if (!gen.getGun().getFireMode().isAutomatic()) return;
         final String path = gen.getCSWeaponName() + ".Fully_Automatic.";
         
         wepsYAML.set(path + "Enable",    true);
@@ -176,7 +171,7 @@ public class YAMLGenerator
         wepsYAML.set(path + "Reload_Amount",               gen.getReloadAmount());
         wepsYAML.set(path + "Reload_Duration",             gen.getReloadDuration());
         wepsYAML.set(path + "Take_Ammo_On_Reload",         true);
-        wepsYAML.set(path + "Reload_Bullets_Individually", gen.reloadBulletsIndividually());
+        wepsYAML.set(path + "Reload_Bullets_Individually", gen.getSkeleton().reloadsBulletsIndividually());
         wepsYAML.set(path + "Sounds_Out_Of_Ammo",          "ITEM_BREAK-1-1-0");
         wepsYAML.set(path + "Sounds_Reloading",            gen.getSkeleton().getReloadSound());
     }
@@ -220,14 +215,6 @@ public class YAMLGenerator
         
         wepsYAML.set(path + "Enable",        true);
         wepsYAML.set(path + "Sounds_Victim", "VILLAGER_IDLE-1-1-0");
-    }
-    
-    private void writeProjectileIncendiary()
-    {
-        final String path = gen.getCSWeaponName() + ".Shooting.Projectile_Incendiary.";
-        
-        wepsYAML.set(path + "Enable",   true);
-        wepsYAML.set(path + "Duration", 3);
     }
     
 }

@@ -5,35 +5,73 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
-
 
 /**
  *
  * @author jesse
  */
-public interface GunModifier
+public abstract class GunModifier extends CSVValue
 {
+    private final Material material;
+    private final int materialData;
+    private final int price;
+    private final ChatColor color;
+    
+    public GunModifier(final String name,
+                       final String material,
+                       final int materialData,
+                       final int price,
+                       final String color)
+    {
+        super(name);
+        this.materialData = materialData;
+        this.price = price;
+        this.material = GunUtils.matchMaterial(material);
+        this.color = GunUtils.matchChatColor(color);
+    }
+    
+    /**
+     * @return Returns the null modifier.
+     */
+    abstract public GunModifier getNullModifier();
+    
     /**
      * @return Returns the price of the gun modification at the gunsmith.
      */
-    public int price();
-    
-    /**
-     * @return Name of gun modification.
-     */
-    public String getDisplayName();
+    public int price()
+    {
+        return price;
+    }
     
     /**
      * @return Color of the GunModifier in lore based on rarity.
      */
-    public ChatColor getColor();
+    public ChatColor getColor()
+    {
+        return color;
+    }
     
     /**
      * @return MaterialData of item if craftable. Null otherwise.
      */
-    public MaterialData getMaterialData();
+    public MaterialData getMaterialData()
+    {
+        if (material == null)
+            return null;
+        else
+            return new MaterialData(material, (byte)materialData);
+    }
     
-    public boolean isNull();
+    /**
+     * @return Whether the modifier is null.
+     */
+    public boolean isNull()
+    {
+        return this.equals(this.getNullModifier());
+    }
 }

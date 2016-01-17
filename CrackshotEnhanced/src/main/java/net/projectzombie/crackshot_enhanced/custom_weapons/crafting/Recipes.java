@@ -7,18 +7,25 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.crafting;
 
 
 import java.util.HashMap;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrel;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolt;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazine;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stock;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -35,7 +42,7 @@ import org.bukkit.material.MaterialData;
 
 /**
  *
- * @author jesse
+ * @author Jesse Bannon
  */
 public class Recipes implements Listener
 {
@@ -96,7 +103,7 @@ public class Recipes implements Listener
      */
     private GunSkeleton getSkeleton(final ItemStack result)
     {
-        for (GunSkeleton skele : GunSkeleton.values())
+        for (GunSkeleton skele : GunSkeletons.getInstance().getAll())
         {
             if (skele.getBareItemStack().equals(result))
                 return skele;
@@ -120,7 +127,7 @@ public class Recipes implements Listener
     
     static public void initializeCraftingRecipes()
     {
-        for (GunSkeleton skele : GunSkeleton.values())
+        for (GunSkeleton skele : GunSkeletons.getInstance().getAll())
         {
             //intializeScopes(skele);
             intializeAttatchments(skele);
@@ -162,19 +169,19 @@ public class Recipes implements Listener
     static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
     {
         final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
-        for (Attatchment mod : Attatchment.values())
+        for (Attatchment mod : Attatchments.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (Barrel mod : Barrel.values())
+        for (Barrel mod : Barrels.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (Bolt mod : Bolt.values())
+        for (Bolt mod : Bolts.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (FireMode mod : FireMode.values())
+        for (FireMode mod : FireModes.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (Magazine mod : Magazine.values())
+        for (Magazine mod : Magazines.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (Scope mod : Scope.values())
+        for (Scope mod : Sights.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
-        for (Stock mod : Stock.values())
+        for (Stock mod : Stocks.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
         
         hash.remove(null);

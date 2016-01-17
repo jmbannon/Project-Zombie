@@ -29,7 +29,11 @@ public final class CSVReader
     private final int rowCount;
     private final int columnCount;
     
-    
+    /**
+     * Initializes the plugin which is needed to traverse the directories to
+     * read the any CSVs.
+     * @param pl CrackshotEnhanced plugin found in Main.
+     */
     static public void initializePlugin(final Plugin pl)
     {
         plugin = pl;
@@ -84,11 +88,23 @@ public final class CSVReader
         }
     }
     
+    /**
+     * @return Row count of the CSV.
+     */
     public int getRowCount()
     {
         return rowCount;
     }
     
+    /**
+     * Reads in data from a CSV and stores it in a nested ArrayList of Strings.
+     * Each inner ArrayList represents either a column (if column-wise) or represents
+     * a row (if row-wise).
+     * @param columnWise Whether to read the data column-wise.
+     * @param linesToSkip Lines to skip in the CSV before reading data.
+     * @param columnValues
+     * @return Nested ArrayList of data in String format.
+     */
     private ArrayList<ArrayList<String>> readData(final boolean columnWise,
                                                   final int linesToSkip,
                                                   final String[] columnValues)
@@ -165,13 +181,18 @@ public final class CSVReader
     
     public String[] getColumnString(final int columnNumber)
     {
+        String temp;
         if (!isValidColumn(columnNumber))
             return null;
         
         final String[] toRet = new String[rowCount];
         for (int i = 0; i < rowCount; i++)
         {
-            toRet[i] = data.get(columnNumber).get(i);
+            temp = data.get(columnNumber).get(i);
+            if (temp.isEmpty() || temp.equalsIgnoreCase("null") || temp.equalsIgnoreCase("n/a") || temp.equalsIgnoreCase("na"))
+                toRet[i] = null;
+            else
+                toRet[i] = temp;
         }
         return toRet;
     }

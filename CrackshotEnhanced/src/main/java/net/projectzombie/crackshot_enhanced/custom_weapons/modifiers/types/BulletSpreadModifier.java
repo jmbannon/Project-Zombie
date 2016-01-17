@@ -16,5 +16,4 @@ public interface BulletSpreadModifier
      * @return Percentage to modifiy the bullet spread (0, inf).
      */
     public double getBulletSpreadMultiplier();
-   
 }

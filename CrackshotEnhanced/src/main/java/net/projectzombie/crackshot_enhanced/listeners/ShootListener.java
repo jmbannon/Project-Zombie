@@ -109,14 +109,13 @@ public class ShootListener implements Listener
      * @param eventBulletSpread
      * @param item
      * @return -2 - An error occurred in the parsing.
-     *         -1 - The weapon's lore is not encrypted
-     *          0 - The weapon is broken
-     *         >0 - The bullet spread to set for the event
+     *           0 - The weapon is broken
+     *          >0 - The bullet spread to set for the event
      */
     public static double shoot(final double eventBulletSpread,
                                final ItemStack item)
     {
-        final int ERROR = -2, UNENCRYPTED = -1;
+        final int ERROR = -2;
         final ItemMeta gunMeta = item.getItemMeta();
         
         double bulletSpread = ERROR;

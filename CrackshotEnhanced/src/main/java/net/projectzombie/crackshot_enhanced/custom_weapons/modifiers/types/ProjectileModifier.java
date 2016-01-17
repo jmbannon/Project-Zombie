@@ -11,5 +11,11 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  */
 public interface ProjectileModifier
 {
-    public int getAdditionalProjectileAmount();
+    public int getProjectileValue();
+    public double getProjectileSpeedMultiplier();
+    
+    public int getProjectileRangeValue();
+    public double getProjectileRangeModifier();
+    
+    public double getIntervalBetweenShotModifier();
 }

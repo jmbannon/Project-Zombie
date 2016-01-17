@@ -6,16 +6,16 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *
  * @author jbannon
  */
-public class Sights extends CSVInput<Scope2>
+public class Sights extends CSVInput<Scope>
 {
     static private Sights singleton = null;
     static public Sights getInstance()
@@ -42,16 +42,16 @@ public class Sights extends CSVInput<Scope2>
     }
     
     @Override
-    public Scope2 getNullValue()
+    public Scope getNullValue()
     {
-        return new Scope2();
+        return new Scope();
     }
     
     /**
      * Builds all Scopes, if any. Allowed to not have any in CSV.
      * @return Array of all Scopes. Null otherwise.
      */
-    static private Scope2[] buildScopes()
+    static private Scope[] buildScopes()
     {
         final CSVReader csv = new CSVReader(SCOPE_CSV_NAME, SCOPE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -62,7 +62,7 @@ public class Sights extends CSVInput<Scope2>
         }
         
         int j = 0;
-        final Scope2[] toReturn             = new Scope2[rowCount + 1];
+        final Scope[] toReturn             = new Scope[rowCount + 1];
         final String[] displayNames         = csv.getColumnString(j++);
         final String[] materialNames        = csv.getColumnString(j++);
         final int[]    materialBytes        = csv.getColumnInt(j++);
@@ -70,11 +70,11 @@ public class Sights extends CSVInput<Scope2>
         final String[] colors               = csv.getColumnString(j++);
         final int[] crackshotZoomAmount     = csv.getColumnInt(j++);
         final double[] bulletSpreadModifier = csv.getColumnDouble(j++);
-        toReturn[rowCount] = new Scope2();
+        toReturn[rowCount] = new Scope();
         
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Scope2(displayNames[i],
+            toReturn[i] = new Scope(displayNames[i],
                                       materialNames[i],
                                       materialBytes[i],
                                       price[i],
@@ -85,12 +85,12 @@ public class Sights extends CSVInput<Scope2>
         return toReturn;
     }
     
-    static public class Scope2 extends GunModifier2 implements BulletSpreadModifier
+    static public class Scope extends GunModifier implements BulletSpreadModifier
     {
         private final int zoomAmount;
         private final double bulletSpreadModifier;
 
-        private Scope2(final String displayName,
+        private Scope(final String displayName,
                        final String material,
                        final int materialByte,
                        final int price,
@@ -103,13 +103,13 @@ public class Sights extends CSVInput<Scope2>
             this.bulletSpreadModifier = bulletSpreadModifier;
         }
 
-        private Scope2()
+        private Scope()
         {
             this(null, null, 0, 0, null, 0, 0);
         }
 
         public int getZoomAmount()                          { return zoomAmount;   }
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadModifier; }
-        @Override public Scope2 getNullModifier()           { return singleton.getNullValue(); }
+        @Override public Scope getNullModifier()           { return singleton.getNullValue(); }
     }
 }

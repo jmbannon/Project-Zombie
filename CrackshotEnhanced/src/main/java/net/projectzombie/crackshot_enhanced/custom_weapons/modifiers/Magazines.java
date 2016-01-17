@@ -6,16 +6,16 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 
 /**
  *
  * @author jesse
  */
-public class Magazines extends CSVInput<Magazine2>
+public class Magazines extends CSVInput<Magazine>
 {
     static private Magazines singleton = null;
     static public Magazines getInstance()
@@ -36,7 +36,7 @@ public class Magazines extends CSVInput<Magazine2>
         "reload speed multiplier"
     };
     
-    private Magazine2[] magazines;
+    private Magazine[] magazines;
     
     private Magazines()
     {
@@ -44,27 +44,27 @@ public class Magazines extends CSVInput<Magazine2>
     }
     
     @Override
-    public Magazine2 getNullValue()
+    public Magazine getNullValue()
     {
-        return new Magazine2();
+        return new Magazine();
     }
     
     /**
      * Builds all magazines, if any. Allowed to not have any in CSV.
      * @return Array of all magazines (including null magazine).
      */
-    static private Magazine2[] buildMagazines()
+    static private Magazine[] buildMagazines()
     {
         final CSVReader csv = new CSVReader(MAGAZINES_CSV_NAME, MAGAZINE_VALUES);
         final int rowCount = csv.getRowCount();
         
         if (rowCount <= 0)
         {
-            return new Magazine2[] { new Magazine2() };
+            return new Magazine[] { new Magazine() };
         }
         
         int j = 0;
-        final Magazine2[] toReturn          = new Magazine2[rowCount + 1];
+        final Magazine[] toReturn          = new Magazine[rowCount + 1];
         final String[] displayNames         = csv.getColumnString(j++);
         final String[] materialNames        = csv.getColumnString(j++);
         final int[]    materialBytes        = csv.getColumnInt(j++);
@@ -73,10 +73,10 @@ public class Magazines extends CSVInput<Magazine2>
         final int[] magazineBoost           = csv.getColumnInt(j++);
         final double[] reloadSpeedMultiplier= csv.getColumnDouble(j++);
         
-        toReturn[rowCount] = new Magazine2();
+        toReturn[rowCount] = new Magazine();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Magazine2(displayNames[i],
+            toReturn[i] = new Magazine(displayNames[i],
                                       materialNames[i],
                                       materialBytes[i],
                                       price[i],
@@ -87,12 +87,12 @@ public class Magazines extends CSVInput<Magazine2>
         return toReturn;
     }
     
-    static public class Magazine2 extends GunModifier2 implements MagazineModifier
+    static public class Magazine extends GunModifier implements MagazineModifier
     {
         private final int magazineBoost;
         private final double reloadSpeedMultiplier;
 
-        private Magazine2(final String displayName,
+        private Magazine(final String displayName,
                           final String material,
                           final int materialByte,
                           final int price,
@@ -105,13 +105,13 @@ public class Magazines extends CSVInput<Magazine2>
             this.reloadSpeedMultiplier = reloadSpeedMultiplier;
         }
 
-        private Magazine2()
+        private Magazine()
         {
             this(null, null, 0, 0, null, 0, 0);
         }
 
-        @Override public int getMagazineBoost()            { return magazineBoost; }
+        @Override public int getMagazineValue()            { return magazineBoost; }
         @Override public double getReloadSpeedMultiplier() { return reloadSpeedMultiplier; }
-        @Override public GunModifier2 getNullModifier() { return singleton.getNullValue(); }
+        @Override public GunModifier getNullModifier() { return singleton.getNullValue(); }
     }
 }

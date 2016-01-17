@@ -6,18 +6,18 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 /**
  *
  * @author jbannon
  */
-public class Attatchments extends CSVInput<Attatchment2>
+public class Attatchments extends CSVInput<Attatchment>
 {
     static private Attatchments singleton = null;
     
@@ -30,17 +30,24 @@ public class Attatchments extends CSVInput<Attatchment2>
     
     static private final String ATTATCHMENT_CSV_NAME = "Attatchments.csv";
     static private final String[] ATTATCHMENT_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "bulletspread percent modifier",
-        "damage modifier",
-        "crit chance boost",
-        "crit multiplier boost",
-        "bleedout duration",
-        "bleedout damage"
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Bulletspread Multiplier (DBL)",
+        "Damage Modifier (DBL)",
+        "Damage Multiplier (DBL)",
+        "Headshot Damage Modifier (DBL)",
+        "Headshot Damage Multiplier (DBL)",
+        "Crit Chance Modifier (DBL)",
+        "Crit Strike Multiplier (DBL)",
+        "Bleedout Duration Seconds (DBL)",
+        "Bleedout Duration Multiplier (DBL)",
+        "Bleedout Damage (DBL)",
+        "Bleedout Damage Multiplier from Base Damage",
+        "Bleedout Damage Multiplier from Shrapnel",
+        "Is Silencer (T/F)"
     };
     
     private Attatchments()
@@ -49,104 +56,145 @@ public class Attatchments extends CSVInput<Attatchment2>
     }
     
     @Override
-    public Attatchment2 getNullValue()
+    public Attatchment getNullValue()
     {
-        return new Attatchment2();
+        return new Attatchment();
     }
     
     /**
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    static private Attatchment2[] buildAttatchments()
+    static private Attatchment[] buildAttatchments()
     {
         final CSVReader csv = new CSVReader(ATTATCHMENT_CSV_NAME, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
         {
-            return new Attatchment2[] { new Attatchment2() };
+            return new Attatchment[] { new Attatchment() };
         }
+        int j = 0;
+        final Attatchment[] toReturn      = new Attatchment[rowCount + 1];
+        final String[] displayNames        = csv.getColumnString(j++);
+        final String[] materialNames       = csv.getColumnString(j++);
+        final int[]    materialBytes       = csv.getColumnInt(j++);
+        final int[]    price               = csv.getColumnInt(j++);
+        final String[] colors              = csv.getColumnString(j++);
+        final double[] bsMultiplier        = csv.getColumnDouble(j++);
+        final double[] damageModifier      = csv.getColumnDouble(j++);
+        final double[] damageMultiplier    = csv.getColumnDouble(j++);
+        final double[] headshotModifier    = csv.getColumnDouble(j++);
+        final double[] headshotMultiplier  = csv.getColumnDouble(j++);
+        final double[] critChanceBoost     = csv.getColumnDouble(j++);
+        final double[] critMultiplierBoost = csv.getColumnDouble(j++);
+        final double[] bleedoutDuration    = csv.getColumnDouble(j++);
+        final double[] bleedoutDurationMultiplier = csv.getColumnDouble(j++);
+        final double[] bleedoutDamage      = csv.getColumnDouble(j++);
+        final double[] bleedoutDamageFromBase = csv.getColumnDouble(j++);
+        final double[] bleedoutDamageFromShrap = csv.getColumnDouble(j++);
+        final boolean[] isSilencer         = csv.getColumnBoolean(j++);
  
-        final Attatchment2[] toReturn      = new Attatchment2[rowCount + 1];
-        final String[] displayNames        = csv.getColumnString(0);
-        final String[] materialNames       = csv.getColumnString(1);
-        final int[]    materialBytes       = csv.getColumnInt(2);
-        final int[]    price               = csv.getColumnInt(3);
-        final String[] colors              = csv.getColumnString(4);
-        final double[] bsPercentModifier   = csv.getColumnDouble(5);
-        final double[] damageModifier      = csv.getColumnDouble(6);
-        final double[] critChanceBoost     = csv.getColumnDouble(7);
-        final double[] critMultiplierBoost = csv.getColumnDouble(8);
-        final double[] bleedoutDuration    = csv.getColumnDouble(9);
-        final double[] bleedoutDamage      = csv.getColumnDouble(10);
- 
-        toReturn[rowCount] = new Attatchment2();
+        toReturn[rowCount] = new Attatchment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Attatchment2(displayNames[i],
+            toReturn[i] = new Attatchment(displayNames[i],
                                            materialNames[i],
                                            materialBytes[i],
                                            price[i],
                                            colors[i],
-                                           bsPercentModifier[i],
+                                           bsMultiplier[i],
                                            damageModifier[i],
+                                           damageMultiplier[i],
+                                           headshotModifier[i],
+                                           headshotMultiplier[i],
                                            critChanceBoost[i],
                                            critMultiplierBoost[i],
                                            bleedoutDuration[i],
-                                           bleedoutDamage[i]);
+                                           bleedoutDurationMultiplier[i],
+                                           bleedoutDamage[i],
+                                           bleedoutDamageFromBase[i],
+                                           bleedoutDamageFromShrap[i],
+                                           isSilencer[i]);
         }
         return toReturn;
     }
 
-    static public class Attatchment2 extends GunModifier2 implements BulletSpreadModifier, 
+    static public class Attatchment extends GunModifier implements BulletSpreadModifier, 
                                                               DamageModifier,
                                                               CritModifier,
                                                               BleedoutModifier
     {
         private final double bulletSpreadMultiplier;
+        private final double damageModifier;
         private final double damageMultiplier;
+        private final double headshotDamageModifier;
+        private final double headshotDamageMultiplier;
         private final double critChanceBoost;
         private final double critStrikeMultiplier;
         private final double bleedoutDurationSeconds;
+        private final double bleedoutDurationMultiplier;
         private final double bleedoutDamageBoost;
+        private final double bleedoutDamageMultiplierFromBase;
+        private final double bleedoutDamageMultiplierFromShrap;
+        private final boolean isSilencer;
 
-        private Attatchment2(final String displayname,
+        private Attatchment(final String displayname,
                             final String materialName,
                             final int materialByte,
                             final int price,
                             final String color,
                             final double bulletSpreadMultiplier,
+                            final double damageModifier,
                             final double damageMultiplier,
+                            final double headshotDamageModifier,
+                            final double headshotDamageMultiplier,
                             final double critChanceBoost,
                             final double critStrikeMultiplier,
                             final double bleedoutDurationSeconds,
-                            final double bleedoutDamageBoost)
+                            final double bleedoutDurationMultiplier,
+                            final double bleedoutDamageBoost,
+                            final double bleedoutDamageMultiplierFromBase,
+                            final double bleedoutDamageMultiplierFromShrap,
+                            final boolean isSilencer)
         {        
             super(displayname, materialName, materialByte, price, color);
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
+            this.damageModifier = damageModifier;
             this.damageMultiplier = damageMultiplier;
+            this.headshotDamageModifier = headshotDamageModifier;
+            this.headshotDamageMultiplier = headshotDamageMultiplier;
             this.critChanceBoost = critChanceBoost;
             this.critStrikeMultiplier = critStrikeMultiplier;
             this.bleedoutDurationSeconds = bleedoutDurationSeconds;
+            this.bleedoutDurationMultiplier = bleedoutDurationMultiplier;
             this.bleedoutDamageBoost = bleedoutDamageBoost;
+            this.bleedoutDamageMultiplierFromBase = bleedoutDamageMultiplierFromBase;
+            this.bleedoutDamageMultiplierFromShrap = bleedoutDamageMultiplierFromShrap;
+            this.isSilencer = isSilencer;
         }
 
         /**
          * Constructs the null Attatchment.
          */
-        private Attatchment2()
+        private Attatchment()
         {
-            this(null, null, 0, 0, null, 0, 0, 0, 0, 0, 0);
+            this(null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
         }
 
+        public boolean isSilencer()                         { return isSilencer; }
         @Override public double getDamageValue()            { return 0;           }
         @Override public double getDamageMultiplier()       { return damageMultiplier; }
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
         @Override public double getCritChance()             { return critChanceBoost; }
         @Override public double getCritStrike()             { return critStrikeMultiplier; }
         @Override public double getBleedoutDurationValue()  { return bleedoutDurationSeconds; }
-        @Override public double getBleedoutDamageValue()    { return bleedoutDamageBoost;  }
-        @Override public Attatchment2 getNullModifier()     { return singleton.getNullValue(); }
+        @Override public double getBleedoutDamageValuePerSecond()    { return bleedoutDamageBoost;  }
+        @Override public Attatchment getNullModifier()     { return singleton.getNullValue(); }
+        @Override public double getHeadshotDamageValue() { return headshotDamageModifier; }
+        @Override public double getHeadshotDamageMultiplier() { return headshotDamageMultiplier; }
+        @Override public double getBleedoutDurationMultiplier() { return bleedoutDurationMultiplier; }
+        @Override public double getBleedoutDamageMultiplierFromDamage() { return bleedoutDamageMultiplierFromBase; }
+        @Override public double getBleedoutDamageMultiplerFromShrapnel() { return bleedoutDamageMultiplierFromShrap; }
     }
 }

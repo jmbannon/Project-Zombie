@@ -11,6 +11,8 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  */
 public interface MagazineModifier
 {
-    public int getMagazineBoost();
+    public int getMagazineValue();
+    public double getMagazineSizeMultiplier();
+    
     public double getReloadSpeedMultiplier();
 }

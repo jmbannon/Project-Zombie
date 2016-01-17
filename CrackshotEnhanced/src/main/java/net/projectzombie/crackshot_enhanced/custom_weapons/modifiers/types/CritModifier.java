@@ -18,7 +18,7 @@ public interface CritModifier
     public double getCritChance();
     
     /**
-     * Returns the crit strike percentage modifier.
+     * Returns the crit strike percentage modifier from base damage.
      * @return Percent modifier of crit strike (0, inf).
      */
     public double getCritStrike();

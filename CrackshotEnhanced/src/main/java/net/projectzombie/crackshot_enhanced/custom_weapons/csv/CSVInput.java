@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author jesse
- * @param <T>
+ * @author Jesse Bannon
+ * @param <T> The CSVValue type read from a CSV.
  */
 public abstract class CSVInput<T extends CSVValue>
 {
@@ -29,6 +29,12 @@ public abstract class CSVInput<T extends CSVValue>
         this.template = null;
     }
     
+    /**
+     * CSVInput constructor for row-wise spreadsheets.
+     * @param CSVName Name of the CSV file.
+     * @param readValues Values read from CSV.
+     * @param template Top line(s) of the CSV to write to if it doesn't exist.
+     */
     public CSVInput(final String CSVName,
                     final T[] readValues,
                     final String template)
@@ -39,16 +45,27 @@ public abstract class CSVInput<T extends CSVValue>
         this.template = template;
     }
     
+    /**
+     * @return Returns all initialized CSVValues.
+     */
     public T[] getAll()
     {
         return readValues;
     }
     
+    /**
+     * @return Returns the null value of the CSVValue. More-so for gun modifiers to represent the empty
+     * element in the set.
+     */
     public T getNullValue()
     {
         return null;
     }
     
+    /**
+     * @param name Name of the CSVValue.
+     * @return The element if it has a similar name.
+     */
     public T get(final String name)
     {
         for (T temp : readValues)
@@ -62,15 +79,10 @@ public abstract class CSVInput<T extends CSVValue>
     }
     
     /**
-     *
-     * @param names
-     * @return
+     * @param names Array of names of the CSVValues.
+     * @param includeNull Whether or not to include the null element in the returned set.
+     * @return An ArrayList of CSVValues that any of the names given.
      */
-    public ArrayList<T> get(final String[] names)
-    {
-        return get(names, false);
-    }
-    
     public ArrayList<T> get(final String[] names,
                             final boolean includeNull)
     {
@@ -83,15 +95,16 @@ public abstract class CSVInput<T extends CSVValue>
         if (names == null || names.length == 0)
             return matchValues;
         
-        for (T temp : readValues)
+        for (String name : names)
         {
-            for (String name : names)
+            for (T temp : readValues)
             {
                 if (temp == null)
                 {
                     if (name == null || name.isEmpty() || name.equalsIgnoreCase("null"))
                     {
                         matchValues.add(temp);
+                        break;
                     }
                 }
                 else
@@ -100,6 +113,7 @@ public abstract class CSVInput<T extends CSVValue>
                     if (tempName != null && tempName.equalsIgnoreCase(name))
                     {
                         matchValues.add(temp);
+                        break;
                     }
                 }
             }
@@ -108,6 +122,9 @@ public abstract class CSVInput<T extends CSVValue>
         return matchValues;
     }
 
+    /**
+     * @return The length of the initialized array of elements. -1 if null.
+     */
     public int initialize()
     {
         if (readValues == null)

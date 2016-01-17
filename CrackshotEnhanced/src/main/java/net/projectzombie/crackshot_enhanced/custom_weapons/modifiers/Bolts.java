@@ -6,16 +6,16 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *
  * @author jesse
  */
-public class Bolts extends CSVInput<Bolt2>
+public class Bolts extends CSVInput<Bolt>
 {
     static private Bolts singleton = null;
     static public Bolts getInstance()
@@ -41,27 +41,27 @@ public class Bolts extends CSVInput<Bolt2>
     }
     
     @Override
-    public Bolt2 getNullValue()
+    public Bolt getNullValue()
     {
-        return new Bolt2();
+        return new Bolt();
     }
     
     /**
     * Builds all bolts, if any. Allowed to not have any in CSV.
     * @return Array of all bolts (including null bolt).
     */
-    static private Bolt2[] buildBolts()
+    static private Bolt[] buildBolts()
     {
         final CSVReader csv = new CSVReader(BOLTS_CSV_NAME, BOLT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
         {
-            return new Bolt2[] { new Bolt2() };
+            return new Bolt[] { new Bolt() };
         }
  
         int j = 0;
-        final Bolt2[] toReturn            = new Bolt2[rowCount + 1];
+        final Bolt[] toReturn            = new Bolt[rowCount + 1];
         final String[] displayNames         = csv.getColumnString(j++);
         final String[] materialNames        = csv.getColumnString(j++);
         final int[]    materialBytes        = csv.getColumnInt(j++);
@@ -69,10 +69,10 @@ public class Bolts extends CSVInput<Bolt2>
         final String[] colors               = csv.getColumnString(j++);
         final double[] durationMultiplie    = csv.getColumnDouble(j++);
  
-        toReturn[rowCount] = new Bolt2();
+        toReturn[rowCount] = new Bolt();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Bolt2(displayNames[i],
+            toReturn[i] = new Bolt(displayNames[i],
                                       materialNames[i],
                                       materialBytes[i],
                                       price[i],
@@ -82,11 +82,11 @@ public class Bolts extends CSVInput<Bolt2>
         return toReturn;
     }
     
-    static public class Bolt2 extends GunModifier2 implements BoltModifier
+    static public class Bolt extends GunModifier implements BoltModifier
     {
         private final double durationMultiplier;
 
-        private Bolt2(final String displayName,
+        private Bolt(final String displayName,
                       final String material,
                       final int materialByte,
                       final int price,
@@ -97,12 +97,12 @@ public class Bolts extends CSVInput<Bolt2>
             this.durationMultiplier = durationMultiplier;
         }
 
-        private Bolt2()
+        private Bolt()
         {
             this(null, null, 0, 0, null, 0);
         }
 
-        @Override public double getDurationMultiplier() { return durationMultiplier; }
-        @Override public Bolt2 getNullModifier()        { return singleton.getNullValue(); }
+        @Override public double getBoltActionDurationMultiplier() { return durationMultiplier; }
+        @Override public Bolt getNullModifier()        { return singleton.getNullValue(); }
     }
 }

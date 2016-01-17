@@ -8,13 +8,14 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *
  * @author jesse
  */
-public class Stocks extends CSVInput
+public class Stocks extends CSVInput<Stock>
 {
     static private Stocks singleton = null;
     static public Stocks getInstance()
@@ -40,27 +41,27 @@ public class Stocks extends CSVInput
     }
     
     @Override
-    public Stock2 getNullValue()
+    public Stock getNullValue()
     {
-        return new Stock2();
+        return new Stock();
     }
     
     /**
      * Builds all stocks, if any. Allowed to not have any in CSV.
      * @return Array of all stocks (including null stock).
      */
-    static private Stock2[] buildStocks()
+    static private Stock[] buildStocks()
     {
         final CSVReader csv = new CSVReader(STOCK_CSV_NAME, STOCK_VALUES);
         final int rowCount = csv.getRowCount();
         
         if (rowCount <= 0)
         {
-            return new Stock2[] { new Stock2() };
+            return new Stock[] { new Stock() };
         }
         
         int j = 0;
-        final Stock2[] toReturn             = new Stock2[rowCount + 1];
+        final Stock[] toReturn             = new Stock[rowCount + 1];
         final String[] displayNames         = csv.getColumnString(j++);
         final String[] materialNames        = csv.getColumnString(j++);
         final int[]    materialBytes        = csv.getColumnInt(j++);
@@ -68,10 +69,10 @@ public class Stocks extends CSVInput
         final String[] colors               = csv.getColumnString(j++);
         final double[] bulletSpreadModifier = csv.getColumnDouble(j++);
         
-        toReturn[rowCount] = new Stock2();
+        toReturn[rowCount] = new Stock();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Stock2(displayNames[i],
+            toReturn[i] = new Stock(displayNames[i],
                                       materialNames[i],
                                       materialBytes[i],
                                       price[i],
@@ -81,11 +82,11 @@ public class Stocks extends CSVInput
         return toReturn;
     }
     
-    static public class Stock2 extends GunModifier2 implements BulletSpreadModifier
+    static public class Stock extends GunModifier implements BulletSpreadModifier
     {
         private final double bulletSpreadMultiplier;
 
-        private Stock2(final String displayName,
+        private Stock(final String displayName,
                        final String material,
                        final int materialData,
                        final int price,
@@ -96,9 +97,9 @@ public class Stocks extends CSVInput
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
         }
 
-        private Stock2() { this(null, null, 0, 0, null, 0); }
+        private Stock() { this(null, null, 0, 0, null, 0); }
         
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
-        @Override public Stock2 getNullModifier() { return singleton.getNullValue(); }
+        @Override public Stock getNullModifier() { return singleton.getNullValue(); }
     }
 }

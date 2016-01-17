@@ -6,16 +6,15 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode2;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier2;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Type;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *
  * @author jbannon
  */
-public class FireModes extends CSVInput<FireMode2>
+public class FireModes extends CSVInput<FireMode>
 {
     static private FireModes singleton = null;
     static public FireModes getInstance()
@@ -43,7 +42,7 @@ public class FireModes extends CSVInput<FireMode2>
     }
     
     @Override
-    public FireMode2 getNullValue()
+    public FireMode getNullValue()
     {
         return null;
     }
@@ -52,7 +51,7 @@ public class FireModes extends CSVInput<FireMode2>
      * Builds all FireModes, if any. Must have at least one in CSV.
      * @return Array of all FireModes. Null otherwise.
      */
-    static private FireMode2[] buildFireModes()
+    static private FireMode[] buildFireModes()
     {
         final CSVReader csv = new CSVReader(FIREMODE_CSV_NAME, FIREMODE_VALUES);
         final int rowCount = csv.getRowCount();
@@ -63,7 +62,7 @@ public class FireModes extends CSVInput<FireMode2>
         }
         
         int j = 0;
-        final FireMode2[] toReturn           = new FireMode2[rowCount];
+        final FireMode[] toReturn           = new FireMode[rowCount];
         final String[] displayNames          = csv.getColumnString(j++);
         final String[] materialNames         = csv.getColumnString(j++);
         final int[]    materialBytes         = csv.getColumnInt(j++);
@@ -75,7 +74,7 @@ public class FireModes extends CSVInput<FireMode2>
         
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new FireMode2(displayNames[i],
+            toReturn[i] = new FireMode(displayNames[i],
                                       materialNames[i],
                                       materialBytes[i],
                                       price[i],
@@ -88,7 +87,7 @@ public class FireModes extends CSVInput<FireMode2>
     }
     
     
-    static public class FireMode2 extends GunModifier2 implements Type
+    static public class FireMode extends GunModifier
     {
         private static final String TITLE = "Fire Mode: ";
 
@@ -96,7 +95,7 @@ public class FireModes extends CSVInput<FireMode2>
         private final boolean isAutomatic;
         private final int shotsPerBurst;
 
-        private FireMode2(final String displayName,
+        private FireMode(final String displayName,
                           final String material,
                           final int materialByte,
                           final int price,
@@ -110,9 +109,17 @@ public class FireModes extends CSVInput<FireMode2>
             this.shotsPerBurst = shotsPerBurst;
             this.isAutomatic = isAutomatic;
         }
-
+        
+        public boolean isBurstFire()                 { return isBurstFire; }
+        public boolean isAutomatic()                 { return isAutomatic; }
+        public int     getShotsPerBurst()            { return shotsPerBurst; }
         @Override public int price()                 { return 40;       }
-        @Override public String title()              { return TITLE;    }
-        @Override  public FireMode2 getNullModifier() { return singleton.getNullValue(); }
+        @Override public FireMode getNullModifier() { return singleton.getNullValue(); }
+        
+        static
+        public String getTitle()
+        {
+            return TITLE;
+        }
     }
 }

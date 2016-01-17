@@ -6,11 +6,7 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
 import java.util.ArrayList;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.types.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -20,45 +16,6 @@ import org.bukkit.Material;
  */
 public class GunUtils
 {
-    static
-    public Boolean isShotgun(final CrackshotGun gun)
-    {
-        final Weapon weaponType = gun.getSkeleton().getWeaponType();
-        return (weaponType.equals(Weapon.SH_BREAK)
-                || weaponType.equals(Weapon.SH_PUMP)
-                || weaponType.equals(Weapon.SH_SLIDE));
-    }
-    
-    static
-    public Boolean isSniper(final CrackshotGun gun)
-    {
-        return gun.getSkeleton().getWeaponType().equals(Weapon.SNIPER);
-    }
-    
-    static
-    public Boolean isHuntingRifle(final CrackshotGun gun)
-    {
-        return gun.getSkeleton().getWeaponType().equals(Weapon.HUNTING);
-    }
-    
-    static
-    public Boolean hasScope(final CrackshotGun gun)
-    {
-        return !gun.getScope().equals(Scope.IRON);
-    }
-    
-    static
-    public Boolean isBurstFire(final CrackshotGun gun)
-    {
-        return gun.getFireMode().equals(FireMode.BURST);
-    }
-    
-    static
-    public Boolean isAutomatic(final CrackshotGun gun)
-    {
-        return gun.getFireMode().equals(FireMode.AUTO);
-    }
-    
     /**
      * Sorts GunModifiers by price ascending using bubble sort.
      * @param mods ArrayList of GunModifier
@@ -99,8 +56,8 @@ public class GunUtils
         
         ChatColor colors[] = ChatColor.values();
         for (ChatColor color : colors)
-        {
-            if (color.toString().equalsIgnoreCase(string))
+        { 
+            if (color.name().equalsIgnoreCase(string))
             {
                 return color;
             }
@@ -120,27 +77,5 @@ public class GunUtils
             return null;
         
         return Material.matchMaterial(string);
-    }
-    
-    /**
-     * Attempts to match a string with a Sounds enum.
-     * @param string Name of Sounds enum.
-     * @return Sounds enum if matches. Null otherwise.
-     */
-    static
-    public Sounds matchSound(final String string)
-    {
-        if (string == null)
-            return null;
-        
-        Sounds sounds[] = Sounds.values();
-        for (Sounds sound : sounds)
-        {
-            if (sound.toString().equalsIgnoreCase(string))
-            {
-                return sound;
-            }
-        }
-        return null;
     }
 }
