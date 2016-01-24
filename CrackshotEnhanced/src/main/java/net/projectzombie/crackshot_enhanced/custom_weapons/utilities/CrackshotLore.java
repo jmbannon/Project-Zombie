@@ -73,7 +73,7 @@ public class CrackshotLore
         lore.add(CONDITION_IDX,  buildConditionLore(initialCondition));
         lore.add(BUILD_IDX,      buildBuildLore(Build.STOCK.getEnumValue()));
         lore.add(FIRE_MODE_IDX,  buildFireModeLore(gun));
-        lore.addAll(ModifierLoreBuilder.buildModifierLore(gun));
+        lore.addAll(gun.buildModifierLore());
     }
     
     static

@@ -29,30 +29,30 @@ public class ModifierLoreBuilder
     
     private ModifierLoreBuilder() { /* Do nothing */ }
     
-    static
-    public ArrayList<String> buildModifierLore(final CrackshotGun gun)
-    {
-        final ArrayList<ArrayList<String>> attatchmentStats = new ArrayList<>();
-        final ArrayList<String> loreToReturn = new ArrayList<>();
-        ArrayList<String> attatchmentStat;
-        for (GunModifier mod : gun.getCraftableModifiers())
-        {
-            if (!mod.isNull())
-            {
-                attatchmentStat = buildGunModifierLore(mod);
-                if (attatchmentStat != null && !attatchmentStat.isEmpty())
-                    attatchmentStats.add(attatchmentStat);
-            }
-        }
-        
-        Collections.shuffle(attatchmentStats);
-        for (ArrayList<String> temp : attatchmentStats)
-        {
-            loreToReturn.addAll(temp);
-        }
-        
-        return loreToReturn;
-    }
+//    static
+//    public ArrayList<String> buildModifierLore(final CrackshotGun gun)
+//    {
+//        final ArrayList<ArrayList<String>> attatchmentStats = new ArrayList<>();
+//        final ArrayList<String> loreToReturn = new ArrayList<>();
+//        ArrayList<String> attatchmentStat;
+//        for (GunModifier mod : gun.getCraftableModifiers())
+//        {
+//            if (!mod.isNull())
+//            {
+//                attatchmentStat = buildGunModifierLore(mod);
+//                if (attatchmentStat != null && !attatchmentStat.isEmpty())
+//                    attatchmentStats.add(attatchmentStat);
+//            }
+//        }
+//        
+//        Collections.shuffle(attatchmentStats);
+//        for (ArrayList<String> temp : attatchmentStats)
+//        {
+//            loreToReturn.addAll(temp);
+//        }
+//        
+//        return loreToReturn;
+//    }
     
     static
     private ArrayList<String> buildGunModifierLore(final GunModifier mod)

@@ -9,6 +9,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
@@ -218,6 +219,30 @@ public class Guns
                 return 0;
             else
                 return (int)((build + 1) * this.getWeaponType().getUpgradePriceWeight());
+        }
+        
+        public ArrayList<String> buildModifierLore()
+        {
+            final ArrayList<ArrayList<String>> attatchmentStats = new ArrayList<>();
+            final ArrayList<String> loreToReturn = new ArrayList<>();
+            ArrayList<String> attatchmentStat;
+            for (GunModifier mod : getCraftableModifiers())
+            {
+                if (!mod.isNull())
+                {
+                    attatchmentStat = mod.getLore();
+                    if (attatchmentStat != null && !attatchmentStat.isEmpty())
+                        attatchmentStats.add(attatchmentStat);
+                }
+            }
+
+            Collections.shuffle(attatchmentStats);
+            for (ArrayList<String> temp : attatchmentStats)
+            {
+                loreToReturn.addAll(temp);
+            }
+
+            return loreToReturn;
         }
 
         public CrackshotGun getModifiedGun(final GunModifier modType)
