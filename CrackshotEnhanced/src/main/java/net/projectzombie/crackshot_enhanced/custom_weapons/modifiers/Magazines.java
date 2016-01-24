@@ -120,5 +120,6 @@ public class Magazines extends CSVInput<Magazine>
         @Override public double getReloadSpeedMultiplier()  { return reloadSpeedMultiplier; }
         @Override public GunModifier getNullModifier()      { return singleton.getNullValue(); }
         @Override public double getMagazineSizeMultiplier() { return magazineMultiplier; }
+
     }
 }
