@@ -102,7 +102,8 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         final String[] reloadSounds         = csv.getColumnString(j++);
         final String[] particleShoots       = csv.getColumnString(j++);
         
-        
+        if (modifierSets.isEmpty() || wepTypes.isEmpty())
+            return null;
         
         for (int i = 0; i < rowCount; i++)
         {
@@ -190,7 +191,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         }
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
-        public Weapon    getWeaponType()     { return weaponType;     }
+        public Weapon        getWeaponType()     { return weaponType;     }
         public double        getBulletSpread()   { return bulletSpread;   }
         public int           getItemID()         { return itemID;         }
         public int           getItemData()       { return itemData;       }
@@ -221,22 +222,28 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
 
             CrackshotGun guns[] = new CrackshotGun[combinationCount];
 
-            for (Attatchment attatchment : modSet.getAttatchments())
+            for (Attatchment attatchmentOne : modSet.getSlot1Attatchments())
             {
-                for (Barrel barrel : modSet.getBarrels())
+                for (Attatchment attatchmentTwo : modSet.getSlot2Attatchments())
                 {
-                    for (Bolt bolt : modSet.getBolts())
+                    for (Attatchment attatchmentThree : modSet.getSlot3Attatchments())
                     {
-                        for (FireMode fireMode : modSet.getFireModes())
+                        for (Barrel barrel : modSet.getBarrels())
                         {
-                            for (Magazine magazine : modSet.getMagazines())
+                            for (Bolt bolt : modSet.getBolts())
                             {
-                                for (Scope scope : modSet.getScopes())
+                                for (FireMode fireMode : modSet.getFireModes())
                                 {
-                                    for (Stock stock : modSet.getStocks())
+                                    for (Magazine magazine : modSet.getMagazines())
                                     {
-                                         guns[i] = new CrackshotGun(uniqueIDOffset, uniqueIDOffset + i, this, attatchment, barrel, bolt, fireMode, magazine, scope, stock);
-                                         ++i;
+                                        for (Scope scope : modSet.getScopes())
+                                        {
+                                            for (Stock stock : modSet.getStocks())
+                                            {
+                                                 guns[i] = new CrackshotGun(uniqueIDOffset, uniqueIDOffset + i, this, attatchmentOne, attatchmentTwo, attatchmentThree, barrel, bolt, fireMode, magazine, scope, stock);
+                                                 ++i;
+                                            }
+                                        }
                                     }
                                 }
                             }

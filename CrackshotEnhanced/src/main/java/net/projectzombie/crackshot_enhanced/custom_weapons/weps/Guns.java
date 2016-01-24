@@ -99,7 +99,9 @@ public class Guns
         private final GunSkeleton skeleton;
 
         /* Craftable gun modifiers */
-        private final Attatchment attatchment;
+        private final Attatchment attatchmentOne;
+        private final Attatchment attatchmentTwo;
+        private final Attatchment attatchmentThree;
         private final Barrel barrel;
         private final Bolt bolt;
         private final FireMode firemodeType;
@@ -112,7 +114,9 @@ public class Guns
         public CrackshotGun(final int gunIDOffset,
                              final int uniqueID,
                              final GunSkeleton skeleton,
-                             final Attatchment attatchment,
+                             final Attatchment attatchmentOne,
+                             final Attatchment attatchmentTwo,
+                             final Attatchment attatchmentThree,
                              final Barrel barrel,
                              final Bolt bolt,
                              final FireMode firemodeType,
@@ -125,7 +129,9 @@ public class Guns
             this.skeleton = skeleton;
             this.firemodeType = firemodeType;
             this.scopeType = scopeType;
-            this.attatchment = attatchment;
+            this.attatchmentOne = attatchmentOne;
+            this.attatchmentTwo = attatchmentTwo;
+            this.attatchmentThree = attatchmentThree;
             this.bolt = bolt;
             this.barrel = barrel;
             this.stock = stock;
@@ -133,14 +139,14 @@ public class Guns
             this.csWeaponName = String.valueOf(uniqueID) + "_" + skeleton.getFileName();
         }
 
-        public GunSkeleton getSkeleton()         { return skeleton;                }
+        public GunSkeleton  getSkeleton()         { return skeleton;                }
         public int          getIDOffset()         { return gunIDOffset;             }
         public int          getUniqueId()         { return uniqueID;                }
-        public Weapon   getWeaponType()       { return skeleton.getWeaponType();}
-        public FireMode    getFireMode()         { return firemodeType;            }
-        public Scope       getScope()            { return scopeType;               }
-        public Attatchment getAttatchment()      { return attatchment;             }
-        public Barrel      getBarrel()           { return barrel;                  }
+        public Weapon       getWeaponType()       { return skeleton.getWeaponType();}
+        public FireMode     getFireMode()         { return firemodeType;            }
+        public Scope        getScope()            { return scopeType;               }
+        public Attatchment  getAttatchment()      { return attatchmentOne;             }
+        public Barrel       getBarrel()           { return barrel;                  }
         public int          getItemID()           { return skeleton.getItemID();    }
         public int          getItemData()         { return skeleton.getItemData();  }
         public String       getCSWeaponName()     { return csWeaponName;            }
@@ -151,7 +157,9 @@ public class Guns
         {
             return new GunModifier[]
             { 
-                attatchment,
+                attatchmentOne,
+                attatchmentTwo,
+                attatchmentThree,
                 barrel,
                 bolt,
                 firemodeType,
@@ -237,7 +245,7 @@ public class Guns
             final ArrayList<GunModifier> mods = new ArrayList<>();
             for (GunModifier modifier : skeleton.getModifiers())
             {
-                if (this.attatchment != modifier
+                if (this.attatchmentOne != modifier
                         && this.firemodeType != modifier
                         && this.scopeType != modifier)
                 {

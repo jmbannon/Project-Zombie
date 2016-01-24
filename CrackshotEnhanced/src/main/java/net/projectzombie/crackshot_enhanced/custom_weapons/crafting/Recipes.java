@@ -153,7 +153,7 @@ public class Recipes implements Listener
     static private void intializeAttatchments(final GunSkeleton skele)
     {
         final ItemStack bareSkeleItemStack = skele.getBareItemStack();
-        for (Attatchment att : skele.getModifierSet().getAttatchments())
+        for (Attatchment att : skele.getModifierSet().getSlot1Attatchments())
         {
             if (att.getMaterialData() != null)
             {
@@ -169,7 +169,7 @@ public class Recipes implements Listener
     static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
     {
         final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
-        for (Attatchment mod : Attatchments.getInstance().getAll())
+        for (Attatchment mod : Attatchments.getSlotOneInstance().getAll())
             hash.put(mod.getMaterialData(), mod);
         for (Barrel mod : Barrels.getInstance().getAll())
             hash.put(mod.getMaterialData(), mod);

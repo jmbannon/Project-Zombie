@@ -23,6 +23,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
  */
 public interface DurabilityModifier
 {
-    public int getDurabilityValue();
-    public double getDurabilityIncrease();
+    public int getDurabilityModifier();
+    public double getDurabilityMultiplier();
 }

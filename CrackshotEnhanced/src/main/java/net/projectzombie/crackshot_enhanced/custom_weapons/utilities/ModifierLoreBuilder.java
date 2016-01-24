@@ -120,7 +120,7 @@ public class ModifierLoreBuilder
     ArrayList<String> getBoltModifierStats(final BoltModifier boltMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String durationIncrease = getMultiplierStat(boltMod.getBoltActionDurationMultiplier(), "bolt action speed");
+        final String durationIncrease = getMultiplierStat(boltMod.getBoltDurationMultiplier(), "bolt action speed");
         
         if (durationIncrease != null)
             stats.add(durationIncrease);
@@ -176,7 +176,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getMagazineModifierStats(final MagazineModifier magMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String magBoost = getValueStat(magMod.getMagazineValue(), "mag size");
+        final String magBoost = getValueStat(magMod.getMagazineModifier(), "mag size");
         final String reloadSpeed = getMultiplierStat(magMod.getReloadSpeedMultiplier(), "reload speed");
         
         if (magBoost != null)

@@ -27,12 +27,12 @@ public class Bolts extends CSVInput<Bolt>
     
     static private final String BOLTS_CSV_NAME = "Bolts.csv";
     static private final String[] BOLT_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "duration multiplier"
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Bolt Duration Multiplier (DBL)"
     };
     
     private Bolts()
@@ -61,23 +61,24 @@ public class Bolts extends CSVInput<Bolt>
         }
  
         int j = 0;
-        final Bolt[] toReturn            = new Bolt[rowCount + 1];
+        final Bolt[]   toReturn             = new Bolt[rowCount + 1];
         final String[] displayNames         = csv.getColumnString(j++);
         final String[] materialNames        = csv.getColumnString(j++);
         final int[]    materialBytes        = csv.getColumnInt(j++);
         final int[]    price                = csv.getColumnInt(j++);
         final String[] colors               = csv.getColumnString(j++);
-        final double[] durationMultiplie    = csv.getColumnDouble(j++);
+        final double[] durationMultiplier   = csv.getColumnDouble(j++);
  
         toReturn[rowCount] = new Bolt();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Bolt(displayNames[i],
-                                      materialNames[i],
-                                      materialBytes[i],
-                                      price[i],
-                                      colors[i],
-                                      durationMultiplie[i]);
+            toReturn[i] = new Bolt(
+                displayNames[i],
+                materialNames[i],
+                materialBytes[i],
+                price[i],
+                colors[i],
+                durationMultiplier[i]);
         }
         return toReturn;
     }
@@ -102,7 +103,7 @@ public class Bolts extends CSVInput<Bolt>
             this(null, null, 0, 0, null, 0);
         }
 
-        @Override public double getBoltActionDurationMultiplier() { return durationMultiplier; }
-        @Override public Bolt getNullModifier()        { return singleton.getNullValue(); }
+        @Override public double getBoltDurationMultiplier() { return durationMultiplier; }
+        @Override public Bolt getNullModifier()             { return new Bolt(); }
     }
 }

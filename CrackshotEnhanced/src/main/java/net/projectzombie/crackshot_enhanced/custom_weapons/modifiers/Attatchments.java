@@ -13,22 +13,43 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 /**
  *
  * @author jbannon
  */
 public class Attatchments extends CSVInput<Attatchment>
 {
-    static private Attatchments singleton = null;
-    
-    static public Attatchments getInstance()
+    static private Attatchments slotOneSingleton = null;
+    static private Attatchments slotTwoSingleton = null;
+    static private Attatchments slotThreeSingleton = null;
+            
+    static public Attatchments getSlotOneInstance()
     {
-        if (singleton == null)
-            singleton = new Attatchments();
-        return singleton;
+        if (slotOneSingleton == null)
+            slotOneSingleton = new Attatchments(ATTATCHMENT_ONE_CSV_NAME);
+        return slotOneSingleton;
     }
     
-    static private final String ATTATCHMENT_CSV_NAME = "Attatchments.csv";
+    static public Attatchments getSlotTwoInstance()
+    {
+        if (slotTwoSingleton == null)
+            slotTwoSingleton = new Attatchments(ATTATCHMENT_TWO_CSV_NAME);
+        return slotTwoSingleton;
+    }
+    
+    static public Attatchments getSlotThreeInstance()
+    {
+        if (slotThreeSingleton == null)
+            slotThreeSingleton = new Attatchments(ATTATCHMENT_THREE_CSV_NAME);
+        return slotThreeSingleton;
+    }
+    
+    static private final String ATTATCHMENT_ONE_CSV_NAME = "Slot1_Attatchments.csv";
+    static private final String ATTATCHMENT_TWO_CSV_NAME = "Slot2_Attatchments.csv";
+    static private final String ATTATCHMENT_THREE_CSV_NAME = "Slot3_Attatchments.csv";
+    
     static private final String[] ATTATCHMENT_VALUES = {
         "Display Name (STR)",
         "Material (INT)",
@@ -45,14 +66,21 @@ public class Attatchments extends CSVInput<Attatchment>
         "Bleedout Duration Seconds (DBL)",
         "Bleedout Duration Multiplier (DBL)",
         "Bleedout Damage (DBL)",
-        "Bleedout Damage Multiplier from Base Damage",
-        "Bleedout Damage Multiplier from Shrapnel",
-        "Is Silencer (T/F)"
+        "Bleedout Damage Multiplier from Base Damage (DBL)",
+        "Bleedout Damage Multiplier from Shrapnel (DBL)",
+        "Fire Damage Modifier (DBL)",
+        "Fire Damage Multiplier (DBL)",
+        "Ignite Chance (DBL)",
+        "Ignite Duration (DBL)",
+        "Shrapnel Damage Modifier (DBL)",
+        "Shrapnel Damage Multiplier (DBL)",
+        "Stun Chance (DBL)",
+        "Stun Duration (DBL)"
     };
     
-    private Attatchments()
+    private Attatchments(final String csvName)
     {
-        super(ATTATCHMENT_CSV_NAME, buildAttatchments(), ATTATCHMENT_VALUES);
+        super(csvName, buildAttatchments(csvName), ATTATCHMENT_VALUES);
     }
     
     @Override
@@ -65,9 +93,9 @@ public class Attatchments extends CSVInput<Attatchment>
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    static private Attatchment[] buildAttatchments()
+    static private Attatchment[] buildAttatchments(final String csvName)
     {
-        final CSVReader csv = new CSVReader(ATTATCHMENT_CSV_NAME, ATTATCHMENT_VALUES);
+        final CSVReader csv = new CSVReader(csvName, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
@@ -93,29 +121,45 @@ public class Attatchments extends CSVInput<Attatchment>
         final double[] bleedoutDamage      = csv.getColumnDouble(j++);
         final double[] bleedoutDamageFromBase = csv.getColumnDouble(j++);
         final double[] bleedoutDamageFromShrap = csv.getColumnDouble(j++);
-        final boolean[] isSilencer         = csv.getColumnBoolean(j++);
+        final double[] fireDamageModifier = csv.getColumnDouble(j++);
+        final double[] fireDamageMultiplier = csv.getColumnDouble(j++);
+        final double[] igniteChance = csv.getColumnDouble(j++);
+        final double[] igniteDuration = csv.getColumnDouble(j++);
+        final double[] shrapnelDamageModifier = csv.getColumnDouble(j++);
+        final double[] shrapnelDamageMultiplier = csv.getColumnDouble(j++);
+        final double[] stunChance = csv.getColumnDouble(j++);
+        final double[] stunDuration = csv.getColumnDouble(j++);
  
         toReturn[rowCount] = new Attatchment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Attatchment(displayNames[i],
-                                           materialNames[i],
-                                           materialBytes[i],
-                                           price[i],
-                                           colors[i],
-                                           bsMultiplier[i],
-                                           damageModifier[i],
-                                           damageMultiplier[i],
-                                           headshotModifier[i],
-                                           headshotMultiplier[i],
-                                           critChanceBoost[i],
-                                           critMultiplierBoost[i],
-                                           bleedoutDuration[i],
-                                           bleedoutDurationMultiplier[i],
-                                           bleedoutDamage[i],
-                                           bleedoutDamageFromBase[i],
-                                           bleedoutDamageFromShrap[i],
-                                           isSilencer[i]);
+            toReturn[i] = new Attatchment(
+                    displayNames[i],
+                    materialNames[i],
+                    materialBytes[i],
+                    price[i],
+                    colors[i],
+                    bsMultiplier[i],
+                    damageModifier[i],
+                    damageMultiplier[i],
+                    headshotModifier[i],
+                    headshotMultiplier[i],
+                    critChanceBoost[i],
+                    critMultiplierBoost[i],
+                    bleedoutDuration[i],
+                    bleedoutDurationMultiplier[i],
+                    bleedoutDamage[i],
+                    bleedoutDamageFromBase[i],
+                    bleedoutDamageFromShrap[i],
+                    fireDamageModifier[i],
+                    fireDamageMultiplier[i],
+                    igniteChance[i],
+                    igniteDuration[i],
+                    shrapnelDamageModifier[i],
+                    shrapnelDamageMultiplier[i],
+                    stunChance[i],
+                    stunDuration[i]
+            );
         }
         return toReturn;
     }
@@ -123,7 +167,9 @@ public class Attatchments extends CSVInput<Attatchment>
     static public class Attatchment extends GunModifier implements BulletSpreadModifier, 
                                                               DamageModifier,
                                                               CritModifier,
-                                                              BleedoutModifier
+                                                              BleedoutModifier,
+                                                              IncendiaryModifier,
+                                                              Shrapnel
     {
         private final double bulletSpreadMultiplier;
         private final double damageModifier;
@@ -137,7 +183,14 @@ public class Attatchments extends CSVInput<Attatchment>
         private final double bleedoutDamageBoost;
         private final double bleedoutDamageMultiplierFromBase;
         private final double bleedoutDamageMultiplierFromShrap;
-        private final boolean isSilencer;
+        private final double fireDamageModifier;
+        private final double fireDamageMultiplier;
+        private final double igniteChance;
+        private final double igniteDuration;
+        private final double shrapnelDamageModifier;
+        private final double shrapnelDamageMultiplier;
+        private final double stunChance;
+        private final double stunDuration;
 
         private Attatchment(final String displayname,
                             final String materialName,
@@ -156,7 +209,14 @@ public class Attatchments extends CSVInput<Attatchment>
                             final double bleedoutDamageBoost,
                             final double bleedoutDamageMultiplierFromBase,
                             final double bleedoutDamageMultiplierFromShrap,
-                            final boolean isSilencer)
+                            final double fireDamageModifier,
+                            final double fireDamageMultiplier,
+                            final double igniteChance,
+                            final double igniteDuration,
+                            final double shrapnelDamageModifier,
+                            final double shrapnelDamageMultiplier,
+                            final double stunChance,
+                            final double stunDuration)
         {        
             super(displayname, materialName, materialByte, price, color);
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
@@ -171,7 +231,14 @@ public class Attatchments extends CSVInput<Attatchment>
             this.bleedoutDamageBoost = bleedoutDamageBoost;
             this.bleedoutDamageMultiplierFromBase = bleedoutDamageMultiplierFromBase;
             this.bleedoutDamageMultiplierFromShrap = bleedoutDamageMultiplierFromShrap;
-            this.isSilencer = isSilencer;
+            this.fireDamageModifier = fireDamageModifier;
+            this.fireDamageMultiplier = fireDamageMultiplier;
+            this.igniteChance = igniteChance;
+            this.igniteDuration = igniteDuration;
+            this.shrapnelDamageModifier = shrapnelDamageModifier;
+            this.shrapnelDamageMultiplier = shrapnelDamageMultiplier;
+            this.stunChance = stunChance;
+            this.stunDuration = stunDuration;
         }
 
         /**
@@ -179,22 +246,29 @@ public class Attatchments extends CSVInput<Attatchment>
          */
         private Attatchment()
         {
-            this(null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, false);
+            this(null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
-        public boolean isSilencer()                         { return isSilencer; }
-        @Override public double getDamageValue()            { return 0;           }
-        @Override public double getDamageMultiplier()       { return damageMultiplier; }
-        @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
-        @Override public double getCritChance()             { return critChanceBoost; }
-        @Override public double getCritStrike()             { return critStrikeMultiplier; }
-        @Override public double getBleedoutDurationValue()  { return bleedoutDurationSeconds; }
-        @Override public double getBleedoutDamageValuePerSecond()    { return bleedoutDamageBoost;  }
-        @Override public Attatchment getNullModifier()     { return singleton.getNullValue(); }
-        @Override public double getHeadshotDamageValue() { return headshotDamageModifier; }
-        @Override public double getHeadshotDamageMultiplier() { return headshotDamageMultiplier; }
-        @Override public double getBleedoutDurationMultiplier() { return bleedoutDurationMultiplier; }
-        @Override public double getBleedoutDamageMultiplierFromDamage() { return bleedoutDamageMultiplierFromBase; }
+        @Override public double getDamageValue()                         { return damageModifier; }
+        @Override public double getDamageMultiplier()                    { return damageMultiplier; }
+        @Override public double getBulletSpreadMultiplier()              { return bulletSpreadMultiplier; }
+        @Override public double getCritChance()                          { return critChanceBoost; }
+        @Override public double getCritStrike()                          { return critStrikeMultiplier; }
+        @Override public double getBleedoutDurationValue()               { return bleedoutDurationSeconds; }
+        @Override public double getBleedoutDamageValuePerSecond()        { return bleedoutDamageBoost;  }
+        @Override public Attatchment getNullModifier()                   { return slotOneSingleton.getNullValue(); }
+        @Override public double getHeadshotDamageModifier()              { return headshotDamageModifier; }
+        @Override public double getHeadshotDamageMultiplier()            { return headshotDamageMultiplier; }
+        @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }
+        @Override public double getBleedoutDamageMultiplierFromDamage()  { return bleedoutDamageMultiplierFromBase; }
         @Override public double getBleedoutDamageMultiplerFromShrapnel() { return bleedoutDamageMultiplierFromShrap; }
+        @Override public double getFireDamageValue()                     { return fireDamageModifier; }
+        @Override public double getFireDamageMultiplier()                { return fireDamageMultiplier; }
+        @Override public double getIgniteChance()                        { return igniteChance; }
+        @Override public double getIgniteDuration()                      { return igniteDuration; }
+        @Override public double getShrapnelDamageValue()                 { return shrapnelDamageModifier; }
+        @Override public double getShrapnelDamageMultiplier()            { return shrapnelDamageMultiplier; }
+        @Override public double getStunChance()                          { return stunChance; }
+        @Override public double getStunDuration()                        { return stunDuration; }
     }
 }

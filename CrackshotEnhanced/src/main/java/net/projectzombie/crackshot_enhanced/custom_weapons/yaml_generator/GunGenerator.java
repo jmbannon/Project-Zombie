@@ -103,7 +103,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getBoltActionDurationMultiplier();
+                durationMultiplier += mod.getBoltDurationMultiplier();
             
             modifiedOpenDuration = (int)Math.round(openDuration * durationMultiplier);
             
@@ -131,7 +131,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getBoltActionDurationMultiplier();
+                durationMultiplier += mod.getBoltDurationMultiplier();
            
             modifiedCloseDuration = (int)Math.round(closeDuration * durationMultiplier);
             
@@ -159,7 +159,7 @@ public class GunGenerator
             double durationMultiplier = 1.0;
             
             for (BoltModifier mod : gun.getBoltModifiers())
-                durationMultiplier += mod.getBoltActionDurationMultiplier();
+                durationMultiplier += mod.getBoltDurationMultiplier();
             
             modifiedCloseShootDelay = (int)Math.round(closeShootDelay * durationMultiplier);
             
@@ -234,7 +234,7 @@ public class GunGenerator
     {
         int reloadAmount = gun.getSkeleton().getReloadAmount();
         for (MagazineModifier mod : gun.getMagazineModifiers())
-            reloadAmount += mod.getMagazineValue();
+            reloadAmount += mod.getMagazineModifier();
         
         if (reloadAmount < 1)
             return 1;
@@ -267,7 +267,7 @@ public class GunGenerator
     public String getSoundsShoot()
     {
         final GunSkeleton base = gun.getSkeleton();
-        return (gun.getAttatchment().isSilencer()) ? 
+        return (gun.getBarrel().isSilencer()) ? 
                 base.getSilencedSound() : base.getShootSound();
     }
     

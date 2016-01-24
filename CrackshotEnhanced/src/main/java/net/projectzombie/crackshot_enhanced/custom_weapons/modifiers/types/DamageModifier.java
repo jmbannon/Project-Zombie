@@ -23,7 +23,7 @@ public interface DamageModifier
      */
     public double getDamageMultiplier();
     
-    public double getHeadshotDamageValue();
+    public double getHeadshotDamageModifier();
     
     public double getHeadshotDamageMultiplier();
 }

@@ -77,12 +77,13 @@ public final class CSVReader
         this.file = new File(plugin.getDataFolder(), fileName);
         this.data = readData(false, linesToSkip, null);
         this.columnCount = -1;
-        if (data != null)
+        if (data != null && !data.isEmpty() && data.get(0) != null && !data.get(0).isEmpty())
         {
             this.rowCount = data.size();
         }
         else
         {
+            System.out.println("WRITING BLANK BITHC");
             writeBlankCSV(template);
             this.rowCount = 0;
         }
@@ -140,7 +141,7 @@ public final class CSVReader
     
     private ArrayList<ArrayList<String>> getColumnData(final String[] columnValues,
                                                        final ArrayList<String> lines)
-    {
+    {   
         final ArrayList<ArrayList<String>> toRet = new ArrayList<>();
         String lineValues[];
         
@@ -177,6 +178,55 @@ public final class CSVReader
         }
         
         return toRet;
+    }
+    
+    public String getString(final int rowValue,
+                             final int colValue)
+    {
+        final String toRet = getValue(rowValue, colValue);
+        if (toRet != null)
+            return toRet;
+        else
+            return null;
+    }
+    
+    public Double getDouble(final int rowValue,
+                             final int colValue)
+    {
+        final String toRet = getValue(rowValue, colValue);
+        if (toRet != null)
+            return Double.valueOf(toRet);
+        else
+            return null;
+    }
+    
+    public Integer getInt(final int rowValue,
+                           final int colValue)
+    {
+        final String toRet = getValue(rowValue, colValue);
+        if (toRet != null)
+            return Integer.valueOf(toRet);
+        else
+            return null;
+    }
+    
+    public Boolean getBool(final int rowValue,
+                            final int colValue)
+    {
+        final String toRet = getValue(rowValue, colValue);
+        if (toRet != null)
+            return Boolean.valueOf(toRet);
+        else
+            return null;
+    }
+    
+    private String getValue(final int rowValue,
+                            final int colValue)
+    {
+        if (!isValidColumn(colValue))
+            return null;
+        
+        return data.get(colValue).get(rowValue);
     }
     
     public String[] getColumnString(final int columnNumber)

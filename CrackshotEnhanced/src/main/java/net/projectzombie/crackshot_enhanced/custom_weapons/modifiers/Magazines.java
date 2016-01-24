@@ -27,13 +27,14 @@ public class Magazines extends CSVInput<Magazine>
     
     static private final String MAGAZINES_CSV_NAME = "Magazines.csv";
     static private final String[] MAGAZINE_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "magazine boost",
-        "reload speed multiplier"
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Magazine Modifier (INT)",
+        "Magazine Multiplier (DBL)",
+        "Reload Speed Multiplier (DBL)"
     };
     
     private Magazine[] magazines;
@@ -71,6 +72,7 @@ public class Magazines extends CSVInput<Magazine>
         final int[]    price                = csv.getColumnInt(j++);
         final String[] colors               = csv.getColumnString(j++);
         final int[] magazineBoost           = csv.getColumnInt(j++);
+        final double[] magazineMultiplier   = csv.getColumnDouble(j++);
         final double[] reloadSpeedMultiplier= csv.getColumnDouble(j++);
         
         toReturn[rowCount] = new Magazine();
@@ -82,6 +84,7 @@ public class Magazines extends CSVInput<Magazine>
                                       price[i],
                                       colors[i],
                                       magazineBoost[i],
+                                      magazineMultiplier[i],
                                       reloadSpeedMultiplier[i]);
         }
         return toReturn;
@@ -90,6 +93,7 @@ public class Magazines extends CSVInput<Magazine>
     static public class Magazine extends GunModifier implements MagazineModifier
     {
         private final int magazineBoost;
+        private final double magazineMultiplier;
         private final double reloadSpeedMultiplier;
 
         private Magazine(final String displayName,
@@ -98,20 +102,23 @@ public class Magazines extends CSVInput<Magazine>
                           final int price,
                           final String color,
                           final int magazineBoost,
+                          final double magazineMultiplier,
                           final double reloadSpeedMultiplier)
         {
             super(displayName, material, materialByte, price, color);
             this.magazineBoost = magazineBoost;
+            this.magazineMultiplier = magazineMultiplier;
             this.reloadSpeedMultiplier = reloadSpeedMultiplier;
         }
 
         private Magazine()
         {
-            this(null, null, 0, 0, null, 0, 0);
+            this(null, null, 0, 0, null, 0, 0, 0);
         }
 
-        @Override public int getMagazineValue()            { return magazineBoost; }
-        @Override public double getReloadSpeedMultiplier() { return reloadSpeedMultiplier; }
-        @Override public GunModifier getNullModifier() { return singleton.getNullValue(); }
+        @Override public int getMagazineModifier()          { return magazineBoost; }
+        @Override public double getReloadSpeedMultiplier()  { return reloadSpeedMultiplier; }
+        @Override public GunModifier getNullModifier()      { return singleton.getNullValue(); }
+        @Override public double getMagazineSizeMultiplier() { return magazineMultiplier; }
     }
 }

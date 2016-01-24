@@ -27,13 +27,14 @@ public class Sights extends CSVInput<Scope>
     
     static private final String SCOPE_CSV_NAME = "Scopes.csv";
     static private final String[] SCOPE_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "crackshot zoom amount",
-        "bullet spread multiplier"
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Crackshot Zoom Amount (INT)",
+        "Bullet Spread Multiplier (DBL)",
+        "Zoom Bulletspread Multiplier (DBL)"
     };
 
     private Sights()
@@ -70,6 +71,7 @@ public class Sights extends CSVInput<Scope>
         final String[] colors               = csv.getColumnString(j++);
         final int[] crackshotZoomAmount     = csv.getColumnInt(j++);
         final double[] bulletSpreadModifier = csv.getColumnDouble(j++);
+        final double[] zoomBulletSpreadMultiplier = csv.getColumnDouble(j++);
         toReturn[rowCount] = new Scope();
         
         for (int i = 0; i < rowCount; i++)
@@ -80,7 +82,8 @@ public class Sights extends CSVInput<Scope>
                                       price[i],
                                       colors[i],
                                       crackshotZoomAmount[i],
-                                      bulletSpreadModifier[i]);
+                                      bulletSpreadModifier[i],
+                                      zoomBulletSpreadMultiplier[i]);
         }
         return toReturn;
     }
@@ -89,26 +92,30 @@ public class Sights extends CSVInput<Scope>
     {
         private final int zoomAmount;
         private final double bulletSpreadModifier;
-
+        private final double zoomBulletSpreadMultiplier;
+        
         private Scope(final String displayName,
                        final String material,
                        final int materialByte,
                        final int price,
                        final String color,
                        final int crackshotZoomAmount,
-                       final double bulletSpreadModifier)
+                       final double bulletSpreadModifier,
+                       final double zoomBulletSpreadModifier)
         {
             super(displayName, material, materialByte, price, color);
             this.zoomAmount = crackshotZoomAmount;
             this.bulletSpreadModifier = bulletSpreadModifier;
+            this.zoomBulletSpreadMultiplier = zoomBulletSpreadModifier;
         }
 
         private Scope()
         {
-            this(null, null, 0, 0, null, 0, 0);
+            this(null, null, 0, 0, null, 0, 0, 0);
         }
 
         public int getZoomAmount()                          { return zoomAmount;   }
+        public double getZoomBulletSpreadMultiplier()         { return zoomBulletSpreadMultiplier; }
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadModifier; }
         @Override public Scope getNullModifier()           { return singleton.getNullValue(); }
     }

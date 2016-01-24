@@ -26,14 +26,14 @@ public class FireModes extends CSVInput<FireMode>
     
     static private final String FIREMODE_CSV_NAME = "FireModes.csv";
     static private final String[] FIREMODE_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "is burst fire",
-        "shots per burst",
-        "is automatic"
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Is Burst Fire (T/F)",
+        "Shots Per Burst (INT)",
+        "Is Automatic (T/F)"
     };
     
     private FireModes()

@@ -29,15 +29,22 @@ public class Barrels extends CSVInput<Barrel>
     
     static private final String BARREL_CSV_NAME = "Barrels.csv";
     static private final String[] BARREL_VALUES = {
-        "display name",
-        "material",
-        "materialData",
-        "price",
-        "color",
-        "damageValue",
-        "damageMultiplier",
-        "additional projectiles",
-        "bulletSpread modifier",
+        "Display Name (STR)",
+        "Material (INT)",
+        "Material Data (INT)",
+        "Price (INT)",
+        "Color (STR)",
+        "Is Silencer (T/F)",
+        "BulletSpreadModifier (DBL)",
+        "Damage Value (DBL)",
+        "Damage Multiplier (DBL)",
+        "Headshot Modifier (DBL)",
+        "Headshot Multiplier (DBL)",
+        "AdditionalProjectiles (INT)",
+        "Projectile Speed Multiplier (DBL)",
+        "Projectile Range Modifier (INT)",
+        "Projectile Range Multiplier (DBL)",
+        "Interval Between Shot Multiplier (DBL)"
     };
 
     private Barrels()
@@ -66,29 +73,46 @@ public class Barrels extends CSVInput<Barrel>
         }
  
         int j = 0;
-        final Barrel[] toReturn            = new Barrel[rowCount + 1];
-        final String[] displayNames         = csv.getColumnString(j++);
-        final String[] materialNames        = csv.getColumnString(j++);
-        final int[]    materialBytes        = csv.getColumnInt(j++);
-        final int[]    price                = csv.getColumnInt(j++);
-        final String[] colors               = csv.getColumnString(j++);
-        final double[] damageValues         = csv.getColumnDouble(j++);
-        final double[] damageMultipliers    = csv.getColumnDouble(j++);
-        final int[] additionalProjectiles   = csv.getColumnInt(j++);
-        final double[] bulletSpreadModifier = csv.getColumnDouble(j++);
+        final Barrel[] toReturn                      = new Barrel[rowCount + 1];
+        final String[] displayName                   = csv.getColumnString(j++);
+        final String[] material                      = csv.getColumnString(j++);
+        final int[]    materialByte                  = csv.getColumnInt(j++);
+        final int[]    price                         = csv.getColumnInt(j++);
+        final String[] color                         = csv.getColumnString(j++);
+        final boolean[] silencer                     = csv.getColumnBoolean(j++);
+        final double[] bulletSpreadModifier          = csv.getColumnDouble(j++);
+        final double[] damageValue                   = csv.getColumnDouble(j++);
+        final double[] damageMultiplier              = csv.getColumnDouble(j++);
+        final double[] headshotValue                 = csv.getColumnDouble(j++);
+        final double[] headshotMultiplier            = csv.getColumnDouble(j++);
+        final int[]    additionalProjectiles         = csv.getColumnInt(j++);
+        final double[] projectileSpeedMultiplier     = csv.getColumnDouble(j++);
+        final int[]    projectileRangeValue          = csv.getColumnInt(j++);
+        final double[] projectileRangeMultiplier     = csv.getColumnDouble(j++);
+        final double[] intervalBetweenShotMultiplier = csv.getColumnDouble(j++);
+        
  
         toReturn[rowCount] = new Barrel();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Barrel(displayNames[i],
-                                      materialNames[i],
-                                      materialBytes[i],
-                                      price[i],
-                                      colors[i],
-                                      damageValues[i],
-                                      damageMultipliers[i],
-                                      additionalProjectiles[i],
-                                      bulletSpreadModifier[i]);
+            toReturn[i] = new Barrel(
+                displayName[i],              
+                material[i],                     
+                materialByte[i],                 
+                price[i],                        
+                color[i],
+                silencer[i],
+                bulletSpreadModifier[i],         
+                damageValue[i],                  
+                damageMultiplier[i],             
+                headshotValue[i],                
+                headshotMultiplier[i],           
+                additionalProjectiles[i],        
+                projectileSpeedMultiplier[i],    
+                projectileRangeValue[i],         
+                projectileRangeMultiplier[i],    
+                intervalBetweenShotMultiplier[i]
+            );
         }
         return toReturn;
     }
@@ -98,37 +122,66 @@ public class Barrels extends CSVInput<Barrel>
                                                               DamageModifier,
                                                               ProjectileModifier
     {
+        private final double bulletSpreadModifier;
         private final double damageValue;
         private final double damageMultiplier;
+        private final double headshotValue;
+        private final double headshotMultiplier;
         private final int    additionalProjectiles;
-        private final double bulletSpreadModifier;
+        private final double projectileSpeedMultiplier;
+        private final int    projectileRangeValue;
+        private final double projectileRangeMultiplier;
+        private final double intervalBetweenShotMultiplier;
+        private final boolean isSilencer;
+        
 
-        private Barrel(final String displayName,
+        private Barrel(final String  displayName,
                         final String material,
-                        final int materialByte,
-                        final int price,
+                        final int    materialByte,
+                        final int    price,
                         final String color,
+                        final boolean isSilencer,
+                        final double bulletSpreadModifier,
                         final double damageValue,
                         final double damageMultiplier,
-                        final int additionalProjectiles,
-                        final double bulletSpreadModifier)
+                        final double headshotValue,
+                        final double headshotMultiplier,
+                        final int    additionalProjectiles,
+                        final double projectileSpeedMultiplier,
+                        final int    projectileRangeValue,
+                        final double projectileRangeMultiplier,
+                        final double intervalBetweenShotMultiplier)
         {
             super(displayName, material, materialByte, price, color);
+            this.isSilencer = isSilencer;
+            this.bulletSpreadModifier = bulletSpreadModifier;
             this.damageValue = damageValue;
             this.damageMultiplier = damageMultiplier;
+            this.headshotValue = headshotValue;
+            this.headshotMultiplier = headshotMultiplier;
             this.additionalProjectiles = additionalProjectiles;
-            this.bulletSpreadModifier = bulletSpreadModifier;
+            this.projectileSpeedMultiplier = projectileSpeedMultiplier;
+            this.projectileRangeValue = projectileRangeValue;
+            this.projectileRangeMultiplier = projectileRangeMultiplier;
+            this.intervalBetweenShotMultiplier = intervalBetweenShotMultiplier;
         }
 
         public Barrel()
         {
-            this(null, null, 0, 0, null, 0, 0, 0, 0);
+            this(null, null, 0, 0, null, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
+        public boolean isSilencer()                          { return isSilencer; }
         @Override public double getDamageValue()             { return damageValue; }
         @Override public double getDamageMultiplier()        { return damageMultiplier; }
-        @Override public int getProjectileValue() { return additionalProjectiles; }
+        @Override public int getProjectileValue()            { return additionalProjectiles; }
         @Override public double getBulletSpreadMultiplier()  { return bulletSpreadModifier; }
-        @Override public Barrel getNullModifier()      { return singleton.getNullValue(); }
+        @Override public Barrel getNullModifier()            { return singleton.getNullValue(); }
+        @Override public double getHeadshotDamageModifier()  { return headshotValue; }
+        @Override public double getHeadshotDamageMultiplier() { return headshotMultiplier; }
+        @Override public double getProjectileSpeedMultiplier() { return projectileSpeedMultiplier; }
+        @Override public int getProjectileRangeValue()         { return projectileRangeValue; }
+        @Override public double getProjectileRangeMultiplier() { return projectileRangeMultiplier; }
+        @Override public double getIntervalBetweenShotModifier() { return intervalBetweenShotMultiplier; }
     }
 }
