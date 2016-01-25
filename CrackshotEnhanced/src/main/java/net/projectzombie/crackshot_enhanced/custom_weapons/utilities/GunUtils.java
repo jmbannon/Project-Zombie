@@ -6,7 +6,7 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
 import java.util.ArrayList;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 

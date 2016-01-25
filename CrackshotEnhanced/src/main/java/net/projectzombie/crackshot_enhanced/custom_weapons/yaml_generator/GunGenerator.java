@@ -234,7 +234,7 @@ public class GunGenerator
     {
         int reloadAmount = gun.getSkeleton().getReloadAmount();
         for (MagazineModifier mod : gun.getMagazineModifiers())
-            reloadAmount += mod.getMagazineModifier();
+            reloadAmount += mod.getMagazineSizeModifier();
         
         if (reloadAmount < 1)
             return 1;

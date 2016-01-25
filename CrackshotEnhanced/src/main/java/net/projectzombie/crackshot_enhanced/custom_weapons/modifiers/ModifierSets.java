@@ -17,7 +17,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scop
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *

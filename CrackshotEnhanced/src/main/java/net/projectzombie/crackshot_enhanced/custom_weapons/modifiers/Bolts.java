@@ -9,7 +9,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 
 /**
  *
@@ -69,10 +68,11 @@ public class Bolts extends CSVInput<Bolt>
         final String[] colors               = csv.getColumnString(j++);
         final double[] durationMultiplier   = csv.getColumnDouble(j++);
  
-        toReturn[rowCount] = new Bolt();
+        toReturn[0] = new Bolt();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Bolt(
+            toReturn[i+1] = new Bolt(
+                i+1,
                 displayNames[i],
                 materialNames[i],
                 materialBytes[i],
@@ -87,20 +87,21 @@ public class Bolts extends CSVInput<Bolt>
     {
         private final double durationMultiplier;
 
-        private Bolt(final String displayName,
+        private Bolt(final int uniqueID,
+                      final String displayName,
                       final String material,
                       final int materialByte,
                       final int price,
                       final String color,
                       final double durationMultiplier)
         {
-            super(displayName, material, materialByte, price, color);
+            super(uniqueID, displayName, material, materialByte, price, color);
             this.durationMultiplier = durationMultiplier;
         }
 
         private Bolt()
         {
-            this(null, null, 0, 0, null, 0);
+            this(0, null, null, 0, 0, null, 0);
         }
 
         @Override public double getBoltDurationMultiplier() { return durationMultiplier; }

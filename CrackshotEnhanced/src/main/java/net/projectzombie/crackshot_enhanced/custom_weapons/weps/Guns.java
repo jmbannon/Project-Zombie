@@ -23,7 +23,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltM
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;

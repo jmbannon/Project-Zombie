@@ -21,7 +21,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;

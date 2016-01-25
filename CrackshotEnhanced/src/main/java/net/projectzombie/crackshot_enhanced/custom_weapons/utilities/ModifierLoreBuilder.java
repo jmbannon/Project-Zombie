@@ -12,7 +12,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltM
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
@@ -176,7 +176,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getMagazineModifierStats(final MagazineModifier magMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String magBoost = getValueStat(magMod.getMagazineModifier(), "mag size");
+        final String magBoost = getValueStat(magMod.getMagazineSizeModifier(), "mag size");
         final String reloadSpeed = getMultiplierStat(magMod.getReloadSpeedMultiplier(), "reload speed");
         
         if (magBoost != null)

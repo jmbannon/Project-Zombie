@@ -9,7 +9,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ZoomModifier;
 
 /**
  *
@@ -72,29 +72,33 @@ public class Sights extends CSVInput<Scope>
         final int[] crackshotZoomAmount     = csv.getColumnInt(j++);
         final double[] bulletSpreadModifier = csv.getColumnDouble(j++);
         final double[] zoomBulletSpreadMultiplier = csv.getColumnDouble(j++);
-        toReturn[rowCount] = new Scope();
+        toReturn[0] = new Scope();
         
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Scope(displayNames[i],
-                                      materialNames[i],
-                                      materialBytes[i],
-                                      price[i],
-                                      colors[i],
-                                      crackshotZoomAmount[i],
-                                      bulletSpreadModifier[i],
-                                      zoomBulletSpreadMultiplier[i]);
+            toReturn[i+1] = new Scope(
+                    i+1,
+                    displayNames[i],
+                    materialNames[i],
+                    materialBytes[i],
+                    price[i],
+                    colors[i],
+                    crackshotZoomAmount[i],
+                    bulletSpreadModifier[i],
+                    zoomBulletSpreadMultiplier[i]);
         }
         return toReturn;
     }
     
-    static public class Scope extends GunModifier implements BulletSpreadModifier
+    static public class Scope extends GunModifier implements BulletSpreadModifier,
+                                                             ZoomModifier
     {
         private final int zoomAmount;
         private final double bulletSpreadModifier;
         private final double zoomBulletSpreadMultiplier;
         
-        private Scope(final String displayName,
+        private Scope(final int uniqueID,
+                       final String displayName,
                        final String material,
                        final int materialByte,
                        final int price,
@@ -103,7 +107,7 @@ public class Sights extends CSVInput<Scope>
                        final double bulletSpreadModifier,
                        final double zoomBulletSpreadModifier)
         {
-            super(displayName, material, materialByte, price, color);
+            super(uniqueID, displayName, material, materialByte, price, color);
             this.zoomAmount = crackshotZoomAmount;
             this.bulletSpreadModifier = bulletSpreadModifier;
             this.zoomBulletSpreadMultiplier = zoomBulletSpreadModifier;
@@ -111,12 +115,12 @@ public class Sights extends CSVInput<Scope>
 
         private Scope()
         {
-            this(null, null, 0, 0, null, 0, 0, 0);
+            this(0, null, null, 0, 0, null, 0, 0, 0);
         }
 
-        public int getZoomAmount()                          { return zoomAmount;   }
-        public double getZoomBulletSpreadMultiplier()         { return zoomBulletSpreadMultiplier; }
-        @Override public double getBulletSpreadMultiplier() { return bulletSpreadModifier; }
-        @Override public Scope getNullModifier()           { return singleton.getNullValue(); }
+        @Override public int getZoomAmount()                    { return zoomAmount;   }
+        @Override public double getZoomBulletSpreadMultiplier() { return zoomBulletSpreadMultiplier; }
+        @Override public double getBulletSpreadMultiplier()     { return bulletSpreadModifier; }
+        @Override public Scope getNullModifier()                { return singleton.getNullValue(); }
     }
 }

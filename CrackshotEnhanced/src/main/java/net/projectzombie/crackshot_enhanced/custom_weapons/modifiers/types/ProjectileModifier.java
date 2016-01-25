@@ -16,6 +16,4 @@ public interface ProjectileModifier
     
     public int getProjectileRangeValue();
     public double getProjectileRangeMultiplier();
-    
-    public double getIntervalBetweenShotModifier();
 }

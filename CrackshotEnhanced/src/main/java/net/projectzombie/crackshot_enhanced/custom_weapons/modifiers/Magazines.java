@@ -8,7 +8,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
 
 /**
@@ -75,17 +74,19 @@ public class Magazines extends CSVInput<Magazine>
         final double[] magazineMultiplier   = csv.getColumnDouble(j++);
         final double[] reloadSpeedMultiplier= csv.getColumnDouble(j++);
         
-        toReturn[rowCount] = new Magazine();
+        toReturn[0] = new Magazine();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Magazine(displayNames[i],
-                                      materialNames[i],
-                                      materialBytes[i],
-                                      price[i],
-                                      colors[i],
-                                      magazineBoost[i],
-                                      magazineMultiplier[i],
-                                      reloadSpeedMultiplier[i]);
+            toReturn[i+1] = new Magazine(
+                    i+1,
+                    displayNames[i],
+                    materialNames[i],
+                    materialBytes[i],
+                    price[i],
+                    colors[i],
+                    magazineBoost[i],
+                    magazineMultiplier[i],
+                    reloadSpeedMultiplier[i]);
         }
         return toReturn;
     }
@@ -96,7 +97,8 @@ public class Magazines extends CSVInput<Magazine>
         private final double magazineMultiplier;
         private final double reloadSpeedMultiplier;
 
-        private Magazine(final String displayName,
+        private Magazine(final int uniqueID,
+                        final String displayName,
                           final String material,
                           final int materialByte,
                           final int price,
@@ -105,7 +107,7 @@ public class Magazines extends CSVInput<Magazine>
                           final double magazineMultiplier,
                           final double reloadSpeedMultiplier)
         {
-            super(displayName, material, materialByte, price, color);
+            super(uniqueID, displayName, material, materialByte, price, color);
             this.magazineBoost = magazineBoost;
             this.magazineMultiplier = magazineMultiplier;
             this.reloadSpeedMultiplier = reloadSpeedMultiplier;
@@ -113,10 +115,10 @@ public class Magazines extends CSVInput<Magazine>
 
         private Magazine()
         {
-            this(null, null, 0, 0, null, 0, 0, 0);
+            this(0, null, null, 0, 0, null, 0, 0, 0);
         }
 
-        @Override public int getMagazineModifier()          { return magazineBoost; }
+        @Override public int getMagazineSizeModifier()          { return magazineBoost; }
         @Override public double getReloadSpeedMultiplier()  { return reloadSpeedMultiplier; }
         @Override public GunModifier getNullModifier()      { return singleton.getNullValue(); }
         @Override public double getMagazineSizeMultiplier() { return magazineMultiplier; }

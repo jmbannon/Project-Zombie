@@ -10,7 +10,7 @@ import java.util.Arrays;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
@@ -20,7 +20,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets.ModifierSet;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;

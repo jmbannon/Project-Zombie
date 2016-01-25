@@ -9,7 +9,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.RunningModifier;
 
 /**
  *
@@ -73,10 +73,11 @@ public class Stocks extends CSVInput<Stock>
         final double[] runningBulletSpreadMultiplier = csv.getColumnDouble(j++);
         final double[] runningSpeedMultiplier = csv.getColumnDouble(j++);
         
-        toReturn[rowCount] = new Stock();
+        toReturn[0] = new Stock();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Stock(
+            toReturn[i+1] = new Stock(
+                    i+1,
                     displayNames[i],
                     materialNames[i],
                     materialBytes[i],
@@ -89,13 +90,15 @@ public class Stocks extends CSVInput<Stock>
         return toReturn;
     }
     
-    static public class Stock extends GunModifier implements BulletSpreadModifier
+    static public class Stock extends GunModifier implements BulletSpreadModifier,
+                                                             RunningModifier
     {
         private final double bulletSpreadMultiplier;
         private final double runningBulletSpreadMultiplier;
         private final double runningSpeedMultiplier;
 
-        private Stock(final String displayName,
+        private Stock(final int uniqueID,
+                       final String displayName,
                        final String material,
                        final int materialData,
                        final int price,
@@ -104,16 +107,16 @@ public class Stocks extends CSVInput<Stock>
                        final double runningBulletSpreadMultiplier,
                        final double runningSpeedMultiplier)
         {
-            super(displayName, material, materialData, price, color);
+            super(uniqueID, displayName, material, materialData, price, color);
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
             this.runningBulletSpreadMultiplier = runningBulletSpreadMultiplier;
             this.runningSpeedMultiplier = runningSpeedMultiplier;
         }
 
-        private Stock() { this(null, null, 0, 0, null, 0, 0, 0); }
+        private Stock() { this(0, null, null, 0, 0, null, 0, 0, 0); }
         
-        public double getRunningBulletSpreadMultiplier() { return runningBulletSpreadMultiplier; }
-        public double getRunningSpeedMultiplier()        { return runningSpeedMultiplier; }
+        @Override public double getRunningBulletSpreadMultiplier() { return runningBulletSpreadMultiplier; }
+        @Override public double getRunningSpeedMultiplier()        { return runningSpeedMultiplier; }
         @Override public Stock getNullModifier()         { return singleton.getNullValue(); }
         @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
     }

@@ -13,10 +13,10 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Bleed
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DurabilityModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.SilencerModifier;
 
 /**
  *
@@ -48,8 +48,7 @@ public class Barrels extends CSVInput<Barrel>
         "AdditionalProjectiles (INT)",
         "Projectile Speed Multiplier (DBL)",
         "Projectile Range Modifier (INT)",
-        "Projectile Range Multiplier (DBL)",
-        "Interval Between Shot Multiplier (DBL)"
+        "Projectile Range Multiplier (DBL)"
     };
 
     private Barrels()
@@ -94,13 +93,13 @@ public class Barrels extends CSVInput<Barrel>
         final double[] projectileSpeedMultiplier     = csv.getColumnDouble(j++);
         final int[]    projectileRangeValue          = csv.getColumnInt(j++);
         final double[] projectileRangeMultiplier     = csv.getColumnDouble(j++);
-        final double[] intervalBetweenShotMultiplier = csv.getColumnDouble(j++);
         
  
-        toReturn[rowCount] = new Barrel();
+        toReturn[0] = new Barrel();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Barrel(
+            toReturn[i+1] = new Barrel(
+                i+1,
                 displayName[i],              
                 material[i],                     
                 materialByte[i],                 
@@ -115,8 +114,7 @@ public class Barrels extends CSVInput<Barrel>
                 additionalProjectiles[i],        
                 projectileSpeedMultiplier[i],    
                 projectileRangeValue[i],         
-                projectileRangeMultiplier[i],    
-                intervalBetweenShotMultiplier[i]
+                projectileRangeMultiplier[i]
             );
         }
         return toReturn;
@@ -125,7 +123,8 @@ public class Barrels extends CSVInput<Barrel>
 
     static public class Barrel extends GunModifier implements BulletSpreadModifier,
                                                               DamageModifier,
-                                                              ProjectileModifier
+                                                              ProjectileModifier,
+                                                              SilencerModifier
     {
         private final double bulletSpreadModifier;
         private final double damageValue;
@@ -136,11 +135,11 @@ public class Barrels extends CSVInput<Barrel>
         private final double projectileSpeedMultiplier;
         private final int    projectileRangeValue;
         private final double projectileRangeMultiplier;
-        private final double intervalBetweenShotMultiplier;
         private final boolean isSilencer;
         
 
-        private Barrel(final String  displayName,
+        private Barrel(final int     uniqueID,
+                        final String  displayName,
                         final String material,
                         final int    materialByte,
                         final int    price,
@@ -154,10 +153,9 @@ public class Barrels extends CSVInput<Barrel>
                         final int    additionalProjectiles,
                         final double projectileSpeedMultiplier,
                         final int    projectileRangeValue,
-                        final double projectileRangeMultiplier,
-                        final double intervalBetweenShotMultiplier)
+                        final double projectileRangeMultiplier)
         {
-            super(displayName, material, materialByte, price, color);
+            super(uniqueID, displayName, material, materialByte, price, color);
             this.isSilencer = isSilencer;
             this.bulletSpreadModifier = bulletSpreadModifier;
             this.damageValue = damageValue;
@@ -168,15 +166,14 @@ public class Barrels extends CSVInput<Barrel>
             this.projectileSpeedMultiplier = projectileSpeedMultiplier;
             this.projectileRangeValue = projectileRangeValue;
             this.projectileRangeMultiplier = projectileRangeMultiplier;
-            this.intervalBetweenShotMultiplier = intervalBetweenShotMultiplier;
         }
 
         public Barrel()
         {
-            this(null, null, 0, 0, null, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            this(0, null, null, 0, 0, null, false, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
-        public boolean isSilencer()                          { return isSilencer; }
+        @Override public boolean isSilencer()                { return isSilencer; }
         @Override public double getDamageValue()             { return damageValue; }
         @Override public double getDamageMultiplier()        { return damageMultiplier; }
         @Override public int getProjectileValue()            { return additionalProjectiles; }
@@ -187,6 +184,5 @@ public class Barrels extends CSVInput<Barrel>
         @Override public double getProjectileSpeedMultiplier() { return projectileSpeedMultiplier; }
         @Override public int getProjectileRangeValue()         { return projectileRangeValue; }
         @Override public double getProjectileRangeMultiplier() { return projectileRangeMultiplier; }
-        @Override public double getIntervalBetweenShotModifier() { return intervalBetweenShotMultiplier; }
     }
 }

@@ -8,7 +8,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.FireModeModifier;
 
 /**
  *
@@ -74,20 +74,22 @@ public class FireModes extends CSVInput<FireMode>
         
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new FireMode(displayNames[i],
-                                      materialNames[i],
-                                      materialBytes[i],
-                                      price[i],
-                                      colors[i],
-                                      isBurstFire[i],
-                                      shotsPerBurst[i],
-                                      isAutomatic[i]);
+            toReturn[i] = new FireMode(
+                    i,
+                    displayNames[i],
+                    materialNames[i],
+                    materialBytes[i],
+                    price[i],
+                    colors[i],
+                    isBurstFire[i],
+                    shotsPerBurst[i],
+                    isAutomatic[i]);
         }
         return toReturn;
     }
     
     
-    static public class FireMode extends GunModifier
+    static public class FireMode extends GunModifier implements FireModeModifier
     {
         private static final String TITLE = "Fire Mode: ";
 
@@ -95,7 +97,8 @@ public class FireModes extends CSVInput<FireMode>
         private final boolean isAutomatic;
         private final int shotsPerBurst;
 
-        private FireMode(final String displayName,
+        private FireMode(final int uniqueID,
+                        final String displayName,
                           final String material,
                           final int materialByte,
                           final int price,
@@ -104,15 +107,15 @@ public class FireModes extends CSVInput<FireMode>
                           final int shotsPerBurst,
                           final boolean isAutomatic) 
         {
-            super(displayName, material, materialByte, price, color);
+            super(uniqueID, displayName, material, materialByte, price, color);
             this.isBurstFire = isBurstFire;
             this.shotsPerBurst = shotsPerBurst;
             this.isAutomatic = isAutomatic;
         }
         
-        public boolean isBurstFire()                 { return isBurstFire; }
-        public boolean isAutomatic()                 { return isAutomatic; }
-        public int     getShotsPerBurst()            { return shotsPerBurst; }
+        @Override public boolean isBurstFire()       { return isBurstFire; }
+        @Override public boolean isAutomatic()       { return isAutomatic; }
+        @Override public int     getShotsPerBurst()  { return shotsPerBurst; }
         @Override public int price()                 { return 40;       }
         @Override public FireMode getNullModifier() { return singleton.getNullValue(); }
         

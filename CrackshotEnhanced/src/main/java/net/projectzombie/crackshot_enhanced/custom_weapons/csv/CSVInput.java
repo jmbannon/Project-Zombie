@@ -68,6 +68,18 @@ public abstract class CSVInput<T extends CSVValue>
     }
     
     /**
+     * @param uniqueID ID or index of the element.
+     * @return Element with the array at index of uniqueID.
+     */
+    public T get(final int uniqueID)
+    {
+        if (uniqueID >= 0 && uniqueID < readValues.length)
+            return readValues[uniqueID];
+        else
+            return null;
+    }
+    
+    /**
      * @param name Name of the CSVValue.
      * @return The element if it has a similar name.
      */

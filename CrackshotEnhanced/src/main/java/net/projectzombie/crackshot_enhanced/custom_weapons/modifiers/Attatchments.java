@@ -12,7 +12,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Bulle
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 /**
@@ -130,10 +129,11 @@ public class Attatchments extends CSVInput<Attatchment>
         final double[] stunChance                 = csv.getColumnDouble(j++);
         final double[] stunDuration               = csv.getColumnDouble(j++);
  
-        toReturn[rowCount] = new Attatchment();
+        toReturn[0] = new Attatchment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Attatchment(
+            toReturn[i+1] = new Attatchment(
+                    i+1,
                     displayNames[i],
                     materialNames[i],
                     materialBytes[i],
@@ -192,7 +192,8 @@ public class Attatchments extends CSVInput<Attatchment>
         private final double stunChance;
         private final double stunDuration;
 
-        private Attatchment(final String displayname,
+        private Attatchment(final int uniqueID,
+                            final String displayname,
                             final String materialName,
                             final int materialByte,
                             final int price,
@@ -218,7 +219,7 @@ public class Attatchments extends CSVInput<Attatchment>
                             final double stunChance,
                             final double stunDuration)
         {        
-            super(displayname, materialName, materialByte, price, color);
+            super(uniqueID, displayname, materialName, materialByte, price, color);
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
             this.damageModifier = damageModifier;
             this.damageMultiplier = damageMultiplier;
@@ -246,7 +247,7 @@ public class Attatchments extends CSVInput<Attatchment>
          */
         private Attatchment()
         {
-            this(null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            this(0, null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         @Override public double getDamageValue()                         { return damageModifier; }
