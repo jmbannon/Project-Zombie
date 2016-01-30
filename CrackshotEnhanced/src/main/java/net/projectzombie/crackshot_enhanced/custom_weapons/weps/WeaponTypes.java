@@ -75,26 +75,25 @@ public class WeaponTypes extends CSVInput<Weapon>
         final double[] upgradePriceWeight = csv.getColumnDouble(j++);
         final double[] bulletSpreadWeight = csv.getColumnDouble(j++);
         
-        for (FirearmAction act : firearmActions)
-            System.out.println(act == null ? "null" : act.getName());
-        
         if (firearmActions == null || firearmActions.size() != ammoNames.length)
             return null;
 
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new Weapon(displayNames[i],
-                                      firearmActions.get(i),
-                                      ammoNames[i],
-                                      ammoIDs[i],
-                                      ammoDatas[i],
-                                      projectileAmounts[i],
-                                      projectileSpeeds[i],
-                                      removalDragDelays[i],
-                                      inventoryControls[i],
-                                      repairPriceWeight[i],
-                                      upgradePriceWeight[i],
-                                      bulletSpreadWeight[i]);
+            toReturn[i] = new Weapon(
+                    i,
+                    displayNames[i],
+                    firearmActions.get(i),
+                    ammoNames[i],
+                    ammoIDs[i],
+                    ammoDatas[i],
+                    projectileAmounts[i],
+                    projectileSpeeds[i],
+                    removalDragDelays[i],
+                    inventoryControls[i],
+                    repairPriceWeight[i],
+                    upgradePriceWeight[i],
+                    bulletSpreadWeight[i]);
         }
         return toReturn;
     }
@@ -122,7 +121,8 @@ public class WeaponTypes extends CSVInput<Weapon>
          * @param upgradePriceWeight Weight for calculating upgrade price.
          * @param bulletSpreadWeight Weight for calculating current bullet spread based on tier.
          */
-        private Weapon(final String displayName,
+        private Weapon(final int index,
+                       final String displayName,
                         final FirearmAction firearmAction,
                         final String ammoName,
                         final int ammoID,
@@ -135,7 +135,7 @@ public class WeaponTypes extends CSVInput<Weapon>
                         final double upgradePriceWeight,
                         final double bulletSpreadWeight)
         {
-            super(displayName);
+            super(index, displayName);
             this.firearmAction = firearmAction;
             this.ammoName = ammoName;
             this.ammoID = ammoID;

@@ -32,7 +32,7 @@ public class GunGenerator
     public GunGenerator(final CrackshotGun gun)
     {
         this.gun = gun;
-        this.gunFileName = String.valueOf(gun.getUniqueId() + "_" + gun.getSkeleton().getFileName());
+        this.gunFileName = String.valueOf(gun.getCSWeaponName());
     }
     
     
@@ -174,7 +174,7 @@ public class GunGenerator
     
     public String getItemName()
     {
-        final String ID = String.valueOf(gun.getUniqueId() * 13);
+        final String ID = String.valueOf(gun.getUniqueID());
         final StringBuilder stb = new StringBuilder();
         
         stb.append(CrackshotLore.ITEM_COLOR);
@@ -209,7 +209,7 @@ public class GunGenerator
         stbVerify.append(CrackshotLore.seperator);
         stbVerify.append(CrackshotLore.verification);
         stbVerify.append(CrackshotLore.seperator);
-        stbVerify.append(gun.getUniqueId());
+        stbVerify.append(gun.getUniqueID());
         
         final StringBuilder stb = new StringBuilder();
         stb.append(CrackshotLore.line);

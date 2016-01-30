@@ -67,11 +67,7 @@ public class Main extends JavaPlugin {
     private boolean initializeGuns()
     {
         CSVReader.initializePlugin(this);
-        if (!isInitialized("Slot One Attatchments", Attatchments.getSlotOneInstance().initialize()))
-            return false;
-        if (!isInitialized("Slot Two Attatchments", Attatchments.getSlotTwoInstance().initialize()))
-            return false;
-        if (!isInitialized("Slot Three Attatchments", Attatchments.getSlotThreeInstance().initialize()))
+        if (!isInitialized("Attatchments", Attatchments.getSlotOneInstance().initialize()))
             return false;
         if (!isInitialized("Barrels", Barrels.getInstance().initialize()))
             return false;

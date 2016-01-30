@@ -8,6 +8,7 @@ package net.projectzombie.crackshot_enhanced.listeners;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import com.shampaggon.crackshot.events.WeaponPreShootEvent;
 import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
+import com.shampaggon.crackshot.events.WeaponShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import org.bukkit.Bukkit;
@@ -89,6 +90,11 @@ public class ShootListener implements Listener
             shooter.sendMessage("Your " + event.getWeaponTitle() + " is broken.");
             event.setCancelled(true);
         }
+    }
+    
+    public void test(WeaponShootEvent event)
+    {
+
     }
     
     /**

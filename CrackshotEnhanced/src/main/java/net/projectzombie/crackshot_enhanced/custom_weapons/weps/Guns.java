@@ -8,8 +8,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Random;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
@@ -38,7 +39,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Guns
 {
-    private static ArrayList<CrackshotGun> guns = null;
+    private static HashMap<String, CrackshotGun> guns = null;
     
     private Guns() { /* Do nothing. */ }
     
@@ -51,30 +52,38 @@ public class Guns
     }
     
     static
-    private ArrayList<CrackshotGun> initializeGuns()
+    private HashMap<String, CrackshotGun> initializeGuns()
     {
-        ArrayList<CrackshotGun> gunArray = new ArrayList<>();
+        HashMap<String, CrackshotGun> gunMap = new HashMap<>();
         final GunSkeleton gunSkeletons[] = GunSkeletons.getInstance().getAll();
         CrackshotGun skeleGuns[];
         int id = 0;
         
         for (GunSkeleton skeleton : gunSkeletons)
         {
-            skeleGuns = skeleton.getGuns(id);
-            if (skeleGuns != null)
+            for (CrackshotGun skeleGun : skeleton.getGuns())
             {
-                gunArray.addAll(Arrays.asList(skeleGuns));
-                id += skeleGuns.length;
+                gunMap.put(skeleGun.uniqueID, skeleGun);
             }
         }
-        return gunArray;
+        return gunMap;
     }
     
 
     static
-    public CrackshotGun get(final int gunID)
+    public CrackshotGun get(final String uniqueGunID)
     {
-        return (gunID >= 0 && gunID < guns.size()) ? guns.get(gunID) : null;
+        if (GunID.isValidID(uniqueGunID))
+        {
+            if (guns.containsKey(uniqueGunID))
+                return guns.get(uniqueGunID);
+            else
+                
+        }
+        else
+        {
+            return null;
+        }
     }
     
     static
@@ -84,9 +93,9 @@ public class Guns
     }
     
     static
-    public ArrayList<CrackshotGun> getGuns()
+    public Collection<CrackshotGun> getGuns()
     {
-        return guns;
+        return guns.values();
     }
 
     static public class CrackshotGun
@@ -94,9 +103,10 @@ public class Guns
         private static final Random rand = new Random();
         private static final double CROUCH_BULLET_SPREAD_MODIFIER = -0.05;
         private static final double BULLET_SPREAD_MODIFIER_CAP = 0.10;
-
-        private final int gunIDOffset;
-        private final int uniqueID;
+        
+        private final String uniqueID;
+        private final String csUniqueID;
+        
         private final GunSkeleton skeleton;
 
         /* Craftable gun modifiers */
@@ -110,11 +120,9 @@ public class Guns
         private final Scope scopeType;
         private final Stock stock;
 
-        private final String csWeaponName;
+        
 
-        public CrackshotGun(final int gunIDOffset,
-                             final int uniqueID,
-                             final GunSkeleton skeleton,
+        public CrackshotGun(final GunSkeleton skeleton,
                              final Attatchment attatchmentOne,
                              final Attatchment attatchmentTwo,
                              final Attatchment attatchmentThree,
@@ -125,8 +133,7 @@ public class Guns
                              final Scope scopeType,
                              final Stock stock)
         {
-            this.gunIDOffset = gunIDOffset;
-            this.uniqueID = uniqueID;
+            final GunID id = new GunID(skeleton, attatchmentOne, attatchmentTwo, attatchmentThree, barrel, bolt, firemodeType, magazine, scopeType, stock);
             this.skeleton = skeleton;
             this.firemodeType = firemodeType;
             this.scopeType = scopeType;
@@ -137,12 +144,12 @@ public class Guns
             this.barrel = barrel;
             this.stock = stock;
             this.magazine = magazine;
-            this.csWeaponName = String.valueOf(uniqueID) + "_" + skeleton.getFileName();
+            
+            this.uniqueID = id.getUniqueID();
+            this.csUniqueID = skeleton.getFileName() + "_" + id.getCSUniqueID();
         }
 
         public GunSkeleton  getSkeleton()         { return skeleton;                }
-        public int          getIDOffset()         { return gunIDOffset;             }
-        public int          getUniqueId()         { return uniqueID;                }
         public Weapon       getWeaponType()       { return skeleton.getWeaponType();}
         public FireMode     getFireMode()         { return firemodeType;            }
         public Scope        getScope()            { return scopeType;               }
@@ -150,10 +157,11 @@ public class Guns
         public Barrel       getBarrel()           { return barrel;                  }
         public int          getItemID()           { return skeleton.getItemID();    }
         public int          getItemData()         { return skeleton.getItemData();  }
-        public String       getCSWeaponName()     { return csWeaponName;            }
+        public String       getCSWeaponName()     { return csUniqueID;            }
+        public String       getUniqueID()         { return uniqueID;               }
         public double       getInitBulletSpread() { return skeleton.getBulletSpread();  }
         public int          getMaxDurability()    { return skeleton.getMaxDurability(); }
-
+        
         public GunModifier[] getCraftableModifiers()
         {
             return new GunModifier[]
@@ -170,7 +178,7 @@ public class Guns
             };
         }
 
-        @Override public String toString()       { return csWeaponName;  }
+        @Override public String toString()       { return csUniqueID;  }
 
 
         public int getInitialDurability()

@@ -65,13 +65,15 @@ public class FirearmActions extends CSVInput<FirearmAction>
         toReturn[rowCount] = null;
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i] = new FirearmAction(displayNames[i],
-                                      type[i],
-                                      soundOpen[i],
-                                      soundClose[i],
-                                      openDuration[i],
-                                      closeDuration[i],
-                                      closeShootDelay[i]);
+            toReturn[i] = new FirearmAction(
+                    i,
+                    displayNames[i],
+                    type[i],
+                    soundOpen[i],
+                    soundClose[i],
+                    openDuration[i],
+                    closeDuration[i],
+                    closeShootDelay[i]);
         }
         return toReturn;
     }
@@ -86,7 +88,8 @@ public class FirearmActions extends CSVInput<FirearmAction>
         private final int closeDuration;
         private final int closeShootDelay;
 
-        private FirearmAction(final String displayName,
+        private FirearmAction(final int index,
+                              final String displayName,
                                final String type,
                                final String soundOpen,
                                final String soundClose,
@@ -94,7 +97,7 @@ public class FirearmActions extends CSVInput<FirearmAction>
                                final int closeDuration,
                                final int closeShootDelay)
         {
-            super(displayName);
+            super(index, displayName);
             this.type = type;
             this.soundOpen = soundOpen;
             this.soundClose = soundClose;

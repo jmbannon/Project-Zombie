@@ -83,7 +83,6 @@ public final class CSVReader
         }
         else
         {
-            System.out.println("WRITING BLANK BITHC");
             writeBlankCSV(template);
             this.rowCount = 0;
         }

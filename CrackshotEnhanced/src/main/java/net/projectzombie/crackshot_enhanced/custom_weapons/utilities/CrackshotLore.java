@@ -139,7 +139,7 @@ public class CrackshotLore
         final int durability, condition, newCondition, build;
         String infoSplit[] = getInfoSplit(lore);
         
-        CrackshotGun gun = Guns.get(Integer.valueOf(INFO_ID_IDX));
+        CrackshotGun gun = Guns.get(infoSplit[INFO_ID_IDX]);
         if (gun == null)
             return -1;
 
@@ -166,10 +166,10 @@ public class CrackshotLore
     }
     
     static
-    public int getWeaponID(final ItemStack item)
+    public String getWeaponID(final ItemStack item)
     {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore())
-            return -1;
+            return null;
         
         return getWeaponId(item.getItemMeta().getLore());
     }
@@ -196,7 +196,7 @@ public class CrackshotLore
         List<String> lore = meta.getLore();
         String split[] = getInfoSplit(lore);
         
-        final CrackshotGun gun = Guns.get(Integer.valueOf(split[INFO_ID_IDX]));
+        final CrackshotGun gun = Guns.get(split[INFO_ID_IDX]);
         final int maxDur = gun.getMaxDurability()-1;
         final int build = Integer.valueOf(split[INFO_BUILD_IDX]);
         
@@ -221,7 +221,7 @@ public class CrackshotLore
         List<String> lore = meta.getLore();
         String split[] = getInfoSplit(lore);
         
-        final CrackshotGun gun = Guns.get(Integer.valueOf(split[INFO_ID_IDX]));
+        final CrackshotGun gun = Guns.get(split[INFO_ID_IDX]);
         final int newBuild = Integer.valueOf(split[INFO_BUILD_IDX]) + 1;
         final int durability = Integer.valueOf(split[INFO_DUR_IDX]);
         
@@ -317,7 +317,7 @@ public class CrackshotLore
         stb.append(seperator);
         stb.append(verification);
         stb.append(seperator);
-        stb.append(gun.getUniqueId());
+        stb.append(gun.getUniqueID());
         stb.append(seperator);
         stb.append(durability);
         stb.append(seperator);
@@ -373,9 +373,9 @@ public class CrackshotLore
     }
     
     static
-    private int getWeaponId(final List<String> lore)
+    private String getWeaponId(final List<String> lore)
     {
-        return hasWeaponLore(lore) ? Integer.valueOf(getInfoSplit(lore)[INFO_ID_IDX]) : -1;
+        return hasWeaponLore(lore) ? getInfoSplit(lore)[INFO_ID_IDX] : null;
     }
     
     static

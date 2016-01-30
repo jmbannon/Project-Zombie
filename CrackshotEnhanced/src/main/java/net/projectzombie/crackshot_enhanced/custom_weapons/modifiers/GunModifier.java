@@ -38,7 +38,6 @@ public abstract class GunModifier extends CSVValue
     private static final String statColor = ChatColor.GRAY.toString() 
                                                + ChatColor.ITALIC.toString();
     
-    private final int uniqueID;
     private final Material material;
     private final int materialData;
     private final int price;
@@ -51,8 +50,7 @@ public abstract class GunModifier extends CSVValue
                        final int price,
                        final String color)
     {
-        super(name);
-        this.uniqueID = uniqueID;
+        super(uniqueID, name);
         this.materialData = materialData;
         this.price = price;
         this.material = GunUtils.matchMaterial(material);
@@ -63,14 +61,6 @@ public abstract class GunModifier extends CSVValue
      * @return Returns the null modifier.
      */
     abstract public GunModifier getNullModifier();
-    
-    /**
-     * @return Returns the unique ID of the GunModifier (also the index within the array).
-     */
-    public int getUniqueID()
-    {
-        return uniqueID;
-    }
     
     /**
      * @return Returns the price of the gun modification at the gunsmith.
@@ -131,7 +121,7 @@ public abstract class GunModifier extends CSVValue
         if (!stats.isEmpty())
         {
             Collections.shuffle(stats);
-            stats.add(0, HiddenStringUtils.encodeString(String.valueOf(this.uniqueID)));
+            stats.add(0, HiddenStringUtils.encodeString(String.valueOf(super.getIndex())));
             stats.add(1, this.color + super.getName());
             return stats;
         }

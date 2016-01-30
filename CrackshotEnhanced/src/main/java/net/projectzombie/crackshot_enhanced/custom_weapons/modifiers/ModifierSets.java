@@ -32,9 +32,9 @@ public class ModifierSets extends CSVInput<ModifierSet>
         return singleton;
     }
     
-    static private final String MODIFIER_SET_CSV_TEMPLATE = "Set Name:,Example Set\nSlot1_Attatchments:\nSlot2_Attatchments:\nSlot3_Attatchments:\nBarrels:\nBolts:\nFireModes:\nMagazines:\nScopes:\nStocks\n---------";
+    static private final String MODIFIER_SET_CSV_TEMPLATE = "Set Name:,Example Set\nAttatchments:\nBarrels:\nBolts:\nFireModes:\nMagazines:\nScopes:\nStocks\n---------";
     static private final String MODIFIER_SET_CSV_NAME = "ModifierSet.csv";
-    static private final int LINES_PER_SET = 11;
+    static private final int LINES_PER_SET = 9;
     
     public ModifierSets()
     {
@@ -68,18 +68,16 @@ public class ModifierSets extends CSVInput<ModifierSet>
         
         for (int i = 0; i < rowCount; i += LINES_PER_SET)
         {
-            name         = csv.getRowString(i + 0);
+            name               = csv.getRowString(i + 0);
             slot1_attatchments = Attatchments.getSlotOneInstance().get(csv.getRowString(i+1), true);
-            slot2_attatchments = Attatchments.getSlotTwoInstance().get(csv.getRowString(i+2), true);
-            slot3_attatchments = Attatchments.getSlotThreeInstance().get(csv.getRowString(i+3), true);
-            barrels            = Barrels.getInstance().get(csv.getRowString(i+4), true);
-            bolts              = Bolts.getInstance().get(csv.getRowString(i+5), true);
-            fireModes          = FireModes.getInstance().get(csv.getRowString(i+6), false);
-            magazines          = Magazines.getInstance().get(csv.getRowString(i+7), true);
-            scopes             = Sights.getInstance().get(csv.getRowString(i+8), true);
-            stocks             = Stocks.getInstance().get(csv.getRowString(i+9), true);
+            barrels            = Barrels.getInstance().get(csv.getRowString(i+2), true);
+            bolts              = Bolts.getInstance().get(csv.getRowString(i+3), true);
+            fireModes          = FireModes.getInstance().get(csv.getRowString(i+4), false);
+            magazines          = Magazines.getInstance().get(csv.getRowString(i+5), true);
+            scopes             = Sights.getInstance().get(csv.getRowString(i+6), true);
+            stocks             = Stocks.getInstance().get(csv.getRowString(i+7), true);
             
-            temp = createModifierSet(name, slot1_attatchments, slot2_attatchments, slot3_attatchments, barrels, bolts, fireModes, magazines, scopes, stocks);
+            temp = createModifierSet(i, name, slot1_attatchments, barrels, bolts, fireModes, magazines, scopes, stocks);
             if (temp != null)
                 toReturn.add(temp);
         }
@@ -87,10 +85,9 @@ public class ModifierSets extends CSVInput<ModifierSet>
         return toReturn.toArray(new ModifierSet[toReturn.size()]);
     }
     
-    static private ModifierSet createModifierSet(String[] nameArray,
+    static private ModifierSet createModifierSet(int index,
+                                           String[] nameArray,
                                            ArrayList<Attatchment> slot1Attatchments,
-                                           ArrayList<Attatchment> slot2Attatchments,
-                                           ArrayList<Attatchment> slot3Attatchments,
                                            ArrayList<Barrel> barrels,
                                            ArrayList<Bolt> bolts,
                                            ArrayList<FireMode> fireModes,
@@ -105,10 +102,9 @@ public class ModifierSets extends CSVInput<ModifierSet>
         else
         {
             return new ModifierSet(
+                    index,
                     nameArray[0],
-                    slot1Attatchments, 
-                    slot2Attatchments,
-                    slot3Attatchments,
+                    slot1Attatchments,
                     barrels,
                     bolts,
                     fireModes,
@@ -121,8 +117,6 @@ public class ModifierSets extends CSVInput<ModifierSet>
     static public class ModifierSet extends CSVValue
     {
         private final ArrayList<Attatchment> slot1Attatchments;
-        private final ArrayList<Attatchment> slot2Attatchments;
-        private final ArrayList<Attatchment> slot3Attatchments;
         private final ArrayList<Barrel> barrels;
         private final ArrayList<Bolt> bolts;
         private final ArrayList<FireMode> fireModes;
@@ -131,10 +125,9 @@ public class ModifierSets extends CSVInput<ModifierSet>
         private final ArrayList<Stock> stocks;
         private final GunModifier[] modifiers;
 
-        private ModifierSet(final String name,
+        private ModifierSet(final int index,
+                            final String name,
                             final ArrayList<Attatchment> slot1Attatchments,
-                            final ArrayList<Attatchment> slot2Attatchments,
-                            final ArrayList<Attatchment> slot3Attatchments,
                             final ArrayList<Barrel> barrels,
                             final ArrayList<Bolt> bolts,
                             final ArrayList<FireMode> fireModes,
@@ -142,10 +135,8 @@ public class ModifierSets extends CSVInput<ModifierSet>
                             final ArrayList<Scope> scopes,
                             final ArrayList<Stock> stocks)
         {
-            super(name);
+            super(index, name);
             this.slot1Attatchments = slot1Attatchments;
-            this.slot2Attatchments = slot2Attatchments;
-            this.slot3Attatchments = slot3Attatchments;
             this.barrels = barrels;
             this.bolts = bolts;
             this.fireModes = fireModes;
@@ -156,8 +147,6 @@ public class ModifierSets extends CSVInput<ModifierSet>
         }
 
         public ArrayList<Attatchment> getSlot1Attatchments() { return slot1Attatchments; }
-        public ArrayList<Attatchment> getSlot2Attatchments() { return slot2Attatchments; }
-        public ArrayList<Attatchment> getSlot3Attatchments() { return slot3Attatchments; }
         public ArrayList<Barrel>      getBarrels()           { return barrels;      }
         public ArrayList<Bolt>        getBolts()             { return bolts;        } 
         public ArrayList<FireMode>    getFireModes()         { return fireModes;    }
@@ -166,11 +155,9 @@ public class ModifierSets extends CSVInput<ModifierSet>
         public ArrayList<Stock>       getStocks()            { return stocks;       }
         public GunModifier[]          getModifiers()         { return modifiers;    }
 
-        public int getCombinationCount()
+        public int getCSCombinationCount()
         {
-            return slot1Attatchments.size() * slot2Attatchments.size() 
-                    * slot3Attatchments.size() * barrels.size() * bolts.size() 
-                    * fireModes.size() * magazines.size() * scopes.size() * stocks.size();
+            return barrels.size() * bolts.size() * fireModes.size() * magazines.size() * scopes.size();
         }
 
         /**
@@ -179,7 +166,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
          */
         public boolean isValid()
         {
-            return getCombinationCount() != 0;
+            return getCSCombinationCount() != 0;
         }
 
         /**
@@ -189,8 +176,6 @@ public class ModifierSets extends CSVInput<ModifierSet>
         {
             final ArrayList<GunModifier> mods = new ArrayList<>();
             mods.addAll(slot1Attatchments);
-            mods.addAll(slot2Attatchments);
-            mods.addAll(slot3Attatchments);
             mods.addAll(barrels);
             mods.addAll(bolts);
             mods.addAll(fireModes);

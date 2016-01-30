@@ -9,13 +9,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DurabilityModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.SilencerModifier;
 
 /**

@@ -26,32 +26,32 @@ import org.bukkit.inventory.PlayerInventory;
  */
 public class ScopeZoomListener implements Listener
 {
-	private static final HashMap<UUID, ItemStack> helmetList = new HashMap<>();
+    private static final HashMap<UUID, ItemStack> helmetList = new HashMap<>();
 
-        /**
-         * Places pumpkin on the player's head when zoomed in. Restores helmet
-         * when the player zooms out.
-         * 
-         * @param event CrackShot weapon scope event.
-         */
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void scopeEvent(WeaponScopeEvent event)
+    /**
+     * Places pumpkin on the player's head when zoomed in. Restores helmet
+     * when the player zooms out.
+     * 
+     * @param event CrackShot weapon scope event.
+     */
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void scopeEvent(WeaponScopeEvent event)
+    {
+        final Player player = event.getPlayer();
+        final UUID playerUUID = event.getPlayer().getUniqueId();
+        final ItemStack scope = new ItemStack(Material.PUMPKIN);
+
+        if (event.isZoomIn())
         {
-            final Player player = event.getPlayer();
-            final UUID playerUUID = event.getPlayer().getUniqueId();
-            final ItemStack scope = new ItemStack(Material.PUMPKIN);
-            
-            if (event.isZoomIn())
-            {
-                helmetList.put(playerUUID, player.getInventory().getHelmet());	
-                player.getInventory().setHelmet(scope);
-            } 
-            else if (helmetList.containsKey(playerUUID))
-            {
-                player.getInventory().setHelmet(helmetList.get(playerUUID));
-                helmetList.remove(playerUUID);
-            }
-	}
+            helmetList.put(playerUUID, player.getInventory().getHelmet());	
+            player.getInventory().setHelmet(scope);
+        } 
+        else if (helmetList.containsKey(playerUUID))
+        {
+            player.getInventory().setHelmet(helmetList.get(playerUUID));
+            helmetList.remove(playerUUID);
+        }
+    }
     
     /**
      * Removes the pumpkin if the player attempts to take it off their head
@@ -79,12 +79,15 @@ public class ScopeZoomListener implements Listener
     public void disable()
     {
         Player player;
-        for (UUID playerUUID : helmetList.keySet())
+        if (!helmetList.isEmpty())
         {
-            player = Bukkit.getPlayer(playerUUID);
-            if (player != null)
+            for (UUID playerUUID : helmetList.keySet())
             {
-                player.getInventory().setHelmet(helmetList.get(playerUUID));
+                player = Bukkit.getPlayer(playerUUID);
+                if (player != null && player.isOnline())
+                {
+                    player.getInventory().setHelmet(helmetList.get(playerUUID));
+                }
             }
         }
     }

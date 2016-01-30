@@ -12,10 +12,18 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.csv;
 public abstract class CSVValue
 {
     private final String name;
+    private final int index;
     
-    public CSVValue(final String name)
+    public CSVValue(final int index,
+                    final String name)
     {
         this.name = name;
+        this.index = index;
+    }
+    
+    public int getIndex()
+    {
+        return index;
     }
     
     public String getName()

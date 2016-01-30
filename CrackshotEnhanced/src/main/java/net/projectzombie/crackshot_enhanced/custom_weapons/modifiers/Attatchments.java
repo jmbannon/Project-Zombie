@@ -31,23 +31,7 @@ public class Attatchments extends CSVInput<Attatchment>
         return slotOneSingleton;
     }
     
-    static public Attatchments getSlotTwoInstance()
-    {
-        if (slotTwoSingleton == null)
-            slotTwoSingleton = new Attatchments(ATTATCHMENT_TWO_CSV_NAME);
-        return slotTwoSingleton;
-    }
-    
-    static public Attatchments getSlotThreeInstance()
-    {
-        if (slotThreeSingleton == null)
-            slotThreeSingleton = new Attatchments(ATTATCHMENT_THREE_CSV_NAME);
-        return slotThreeSingleton;
-    }
-    
-    static private final String ATTATCHMENT_ONE_CSV_NAME = "Slot1_Attatchments.csv";
-    static private final String ATTATCHMENT_TWO_CSV_NAME = "Slot2_Attatchments.csv";
-    static private final String ATTATCHMENT_THREE_CSV_NAME = "Slot3_Attatchments.csv";
+    static private final String ATTATCHMENT_ONE_CSV_NAME = "Attatchments.csv";
     
     static private final String[] ATTATCHMENT_VALUES = {
         "Display Name (STR)",
