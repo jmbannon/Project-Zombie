@@ -39,46 +39,51 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Guns
 {
-    private static HashMap<String, CrackshotGun> guns = null;
+    private static HashMap<String, CrackshotGun> guns = new HashMap<>();
     
     private Guns() { /* Do nothing. */ }
     
     static
     public int initialize()
     {
-        if (guns == null)
-            guns = initializeGuns();
         return guns.size();
     }
     
-    static
-    private HashMap<String, CrackshotGun> initializeGuns()
-    {
-        HashMap<String, CrackshotGun> gunMap = new HashMap<>();
-        final GunSkeleton gunSkeletons[] = GunSkeletons.getInstance().getAll();
-        CrackshotGun skeleGuns[];
-        int id = 0;
-        
-        for (GunSkeleton skeleton : gunSkeletons)
-        {
-            for (CrackshotGun skeleGun : skeleton.getGuns())
-            {
-                gunMap.put(skeleGun.uniqueID, skeleGun);
-            }
-        }
-        return gunMap;
-    }
+//    static
+//    private HashMap<String, CrackshotGun> initializeGuns()
+//    {
+//        HashMap<String, CrackshotGun> gunMap = new HashMap<>();
+//        final GunSkeleton gunSkeletons[] = GunSkeletons.getInstance().getAll();
+//        CrackshotGun skeleGuns[];
+//        int id = 0;
+//        
+//        for (GunSkeleton skeleton : gunSkeletons)
+//        {
+//            for (CrackshotGun skeleGun : skeleton.getGunBaseSet())
+//            {
+//                gunMap.put(skeleGun.uniqueID, skeleGun);
+//            }
+//        }
+//        return gunMap;
+//    }
     
 
     static
-    public CrackshotGun get(final String uniqueGunID)
+    public CrackshotGun get(final GunID gunID)
     {
-        if (GunID.isValidID(uniqueGunID))
+        if (gunID.isValid())
         {
-            if (guns.containsKey(uniqueGunID))
-                return guns.get(uniqueGunID);
+            if (guns.containsKey(gunID.getUniqueID()))
+            {
+                return guns.get(gunID.getUniqueID());
+            }
             else
-                
+            {
+                final CrackshotGun gun = new CrackshotGun(gunID);
+                guns.put(gunID.getUniqueID(), gun);
+                System.out.println("Total guns in hash map: " + guns.size());
+                return gun;
+            }
         }
         else
         {
@@ -87,9 +92,15 @@ public class Guns
     }
     
     static
+    public CrackshotGun get(final String gunID)
+    {
+        return get(new GunID(gunID));
+    }
+    
+    static
     public CrackshotGun get(final ItemStack item)
     {
-        return get(CrackshotLore.getWeaponID(item));
+        return get(new GunID(CrackshotLore.getWeaponID(item)));
     }
     
     static
@@ -119,7 +130,6 @@ public class Guns
         private final Magazine magazine;
         private final Scope scopeType;
         private final Stock stock;
-
         
 
         public CrackshotGun(final GunSkeleton skeleton,
@@ -148,13 +158,35 @@ public class Guns
             this.uniqueID = id.getUniqueID();
             this.csUniqueID = skeleton.getFileName() + "_" + id.getCSUniqueID();
         }
+        
+        private CrackshotGun(final GunID id)
+        {
+            this.skeleton = id.getSkeleton();
+            this.attatchmentOne = id.getAttatchmentOne();
+            this.attatchmentTwo = id.getAttatchmentTwo();
+            this.attatchmentThree = id.getAttatchmentThree();
+            this.bolt = id.getBolt();
+            this.barrel = id.getBarrel();
+            this.firemodeType = id.getFireMode();
+            this.magazine = id.getMagazine();
+            this.scopeType = id.getScope();
+            this.stock = id.getStock();
+            
+            this.uniqueID = id.getUniqueID();
+            this.csUniqueID = skeleton.getFileName() + "_" + id.getCSUniqueID();
+        }
 
         public GunSkeleton  getSkeleton()         { return skeleton;                }
         public Weapon       getWeaponType()       { return skeleton.getWeaponType();}
         public FireMode     getFireMode()         { return firemodeType;            }
         public Scope        getScope()            { return scopeType;               }
-        public Attatchment  getAttatchment()      { return attatchmentOne;             }
+        public Attatchment  getAttatchmentOne()   { return attatchmentOne;          }
+        public Attatchment  getAttatchmentTwo()   { return attatchmentTwo;          }
+        public Attatchment  getAttatchmentThree() { return attatchmentThree;        }
         public Barrel       getBarrel()           { return barrel;                  }
+        public Bolt         getBolt()             { return bolt;                    }
+        public Magazine     getMagazine()         { return magazine;                }
+        public Stock        getStock()            { return stock;                   }
         public int          getItemID()           { return skeleton.getItemID();    }
         public int          getItemData()         { return skeleton.getItemData();  }
         public String       getCSWeaponName()     { return csUniqueID;            }
@@ -253,9 +285,11 @@ public class Guns
             return loreToReturn;
         }
 
-        public CrackshotGun getModifiedGun(final GunModifier modType)
+        public CrackshotGun getModifiedGun(final GunModifier modifier,
+                                           final GunModifier.GunModifierType type)
         {
-            return skeleton.getModifiedGun(this, modType);
+            final GunID modifierGunID = new GunID(this, modifier, type);
+            return Guns.get(modifierGunID);
         }
 
         /**

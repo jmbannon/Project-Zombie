@@ -69,7 +69,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
         for (int i = 0; i < rowCount; i += LINES_PER_SET)
         {
             name               = csv.getRowString(i + 0);
-            slot1_attatchments = Attatchments.getSlotOneInstance().get(csv.getRowString(i+1), true);
+            slot1_attatchments = Attatchments.getInstance().get(csv.getRowString(i+1), true);
             barrels            = Barrels.getInstance().get(csv.getRowString(i+2), true);
             bolts              = Bolts.getInstance().get(csv.getRowString(i+3), true);
             fireModes          = FireModes.getInstance().get(csv.getRowString(i+4), false);

@@ -7,6 +7,7 @@ package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Material;
@@ -38,7 +39,8 @@ public class GunSmithController
     
     static
     public boolean addModification(final Player player,
-                                   final GunModifier mod)
+                                   final GunModifier mod,
+                                   final GunModifierType type)
     {
         final CrackshotGun newGun, currentGun = Guns.get(player.getItemInHand());
         final ItemStack newGunItem;
@@ -50,7 +52,7 @@ public class GunSmithController
             return false;
         }
         
-        newGun = currentGun.getModifiedGun(mod);
+        newGun = currentGun.getModifiedGun(mod, type);
         if (newGun == null)
         {
             player.sendMessage(mod.toString() + " is not available for this weapon.");

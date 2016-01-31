@@ -6,22 +6,9 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.crafting;
 
 
-import java.util.HashMap;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
@@ -38,7 +25,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.material.MaterialData;
 
 /**
  *
@@ -46,8 +32,6 @@ import org.bukkit.material.MaterialData;
  */
 public class Recipes implements Listener
 {
-    static private final HashMap<MaterialData, GunModifier> craftingSet = createCraftingHashMap();
-    
     public Recipes()
     {
         
@@ -55,45 +39,41 @@ public class Recipes implements Listener
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onGunCraft(PrepareItemCraftEvent event)
-    {
-        System.out.println("is recipe?");
+    {   
+        final CraftingInventory inv = event.getInventory();
+        final ItemStack[] mat = inv.getMatrix();
         
-        CraftingInventory inv    = event.getInventory();
-        GunSkeleton skele        = getSkeleton(inv.getResult());
-        CrackshotGun currentGun  = null;
-        CrackshotGun newGun      = null;
-        ItemStack currentGunItem = null;
-        ItemStack newGunItem     = null;
-        GunModifier mod          = null;
-        
-        if (skele == null)
+        if (mat.length <= 4)
             return;
         
-        for (ItemStack item : inv.getContents())
+        final ItemStack currentGunItem = mat[4];
+        final ItemStack newGunItem;
+        final GunSkeleton skele = getSkeleton(inv.getResult());
+        final CrackshotGun currentGun;
+        CrackshotGun newGun;
+        ItemStack tempMod;
+        
+        if (isWeapon(currentGunItem) && skele != null && (currentGun = Guns.get(currentGunItem)) != null)
         {
-            if (CrackshotLore.isPostShotWeapon(item) || CrackshotLore.isPreShotWeapon(item))
+            newGun = currentGun;
+            for (GunModifierType type : GunModifierType.values())
             {
-                currentGunItem = item;
+                tempMod = mat[type.getMatrixIndex()];
+                if (tempMod != null && GunModifier.isGunModifier(tempMod))
+                {
+                    newGun = newGun.getModifiedGun(GunModifier.toModifier(tempMod, type.getMatrixIndex()), type);
+                }
             }
-            if (craftingSet.containsKey(item.getData()))
-            {
-                mod = craftingSet.get(item.getData());
-            }
+            
+            newGunItem = CrackshotLore.getModifiedGunItem(currentGunItem, newGun);
+            inv.setResult(newGunItem);
         }
-        
-        if (currentGunItem == null || mod == null)
-            return;
-        
-        currentGun = Guns.get(currentGunItem);
-        if (currentGun == null)
-            return;
-        
-        newGun = currentGun.getModifiedGun(mod);
-        if (newGun == null)
-            return;
-        
-        newGunItem = CrackshotLore.getModifiedGunItem(currentGunItem, newGun);
-        event.getInventory().setResult(newGunItem);
+    }
+    
+    private boolean isWeapon(final ItemStack item)
+    {
+        return CrackshotLore.isPostShotWeapon(item) 
+                || CrackshotLore.isPreShotWeapon(item);
     }
     
     /**
@@ -134,58 +114,79 @@ public class Recipes implements Listener
         }
     }
     
-    static private void intializeScopes(final GunSkeleton skele)
-    {
-        final ItemStack bareSkeleItemStack = skele.getBareItemStack();
-        for (Scope scope : skele.getModifierSet().getScopes())
-        {
-            if (scope.getMaterialData() != null)
-            {
-                ShapedRecipe scopeRecipe = new ShapedRecipe(bareSkeleItemStack);
-                scopeRecipe.shape(" S ", " G ", "   ")
-                        .setIngredient('S', scope.getMaterialData())
-                        .setIngredient('G', skele.getMaterialData());
-                Bukkit.getServer().addRecipe(scopeRecipe);
-            }
-        }  
-    }
-    
     static private void intializeAttatchments(final GunSkeleton skele)
     {
         final ItemStack bareSkeleItemStack = skele.getBareItemStack();
-        for (Attatchment att : skele.getModifierSet().getSlot1Attatchments())
-        {
-            if (att.getMaterialData() != null)
-            {
-                ShapedRecipe attRecipe = new ShapedRecipe(bareSkeleItemStack);
-                attRecipe.shape("   ", " G ", "A  ")
-                        .setIngredient('A', att.getMaterialData())
-                        .setIngredient('G', skele.getMaterialData());
-                Bukkit.getServer().addRecipe(attRecipe);
-            }
-        }  
-    }
-    
-    static private HashMap<MaterialData, GunModifier> createCraftingHashMap()
-    {
-        final HashMap<MaterialData, GunModifier> hash = new HashMap<>();
-        for (Attatchment mod : Attatchments.getSlotOneInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (Barrel mod : Barrels.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (Bolt mod : Bolts.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (FireMode mod : FireModes.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (Magazine mod : Magazines.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (Scope mod : Sights.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
-        for (Stock mod : Stocks.getInstance().getAll())
-            hash.put(mod.getMaterialData(), mod);
         
-        hash.remove(null);
-        return hash;
+        final String[] idx0 = { " ", "A" }; 
+        final String[] idx1 = { " ", "B" };
+        final String[] idx2 = { " ", "C", "J" };
+        final String[] idx3 = { " ", "D" };
+        final String[] idx4 = { "E" };
+        final String[] idx5 = { " ", "F" };
+        final String[] idx6 = { " ", "G" };
+        final String[] idx7 = { " ", "H" };
+        final String[] idx8 = { " ", "I" };
+        String all, top, mid, bot;
+        char c;
+        int len;
+        ShapedRecipe modRecipe;
+        
+        // Powerset of all crafting combinations
+        for (String i0 : idx0)
+        {
+        for (String i1 : idx1)
+        {
+        for (String i2 : idx2)
+        {
+        for (String i3 : idx3)
+        {
+        for (String i4 : idx4)
+        {
+        for (String i5 : idx5)
+        {
+        for (String i6 : idx6)
+        {
+        for (String i7 : idx7)
+        {
+        for (String i8 : idx8)
+        {
+            top = i0 + i1 + i2;
+            mid = i3 + i4 + i5;
+            bot = i6 + i7 + i8;
+            all = (top + mid + bot).replace(" ", "");
+            
+            modRecipe = new ShapedRecipe(bareSkeleItemStack);
+            modRecipe = modRecipe.shape(top, mid, bot);
+            len = all.length();
+            
+            if (len == 1)
+                continue;
+            
+            for (int i = 0; i < len; i++)
+            {
+                c = all.charAt(i);
+                if      (c == 'A') modRecipe = modRecipe.setIngredient('A', SLOT_ONE_ATTATCHMENT.getMaterialData());
+                else if (c == 'B') modRecipe = modRecipe.setIngredient('B', SIGHT.getMaterialData());
+                else if (c == 'C') modRecipe = modRecipe.setIngredient('C', BOLT.getMaterialData());
+                else if (c == 'J') modRecipe = modRecipe.setIngredient('J', FIREMODE.getMaterialData());
+                else if (c == 'D') modRecipe = modRecipe.setIngredient('D', BARREL.getMaterialData());
+                else if (c == 'E') modRecipe = modRecipe.setIngredient('E', skele.getMaterialData());
+                else if (c == 'F') modRecipe = modRecipe.setIngredient('F', STOCK.getMaterialData());
+                else if (c == 'G') modRecipe = modRecipe.setIngredient('G', SLOT_TWO_ATTATCHMENT.getMaterialData());
+                else if (c == 'H') modRecipe = modRecipe.setIngredient('H', MAGAZINE.getMaterialData());
+                else if (c == 'I') modRecipe = modRecipe.setIngredient('I', SLOT_THREE_ATTATCHMENT.getMaterialData());;  
+            }
+                    
+            Bukkit.getServer().addRecipe(modRecipe);        
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
     }
-    
 }

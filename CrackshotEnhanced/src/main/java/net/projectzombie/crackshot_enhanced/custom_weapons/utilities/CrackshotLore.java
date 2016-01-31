@@ -7,11 +7,13 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import com.shampaggon.crackshot.CSUtility;
+import java.util.ArrayList;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -24,11 +26,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CrackshotLore
 {
     private static final int INFO_IDX = 0;
-    private static final int ACCURACY_IDX = 1;
-    private static final int CONDITION_IDX = 2;
-    private static final int BUILD_IDX = 3;
-    private static final int FIRE_MODE_IDX = 4;
-    //public static final int SCOPE_IDX = 6;
+    private static final int DPS_IDX = 1;
+    private static final int ACCURACY_IDX = 2;
+    private static final int ZOOOM_IDX = 3;
+    private static final int BUILD_IDX = 4;
+    private static final int CONDITION_IDX = 5;
+    private static final int LINE_IDX = 6;
+    private static final int ATT1_IDX = 7;
+    private static final int ATT2_IDX = 8;
+    private static final int ATT3_IDX = 9;
+    private static final int BARREL_IDX = 10;
+    private static final int BOLT_IDX = 11;
+    private static final int FIRE_MODE_IDX = 12;
+    private static final int MAG_IDX = 13;
+    private static final int SIGHT_IDX = 14;
+    private static final int STOCK_IDX = 15;
+    private static final int MORE_INFO_IDX = 16;
+    public static final int  LORE_SIZE = 17;
     
     // PZ`gunID`durability`ConditionType`BuildType
     private static final int INFO_VERIFY_IDX = 0;
@@ -44,37 +58,69 @@ public class CrackshotLore
     public static final ChatColor TITLE_COLOR = ChatColor.DARK_GREEN;
     public static final ChatColor VALUE_COLOR = ChatColor.GRAY;
     
-    public static final String preShotVerification = TITLE_COLOR + "Shoot to unviel stats.";
+    
+    public static final String preShotVerification = TITLE_COLOR + "Unviel using an identitying kit.";
     public static final String verification = "PZ";
     public static final String seperator = "`";
     public static final String line = TITLE_COLOR + "=-=-=-=-=-=-=-=-=-=-=";
+    public static final String moreInfo = TITLE_COLOR + "More info using " + VALUE_COLOR + "/gunsmith info";
 
     public static CSUtility crackshot = new CSUtility();
     
-    public static double generateLore(final CrackshotGun gun,
-                                      final double eventBulletSpread,
-                                      List<String> lore)
+    public static List<String> generateLore(final List<String> lore)
     {
+        final CrackshotGun gun = Guns.get(getWeaponId(lore));
+        if (gun == null)
+            return null;
+        
         final int initialDurability = gun.getInitialDurability();
         final int initialCondition = gun.getConditionInt(initialDurability);
-        generateLore(gun, lore, initialDurability, initialCondition);
-        return getBulletSpread(gun, eventBulletSpread, initialCondition, 0);
+        return(generateLore(gun, initialDurability, initialCondition));
     }
     
+    /**
+     * Adds lore to a lore list using gun info.
+     * @param gun Gun to generate lore about.
+     * @param initialDurability Initial Durability of the gun.
+     * @param initialCondition Initial Condition of the gun.
+     * @return 
+     */
     static
-    public void generateLore(final CrackshotGun gun,
-                             List<String> lore,
-                             final int initialDurability,
-                             final int initialCondition)
+    public List<String> generateLore(final CrackshotGun gun,
+                                     final int initialDurability,
+                                     final int initialCondition)
     {
+        final ArrayList<String> lore = new ArrayList<>(LORE_SIZE);
         lore.clear();
         lore.add(INFO_IDX,       buildStatLore(gun, initialDurability));
+        lore.add(DPS_IDX,        VALUE_COLOR + "DPS: 10");
         lore.add(ACCURACY_IDX,   buildAccuracyLore(gun, Build.STOCK.getEnumValue(), initialDurability));
-        lore.add(CONDITION_IDX,  buildConditionLore(initialCondition));
+        lore.add(ZOOOM_IDX,      buildAccuracyLore(gun, Build.STOCK.getEnumValue(), initialDurability));
         lore.add(BUILD_IDX,      buildBuildLore(Build.STOCK.getEnumValue()));
-        lore.add(FIRE_MODE_IDX,  buildFireModeLore(gun));
-        lore.addAll(gun.buildModifierLore());
+        lore.add(CONDITION_IDX,  buildConditionLore(initialCondition));
+        lore.add(LINE_IDX, line);
+        lore.add(ATT1_IDX,       VALUE_COLOR + "Attatchment One: " + getModifierDisplayName(gun.getAttatchmentOne()));
+        lore.add(ATT2_IDX,       VALUE_COLOR + "Attatchment Two: " + getModifierDisplayName(gun.getAttatchmentTwo()));
+        lore.add(ATT3_IDX,       VALUE_COLOR + "Attatchment Three: " + getModifierDisplayName(gun.getAttatchmentThree()));
+        lore.add(BARREL_IDX,     VALUE_COLOR + "Barrel: " + getModifierDisplayName(gun.getBarrel()));
+        lore.add(BOLT_IDX,       VALUE_COLOR + "Bolt: " + getModifierDisplayName(gun.getBolt()));
+        lore.add(FIRE_MODE_IDX,  VALUE_COLOR + "Fire Mode: " + getModifierDisplayName(gun.getFireMode()));
+        lore.add(MAG_IDX,        VALUE_COLOR + "Magazine: " + getModifierDisplayName(gun.getMagazine()));
+        lore.add(SIGHT_IDX,      VALUE_COLOR + "Sight: " + getModifierDisplayName(gun.getScope()));
+        lore.add(STOCK_IDX,      VALUE_COLOR + "Stock: " + getModifierDisplayName(gun.getStock()));
+        lore.add(MORE_INFO_IDX,  moreInfo);
+        return lore;
     }
+    
+   static
+   public String getModifierDisplayName(final GunModifier mod)
+   {
+       if (mod != null)
+           return mod.getDisplayName();
+       else
+           return ChatColor.DARK_RED + "n/a";
+       
+   }
     
     static
     public String getEncryptedPreInfoString(final ItemStack item)
@@ -148,7 +194,7 @@ public class CrackshotLore
         if (durability < 0) // Gun is already broken
             return 0;
 
-        condition = Integer.valueOf(infoSplit[CONDITION_IDX]);
+        condition = Integer.valueOf(infoSplit[INFO_COND_IDX]);
         newCondition = gun.getConditionInt(durability);
         build = Integer.valueOf(infoSplit[INFO_BUILD_IDX]);
         
@@ -169,21 +215,15 @@ public class CrackshotLore
     public String getWeaponID(final ItemStack item)
     {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore())
-            return null;
-        
+            return null;   
+ 
         return getWeaponId(item.getItemMeta().getLore());
     }
     
     static
-    public double initializeGun(final double eventBulletSpread,
-                                List<String> lore)
+    private String getWeaponId(final List<String> lore)
     {
-        
-        final CrackshotGun gun = Guns.get(getWeaponId(lore));
-        if (gun == null)
-            return -1;
-        
-        return CrackshotLore.generateLore(gun, eventBulletSpread, lore);  
+        return hasWeaponLore(lore) ? getInfoSplit(lore)[INFO_ID_IDX] : null;
     }
     
     static
@@ -241,12 +281,11 @@ public class CrackshotLore
                                         final CrackshotGun newGun)
     {
         final ItemStack newGunItem = crackshot.generateWeapon(newGun.getCSWeaponName());
-        
         if (newGunItem == null)
             return null;
         
         final ItemMeta newMeta = newGunItem.getItemMeta();
-        final List<String> newLore = newMeta.getLore();
+        List<String> newLore = newMeta.getLore();
         final String adjustedAmmoDisplayName = getAdjustedAmmoCount(originalGunItem, newMeta);
         final int durability, condition;
         
@@ -254,7 +293,7 @@ public class CrackshotLore
         {
             durability = CrackshotLore.getDurability(originalGunItem);
             condition = newGun.getConditionInt(durability);
-            CrackshotLore.generateLore(newGun, newLore, durability, condition);
+            newLore = CrackshotLore.generateLore(newGun, durability, condition);
             newMeta.setLore(newLore);
             newMeta.setDisplayName(adjustedAmmoDisplayName);
             newGunItem.setItemMeta(newMeta);
@@ -262,6 +301,8 @@ public class CrackshotLore
         }
         else if (isPreShotWeapon(originalGunItem))
         {
+            newLore = CrackshotLore.setWeaponID(newGun.getUniqueID(), newLore);
+            newMeta.setLore(newLore);
             return newGunItem;
         }
         else
@@ -372,10 +413,23 @@ public class CrackshotLore
                 * Build.getBuildType(build).getScalar();
     }
     
-    static
-    private String getWeaponId(final List<String> lore)
+    
+    
+    static private List<String> setWeaponID(final String weaponID,
+                                            final List<String> lore)
     {
-        return hasWeaponLore(lore) ? getInfoSplit(lore)[INFO_ID_IDX] : null;
+        
+        
+        if (hasWeaponLore(lore))
+        {
+            final String[] infoSplit = getInfoSplit(lore);
+            infoSplit[INFO_ID_IDX] = weaponID;
+            
+            lore.set(INFO_IDX, rebuildInfoLore(infoSplit));
+            return lore;
+        }
+        else
+            return lore;
     }
     
     static

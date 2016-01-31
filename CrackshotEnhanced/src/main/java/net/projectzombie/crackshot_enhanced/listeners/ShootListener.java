@@ -130,10 +130,15 @@ public class ShootListener implements Listener
             return bulletSpread;
         
         List<String> lore = item.getItemMeta().getLore();
-        
         if (CrackshotLore.isPreShotWeapon(lore))
-            bulletSpread = CrackshotLore.initializeGun(eventBulletSpread, lore);
-        else// if (lore.size() == LORE_SIZE)
+        {
+            lore = CrackshotLore.generateLore(lore);
+            if (lore == null)
+                bulletSpread = ERROR;
+            else
+                bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
+        }
+        else
             bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
         
         gunMeta.setLore(lore);

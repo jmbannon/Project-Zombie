@@ -12,7 +12,6 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
@@ -60,14 +59,15 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable()
     {
-        this.scopeListener.disable();
+        if (this.scopeListener != null)
+            this.scopeListener.disable();
         this.getLogger().info("CrackshotEnhanced disabled.");
     }
     
     private boolean initializeGuns()
     {
         CSVReader.initializePlugin(this);
-        if (!isInitialized("Attatchments", Attatchments.getSlotOneInstance().initialize()))
+        if (!isInitialized("Attatchments", Attatchments.getInstance().initialize()))
             return false;
         if (!isInitialized("Barrels", Barrels.getInstance().initialize()))
             return false;
@@ -89,11 +89,6 @@ public class Main extends JavaPlugin {
             return false;
         if (!isInitialized("Gun Skeletons", GunSkeletons.getInstance().initialize()))
             return false;
-        
-        for (Weapon type : WeaponTypes.getInstance().getAll())
-        {
-            System.out.println(type == null ? "null" : type.toString());
-        }
         
         return isInitialized("Guns", Guns.initialize());
     }

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
@@ -18,6 +20,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
@@ -102,8 +106,6 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         if (modifierSets.isEmpty() || wepTypes.isEmpty())
             return null;
         
-        
-        int deleteMe = 0;
         for (int i = 0; i < rowCount; i++)
         {
             toReturn[i] = new GunSkeleton(
@@ -125,10 +127,8 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                     silencedSounds[i],
                     particleShoots[i],
                     reloadSounds[i]);
-            deleteMe += modifierSets.get(i).getCSCombinationCount();
         }
         
-        System.out.println("TOTAL COMBINATIONS: " + deleteMe);
         return toReturn;
     }
     
@@ -216,7 +216,11 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         public boolean       reloadsBulletsIndividually() { return reloadBulletsIndividually; }
         public GunModifier[] getModifiers()      { return modSet.getModifiers(); }
 
-        public CrackshotGun[] getGuns()
+        /**
+         * Builds the set of guns that contain no Attatchments or Stock. This
+         * method is to be used for generating the YAML for Crackshot guns.
+         */
+        public CrackshotGun[] getGunBaseSet()
         {
             final int combinationCount = modSet.getCSCombinationCount();
             int i = 0;
@@ -225,6 +229,8 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                 return null;
 
             CrackshotGun guns[] = new CrackshotGun[combinationCount];
+            final Attatchment nullAtt = Attatchments.getInstance().getNullValue();
+            final Stock nullStock = Stocks.getInstance().getNullValue();
 
             for (Barrel barrel : modSet.getBarrels())
             {
@@ -236,11 +242,17 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                         {
                             for (Scope scope : modSet.getScopes())
                             {
-                                for (Stock stock : modSet.getStocks())
-                                {
-                                     guns[i] = new CrackshotGun(this, null, null, null, barrel, bolt, fireMode, magazine, scope, stock);
-                                     ++i;
-                                }
+                                guns[i++] = new CrackshotGun(
+                                        this,
+                                        nullAtt,
+                                        nullAtt, 
+                                        nullAtt,
+                                        barrel,
+                                        bolt,
+                                        fireMode,
+                                        magazine,
+                                        scope,
+                                        nullStock);
                             }
                         }
                     }
@@ -248,13 +260,6 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
             }
             return guns;
         }
-
-        public CrackshotGun getModifiedGun(final CrackshotGun gun,
-                                           final GunModifier modifier)
-        {
-            
-        }
-
 
         private boolean containsMod(final GunModifier modifier)
         {

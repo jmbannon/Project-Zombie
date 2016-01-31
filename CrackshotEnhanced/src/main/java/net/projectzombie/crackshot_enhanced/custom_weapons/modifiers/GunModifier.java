@@ -7,7 +7,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType.SLOT_ONE_ATTATCHMENT;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
@@ -22,11 +24,14 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Runni
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.Shrapnel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.SilencerModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ZoomModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.GunUtils;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.HiddenStringUtils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 /**
@@ -35,8 +40,60 @@ import org.bukkit.material.MaterialData;
  */
 public abstract class GunModifier extends CSVValue
 {
-    private static final String statColor = ChatColor.GRAY.toString() 
-                                               + ChatColor.ITALIC.toString();
+    /**
+     * Assigns each GunModifier a matrix index within the crafting inventory.
+     * 
+     *     [,0] [,1] [,2]
+     * [0,]  0    1    2
+     * [1,]  3    4    5    =   9
+     * [2,]  6    7    8
+     * 
+     */
+    public enum GunModifierType
+    {
+        SLOT_ONE_ATTATCHMENT(0, "PRISMARINE_SHARD", 0),
+        SLOT_TWO_ATTATCHMENT(6, "PRISMARINE_CRYSTALS", 0),
+        SLOT_THREE_ATTATCHMENT(8, "RABBIT_HIDE", 0),
+        BARREL(3, "QUARTZ", 0),
+        BOLT(2, "SUGAR", 0),
+        FIREMODE(2, "EGG", 0),
+        MAGAZINE(7, "LEATHER", 0),
+        SIGHT(1, "COAL", 1),
+        STOCK(5, "BLAZE_ROD", 0);
+        
+        private final int matrixIndex;
+        private final Material material;
+        private final int materialData;
+        
+        private GunModifierType(final int matrixIndex,
+                                final String material,
+                                final int materialData)
+        {
+            this.matrixIndex = matrixIndex;
+            this.material = GunUtils.matchMaterial(material);
+            this.materialData = materialData;
+        }
+        
+        public int getMatrixIndex() { return matrixIndex; }
+        
+        public MaterialData getMaterialData()
+        {
+            if (material != null)
+                return new MaterialData(material, (byte)materialData);
+            else
+                return null;
+        }
+        
+        static public GunModifierType getGunModifierType(final int matrixIndex)
+        {
+            for (GunModifierType type : GunModifierType.values())
+                if (type.matrixIndex == matrixIndex)
+                    return type;
+            return null;
+        }
+    }
+    
+    private static final String statColor = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString();
     
     private final Material material;
     private final int materialData;
@@ -79,22 +136,90 @@ public abstract class GunModifier extends CSVValue
     }
     
     /**
-     * @return MaterialData of item if craftable. Null otherwise.
-     */
-    public MaterialData getMaterialData()
-    {
-        if (material == null)
-            return null;
-        else
-            return new MaterialData(material, (byte)materialData);
-    }
-    
-    /**
      * @return Whether the modifier is null.
      */
     public boolean isNull()
     {
         return this.equals(this.getNullModifier());
+    }
+    
+    public String getDisplayName()
+    {
+        if (super.getName() != null)
+            return color + super.getName();
+        else
+            return ChatColor.DARK_RED + "n/a";
+    }
+    
+    public ItemStack toItem(final GunModifierType type)
+    {
+        if (type.material != null)
+        {
+            final ItemStack item = new ItemStack(type.material, 1, (short)type.materialData);
+
+            ItemMeta meta = item.getItemMeta();
+            meta.setLore(getLore());
+            meta.setDisplayName(this.color + super.getName());
+            item.setItemMeta(meta);
+
+            return item;
+        }
+        return null;
+    }
+    
+    static public int getIndex(final ItemStack item)
+    {
+
+        final String infoString;
+        final String indexString;
+        final int lineIndex;
+        if (isGunModifier(item))
+        {
+            infoString = item.getItemMeta().getLore().get(0);
+            lineIndex = infoString.indexOf(CrackshotLore.line);
+            
+            if (lineIndex >= 0)
+            {
+                indexString = HiddenStringUtils.extractHiddenString(infoString.substring(0, lineIndex));
+                return Integer.valueOf(indexString);
+            }
+        }
+        return -1;
+    }
+    
+    static public boolean isGunModifier(final ItemStack item)
+    {
+        return item != null 
+                && item.hasItemMeta()
+                && item.getItemMeta().hasLore() 
+                && item.getItemMeta().getLore().size() >= 1
+                && item.getItemMeta().getLore().get(0).contains(CrackshotLore.line);
+    }
+    
+    static public GunModifier toModifier(final ItemStack item,
+                                         final int matrixIndex)
+    {
+        final int index = getIndex(item);
+        final MaterialData matData;
+        if (index == -1)
+        {
+            return null;
+        }
+        else
+        {
+            switch(matrixIndex)
+            {
+                case 0: return Attatchments.getInstance().get(index);
+                case 1: return Sights.getInstance().get(index);
+                case 2: return Bolts.getInstance().get(index);
+                case 3: return Barrels.getInstance().get(index);
+                case 5: return Stocks.getInstance().get(index);
+                case 6: return Attatchments.getInstance().get(index);
+                case 7: return Magazines.getInstance().get(index);
+                case 8: return Attatchments.getInstance().get(index);
+                default: return null;
+            }
+        }
     }
     
     public ArrayList<String> getLore()
@@ -121,8 +246,7 @@ public abstract class GunModifier extends CSVValue
         if (!stats.isEmpty())
         {
             Collections.shuffle(stats);
-            stats.add(0, HiddenStringUtils.encodeString(String.valueOf(super.getIndex())));
-            stats.add(1, this.color + super.getName());
+            stats.add(0, HiddenStringUtils.encodeString(String.valueOf(super.getIndex())) + CrackshotLore.line);
             return stats;
         }
         else

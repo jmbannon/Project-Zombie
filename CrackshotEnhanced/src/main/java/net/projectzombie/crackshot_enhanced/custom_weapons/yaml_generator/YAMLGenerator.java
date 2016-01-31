@@ -11,7 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -35,11 +36,17 @@ public class YAMLGenerator
     static
     public void generateDefaultWeapons(final Plugin plugin)
     {
-        loadWeapons(plugin);
+        int gunsWritten = 0;
+        loadCrackshotWeaponFile(plugin);
         
-        for (CrackshotGun gun : Guns.getGuns())
-            writeWeapon(gun);
+        for (GunSkeleton skele : GunSkeletons.getInstance().getAll())
+        {
+            gunsWritten += skele.getGunBaseSet().length;
+            for (CrackshotGun gun : skele.getGunBaseSet())
+                writeWeapon(gun);
+        }
         
+        System.out.println("Wrote " + gunsWritten + " Crackshot guns.");
         saveWeapons();
     }
     
@@ -60,7 +67,7 @@ public class YAMLGenerator
     }
     
     static
-    private void loadWeapons(final Plugin plugin)
+    private void loadCrackshotWeaponFile(final Plugin plugin)
     {
         final String defaultWeaponsPath = plugin.getDataFolder().getParent() + "/CrackShot/weapons/";
         

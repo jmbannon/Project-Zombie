@@ -24,7 +24,7 @@ public class Attatchments extends CSVInput<Attatchment>
     static private Attatchments slotTwoSingleton = null;
     static private Attatchments slotThreeSingleton = null;
             
-    static public Attatchments getSlotOneInstance()
+    static public Attatchments getInstance()
     {
         if (slotOneSingleton == null)
             slotOneSingleton = new Attatchments(ATTATCHMENT_ONE_CSV_NAME);
@@ -149,11 +149,11 @@ public class Attatchments extends CSVInput<Attatchment>
     }
 
     static public class Attatchment extends GunModifier implements BulletSpreadModifier, 
-                                                              DamageModifier,
-                                                              CritModifier,
-                                                              BleedoutModifier,
-                                                              IncendiaryModifier,
-                                                              Shrapnel
+                                                DamageModifier,
+                                                CritModifier,
+                                                BleedoutModifier,
+                                                IncendiaryModifier,
+                                                Shrapnel
     {
         private final double bulletSpreadMultiplier;
         private final double damageModifier;
