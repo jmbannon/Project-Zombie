@@ -51,7 +51,7 @@ public abstract class GunModifier extends CSVValue
      */
     public enum GunModifierType
     {
-        SLOT_ONE_ATTATCHMENT(0, "PRISMARINE_SHARD", 0),
+        SLOT_ONE_ATTACHMENT(0, "PRISMARINE_SHARD", 0),
         SLOT_TWO_ATTATCHMENT(6, "PRISMARINE_CRYSTALS", 0),
         SLOT_THREE_ATTATCHMENT(8, "RABBIT_HIDE", 0),
         BARREL(3, "QUARTZ", 0),
@@ -226,14 +226,14 @@ public abstract class GunModifier extends CSVValue
         {
             switch(matrixIndex)
             {
-                case 0: return Attatchments.getInstance().get(index);
+                case 0: return Attachments.getInstance().get(index);
                 case 1: return Sights.getInstance().get(index);
                 case 2: return Bolts.getInstance().get(index);
                 case 3: return Barrels.getInstance().get(index);
                 case 5: return Stocks.getInstance().get(index);
-                case 6: return Attatchments.getInstance().get(index);
+                case 6: return Attachments.getInstance().get(index);
                 case 7: return Magazines.getInstance().get(index);
-                case 8: return Attatchments.getInstance().get(index);
+                case 8: return Attachments.getInstance().get(index);
                 default: return null;
             }
         }

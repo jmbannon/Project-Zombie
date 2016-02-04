@@ -166,7 +166,7 @@ public class Recipes implements Listener
             for (int i = 0; i < len; i++)
             {
                 c = all.charAt(i);
-                if      (c == 'A') modRecipe = modRecipe.setIngredient('A', SLOT_ONE_ATTATCHMENT.getMaterialData());
+                if      (c == 'A') modRecipe = modRecipe.setIngredient('A', SLOT_ONE_ATTACHMENT.getMaterialData());
                 else if (c == 'B') modRecipe = modRecipe.setIngredient('B', SIGHT.getMaterialData());
                 else if (c == 'C') modRecipe = modRecipe.setIngredient('C', BOLT.getMaterialData());
                 else if (c == 'J') modRecipe = modRecipe.setIngredient('J', FIREMODE.getMaterialData());

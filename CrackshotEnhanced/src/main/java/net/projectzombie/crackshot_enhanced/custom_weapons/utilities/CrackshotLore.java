@@ -9,8 +9,8 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import com.shampaggon.crackshot.CSUtility;
 import java.util.ArrayList;
 import java.util.List;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
@@ -97,9 +97,9 @@ public class CrackshotLore
                                      final int initialDurability,
                                      final int initialCondition)
     {
-        final Attatchment att1 = gun.getAttatchmentOne();
-        final Attatchment att2 = gun.getAttatchmentTwo();
-        final Attatchment att3 = gun.getAttatchmentThree();
+        final Attachment att1 = gun.getAttachmentOne();
+        final Attachment att2 = gun.getAttachmentTwo();
+        final Attachment att3 = gun.getAttachmentThree();
         final Barrel barrel = gun.getBarrel();
         final Bolt bolt = gun.getBolt();
         final FireMode firemode = gun.getFireMode();
@@ -116,9 +116,9 @@ public class CrackshotLore
         lore.add(CONDITION_IDX,  buildConditionLore(initialCondition));
         lore.add(LINE_IDX, modLine);
         
-        if (att1 != null && !att1.isNull())         lore.add(GUN_MOD_COLOR + "Attatchment One: " + att1.getDisplayName(true));
-        if (att2 != null && !att2.isNull())         lore.add(GUN_MOD_COLOR + "Attatchment Two: " + att2.getDisplayName(true));
-        if (att3 != null && !att3.isNull())         lore.add(GUN_MOD_COLOR + "Attatchment Three: " + att3.getDisplayName(true));
+        if (att1 != null && !att1.isNull())         lore.add(GUN_MOD_COLOR + "Attachment One: " + att1.getDisplayName(true));
+        if (att2 != null && !att2.isNull())         lore.add(GUN_MOD_COLOR + "Attachment Two: " + att2.getDisplayName(true));
+        if (att3 != null && !att3.isNull())         lore.add(GUN_MOD_COLOR + "Attachment Three: " + att3.getDisplayName(true));
         if (barrel != null && !barrel.isNull())     lore.add(GUN_MOD_COLOR + "Barrel: " + barrel.getDisplayName(true));
         if (bolt != null && !bolt.isNull())         lore.add(GUN_MOD_COLOR + "Bolt: " + bolt.getDisplayName(true));
         if (firemode != null && !firemode.isNull()) lore.add(GUN_MOD_COLOR + "Fire Mode: " + firemode.getDisplayName(true));

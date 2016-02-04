@@ -6,10 +6,11 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttatchments.ProjectileAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BleedoutModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
@@ -20,14 +21,14 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.
  *
  * @author jbannon
  */
-public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
+public class ProjectileAttachments extends CSVInput<ProjectileAttachment>
 {
-    static private AOEAttatchments slotOneSingleton = null;
+    static private ProjectileAttachments slotOneSingleton = null;
             
-    static public AOEAttatchments getInstance()
+    static protected ProjectileAttachments getInstance()
     {
         if (slotOneSingleton == null)
-            slotOneSingleton = new AOEAttatchments(ATTATCHMENT_ONE_CSV_NAME);
+            slotOneSingleton = new ProjectileAttachments(ATTATCHMENT_ONE_CSV_NAME);
         return slotOneSingleton;
     }
     
@@ -63,32 +64,32 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         "Stun Duration (DBL)"
     };
     
-    private AOEAttatchments(final String csvName)
+    private ProjectileAttachments(final String csvName)
     {
         super(csvName, buildAttatchments(csvName), ATTATCHMENT_VALUES);
     }
     
     @Override
-    public ProjectileAttatchment getNullValue()
+    public ProjectileAttachment getNullValue()
     {
-        return new ProjectileAttatchment();
+        return new ProjectileAttachment();
     }
     
     /**
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    static private ProjectileAttatchment[] buildAttatchments(final String csvName)
+    static private ProjectileAttachment[] buildAttatchments(final String csvName)
     {
         final CSVReader csv = new CSVReader(csvName, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
         {
-            return new ProjectileAttatchment[] { new ProjectileAttatchment() };
+            return new ProjectileAttachment[] { new ProjectileAttachment() };
         }
         int j = 0;
-        final ProjectileAttatchment[] toReturn    = new ProjectileAttatchment[rowCount + 1];
+        final ProjectileAttachment[] toReturn              = new ProjectileAttachment[rowCount + 1];
         final String[] displayNames               = csv.getColumnString(j++);
         final String[] materialNames              = csv.getColumnString(j++);
         final int[]    materialBytes              = csv.getColumnInt(j++);
@@ -117,10 +118,10 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         final double[] stunChance                 = csv.getColumnDouble(j++);
         final double[] stunDuration               = csv.getColumnDouble(j++);
  
-        toReturn[0] = new ProjectileAttatchment();
+        toReturn[0] = new ProjectileAttachment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i+1] = new ProjectileAttatchment(
+            toReturn[i+1] = new ProjectileAttachment(
                     i+1,
                     displayNames[i],
                     materialNames[i],
@@ -154,7 +155,7 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         return toReturn;
     }
 
-    static public class ProjectileAttatchment extends GunModifier implements BulletSpreadModifier, 
+    static public class ProjectileAttachment extends Attachment implements BulletSpreadModifier, 
                                                 DamageModifier,
                                                 CritModifier,
                                                 BleedoutModifier,
@@ -186,7 +187,7 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         private final double stunChance;
         private final double stunDuration;
 
-        private ProjectileAttatchment(final int uniqueID,
+        private ProjectileAttachment(final int uniqueID,
                             final String displayname,
                             final String materialName,
                             final int materialByte,
@@ -243,7 +244,7 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         /**
          * Constructs the null Attatchment.
          */
-        private ProjectileAttatchment()
+        private ProjectileAttachment()
         {
             this(0, null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
@@ -255,7 +256,7 @@ public class AOEAttatchments extends CSVInput<ProjectileAttatchment>
         @Override public double getCritStrike()                          { return critStrikeMultiplier; }
         @Override public double getBleedoutDurationValue()               { return bleedoutDurationSeconds; }
         @Override public double getBleedoutDamageValuePerSecond()        { return bleedoutDamageBoost;  }
-        @Override public ProjectileAttatchment getNullModifier()         { return slotOneSingleton.getNullValue(); }
+        @Override public ProjectileAttachment getNullModifier()                   { return slotOneSingleton.getNullValue(); }
         @Override public double getHeadshotDamageModifier()              { return headshotDamageModifier; }
         @Override public double getHeadshotDamageMultiplier()            { return headshotDamageMultiplier; }
         @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }

@@ -8,8 +8,8 @@ package net.projectzombie.crackshot_enhanced.main;
 //import net.projectzombie.crackshot_enhanced.custom_weapons.GunSmithController;
 //import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import java.util.ArrayList;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
@@ -70,7 +70,7 @@ public class GunSmithCommandExec implements CommandExecutor
                     || args[1].equalsIgnoreCase("attatchment3"))
             {
                 //listModifierNames(sender, ProjectileAttatchments.getInstance().getAll());
-                listModifierNames(sender, Attatchments.getInstance().getAll());
+                listModifierNames(sender, Attachments.getInstance().getAll());
             }
             else if (args[1].equalsIgnoreCase("barrel"))
                 listModifierNames(sender, Barrels.getInstance().getAll());
@@ -105,7 +105,7 @@ public class GunSmithCommandExec implements CommandExecutor
             }
             
             if (args[1].equalsIgnoreCase("attatchment1"))
-                modItem = getModItem(SLOT_ONE_ATTATCHMENT, index);
+                modItem = getModItem(SLOT_ONE_ATTACHMENT, index);
             else if (args[1].equalsIgnoreCase("attatchment2"))
                 modItem = getModItem(SLOT_TWO_ATTATCHMENT, index);
             else if (args[1].equalsIgnoreCase("attatchment3"))
@@ -149,12 +149,12 @@ public class GunSmithCommandExec implements CommandExecutor
         GunModifier mod;
         switch(type)
         {
-            case SLOT_ONE_ATTATCHMENT:
-                mod = Attatchments.getInstance().get(index); break;
+            case SLOT_ONE_ATTACHMENT:
+                mod = Attachments.getInstance().get(index); break;
             case SLOT_TWO_ATTATCHMENT:
-                mod = Attatchments.getInstance().get(index); break;
+                mod = Attachments.getInstance().get(index); break;
             case SLOT_THREE_ATTATCHMENT:
-                mod = Attatchments.getInstance().get(index); break;
+                mod = Attachments.getInstance().get(index); break;
             case BARREL:
                 mod = Barrels.getInstance().get(index); break;
             case BOLT:

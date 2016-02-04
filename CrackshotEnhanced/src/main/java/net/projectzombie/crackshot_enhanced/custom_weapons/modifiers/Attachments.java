@@ -18,42 +18,42 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 
 /**
  *
  * @author jesse
  */
-public class Attatchments extends CSVInput<Attatchment>
+public class Attachments extends CSVInput<Attachment>
 {
-    static private Attatchments slotOneSingleton = null;
+    static private Attachments singleton = null;
             
-    static public Attatchments getInstance()
+    static public Attachments getInstance()
     {
-        if (slotOneSingleton == null)
-            slotOneSingleton = new Attatchments();
-        return slotOneSingleton;
+        if (singleton == null)
+            singleton = new Attachments();
+        return singleton;
     }
     
-    private Attatchments()
+    private Attachments()
     {
         super(null, buildAttatchments(), new String[] {});
     }
     
     @Override
-    public Attatchment getNullValue()
+    public Attachment getNullValue()
     {
-        return ProjectileAttatchments.getInstance().getNullValue();
+        return ProjectileAttachments.getInstance().getNullValue();
     }
     
-    static private Attatchment[] buildAttatchments()
+    static private Attachment[] buildAttatchments()
     {
-        final ProjectileAttatchment[] projAtts = ProjectileAttatchments.getInstance().getAll();
-        final Attatchment[] toRet = new Attatchment[projAtts.length];
+        final ProjectileAttachment[] projAtts = ProjectileAttachments.getInstance().getAll();
+        final Attachment[] toRet = new Attachment[projAtts.length];
         
         int i = 0;
-        for (ProjectileAttatchment projAtt : projAtts)
+        for (ProjectileAttachment projAtt : projAtts)
         {
             toRet[i++] = projAtt;
         }
@@ -61,10 +61,10 @@ public class Attatchments extends CSVInput<Attatchment>
         return toRet;
     }
 
-    static public abstract class Attatchment extends GunModifier
+    static public abstract class Attachment extends GunModifier
     {
 
-        public Attatchment(final int uniqueID,
+        public Attachment(final int uniqueID,
                            final String name,
                            final String material,
                            final int materialData,

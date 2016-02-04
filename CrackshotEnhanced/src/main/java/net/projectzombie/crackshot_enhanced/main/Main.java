@@ -2,8 +2,8 @@ package net.projectzombie.crackshot_enhanced.main;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.crafting.Recipes;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
@@ -68,7 +68,7 @@ public class Main extends JavaPlugin {
     private boolean initializeGuns()
     {
         CSVReader.initializePlugin(this);
-        if (!isInitialized("Attatchments", Attatchments.getInstance().initialize()))
+        if (!isInitialized("Attatchments", Attachments.getInstance().initialize()))
             return false;
         if (!isInitialized("Barrels", Barrels.getInstance().initialize()))
             return false;

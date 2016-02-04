@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Random;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
@@ -106,9 +106,9 @@ public class Guns
         private final GunSkeleton skeleton;
 
         /* Craftable gun modifiers */
-        private final Attatchment attatchmentOne;
-        private final Attatchment attatchmentTwo;
-        private final Attatchment attatchmentThree;
+        private final Attachment attachmentOne;
+        private final Attachment attachmentTwo;
+        private final Attachment attachmentThree;
         private final Barrel barrel;
         private final Bolt bolt;
         private final FireMode firemodeType;
@@ -118,9 +118,9 @@ public class Guns
         
 
         public CrackshotGun(final GunSkeleton skeleton,
-                             final Attatchment attatchmentOne,
-                             final Attatchment attatchmentTwo,
-                             final Attatchment attatchmentThree,
+                             final Attachment attachmentOne,
+                             final Attachment attachmentTwo,
+                             final Attachment attachmentThree,
                              final Barrel barrel,
                              final Bolt bolt,
                              final FireMode firemodeType,
@@ -128,13 +128,13 @@ public class Guns
                              final Scope scopeType,
                              final Stock stock)
         {
-            final GunID id = new GunID(skeleton, attatchmentOne, attatchmentTwo, attatchmentThree, barrel, bolt, firemodeType, magazine, scopeType, stock);
+            final GunID id = new GunID(skeleton, attachmentOne, attachmentTwo, attachmentThree, barrel, bolt, firemodeType, magazine, scopeType, stock);
             this.skeleton = skeleton;
             this.firemodeType = firemodeType;
             this.scopeType = scopeType;
-            this.attatchmentOne = attatchmentOne;
-            this.attatchmentTwo = attatchmentTwo;
-            this.attatchmentThree = attatchmentThree;
+            this.attachmentOne = attachmentOne;
+            this.attachmentTwo = attachmentTwo;
+            this.attachmentThree = attachmentThree;
             this.bolt = bolt;
             this.barrel = barrel;
             this.stock = stock;
@@ -147,9 +147,9 @@ public class Guns
         private CrackshotGun(final GunID id)
         {
             this.skeleton = id.getSkeleton();
-            this.attatchmentOne = id.getAttatchmentOne();
-            this.attatchmentTwo = id.getAttatchmentTwo();
-            this.attatchmentThree = id.getAttatchmentThree();
+            this.attachmentOne = id.getAttatchmentOne();
+            this.attachmentTwo = id.getAttatchmentTwo();
+            this.attachmentThree = id.getAttatchmentThree();
             this.bolt = id.getBolt();
             this.barrel = id.getBarrel();
             this.firemodeType = id.getFireMode();
@@ -165,9 +165,9 @@ public class Guns
         public SkeletonType getWeaponType()       { return skeleton.getWeaponType();}
         public FireMode     getFireMode()         { return firemodeType;            }
         public Scope        getScope()            { return scopeType;               }
-        public Attatchment  getAttatchmentOne()   { return attatchmentOne;          }
-        public Attatchment  getAttatchmentTwo()   { return attatchmentTwo;          }
-        public Attatchment  getAttatchmentThree() { return attatchmentThree;        }
+        public Attachment   getAttachmentOne()    { return attachmentOne;          }
+        public Attachment   getAttachmentTwo()    { return attachmentTwo;          }
+        public Attachment   getAttachmentThree()  { return attachmentThree;        }
         public Barrel       getBarrel()           { return barrel;                  }
         public Bolt         getBolt()             { return bolt;                    }
         public Magazine     getMagazine()         { return magazine;                }
@@ -406,9 +406,9 @@ public class Guns
         {
             return new GunModifier[]
             { 
-                attatchmentOne,
-                attatchmentTwo,
-                attatchmentThree,
+                attachmentOne,
+                attachmentTwo,
+                attachmentThree,
                 barrel,
                 bolt,
                 firemodeType,

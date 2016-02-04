@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
@@ -229,7 +229,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                 return null;
 
             CrackshotGun guns[] = new CrackshotGun[combinationCount];
-            final Attatchment nullAtt = Attatchments.getInstance().getNullValue();
+            final Attachment nullAtt = Attachments.getInstance().getNullValue();
             final Stock nullStock = Stocks.getInstance().getNullValue();
 
             for (Barrel barrel : modSet.getBarrels())

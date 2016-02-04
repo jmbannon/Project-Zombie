@@ -17,11 +17,11 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
@@ -64,9 +64,9 @@ public class GunID
     private final int stockIndex;
     
     public GunID(final GunSkeleton skeleton,
-                final Attatchment attatchmentOne,
-                final Attatchment attatchmentTwo,
-                final Attatchment attatchmentThree,
+                final Attachment attatchmentOne,
+                final Attachment attatchmentTwo,
+                final Attachment attatchmentThree,
                 final Barrel barrel,
                 final Bolt bolt,
                 final FireMode firemodeType,
@@ -112,9 +112,9 @@ public class GunID
                  final GunModifierType type)
     {
         this(gun.getSkeleton(),
-            type.equals(SLOT_ONE_ATTATCHMENT)   ? (ProjectileAttatchment)modifier : gun.getAttatchmentOne(), 
-            type.equals(SLOT_TWO_ATTATCHMENT)   ? (ProjectileAttatchment)modifier : gun.getAttatchmentTwo(),  
-            type.equals(SLOT_THREE_ATTATCHMENT) ? (ProjectileAttatchment)modifier : gun.getAttatchmentThree(), 
+            type.equals(SLOT_ONE_ATTACHMENT)   ? (ProjectileAttachment)modifier : gun.getAttachmentOne(), 
+            type.equals(SLOT_TWO_ATTATCHMENT)   ? (ProjectileAttachment)modifier : gun.getAttachmentTwo(),  
+            type.equals(SLOT_THREE_ATTATCHMENT) ? (ProjectileAttachment)modifier : gun.getAttachmentThree(), 
             type.equals(BARREL)                 ? (Barrel)modifier      : gun.getBarrel(), 
             type.equals(BOLT)                   ? (Bolt)modifier        : gun.getBolt(), 
             type.equals(FIREMODE)               ? (FireMode)modifier    : gun.getFireMode(), 
@@ -185,9 +185,9 @@ public class GunID
     }
     
     public GunSkeleton getSkeleton()       { return GunSkeletons.getInstance().get(skeletonIndex); }
-    public Attatchment getAttatchmentOne()   { return Attatchments.getInstance().get(attatchmentOneIndex); }
-    public Attatchment getAttatchmentTwo()   { return Attatchments.getInstance().get(attatchmentTwoIndex); }
-    public Attatchment getAttatchmentThree() { return Attatchments.getInstance().get(attatchmentThreeIndex); }
+    public Attachment getAttatchmentOne()   { return Attachments.getInstance().get(attatchmentOneIndex); }
+    public Attachment getAttatchmentTwo()   { return Attachments.getInstance().get(attatchmentTwoIndex); }
+    public Attachment getAttatchmentThree() { return Attachments.getInstance().get(attatchmentThreeIndex); }
     public Barrel getBarrel()                { return Barrels.getInstance().get(barrelIndex); }
     public Bolt getBolt()                    { return Bolts.getInstance().get(boltIndex); }
     public FireMode getFireMode()            { return FireModes.getInstance().get(firemodeTypeIndex); }
@@ -227,9 +227,9 @@ public class GunID
                 && csIDXs[3] < FireModes.getInstance().initialize()
                 && csIDXs[4] < Magazines.getInstance().initialize()
                 && csIDXs[5] < Sights.getInstance().initialize()
-                && attIDXs[0] < Attatchments.getInstance().initialize()
-                && attIDXs[1] < Attatchments.getInstance().initialize()
-                && attIDXs[2] < Attatchments.getInstance().initialize()
+                && attIDXs[0] < Attachments.getInstance().initialize()
+                && attIDXs[1] < Attachments.getInstance().initialize()
+                && attIDXs[2] < Attachments.getInstance().initialize()
                 && attIDXs[3] < Stocks.getInstance().initialize();
     }
     
