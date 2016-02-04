@@ -1,5 +1,6 @@
 package net.projectzombie.crackshot_enhanced.windows;
 
+import com.shampaggon.crackshot.CSUtility;
 import net.projectzombie.crackshot_enhanced.windows.GlassFormations.GlassOffset;
 import org.bukkit.event.Listener;
 import org.bukkit.GameMode;
@@ -10,8 +11,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 import net.projectzombie.block_buffer.buffer.Buffer;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.CRACKSHOT;
 import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.util.Vector;
 
 public class BlockBreakListener implements Listener
 {
@@ -53,6 +60,7 @@ public class BlockBreakListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL)
     public void projectileBlockBreakEvent(WeaponHitBlockEvent event)
     {
+        final Player player = event.getPlayer();
         final Block block = event.getBlock();
         
         if (isBreakableBlock(block))
@@ -71,6 +79,36 @@ public class BlockBreakListener implements Listener
         else if (!block.getType().equals(Material.SNOW))
         {
             block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
+        }
+        else // is snow
+        {
+            Entity proj = event.getProjectile();
+            Location loc = proj.getLocation();
+            Vector norm = proj.getVelocity().normalize().multiply(1.0);
+            Material tempMat;
+            int i = 0;
+            
+            do
+            {
+                loc = new Location(block.getWorld(), loc.getX() + norm.getX(), loc.getY() + norm.getY(), loc.getZ() + norm.getZ());
+                ++i;
+            } 
+            while (!loc.getBlock().getType().equals(Material.SNOW) && i < 5);
+            
+            for (i = 0; i < 40; i++)
+            {
+                loc = new Location(block.getWorld(), loc.getX() + norm.getX(), loc.getY() + norm.getY(), loc.getZ() + norm.getZ());
+                tempMat = loc.getBlock().getType();
+                if (!(tempMat.equals(Material.SNOW) || tempMat.equals(Material.AIR)))
+                {
+                    if (loc.getBlock().getRelative(BlockFace.UP).getType().equals(Material.SNOW))
+                        block.getWorld().playEffect(loc.getBlock().getRelative(BlockFace.UP).getLocation(), Effect.STEP_SOUND, Material.SNOW.getId());
+                    else
+                        block.getWorld().playEffect(loc, Effect.STEP_SOUND, tempMat.getId());
+                    break;
+                }
+            }
+                
         }
     }
 

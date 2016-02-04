@@ -3,6 +3,7 @@ package net.projectzombie.crackshot_enhanced.main;
 import net.projectzombie.crackshot_enhanced.custom_weapons.crafting.Recipes;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
@@ -10,9 +11,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSets;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.FirearmActions;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.SkeletonTypes;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import net.projectzombie.crackshot_enhanced.windows.BlockBreakListener;
 import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
@@ -85,7 +86,7 @@ public class Main extends JavaPlugin {
             return false;
         if (!isInitialized("Firearm Action", FirearmActions.getInstance().initialize()))
             return false;
-        if (!isInitialized("Weapon Types", WeaponTypes.getInstance().initialize()))
+        if (!isInitialized("Weapon Types", SkeletonTypes.getInstance().initialize()))
             return false;
         if (!isInitialized("Gun Skeletons", GunSkeletons.getInstance().initialize()))
             return false;

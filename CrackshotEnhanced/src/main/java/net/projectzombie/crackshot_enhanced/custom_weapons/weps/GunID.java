@@ -17,9 +17,11 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
-import java.util.Arrays;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
@@ -35,7 +37,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 
 /**
@@ -110,9 +112,9 @@ public class GunID
                  final GunModifierType type)
     {
         this(gun.getSkeleton(),
-            type.equals(SLOT_ONE_ATTATCHMENT)   ? (Attatchment)modifier : gun.getAttatchmentOne(), 
-            type.equals(SLOT_TWO_ATTATCHMENT)   ? (Attatchment)modifier : gun.getAttatchmentTwo(),  
-            type.equals(SLOT_THREE_ATTATCHMENT) ? (Attatchment)modifier : gun.getAttatchmentThree(), 
+            type.equals(SLOT_ONE_ATTATCHMENT)   ? (ProjectileAttatchment)modifier : gun.getAttatchmentOne(), 
+            type.equals(SLOT_TWO_ATTATCHMENT)   ? (ProjectileAttatchment)modifier : gun.getAttatchmentTwo(),  
+            type.equals(SLOT_THREE_ATTATCHMENT) ? (ProjectileAttatchment)modifier : gun.getAttatchmentThree(), 
             type.equals(BARREL)                 ? (Barrel)modifier      : gun.getBarrel(), 
             type.equals(BOLT)                   ? (Bolt)modifier        : gun.getBolt(), 
             type.equals(FIREMODE)               ? (FireMode)modifier    : gun.getFireMode(), 
@@ -183,8 +185,8 @@ public class GunID
     }
     
     public GunSkeleton getSkeleton()       { return GunSkeletons.getInstance().get(skeletonIndex); }
-    public Attatchment getAttatchmentOne() { return Attatchments.getInstance().get(attatchmentOneIndex); }
-    public Attatchment getAttatchmentTwo() { return Attatchments.getInstance().get(attatchmentTwoIndex); }
+    public Attatchment getAttatchmentOne()   { return Attatchments.getInstance().get(attatchmentOneIndex); }
+    public Attatchment getAttatchmentTwo()   { return Attatchments.getInstance().get(attatchmentTwoIndex); }
     public Attatchment getAttatchmentThree() { return Attatchments.getInstance().get(attatchmentThreeIndex); }
     public Barrel getBarrel()                { return Barrels.getInstance().get(barrelIndex); }
     public Bolt getBolt()                    { return Bolts.getInstance().get(boltIndex); }

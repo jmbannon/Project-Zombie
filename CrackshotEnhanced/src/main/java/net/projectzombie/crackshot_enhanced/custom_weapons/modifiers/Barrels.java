@@ -7,11 +7,12 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.SilencerModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.SilencerModifier;
 
 /**
  *
@@ -36,8 +37,12 @@ public class Barrels extends CSVInput<Barrel>
         "Color (STR)",
         "Is Silencer (T/F)",
         "BulletSpreadModifier (DBL)",
-        "Damage Value (DBL)",
-        "Damage Multiplier (DBL)",
+        "Base Damage Value (DBL)",
+        "Base Damage Multiplier (DBL)",
+        "Shrapnel Damage Value (DBL)",
+        "Shrapnel Damage Multiplier (DBL)",
+        "Fire Damage Value (DBL)",
+        "Fire Damage Multiplier (DBL)",
         "Headshot Modifier (DBL)",
         "Headshot Multiplier (DBL)",
         "AdditionalProjectiles (INT)",
@@ -80,8 +85,12 @@ public class Barrels extends CSVInput<Barrel>
         final String[] color                         = csv.getColumnString(j++);
         final boolean[] silencer                     = csv.getColumnBoolean(j++);
         final double[] bulletSpreadModifier          = csv.getColumnDouble(j++);
-        final double[] damageValue                   = csv.getColumnDouble(j++);
-        final double[] damageMultiplier              = csv.getColumnDouble(j++);
+        final double[] baseDamageValue               = csv.getColumnDouble(j++);
+        final double[] baseDamageMultiplier          = csv.getColumnDouble(j++);
+        final double[] shrapnelDamageValue           = csv.getColumnDouble(j++);
+        final double[] shrapnelDamageMultiplier      = csv.getColumnDouble(j++);
+        final double[] fireDamageValue               = csv.getColumnDouble(j++);
+        final double[] fireDamageMultiplier          = csv.getColumnDouble(j++);
         final double[] headshotValue                 = csv.getColumnDouble(j++);
         final double[] headshotMultiplier            = csv.getColumnDouble(j++);
         final int[]    additionalProjectiles         = csv.getColumnInt(j++);
@@ -102,8 +111,12 @@ public class Barrels extends CSVInput<Barrel>
                 color[i],
                 silencer[i],
                 bulletSpreadModifier[i],         
-                damageValue[i],                  
-                damageMultiplier[i],             
+                baseDamageValue[i],                  
+                baseDamageMultiplier[i],
+                shrapnelDamageValue[i],
+                shrapnelDamageMultiplier[i],
+                fireDamageValue[i],
+                fireDamageMultiplier[i],
                 headshotValue[i],                
                 headshotMultiplier[i],           
                 additionalProjectiles[i],        
@@ -119,11 +132,16 @@ public class Barrels extends CSVInput<Barrel>
     static public class Barrel extends GunModifier implements BulletSpreadModifier,
                                                               DamageModifier,
                                                               ProjectileModifier,
-                                                              SilencerModifier
+                                                              SilencerModifier,
+                                                              IncendiaryModifier
     {
         private final double bulletSpreadModifier;
-        private final double damageValue;
-        private final double damageMultiplier;
+        private final double baseDamageValue;
+        private final double baseDamageMultiplier;
+        private final double shrapnelDamageValue;
+        private final double shrapnelDamageMultiplier;
+        private final double fireDamageValue;
+        private final double fireDamageMultiplier;
         private final double headshotValue;
         private final double headshotMultiplier;
         private final int    additionalProjectiles;
@@ -141,8 +159,12 @@ public class Barrels extends CSVInput<Barrel>
                         final String color,
                         final boolean isSilencer,
                         final double bulletSpreadModifier,
-                        final double damageValue,
-                        final double damageMultiplier,
+                        final double baseDamageValue,
+                        final double baseDamageMultiplier,
+                        final double shrapnelDamageValue,
+                        final double shrapnelDamageMultiplier,
+                        final double fireDamageValue,
+                        final double fireDamageMultiplier,
                         final double headshotValue,
                         final double headshotMultiplier,
                         final int    additionalProjectiles,
@@ -153,8 +175,12 @@ public class Barrels extends CSVInput<Barrel>
             super(uniqueID, displayName, material, materialByte, price, color);
             this.isSilencer = isSilencer;
             this.bulletSpreadModifier = bulletSpreadModifier;
-            this.damageValue = damageValue;
-            this.damageMultiplier = damageMultiplier;
+            this.baseDamageValue = baseDamageValue;
+            this.baseDamageMultiplier = baseDamageMultiplier;
+            this.shrapnelDamageValue = shrapnelDamageValue;
+            this.shrapnelDamageMultiplier = shrapnelDamageMultiplier;
+            this.fireDamageValue = fireDamageValue;
+            this.fireDamageMultiplier = fireDamageMultiplier;
             this.headshotValue = headshotValue;
             this.headshotMultiplier = headshotMultiplier;
             this.additionalProjectiles = additionalProjectiles;
@@ -165,12 +191,12 @@ public class Barrels extends CSVInput<Barrel>
 
         public Barrel()
         {
-            this(0, null, null, 0, 0, null, false, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            this(0, null, null, 0, 0, null, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
         @Override public boolean isSilencer()                { return isSilencer; }
-        @Override public double getDamageValue()             { return damageValue; }
-        @Override public double getDamageMultiplier()        { return damageMultiplier; }
+        @Override public double getDamageValue()             { return baseDamageValue; }
+        @Override public double getDamageMultiplier()        { return baseDamageMultiplier; }
         @Override public int getProjectileValue()            { return additionalProjectiles; }
         @Override public double getBulletSpreadMultiplier()  { return bulletSpreadModifier; }
         @Override public Barrel getNullModifier()            { return singleton.getNullValue(); }
@@ -179,5 +205,7 @@ public class Barrels extends CSVInput<Barrel>
         @Override public double getProjectileSpeedMultiplier() { return projectileSpeedMultiplier; }
         @Override public int getProjectileRangeValue()         { return projectileRangeValue; }
         @Override public double getProjectileRangeMultiplier() { return projectileRangeMultiplier; }
+        @Override public double getFireDamageValue()           { return fireDamageValue; }
+        @Override public double getFireDamageMultiplier()      { return fireDamageMultiplier; }
     }
 }

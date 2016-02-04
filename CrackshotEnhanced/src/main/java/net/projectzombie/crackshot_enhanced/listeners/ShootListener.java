@@ -11,7 +11,10 @@ import com.shampaggon.crackshot.events.WeaponPrepareShootEvent;
 import com.shampaggon.crackshot.events.WeaponShootEvent;
 import java.util.List;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 //import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore.LORE_SIZE;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -84,7 +87,7 @@ public class ShootListener implements Listener
     public void preDecayEvent(WeaponPrepareShootEvent event)
     {
         final Player shooter = event.getPlayer();
-        
+
         if (CrackshotLore.isBroken(shooter.getItemInHand()))
         {
             shooter.sendMessage("Your " + event.getWeaponTitle() + " is broken.");
@@ -92,22 +95,54 @@ public class ShootListener implements Listener
         }
     }
     
+    @EventHandler(priority = EventPriority.LOWEST)
     public void test(WeaponShootEvent event)
     {
-
+        final Entity proj = event.getProjectile();
+        final String gunID = getGunID(event.getPlayer());
+        
+        if (gunID == null)
+        {
+            System.out.println("Gun id is null");
+        }
+        else
+        {
+            proj.setCustomName(gunID);
+            proj.setCustomNameVisible(false);
+            System.out.println("shoot vec " + proj.getVelocity().toString());
+        }
     }
     
     /**
      * Testing
      * @param event 
      */
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onHitEvent(WeaponDamageEntityEvent event)
     {
-        if (event.getVictim() instanceof Monster)
+        
+        final String gunID = event.getDamager().getCustomName();
+        final CrackshotGun gun = Guns.get(gunID);
+        
+        if (gun != null)
         {
-            Monster victim = (Monster)event.getVictim();
-            
+            System.out.println("Setting damage: " + gun.getDamageOnEntityHit(event.isHeadshot()));
+            event.setDamage(gun.getDamageOnEntityHit(event.isHeadshot()));
         }
+        else
+        {
+            System.out.println("Can not find gun with ID: " + gunID);
+        }
+    }
+    
+    private static String getGunID(final Player player)
+    {
+        return CrackshotLore.getWeaponID(player.getItemInHand());
+    }
+    
+    public static CrackshotGun getGun(final Player player)
+    {
+        return Guns.get(getGunID(player));
     }
     
     /**
@@ -136,13 +171,22 @@ public class ShootListener implements Listener
             if (lore == null)
                 bulletSpread = ERROR;
             else
-                bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
+                lore = CrackshotLore.decrementDurability(eventBulletSpread, lore);
         }
+        else if (CrackshotLore.isPostShotWeapon(lore))
+            lore = CrackshotLore.decrementDurability(eventBulletSpread, lore);
         else
-            bulletSpread = CrackshotLore.decrementDurability(eventBulletSpread, lore);
+            bulletSpread = ERROR;
         
-        gunMeta.setLore(lore);
-        item.setItemMeta(gunMeta);
+        if (lore == null)
+            bulletSpread = ERROR;
+        else
+        {
+            bulletSpread = eventBulletSpread;
+            gunMeta.setLore(lore);
+            item.setItemMeta(gunMeta);
+        }
+
         return bulletSpread;
     }
     

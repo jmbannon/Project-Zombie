@@ -15,15 +15,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types;
+package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
 
 /**
  *
  * @author jesse
  */
-public interface FireModeModifier
+public interface ShockModifier
 {
-    public boolean isBurstFire();
-    public boolean isAutomatic();
-    public int     getShotsPerBurst();
+    public double getShockChance();
+    public double getShockDamageValue();
+    public double getShockDamageMultiplierFromElectricity();
 }

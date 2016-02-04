@@ -6,15 +6,19 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.utilities;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BleedoutModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.FirearmActions.FirearmAction;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.FORMATTER;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.TPS;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.ChatColor;
 
@@ -25,178 +29,220 @@ import org.bukkit.ChatColor;
 public class ModifierLoreBuilder
 {
 
-    private static final String statColor = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString();
     
-    private ModifierLoreBuilder() { /* Do nothing */ }
+    private static final String STAT_COLOR = ChatColor.GRAY.toString() + ChatColor.ITALIC.toString();
+    private static final String TITLE_COLOR = ChatColor.RED.toString();
+    private static final String STAT_TYPE_SEPERATOR = ChatColor.GRAY + "--------------------------------";
+    private static final String STAT_SEPERATOR = ChatColor.DARK_GRAY + "---------------";
     
-//    static
-//    public ArrayList<String> buildModifierLore(final CrackshotGun gun)
-//    {
-//        final ArrayList<ArrayList<String>> attatchmentStats = new ArrayList<>();
-//        final ArrayList<String> loreToReturn = new ArrayList<>();
-//        ArrayList<String> attatchmentStat;
-//        for (GunModifier mod : gun.getCraftableModifiers())
-//        {
-//            if (!mod.isNull())
-//            {
-//                attatchmentStat = buildGunModifierLore(mod);
-//                if (attatchmentStat != null && !attatchmentStat.isEmpty())
-//                    attatchmentStats.add(attatchmentStat);
-//            }
-//        }
-//        
-//        Collections.shuffle(attatchmentStats);
-//        for (ArrayList<String> temp : attatchmentStats)
-//        {
-//            loreToReturn.addAll(temp);
-//        }
-//        
-//        return loreToReturn;
-//    }
+    private final CrackshotGun gun;
     
-    static
-    private ArrayList<String> buildGunModifierLore(final GunModifier mod)
+    public ModifierLoreBuilder(final CrackshotGun gun)
     {
-        final ArrayList<String> stats = new ArrayList<>();
-        
-        if (mod instanceof BleedoutModifier)
-        {
-            stats.addAll(getBleedoutStats((BleedoutModifier)mod));
-        }
-        if (mod instanceof BoltModifier)
-        {
-            stats.addAll(getBoltModifierStats((BoltModifier)mod));
-        }
-        if (mod instanceof BulletSpreadModifier)
-        {
-            stats.addAll(getBulletSpreadModifierStats((BulletSpreadModifier)mod));
-        }
-        if (mod instanceof CritModifier)
-        {
-            stats.addAll(getCritModifierStats((CritModifier)mod));
-        }
-        if (mod instanceof DamageModifier)
-        {
-            stats.addAll(getDamageModifierStats((DamageModifier)mod));
-        }
-        if (mod instanceof MagazineModifier)
-        {
-            stats.addAll(getMagazineModifierStats((MagazineModifier)mod));
-        }
-        if (mod instanceof ProjectileModifier)
-        {
-            stats.addAll(getProjectileModifierStats((ProjectileModifier)mod));
-        }
-        
-        if (!stats.isEmpty())
-        {
-            Collections.shuffle(stats);
-            stats.add(0, mod.getColor() + mod.getName());
-            return stats;
-        }
-        else
-        {
-            return null;
-        }
+        this.gun = gun;
     }
     
-    static
-    private ArrayList<String> getBleedoutStats(final BleedoutModifier bleedoutMod)
+    
+    public ArrayList<String> getAllStatInfo()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String bleedDamage = getValueStat(bleedoutMod.getBleedoutDamageValuePerSecond(), "bleed damage p/sec");
-        final String bleedDuration = getValueStat(bleedoutMod.getBleedoutDurationValue(), "bleed duration");
         
-        if (bleedDamage != null)
-            stats.add(bleedDamage);
-        
-        if (bleedDuration != null)
-            stats.add(bleedDuration);
+        stats.add(toTitle(gun.getSkeleton().getName() + " Stats"));
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Bullet Spread"));
+        stats.addAll(this.getBulletSpreadModifierStats());
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Base Damage"));
+        stats.addAll(this.getDamageModifierStats());
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Bleedout Damage"));
+        stats.addAll(getBleedoutStats());
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Fire Damage"));
+        stats.addAll(this.getIncendiaryStats());
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Critical Strike"));
+        stats.addAll(this.getCritModifierStats());
+        stats.add(STAT_TYPE_SEPERATOR);
+        stats.add(toTitle("Bolt Action"));
+        stats.addAll(this.getBoltModifierStats());
         
         return stats;
     }
     
-    static
-    ArrayList<String> getBoltModifierStats(final BoltModifier boltMod)
+    private String toTitle(final String title)
+    {
+        return TITLE_COLOR + title;
+    }
+    
+    private ArrayList<String> getBleedoutStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String durationIncrease = getMultiplierStat(boltMod.getBoltDurationMultiplier(), "bolt action speed");
+        double bleedoutDamageValuePerSecond = 0;
+        double bleedoutDamageMultFromBase = 0;
+        double bleedoutDamageMultFromShrap = 0;
+        double bleedoutDurationValue = 0;
+        double bleedoutDurationMult = 0;
         
-        if (durationIncrease != null)
-            stats.add(durationIncrease);
+        for (BleedoutModifier mod : gun.getBleedoutModifiers())
+        {
+            bleedoutDamageValuePerSecond += mod.getBleedoutDamageValuePerSecond();
+            bleedoutDamageMultFromBase += mod.getBleedoutDamageMultiplierFromDamage();
+            bleedoutDamageMultFromShrap += mod.getBleedoutDamageMultiplerFromShrapnel();
+            bleedoutDurationValue += mod.getBleedoutDurationValue();
+            bleedoutDurationMult += mod.getBleedoutDurationMultiplier();
+        }
+        
+        stats.add(getValueStat(gun.getBleedoutDamagePerSecond(), "total bleed damage p/sec"));
+        stats.add(getValueStat(gun.getBleedoutDurationInSeconds(), "total bleed duration"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(bleedoutDamageValuePerSecond, "bleed damage p/sec"));
+        stats.add(getMultiplierStat(bleedoutDamageValuePerSecond, "bleed damage dealt from base damage p/sec"));
+        stats.add(getMultiplierStat(bleedoutDamageValuePerSecond, "bleed damage dealt from shrapnel damage p/sec"));
+        stats.add(getValueStat(bleedoutDurationValue, "bleed duration"));
+        stats.add(getMultiplierStat(bleedoutDurationMult, "bleed duration"));
         
         return stats;
     }
     
-    static
-    ArrayList<String> getBulletSpreadModifierStats(final BulletSpreadModifier bsMod)
+    private ArrayList<String> getBoltModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String bsMultiplier = getMultiplierStat(bsMod.getBulletSpreadMultiplier(), "bullet spread");
+        final double baseBoltSpeed = gun.getSkeleton().getWeaponType().getAction().getBoltActionDurationInTicks();
+        final double newBoltSpeed;
+        double boltDurationMultiplier = 0; 
+        for (BoltModifier mod : gun.getBoltModifiers())
+        {
+            boltDurationMultiplier += mod.getBoltDurationMultiplier();
+        }
+        newBoltSpeed = baseBoltSpeed * (1.0 + boltDurationMultiplier);
         
-        if (bsMultiplier != null)
-            stats.add(bsMultiplier);
+        stats.add(getValueStat(newBoltSpeed / TPS, "bolt action duration in seconds"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(baseBoltSpeed / TPS, "stock bolt action duration"));
+        stats.add(getMultiplierStat(boltDurationMultiplier, "bolt action duration"));
         
         return stats;
     }
     
-    static
-    private ArrayList<String> getCritModifierStats(final CritModifier critMod)
+    private ArrayList<String> getBulletSpreadModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String critStrike = getMultiplierStat(critMod.getCritStrike(), "critical strike");
-        final String critChance = getMultiplierStat(critMod.getCritChance(), "critical chance");
+        final double originalBS = gun.getSkeleton().getBulletSpread();
+        double bsMultiplier = 0;
+        final double newBS;
         
-        if (critStrike != null)
-            stats.add(critStrike);
+        for (BulletSpreadModifier mod : gun.getBulletSpreadModifiers())
+        {
+            bsMultiplier += mod.getBulletSpreadMultiplier();
+        }
+        newBS = originalBS * (1.0 + bsMultiplier);
         
-        if (critChance != null)
-            stats.add(critChance);
+        stats.add(getValueStat(newBS, "total bullet spread"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(originalBS, "stock bullet spread"));
+        stats.add(getMultiplierStat(bsMultiplier, "bullet spread"));
         
         return stats;
     }
     
-    static
-    private ArrayList<String> getDamageModifierStats(final DamageModifier damageMod)
+    private ArrayList<String> getCritModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String damageMultiplier = getMultiplierStat(damageMod.getDamageMultiplier(), "damage multiplier");
-        final String damageValue = getValueStat(damageMod.getDamageValue(), "base damage");
-        
-        if (damageMultiplier != null)
-            stats.add(damageMultiplier);
-        
-        if (damageValue != null)
-            stats.add(damageValue);
+        double critStrike = 0;
+        for (CritModifier mod : gun.getCritModifiers())
+        {
+            critStrike += mod.getCritStrike();
+        }
+        stats.add(getMultiplierStat(gun.getCritStrike(), "total damage on critical hit"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getMultiplierStat(critStrike, "base damage dealt on critical hit"));
+        stats.add(getMultiplierStat(gun.getCritChance(), "critical hit chance"));
         
         return stats;
     }
     
-    static
-    private ArrayList<String> getMagazineModifierStats(final MagazineModifier magMod)
+    
+    private ArrayList<String> getDamageModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String magBoost = getValueStat(magMod.getMagazineSizeModifier(), "mag size");
-        final String reloadSpeed = getMultiplierStat(magMod.getReloadSpeedMultiplier(), "reload speed");
         
-        if (magBoost != null)
-            stats.add(magBoost);
+        final double totalDamage;
+        final double totalHeadshotDamage;
+        final double stockDamage = gun.getSkeleton().getDamage();
+        double damageMultiplier = 0;
+        double damageValue = 0;
+        double headShotValue = 0;
+        double headShotMultiplier = 0;
+        for (DamageModifier mod : gun.getDamageModifiers())
+        {
+            damageValue += mod.getDamageValue();
+            damageMultiplier += mod.getDamageMultiplier();
+            headShotValue += mod.getHeadshotDamageModifier();
+            headShotMultiplier += mod.getHeadshotDamageMultiplier();
+        }
         
-        if (reloadSpeed != null)
-            stats.add(reloadSpeed);
-        
+        totalDamage = stockDamage + damageValue + (1.0 * damageMultiplier);
+        totalHeadshotDamage = headShotValue + (1.0 * headShotMultiplier);
+        stats.add(getValueStat(totalDamage, "total base damage"));
+        stats.add(getValueStat(totalHeadshotDamage, "extra damage on headshot"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(stockDamage, "stock base damage"));
+        stats.add(getValueStat(damageValue, "base damage"));
+        stats.add(getMultiplierStat(damageMultiplier, "base damage"));
+        stats.add(getValueStat(headShotValue, "head shot damage"));
+        stats.add(getMultiplierStat(headShotMultiplier, "head shot damage"));
+
         return stats;
     }
     
-    static
-    private ArrayList<String> getProjectileModifierStats(final ProjectileModifier projMod)
+    private ArrayList<String> getIncendiaryStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final String projBoost = getValueStat(projMod.getProjectileValue(), "projectiles");
+        final double totalFireDamage = gun.getFireDamage();
+
+        double fireDamageValue = 0;
+        double fireDamageMultiplier = 0;
         
-        if (projBoost != null)
-            stats.add(projBoost);
+        for (IncendiaryModifier mod : gun.getIncendiaryModifiers())
+        {
+            fireDamageValue += mod.getFireDamageValue();
+            fireDamageMultiplier += mod.getFireDamageMultiplier();
+        }
         
+        stats.add(getValueStat(totalFireDamage, "total fire damage"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(fireDamageValue, "fire damage"));
+        stats.add(getMultiplierStat(fireDamageMultiplier, "fire damage"));
+        return stats;
+    }
+    
+    private ArrayList<String> getIgniteStats()
+    {
+        final ArrayList<String> stats = new ArrayList<>();
+        final double totalIgniteDamage;
+
+        double igniteChance = 0;
+        double igniteDuration = 0;
+        double igniteDamageFromFireMult = 0;
+        double igniteDamageFromBaseMult = 0;
+        
+        for (IgniteModifier mod : gun.getIgniteModifiers())
+        {
+            igniteChance += mod.getIgniteChance();
+            igniteDuration += mod.getIgniteDuration();
+            igniteDamageFromFireMult += mod.getIgniteDamageMultiplierFromFireDamage();
+            igniteDamageFromBaseMult += mod.getIgniteDamageMultiplierFromBaseDamage();
+        }
+        totalIgniteDamage = (igniteDamageFromFireMult * gun.getFireDamage())
+                + (igniteDamageFromBaseMult * gun.getBaseDamage());
+        
+        stats.add(getValueStat(totalIgniteDamage, "total ignite damage p/sec"));
+        stats.add(getMultiplierStat(igniteChance, "ignite chance"));
+        stats.add(getValueStat(igniteDuration, "ignite duration in seconds"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getMultiplierStat(igniteDamageFromFireMult, "ignite damage dealt from fire damage p/sec"));
+        stats.add(getMultiplierStat(igniteDamageFromBaseMult, "ignite damage dealt from base damage p/sec"));
         return stats;
     }
     
@@ -204,62 +250,36 @@ public class ModifierLoreBuilder
     private String getMultiplierStat(final double multiplier,
                                      final String description)
     {
-        if (modifiesMultiplier(multiplier))
-        {
-            return statColor + "  " + numPercentage(multiplier) + " " + description;
-        }
-        else
-            return null;
+        return STAT_COLOR + "  " + numPercentage(multiplier) + " " + description;
+
     }
     
     static
     private String getValueStat(final double value,
                                 final String description)
     {
-        if (modifiesValue(value))
-            return statColor + "  " + numValue(value) + " " + description;
-        else
-            return null;
-    }
-    
-    static 
-    private boolean modifiesValue(final double valueModifier)
-    {
-        return valueModifier != 0.;
-    }
-    
-    static
-    private boolean modifiesMultiplier(final double multiplier)
-    {
-        return multiplier != 0. && multiplier != 1.;
+        return STAT_COLOR + "  " + numValue(value) + " " + description;
     }
     
     static
     private String numPercentage(final double num)
     {
-        return getPercentageSign(num) + Math.round(Math.abs(1.-num) * 100) + "%";
+        return getSign(num) + FORMATTER.format(num) + "%";
     }
     
     static
     private String numValue(final double num)
     {
-        return getValueSign(num) + Math.round(num);
+        return getSign(num) + FORMATTER.format(num);
     }
     
     static
-    private String getPercentageSign(final double num)
+    private String getSign(final double num)
     {
-        if (num >= 1.0)
+        if (num > 0.0)
             return "+";
-        else
-            return "-";
-    }
-    
-    static
-    private String getValueSign(final double num)
-    {
-        if (num >= 0)
-            return "+";
+        else if (num == 0)
+            return "";
         else
             return "-";
     }

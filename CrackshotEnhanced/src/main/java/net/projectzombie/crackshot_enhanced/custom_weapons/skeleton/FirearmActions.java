@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
+package net.projectzombie.crackshot_enhanced.custom_weapons.skeleton;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.FirearmActions.FirearmAction;
 
 
 /**
@@ -90,12 +90,12 @@ public class FirearmActions extends CSVInput<FirearmAction>
 
         private FirearmAction(final int index,
                               final String displayName,
-                               final String type,
-                               final String soundOpen,
-                               final String soundClose,
-                               final int openDuration,
-                               final int closeDuration,
-                               final int closeShootDelay)
+                              final String type,
+                              final String soundOpen,
+                              final String soundClose,
+                              final int openDuration,
+                              final int closeDuration,
+                              final int closeShootDelay)
         {
             super(index, displayName);
             this.type = type;
@@ -112,6 +112,20 @@ public class FirearmActions extends CSVInput<FirearmAction>
         public int     getCloseDuration()     { return closeDuration;     }
         public int     getCloseShootDelay()   { return closeShootDelay;   }
         @Override public String toString()    { return type;              }
+        
+        public double getBoltActionDurationInTicks()
+        {
+            if (type.equalsIgnoreCase("pump")
+                    || type.equalsIgnoreCase("bolt")
+                    || type.equalsIgnoreCase("lever"))
+            {
+                return openDuration + closeDuration + closeShootDelay;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
     }
 }

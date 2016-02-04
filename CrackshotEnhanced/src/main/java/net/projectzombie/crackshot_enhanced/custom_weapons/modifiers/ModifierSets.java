@@ -7,7 +7,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
@@ -17,6 +16,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scop
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVValue;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
 
 /**
  *
@@ -116,7 +116,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
     
     static public class ModifierSet extends CSVValue
     {
-        private final ArrayList<Attatchment> slot1Attatchments;
+        private final ArrayList<Attatchment> attatchments;
         private final ArrayList<Barrel> barrels;
         private final ArrayList<Bolt> bolts;
         private final ArrayList<FireMode> fireModes;
@@ -136,7 +136,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
                             final ArrayList<Stock> stocks)
         {
             super(index, name);
-            this.slot1Attatchments = slot1Attatchments;
+            this.attatchments = slot1Attatchments;
             this.barrels = barrels;
             this.bolts = bolts;
             this.fireModes = fireModes;
@@ -146,7 +146,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
             this.modifiers = constructGunModifierArray();
         }
 
-        public ArrayList<Attatchment> getSlot1Attatchments() { return slot1Attatchments; }
+        public ArrayList<Attatchment> getAttatchments()      { return attatchments; }
         public ArrayList<Barrel>      getBarrels()           { return barrels;      }
         public ArrayList<Bolt>        getBolts()             { return bolts;        } 
         public ArrayList<FireMode>    getFireModes()         { return fireModes;    }
@@ -175,7 +175,7 @@ public class ModifierSets extends CSVInput<ModifierSet>
         private GunModifier[] constructGunModifierArray()
         {
             final ArrayList<GunModifier> mods = new ArrayList<>();
-            mods.addAll(slot1Attatchments);
+            mods.addAll(attatchments);
             mods.addAll(barrels);
             mods.addAll(bolts);
             mods.addAll(fireModes);

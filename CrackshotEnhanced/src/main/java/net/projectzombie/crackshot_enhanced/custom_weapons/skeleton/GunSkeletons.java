@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
+package net.projectzombie.crackshot_enhanced.custom_weapons.skeleton;
 
 import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
@@ -20,10 +20,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ModifierSet
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.SkeletonTypes.SkeletonType;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -85,7 +84,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         int j = 0;
         final GunSkeleton[] toReturn       = new GunSkeleton[rowCount];
         final String[] skeletonNames        = csv.getColumnString(j++);
-        final ArrayList<Weapon> wepTypes = WeaponTypes.getInstance().get(csv.getColumnString(j++), false);
+        final ArrayList<SkeletonType> wepTypes = SkeletonTypes.getInstance().get(csv.getColumnString(j++), false);
         final ArrayList<ModifierSet> modifierSets = ModifierSets.getInstance().get(csv.getColumnString(j++), false);
         final int[]    materialIDs          = csv.getColumnInt(j++);
         final int[]    materialData         = csv.getColumnInt(j++);
@@ -134,7 +133,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
     
     static public class GunSkeleton extends CSVValue
     {   
-        private final Weapon weaponType;
+        private final SkeletonType weaponType;
         private final double bulletSpread;
         private final double damage;
         private final ModifierSet modSet;
@@ -157,7 +156,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
 
         private GunSkeleton(final int uniqueID,
                             final String skeletonName,
-                            final Weapon weaponType,
+                            final SkeletonType weaponType,
                             final ModifierSet set,
                             final int materialID,
                             final int materialData,
@@ -195,7 +194,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         }
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
-        public Weapon        getWeaponType()     { return weaponType;     }
+        public SkeletonType  getWeaponType()     { return weaponType;     }
         public double        getBulletSpread()   { return bulletSpread;   }
         public int           getItemID()         { return itemID;         }
         public int           getItemData()       { return itemData;       }
@@ -219,6 +218,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         /**
          * Builds the set of guns that contain no Attatchments or Stock. This
          * method is to be used for generating the YAML for Crackshot guns.
+         * @return 
          */
         public CrackshotGun[] getGunBaseSet()
         {

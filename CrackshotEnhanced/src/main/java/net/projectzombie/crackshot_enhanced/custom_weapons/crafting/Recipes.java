@@ -10,9 +10,9 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier.GunModifierType.*;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons.GunSkeleton;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

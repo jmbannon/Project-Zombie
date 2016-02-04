@@ -6,18 +6,18 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.yaml_generator;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.FirearmActions.FirearmAction;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.FirearmActions.FirearmAction;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.SkeletonTypes.SkeletonType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.HiddenStringUtils;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons.GunSkeleton;
 import org.bukkit.ChatColor;
 
 /**
@@ -26,6 +26,8 @@ import org.bukkit.ChatColor;
  */
 public class GunGenerator
 {
+    public static final ChatColor ITEM_COLOR  = ChatColor.YELLOW;
+    
     private final CrackshotGun gun;
     private final String gunFileName;
     
@@ -53,7 +55,7 @@ public class GunGenerator
     
     public String getAmmoID()
     {
-        final Weapon weaponType = gun.getSkeleton().getWeaponType();
+        final SkeletonType weaponType = gun.getSkeleton().getWeaponType();
         final int ammoData = weaponType.getAmmoData();
         
         if (ammoData != 0)
@@ -177,13 +179,13 @@ public class GunGenerator
         final String ID = String.valueOf(gun.getUniqueID());
         final StringBuilder stb = new StringBuilder();
         
-        stb.append(CrackshotLore.ITEM_COLOR);
+        stb.append(ITEM_COLOR);
         for (char c : ID.toCharArray())
         {
             stb.append('&');
             stb.append(c);
         }
-        stb.append(CrackshotLore.ITEM_COLOR);
+        stb.append(ITEM_COLOR);
         stb.append(gun.getSkeleton().getName());
         return stb.toString().replace(ChatColor.COLOR_CHAR, '&');
     }
@@ -212,7 +214,7 @@ public class GunGenerator
         stbVerify.append(gun.getUniqueID());
         
         final StringBuilder stb = new StringBuilder();
-        stb.append(CrackshotLore.line);
+        stb.append(CrackshotLore.statsLine);
         stb.append(HiddenStringUtils.encodeString(stbVerify.toString()).replace(ChatColor.COLOR_CHAR, '&'));
         stb.append('|');
         stb.append(CrackshotLore.preShotVerification);
@@ -275,7 +277,7 @@ public class GunGenerator
     {
         final int shootDelay = gun.getSkeleton().getShootDelay();
         final FireMode fireMode = gun.getFireMode();
-        final Weapon weaponType = gun.getSkeleton().getWeaponType();
+        final SkeletonType weaponType = gun.getSkeleton().getWeaponType();
         
         if (shootDelay == 0 || fireMode.isAutomatic())
             return 0;

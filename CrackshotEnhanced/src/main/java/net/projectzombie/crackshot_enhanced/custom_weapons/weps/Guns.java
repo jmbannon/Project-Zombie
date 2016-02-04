@@ -6,30 +6,34 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Condition;
-import net.projectzombie.crackshot_enhanced.custom_weapons.qualities.Build;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments.Attatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments.ProjectileAttatchment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Barrel;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes.FireMode;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines.Magazine;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights.Scope;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks.Stock;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BleedoutModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BulletSpreadModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.CritModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BleedoutModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.ProjectileModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.WeaponTypes.Weapon;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.MagazineModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.ShrapnelModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.StunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.SkeletonTypes.SkeletonType;
 import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.CrackshotLore;
-import net.projectzombie.crackshot_enhanced.custom_weapons.weps.GunSkeletons.GunSkeleton;
+import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.GunSkeletons.GunSkeleton;
+import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.TPS;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -49,25 +53,6 @@ public class Guns
         return guns.size();
     }
     
-//    static
-//    private HashMap<String, CrackshotGun> initializeGuns()
-//    {
-//        HashMap<String, CrackshotGun> gunMap = new HashMap<>();
-//        final GunSkeleton gunSkeletons[] = GunSkeletons.getInstance().getAll();
-//        CrackshotGun skeleGuns[];
-//        int id = 0;
-//        
-//        for (GunSkeleton skeleton : gunSkeletons)
-//        {
-//            for (CrackshotGun skeleGun : skeleton.getGunBaseSet())
-//            {
-//                gunMap.put(skeleGun.uniqueID, skeleGun);
-//            }
-//        }
-//        return gunMap;
-//    }
-    
-
     static
     public CrackshotGun get(final GunID gunID)
     {
@@ -177,7 +162,7 @@ public class Guns
         }
 
         public GunSkeleton  getSkeleton()         { return skeleton;                }
-        public Weapon       getWeaponType()       { return skeleton.getWeaponType();}
+        public SkeletonType getWeaponType()       { return skeleton.getWeaponType();}
         public FireMode     getFireMode()         { return firemodeType;            }
         public Scope        getScope()            { return scopeType;               }
         public Attatchment  getAttatchmentOne()   { return attatchmentOne;          }
@@ -193,6 +178,229 @@ public class Guns
         public String       getUniqueID()         { return uniqueID;               }
         public double       getInitBulletSpread() { return skeleton.getBulletSpread();  }
         public int          getMaxDurability()    { return skeleton.getMaxDurability(); }
+        @Override public String toString()        { return uniqueID;  }
+        
+        public double getDamageOnEntityHit(final boolean headshot)
+        {
+            final double dice = rand.nextDouble();
+            
+            double totalDamage = getBaseDamage()
+                    + getShrapnelDamage()
+                    + getFireDamage();
+            
+            if (dice < getCritChance())
+            {
+                totalDamage += getCritStrike();
+            }
+            if (headshot)
+            {
+                totalDamage += getHeadShotDamage();
+            }
+            return totalDamage;
+        }
+        
+        public double getDPS()
+        {
+            double totalDamage = getBaseDamage()
+                    + getShrapnelDamage()
+                    + getFireDamage()
+                    + (Math.min(getCritChance(), 1.0) * getCritStrike())
+                    + (getBleedoutDamagePerSecond() * getBleedoutDurationInSeconds());
+            
+            return totalDamage;
+        }
+        
+        /**
+         * Initializes value with skeleton damage.
+         * Initializes multiplier with 1.0.
+         * Sums all damage mod values and adds it to value.
+         * Sums all damage mod multiplier and adds it to multiplier.
+         * Will always be greater than 1.0.
+         * 
+         * @return baseDamageValues * baseDamageMultiplier.
+         */
+        public double getBaseDamage()
+        {
+            double baseDamageValue = skeleton.getDamage();
+            double baseDamageMultiplier = 1.0;
+            
+            for (DamageModifier mod : getDamageModifiers())
+            {
+                baseDamageValue += mod.getDamageValue();
+                baseDamageMultiplier += mod.getDamageMultiplier();
+            }
+            return nonNegative(baseDamageValue * baseDamageMultiplier);
+        }
+        
+        /**
+         * Initializes value with 0.
+         * Initializes multiplier with 1.0.
+         * Sums all headshot damage mod values and adds it to value.
+         * Sums all headshot damage mod multiplier and adds it to multiplier.
+         * @return baseDamageValues * baseDamageMultiplier.
+         */
+        public double getHeadShotDamage()
+        {
+            double headshotDamageValue = 0;
+            double headshotDamageMultiplier = 1.0;
+            
+            for (DamageModifier mod : getDamageModifiers())
+            {
+                headshotDamageValue += mod.getHeadshotDamageModifier();
+                headshotDamageMultiplier += mod.getHeadshotDamageMultiplier();
+            }
+            return nonNegative(headshotDamageValue * headshotDamageMultiplier);
+        }
+        
+        public double getShrapnelDamage()
+        {
+            double shrapnelDamageValue = 0;
+            double shrapnelDamageMultiplier = 1.0;
+            
+            for (ShrapnelModifier mod : getShrapnelModifiers())
+            {
+                shrapnelDamageValue += mod.getShrapnelDamageValue();
+                shrapnelDamageMultiplier += mod.getShrapnelDamageMultiplier();
+            }
+            return nonNegative(shrapnelDamageValue * shrapnelDamageMultiplier);
+        }
+        
+        public double getFireDamage()
+        {
+            double fireDamageValue = 0;
+            double fireDamageMultiplier = 1.0;
+            
+            for (IncendiaryModifier mod : getIncendiaryModifiers())
+            {
+                fireDamageValue += mod.getFireDamageValue();
+                fireDamageMultiplier += mod.getFireDamageMultiplier();
+            }
+            return nonNegative(fireDamageValue * fireDamageMultiplier);
+        }
+        
+        public double getBleedoutDamagePerSecond()
+        {
+            final double baseDamage = getBaseDamage();
+            final double shrapnelDamage = getShrapnelDamage();
+            
+            double bleedoutDamageValue = 0;
+            double bleedoutDamageBaseMultiplier = 0;
+            double bleedoutDamageShrapMultiplier = 0;
+            
+            for (BleedoutModifier mod : getBleedoutModifiers())
+            {
+                bleedoutDamageValue += mod.getBleedoutDamageValuePerSecond();
+                bleedoutDamageBaseMultiplier += mod.getBleedoutDamageMultiplierFromDamage();
+                bleedoutDamageShrapMultiplier += mod.getBleedoutDamageMultiplerFromShrapnel();
+            }
+            
+            return nonNegative(bleedoutDamageValue 
+                    + (bleedoutDamageBaseMultiplier * baseDamage)
+                    + (bleedoutDamageShrapMultiplier * shrapnelDamage));
+        }
+        
+        public double getBleedoutDamagePerTick()
+        {
+            return getBleedoutDamagePerSecond() / TPS;
+        }
+        
+        public double getBleedoutDurationInSeconds()
+        {
+            double bleedoutDurationValue = 0;
+            double bleedoutDurationMultiplier = 1.0;
+            
+            for (BleedoutModifier mod : getBleedoutModifiers())
+            {
+                bleedoutDurationValue += mod.getBleedoutDurationValue();
+                bleedoutDurationMultiplier += mod.getBleedoutDurationMultiplier();
+            }
+            
+            return nonNegative(bleedoutDurationValue * bleedoutDurationMultiplier);
+        }
+        
+        public double getBleedoutDurationInTicks()
+        {
+            return getBleedoutDurationInSeconds() * TPS;
+        }
+        
+        public double getCritChance()
+        {
+            double critChance = 0;
+            for (CritModifier mod : getCritModifiers())
+            {
+                critChance += mod.getCritChance();
+            }
+            return nonNegative(critChance);
+        }
+        
+        /**
+         * Calculates critical strike based off base damage.
+         * @return 
+         */
+        public double getCritStrike()
+        {
+            final double baseDamage = getBaseDamage();
+            double critStrike = 0;
+            
+            for (CritModifier mod : getCritModifiers())
+            {
+                critStrike += mod.getCritStrike();
+            }
+            return nonNegative(critStrike * baseDamage);
+        }
+        
+        public double getStunChance()
+        {
+            double stunChance = 0;
+            for (StunModifier mod : getStunModifiers())
+            {
+                stunChance += mod.getStunChance();
+            }
+            return nonNegative(stunChance);
+        }
+        
+        public double getStunDurationInTicks()
+        {
+            double stunDuration = 0;
+            for (StunModifier mod : getStunModifiers())
+            {
+                stunDuration += mod.getStunDuration();
+            }
+            return nonNegative(stunDuration * TPS);
+        }
+        
+        public double getStandingBulletSpread()
+        {
+            final double skeletonBulletSpread = skeleton.getBulletSpread();
+            double bulletSpreadMultiplier = 1.0;
+            
+            for (BulletSpreadModifier mod : getBulletSpreadModifiers())
+            {
+                bulletSpreadMultiplier += mod.getBulletSpreadMultiplier();
+            }
+            
+            return nonNegative(skeletonBulletSpread * bulletSpreadMultiplier);
+        }
+        
+        public double getZoomedBulletSpread()
+        {
+            return nonNegative(getStandingBulletSpread()
+                    * (1.0 + scopeType.getZoomBulletSpreadMultiplier()));
+        }
+        
+        public double getRunningBulletSpread()
+        {
+            return nonNegative(getStandingBulletSpread()
+                    * (1.0 + stock.getRunningBulletSpreadMultiplier()));
+        }
+
+        private double nonNegative(final double number)
+        {
+            if (number < 0)
+                return 0;
+            else
+                return number;
+        }
         
         public GunModifier[] getCraftableModifiers()
         {
@@ -209,9 +417,6 @@ public class Guns
                 stock
             };
         }
-
-        @Override public String toString()       { return csUniqueID;  }
-
 
         public int getInitialDurability()
         {
@@ -236,93 +441,12 @@ public class Guns
             return Condition.TIERS;
         }
 
-        public int getRepairPrice(final ItemStack item)
-        {
-            final int durability = CrackshotLore.getDurability(item);
-            final double buildWeight = (double)CrackshotLore.getBuild(item)/10.0;
-
-            if (durability < 0 || buildWeight < 0)
-                return -1;
-
-            return (int)((double)(this.getMaxDurability() - durability) 
-                    * this.skeleton.getWeaponType().getRepairPriceWeight()
-                    / (1.0 - buildWeight));
-        }
-
-        public int getUpgradePrice(final ItemStack item)
-        {
-            final int build = CrackshotLore.getBuild(item);
-
-            if (build < 0)
-                return -1;
-            else if (build == Build.ENHANCED.getEnumValue())
-                return 0;
-            else
-                return (int)((build + 1) * this.getWeaponType().getUpgradePriceWeight());
-        }
-        
-        public ArrayList<String> buildModifierLore()
-        {
-            final ArrayList<ArrayList<String>> attatchmentStats = new ArrayList<>();
-            final ArrayList<String> loreToReturn = new ArrayList<>();
-            ArrayList<String> attatchmentStat;
-            for (GunModifier mod : getCraftableModifiers())
-            {
-                if (!mod.isNull())
-                {
-                    attatchmentStat = mod.getLore();
-                    if (attatchmentStat != null && !attatchmentStat.isEmpty())
-                        attatchmentStats.add(attatchmentStat);
-                }
-            }
-
-            Collections.shuffle(attatchmentStats);
-            for (ArrayList<String> temp : attatchmentStats)
-            {
-                loreToReturn.addAll(temp);
-            }
-
-            return loreToReturn;
-        }
-
         public CrackshotGun getModifiedGun(final GunModifier modifier,
                                            final GunModifier.GunModifierType type)
         {
             final GunID modifierGunID = new GunID(this, modifier, type);
             return Guns.get(modifierGunID);
         }
-
-        /**
-         * Sorts list of possible modifications by price, descending.
-         * @return List of modifications sorted by price.
-         */
-        public String[] getModifiedList()
-        {
-            ArrayList<GunModifier> mods = this.getModifiedIDs();
-            String toReturn[] = new String[mods.size()];
-
-            for (int i = 0; i < mods.size(); i++)
-                toReturn[i] = "$" + mods.get(i).price() + " - " + mods.get(i).toString();
-
-            return toReturn;
-        }
-
-        private ArrayList<GunModifier> getModifiedIDs()
-        {
-            final ArrayList<GunModifier> mods = new ArrayList<>();
-            for (GunModifier modifier : skeleton.getModifiers())
-            {
-                if (this.attatchmentOne != modifier
-                        && this.firemodeType != modifier
-                        && this.scopeType != modifier)
-                {
-                    mods.add(modifier);
-                }
-            }
-            return mods;
-        }
-
-
 
         /**
          * @return Returns all BleedoutModifiers on the gun.
@@ -393,6 +517,34 @@ public class Guns
             }
             return mods;
         }
+        
+        /**
+         * @return Returns all IncendiaryModifiers on the gun.
+         */
+        public ArrayList<IncendiaryModifier> getIncendiaryModifiers()
+        {
+            final ArrayList<IncendiaryModifier> mods = new ArrayList<>();
+            for (GunModifier mod : getCraftableModifiers())
+            {
+                if (mod instanceof IncendiaryModifier)
+                    mods.add((IncendiaryModifier)mod);
+            }
+            return mods;
+        }
+        
+        /**
+         * @return Returns all IgniteModifiers on the gun.
+         */
+        public ArrayList<IgniteModifier> getIgniteModifiers()
+        {
+            final ArrayList<IgniteModifier> mods = new ArrayList<>();
+            for (GunModifier mod : getCraftableModifiers())
+            {
+                if (mod instanceof IgniteModifier)
+                    mods.add((IgniteModifier)mod);
+            }
+            return mods;
+        }
 
         /**
          * @return Returns all MagazineModifiers on the gun.
@@ -422,5 +574,32 @@ public class Guns
             return mods;
         }
         
+        /**
+         * @return Returns all ShrapnelModifiers on the gun.
+         */
+        public ArrayList<ShrapnelModifier> getShrapnelModifiers()
+        {
+            final ArrayList<ShrapnelModifier> mods = new ArrayList<>();
+            for (GunModifier mod : getCraftableModifiers())
+            {
+                if (mod instanceof ShrapnelModifier)
+                    mods.add((ShrapnelModifier)mod);
+            }
+            return mods;
+        }
+        
+        /**
+         * @return Returns all StunModifiers on the gun.
+         */
+        public ArrayList<StunModifier> getStunModifiers()
+        {
+            final ArrayList<StunModifier> mods = new ArrayList<>();
+            for (GunModifier mod : getCraftableModifiers())
+            {
+                if (mod instanceof StunModifier)
+                    mods.add((StunModifier)mod);
+            }
+            return mods;
+        }
     }
 }

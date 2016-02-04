@@ -7,7 +7,9 @@ package net.projectzombie.crackshot_enhanced.main;
 
 //import net.projectzombie.crackshot_enhanced.custom_weapons.GunSmithController;
 //import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
+import java.util.ArrayList;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attatchments;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttatchments;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.FireModes;
@@ -17,12 +19,14 @@ import static net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunM
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Magazines;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Sights;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Stocks;
+import net.projectzombie.crackshot_enhanced.custom_weapons.utilities.ModifierLoreBuilder;
+import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
+import net.projectzombie.crackshot_enhanced.listeners.ShootListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 /**
  *
@@ -41,6 +45,20 @@ public class GunSmithCommandExec implements CommandExecutor
         if (!sender.isOp())
             return true;
         
+        if (args.length == 1 && args[0].equalsIgnoreCase("stats"))
+        {
+            final CrackshotGun gun = ShootListener.getGun(sender);
+            final ArrayList<String> stats;
+            
+            if (gun == null)
+                sender.sendMessage("You must have a gun in hand to view its stats.");
+            else
+            {
+                stats = new ModifierLoreBuilder(gun).getAllStatInfo();
+                for (String str : stats)
+                    sender.sendMessage(str);
+            }
+        }
         if (args.length == 1 && args[0].equalsIgnoreCase("list"))
         {
             listModifierTypes(sender);
@@ -51,6 +69,7 @@ public class GunSmithCommandExec implements CommandExecutor
                     || args[1].equalsIgnoreCase("attatchment2")
                     || args[1].equalsIgnoreCase("attatchment3"))
             {
+                //listModifierNames(sender, ProjectileAttatchments.getInstance().getAll());
                 listModifierNames(sender, Attatchments.getInstance().getAll());
             }
             else if (args[1].equalsIgnoreCase("barrel"))

@@ -7,7 +7,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.types.BoltModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 
 /**
