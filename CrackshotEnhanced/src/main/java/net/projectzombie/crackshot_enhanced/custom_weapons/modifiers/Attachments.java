@@ -73,5 +73,10 @@ public class Attachments extends CSVInput<Attachment>
         {
             super(uniqueID, name, material, materialData, price, color);
         }
+        
+        public boolean isAOE()
+        {
+            return (this instanceof AOEAttatchment);
+        }
     }
 }

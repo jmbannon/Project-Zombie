@@ -21,7 +21,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface ZombieLureAOEModifier
+public interface CombustModifier
 {
-    public double getZombieLureRange();
+    public double getCombustAOERadius();
+    public double getCombustAOEDamageValue();
+    public double getCombustAOEDamageMultiplier();
 }

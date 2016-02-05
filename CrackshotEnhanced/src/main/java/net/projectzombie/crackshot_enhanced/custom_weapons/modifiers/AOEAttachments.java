@@ -6,32 +6,32 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttachments.ProjectileAttatchment;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BleedoutModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.ShrapnelModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.StunModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttachments.AOEAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.AOEModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.CombustModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.ElectricityModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.ExplosiveAOEModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.FlameAOE;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.PoisonAOEModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.RadiationAOEModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.ShockModifier;
 /**
  *
  * @author jbannon
  */
-public class AOEAttachments extends CSVInput<ProjectileAttatchment>
+public class AOEAttachments extends CSVInput<AOEAttatchment>
 {
-    static private AOEAttachments slotOneSingleton = null;
+    static private AOEAttachments singleton = null;
             
     static public AOEAttachments getInstance()
     {
-        if (slotOneSingleton == null)
-            slotOneSingleton = new AOEAttachments(ATTATCHMENT_ONE_CSV_NAME);
-        return slotOneSingleton;
+        if (singleton == null)
+            singleton = new AOEAttachments(ATTATCHMENT_ONE_CSV_NAME);
+        return singleton;
     }
     
-    static private final String ATTATCHMENT_ONE_CSV_NAME = "Attatchments.csv";
+    static private final String ATTATCHMENT_ONE_CSV_NAME = "AOEAttatchments.csv";
     
     static private final String[] ATTATCHMENT_VALUES = {
         "Display Name (STR)",
@@ -69,26 +69,26 @@ public class AOEAttachments extends CSVInput<ProjectileAttatchment>
     }
     
     @Override
-    public ProjectileAttatchment getNullValue()
+    public AOEAttatchment getNullValue()
     {
-        return new ProjectileAttatchment();
+        return new AOEAttatchment();
     }
     
     /**
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    static private ProjectileAttatchment[] buildAttatchments(final String csvName)
+    static private AOEAttatchment[] buildAttatchments(final String csvName)
     {
         final CSVReader csv = new CSVReader(csvName, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
         {
-            return new ProjectileAttatchment[] { new ProjectileAttatchment() };
+            return new AOEAttatchment[] { new AOEAttatchment() };
         }
         int j = 0;
-        final ProjectileAttatchment[] toReturn    = new ProjectileAttatchment[rowCount + 1];
+        final AOEAttatchment[] toReturn    = new AOEAttatchment[rowCount + 1];
         final String[] displayNames               = csv.getColumnString(j++);
         final String[] materialNames              = csv.getColumnString(j++);
         final int[]    materialBytes              = csv.getColumnInt(j++);
@@ -117,10 +117,10 @@ public class AOEAttachments extends CSVInput<ProjectileAttatchment>
         final double[] stunChance                 = csv.getColumnDouble(j++);
         final double[] stunDuration               = csv.getColumnDouble(j++);
  
-        toReturn[0] = new ProjectileAttatchment();
+        toReturn[0] = new AOEAttatchment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i+1] = new ProjectileAttatchment(
+            toReturn[i+1] = new AOEAttatchment(
                     i+1,
                     displayNames[i],
                     materialNames[i],
@@ -154,14 +154,14 @@ public class AOEAttachments extends CSVInput<ProjectileAttatchment>
         return toReturn;
     }
 
-    static public class ProjectileAttatchment extends GunModifier implements BulletSpreadModifier, 
-                                                DamageModifier,
-                                                CritModifier,
-                                                BleedoutModifier,
-                                                IncendiaryModifier,
-                                                IgniteModifier,
-                                                ShrapnelModifier,
-                                                StunModifier
+    static public class AOEAttatchment extends GunModifier implements AOEModifier,
+            CombustModifier,
+            ElectricityModifier,
+            ExplosiveAOEModifier,
+            FlameAOE,
+            PoisonAOEModifier,
+            RadiationAOEModifier,
+            ShockModifier
     {
         private final double bulletSpreadMultiplier;
         private final double damageModifier;
@@ -186,7 +186,7 @@ public class AOEAttachments extends CSVInput<ProjectileAttatchment>
         private final double stunChance;
         private final double stunDuration;
 
-        private ProjectileAttatchment(final int uniqueID,
+        private AOEAttatchment(final int uniqueID,
                             final String displayname,
                             final String materialName,
                             final int materialByte,
@@ -243,33 +243,43 @@ public class AOEAttachments extends CSVInput<ProjectileAttatchment>
         /**
          * Constructs the null Attatchment.
          */
-        private ProjectileAttatchment()
+        private AOEAttatchment()
         {
             this(0, null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
-        @Override public double getDamageValue()                         { return damageModifier; }
-        @Override public double getDamageMultiplier()                    { return damageMultiplier; }
-        @Override public double getBulletSpreadMultiplier()              { return bulletSpreadMultiplier; }
-        @Override public double getCritChance()                          { return critChanceBoost; }
-        @Override public double getCritStrike()                          { return critStrikeMultiplier; }
-        @Override public double getBleedoutDurationValue()               { return bleedoutDurationSeconds; }
-        @Override public double getBleedoutDamageValuePerSecond()        { return bleedoutDamageBoost;  }
-        @Override public ProjectileAttatchment getNullModifier()         { return slotOneSingleton.getNullValue(); }
-        @Override public double getHeadshotDamageModifier()              { return headshotDamageModifier; }
-        @Override public double getHeadshotDamageMultiplier()            { return headshotDamageMultiplier; }
-        @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }
-        @Override public double getBleedoutDamageMultiplierFromDamage()  { return bleedoutDamageMultiplierFromBase; }
-        @Override public double getBleedoutDamageMultiplerFromShrapnel() { return bleedoutDamageMultiplierFromShrap; }
-        @Override public double getFireDamageValue()                     { return fireDamageModifier; }
-        @Override public double getFireDamageMultiplier()                { return fireDamageMultiplier; }
-        @Override public double getIgniteChance()                        { return igniteChance; }
-        @Override public double getIgniteDuration()                      { return igniteDuration; }
-        @Override public double getIgniteDamageMultiplierFromFireDamage() { return igniteDamageMultiplierFromFire; }
-        @Override public double getIgniteDamageMultiplierFromBaseDamage() { return igniteDamageMultiplierFromBase; }
-        @Override public double getShrapnelDamageValue()                 { return shrapnelDamageModifier; }
-        @Override public double getShrapnelDamageMultiplier()            { return shrapnelDamageMultiplier; }
-        @Override public double getStunChance()                          { return stunChance; }
-        @Override public double getStunDuration()                        { return stunDuration; }
+        @Override public double getAOERadiusValue()                        { return damageModifier; }
+        @Override public double getAOERadiusMultiplier()                   { return damageMultiplier; }
+        @Override public double getAOEDurationValue()                      { return bulletSpreadMultiplier; }
+        @Override public double getAOEDurationMultiplier()                 { return critChanceBoost; }
+        @Override public double getCombustAOERadius()                      { return critStrikeMultiplier; }
+        @Override public double getCombustAOEDamageValue()                 { return bleedoutDurationSeconds; }
+        @Override public double getCombustAOEDamageMultiplier()            { return bleedoutDamageBoost;  }
+        @Override public double getElectricityDamageValue()                { return headshotDamageMultiplier; }
+        @Override public double getElectricityDamageMultiplier()           { return headshotDamageModifier; }
+        @Override public double getConcurrentElectricityCount()            { return bleedoutDamageMultiplierFromBase; }
+        @Override public double getExplosiveAOERadius()                    { return bleedoutDamageMultiplierFromShrap; }
+        @Override public double getExplosiveAOEDamageValue()               { return fireDamageModifier; }
+        @Override public double getExplosiveAOEDamageMultiplier()          { return fireDamageMultiplier; }
+        @Override public double getFlameAOERadius()                        { return igniteChance; }
+        @Override public double getFlameAOEDuration()                      { return igniteDuration; }
+        @Override public double getFlameAOEDamagePerSecond()               { return igniteDamageMultiplierFromFire; }
+        @Override public double getFlameAOEDamagePerSecondMultiplier()     { return igniteDamageMultiplierFromBase; }
+        @Override public double getPoisonAOERadius()                       { return shrapnelDamageModifier; }
+        @Override public double getPoisonAOEDuration()                     { return shrapnelDamageMultiplier; }
+        @Override public double getPoisonAOEDamagePerSecond()              { return stunChance; }
+        @Override public double getPoisonAOEDamagePerSecondMultiplier()    { return stunDuration; }
+        @Override public double getRadiationAOERadius()                    { return 0; }
+        @Override public double getRadiationAOEDuration()                  { return 0; }
+        @Override public double getRadiationAOEDamagePerSecond()           { return 0; }
+        @Override public double getRadiationAOEDamagePerSecondMultiplier() { return 0; }
+        @Override public double getShockChance()                           { return 0; }
+        @Override public double getShockDamageValue()                      { return 0; }
+        @Override public double getShockDamageMultiplierFromElectricity()  { return 0; }
+
+        @Override
+        public GunModifier getNullModifier() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 }

@@ -21,9 +21,10 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface ElectricityModifier
+public interface FlameAOE
 {
-    public double getElectricityDamageValue();
-    public double getElectricityDamageMultiplier();
-    public double getConcurrentElectricityCount();
+    public double getFlameAOERadius();
+    public double getFlameAOEDuration();
+    public double getFlameAOEDamagePerSecond();
+    public double getFlameAOEDamagePerSecondMultiplier();
 }
