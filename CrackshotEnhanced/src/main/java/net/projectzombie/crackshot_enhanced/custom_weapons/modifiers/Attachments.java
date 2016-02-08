@@ -18,6 +18,7 @@
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttachments.AOEAttachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.ProjectileAttachments.ProjectileAttachment;
 
@@ -74,9 +75,6 @@ public class Attachments extends CSVInput<Attachment>
             super(uniqueID, name, material, materialData, price, color);
         }
         
-        public boolean isAOE()
-        {
-            return (this instanceof AOEAttatchment);
-        }
+        abstract public boolean isAOE();
     }
 }

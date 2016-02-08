@@ -7,7 +7,8 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttachments.AOEAttatchment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.AOEAttachments.AOEAttachment;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.AOEModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.CombustModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.ElectricityModifier;
@@ -20,7 +21,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe.ShockMo
  *
  * @author jbannon
  */
-public class AOEAttachments extends CSVInput<AOEAttatchment>
+public class AOEAttachments extends CSVInput<AOEAttachment>
 {
     static private AOEAttachments singleton = null;
             
@@ -69,26 +70,26 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
     }
     
     @Override
-    public AOEAttatchment getNullValue()
+    public AOEAttachment getNullValue()
     {
-        return new AOEAttatchment();
+        return new AOEAttachment();
     }
     
     /**
      * Builds all attatchments, if any. Allowed to not have any in CSV.
      * @return Array of all attatchments (including null attatchment).
      */
-    static private AOEAttatchment[] buildAttatchments(final String csvName)
+    static private AOEAttachment[] buildAttatchments(final String csvName)
     {
         final CSVReader csv = new CSVReader(csvName, ATTATCHMENT_VALUES);
         final int rowCount = csv.getRowCount();
  
         if (rowCount <= 0)
         {
-            return new AOEAttatchment[] { new AOEAttatchment() };
+            return new AOEAttachment[] { new AOEAttachment() };
         }
         int j = 0;
-        final AOEAttatchment[] toReturn    = new AOEAttatchment[rowCount + 1];
+        final AOEAttachment[] toReturn    = new AOEAttachment[rowCount + 1];
         final String[] displayNames               = csv.getColumnString(j++);
         final String[] materialNames              = csv.getColumnString(j++);
         final int[]    materialBytes              = csv.getColumnInt(j++);
@@ -117,10 +118,10 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
         final double[] stunChance                 = csv.getColumnDouble(j++);
         final double[] stunDuration               = csv.getColumnDouble(j++);
  
-        toReturn[0] = new AOEAttatchment();
+        toReturn[0] = new AOEAttachment();
         for (int i = 0; i < rowCount; i++)
         {
-            toReturn[i+1] = new AOEAttatchment(
+            toReturn[i+1] = new AOEAttachment(
                     i+1,
                     displayNames[i],
                     materialNames[i],
@@ -154,7 +155,7 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
         return toReturn;
     }
 
-    static public class AOEAttatchment extends GunModifier implements AOEModifier,
+    static public class AOEAttachment extends Attachment implements AOEModifier,
             CombustModifier,
             ElectricityModifier,
             ExplosiveAOEModifier,
@@ -186,7 +187,7 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
         private final double stunChance;
         private final double stunDuration;
 
-        private AOEAttatchment(final int uniqueID,
+        private AOEAttachment(final int uniqueID,
                             final String displayname,
                             final String materialName,
                             final int materialByte,
@@ -243,7 +244,7 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
         /**
          * Constructs the null Attatchment.
          */
-        private AOEAttatchment()
+        private AOEAttachment()
         {
             this(0, null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
@@ -276,10 +277,12 @@ public class AOEAttachments extends CSVInput<AOEAttatchment>
         @Override public double getShockChance()                           { return 0; }
         @Override public double getShockDamageValue()                      { return 0; }
         @Override public double getShockDamageMultiplierFromElectricity()  { return 0; }
-
+        @Override public boolean isAOE() { return true; }
         @Override
         public GunModifier getNullModifier() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        
     }
 }

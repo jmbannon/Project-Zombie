@@ -256,7 +256,6 @@ public class ProjectileAttachments extends CSVInput<ProjectileAttachment>
         @Override public double getCritStrike()                          { return critStrikeMultiplier; }
         @Override public double getBleedoutDurationValue()               { return bleedoutDurationSeconds; }
         @Override public double getBleedoutDamageValuePerSecond()        { return bleedoutDamageBoost;  }
-        @Override public ProjectileAttachment getNullModifier()                   { return slotOneSingleton.getNullValue(); }
         @Override public double getHeadshotDamageModifier()              { return headshotDamageModifier; }
         @Override public double getHeadshotDamageMultiplier()            { return headshotDamageMultiplier; }
         @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }
@@ -272,5 +271,7 @@ public class ProjectileAttachments extends CSVInput<ProjectileAttachment>
         @Override public double getShrapnelDamageMultiplier()            { return shrapnelDamageMultiplier; }
         @Override public double getStunChance()                          { return stunChance; }
         @Override public double getStunDuration()                        { return stunDuration; }
+        @Override public boolean isAOE()                                 { return false;        }
+        @Override public ProjectileAttachment getNullModifier()          { return slotOneSingleton.getNullValue(); }
     }
 }
