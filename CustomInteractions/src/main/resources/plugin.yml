@@ -6,6 +6,6 @@ commands:
   bp:
     description: Nope.
     usage: "WIP"
-  engrave:
+  treesnow:
     description: Nope.
     usage: "WIP"

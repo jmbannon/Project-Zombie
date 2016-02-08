@@ -23,6 +23,7 @@ package net.projectzombie.custom_interactions.main;
 import net.projectzombie.custom_interactions.listeners.BlockListener;
 import net.projectzombie.custom_interactions.listeners.Utilities;
 import net.projectzombie.custom_interactions.listeners.ToolListener;
+import net.projectzombie.custom_interactions.temp.TreeSnow;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -35,6 +36,7 @@ public class Main extends JavaPlugin {
 
     private BlockListener blockListener;
     private ToolListener toolListener;
+    private TreeSnow treeSnowCommand;
     
     @Override
     public void onEnable()
@@ -42,7 +44,9 @@ public class Main extends JavaPlugin {
         Utilities.initialize(this);
         blockListener = new BlockListener();
         toolListener = new ToolListener();
+        treeSnowCommand = new TreeSnow();
         
+        this.getCommand("treesnow").setExecutor(treeSnowCommand);
         this.getServer().getPluginManager().registerEvents(blockListener, this);
         this.getServer().getPluginManager().registerEvents(toolListener, this);
         this.getLogger().info("Placable Blocks enabled!");
