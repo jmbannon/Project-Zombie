@@ -22,7 +22,6 @@ package net.projectzombie.care_package.controller;
 
 import net.projectzombie.care_package.files.StateBuffer;
 import net.projectzombie.care_package.files.StateFile;
-import java.io.IOException;
 import java.util.Set;
 import net.projectzombie.care_package.files.CopyBuffer;
 import net.projectzombie.care_package.state.StateType;
