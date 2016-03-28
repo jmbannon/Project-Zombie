@@ -26,5 +26,4 @@ public interface IgniteModifier
     public double getIgniteChance();
     public double getIgniteDuration();
     public double getIgniteDamageMultiplierFromFireDamage();
-    public double getIgniteDamageMultiplierFromBaseDamage();
 }

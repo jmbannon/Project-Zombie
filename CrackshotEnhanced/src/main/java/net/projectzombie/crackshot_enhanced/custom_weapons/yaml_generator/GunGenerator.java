@@ -317,30 +317,6 @@ public class GunGenerator
     }
     
     /**
-     * Gets the damage by first taking the skeleton's base damage, adding all additional damage boosts,
-     * then multiplying that by the sum of all multipliers.
-     * @return Damage after multipliers.
-     */
-    public double getDamage()
-    {
-        final double modifiedDamage;
-        double baseDamage = gun.getSkeleton().getDamage();
-        double damageModifier = 1.0;
-        for (DamageModifier mod : gun.getDamageModifiers())
-        {
-           baseDamage += mod.getDamageValue();
-           damageModifier += mod.getDamageMultiplier();
-        }
-        
-        modifiedDamage = baseDamage * damageModifier;
-        
-        if (modifiedDamage < 1.0)
-            return 1.0;
-        else
-            return modifiedDamage;
-    }
-    
-    /**
      * Gets the critical chance by summing all critChance modifiers.
      * @return Critical chance [0, 1].
      */

@@ -281,13 +281,11 @@ public abstract class GunModifier extends CSVValue
         final String bleedDamage = getValueStat(bleedoutMod.getBleedoutDamageValuePerSecond(), "bleed damage p/sec");
         final String bleedDuration = getValueStat(bleedoutMod.getBleedoutDurationValue(), "bleed duration");
         final String bleedoutDurationMult = getMultiplierStat(bleedoutMod.getBleedoutDurationMultiplier(), "bleed duration");
-        final String bleedDamageFromBase = getMultiplierStat(bleedoutMod.getBleedoutDamageMultiplierFromDamage(), "bleed damage from base damage p/sec");
         final String bleedDamageFromShrap = getMultiplierStat(bleedoutMod.getBleedoutDamageMultiplerFromShrapnel(), "bleed damage from shrapnel damage p/sec");
         
         if (bleedDamage != null)          stats.add(bleedDamage);
         if (bleedDuration != null)        stats.add(bleedDuration);
         if (bleedoutDurationMult != null) stats.add(bleedoutDurationMult);
-        if (bleedDamageFromBase != null)  stats.add(bleedDamageFromBase);
         if (bleedDamageFromShrap != null) stats.add(bleedDamageFromShrap);
         
         return stats;
@@ -396,7 +394,6 @@ public abstract class GunModifier extends CSVValue
         final String igniteChance = getMultiplierStat(ignMod.getIgniteChance(), "ignite chance");
         final String igniteDuration = getValueStat(ignMod.getIgniteDuration(), "ignite duration");
         final String igniteMultFromFire = getMultiplierStat(ignMod.getIgniteDamageMultiplierFromFireDamage(), "ignite damage from fire damage p/sec");
-        final String igniteMultFromBase = getMultiplierStat(ignMod.getIgniteDamageMultiplierFromBaseDamage(), "ignite damage from base damage p/sec");
         
         if (igniteChance != null)   stats.add(igniteChance);
         if (igniteDuration != null) stats.add(igniteDuration);

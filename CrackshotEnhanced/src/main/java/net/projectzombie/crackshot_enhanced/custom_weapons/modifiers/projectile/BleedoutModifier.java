@@ -15,6 +15,5 @@ public interface BleedoutModifier
     public double getBleedoutDurationMultiplier();
     
     public double getBleedoutDamageValuePerSecond();
-    public double getBleedoutDamageMultiplierFromDamage();
     public double getBleedoutDamageMultiplerFromShrapnel();
 }

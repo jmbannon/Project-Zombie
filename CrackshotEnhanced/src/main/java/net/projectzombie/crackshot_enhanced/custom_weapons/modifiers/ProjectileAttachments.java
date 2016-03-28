@@ -259,14 +259,12 @@ public class ProjectileAttachments extends CSVInput<ProjectileAttachment>
         @Override public double getHeadshotDamageModifier()              { return headshotDamageModifier; }
         @Override public double getHeadshotDamageMultiplier()            { return headshotDamageMultiplier; }
         @Override public double getBleedoutDurationMultiplier()          { return bleedoutDurationMultiplier; }
-        @Override public double getBleedoutDamageMultiplierFromDamage()  { return bleedoutDamageMultiplierFromBase; }
         @Override public double getBleedoutDamageMultiplerFromShrapnel() { return bleedoutDamageMultiplierFromShrap; }
         @Override public double getFireDamageValue()                     { return fireDamageModifier; }
         @Override public double getFireDamageMultiplier()                { return fireDamageMultiplier; }
         @Override public double getIgniteChance()                        { return igniteChance; }
         @Override public double getIgniteDuration()                      { return igniteDuration; }
         @Override public double getIgniteDamageMultiplierFromFireDamage() { return igniteDamageMultiplierFromFire; }
-        @Override public double getIgniteDamageMultiplierFromBaseDamage() { return igniteDamageMultiplierFromBase; }
         @Override public double getShrapnelDamageValue()                 { return shrapnelDamageModifier; }
         @Override public double getShrapnelDamageMultiplier()            { return shrapnelDamageMultiplier; }
         @Override public double getStunChance()                          { return stunChance; }

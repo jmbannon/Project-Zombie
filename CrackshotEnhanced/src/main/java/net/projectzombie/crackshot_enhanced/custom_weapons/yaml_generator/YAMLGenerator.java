@@ -131,7 +131,7 @@ public class YAMLGenerator
         wepsYAML.set(path + "Projectile_Amount",               gen.getProjectileAmount());
         wepsYAML.set(path + "Projectile_Type",                 "snowball");
         wepsYAML.set(path + "Projectile_Speed",                gen.getProjectileSpeed());
-        wepsYAML.set(path + "Projectile_Damage",               gen.getDamage());
+        wepsYAML.set(path + "Projectile_Damage",               gen.getGun().getBaseDamage().getValue());
         wepsYAML.set(path + "Removal_Or_Drag_Delay",           gen.getRemovalOrDragDelay());
         wepsYAML.set(path + "Bullet_Spread",                   gen.getBulletSpread());
         wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
@@ -204,7 +204,7 @@ public class YAMLGenerator
         final String path = gen.getCSWeaponName() + ".Headshot.";
         
         wepsYAML.set(path + "Enable",        true);
-        wepsYAML.set(path + "Bonus_Damage",  gen.getSkeleton().getDamage() * 2);
+        wepsYAML.set(path + "Bonus_Damage",  gen.getSkeleton().getSkeletonBaseDamage() * 2);
         wepsYAML.set(path + "Sounds_Victim", "VILLAGER_NO-1-1-0");
     }
     

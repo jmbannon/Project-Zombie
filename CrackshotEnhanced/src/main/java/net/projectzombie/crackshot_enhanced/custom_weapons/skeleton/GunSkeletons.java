@@ -192,6 +192,27 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
             this.modSet = set;
             this.reloadBulletsIndividually = reloadBulletsIndividually;
         }
+        
+        public GunSkeleton(final GunSkeleton skele)
+        {
+            super(skele.getIndex(), skele.getName());
+            this.weaponType = skele.weaponType;
+            this.itemID = skele.itemData;
+            this.itemData = skele.itemData;
+            this.shootDelay = skele.shootDelay;
+            this.maxDurability = skele.maxDurability;
+            this.bulletSpread = skele.bulletSpread;
+            this.damage = skele.damage;
+            this.recoilAmount = skele.recoilAmount;    
+            this.soundShoot = skele.soundShoot;
+            this.soundSilenced = skele.soundSilenced;
+            this.particleShoot = skele.particleShoot;
+            this.reloadAmount = skele.reloadAmount;
+            this.reloadDuration = skele.reloadDuration;
+            this.soundReload = skele.soundReload;
+            this.modSet = skele.modSet;
+            this.reloadBulletsIndividually = skele.reloadBulletsIndividually;
+        }
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
         public SkeletonType  getWeaponType()     { return weaponType;     }
@@ -202,7 +223,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         public MaterialData  getMaterialData()   { return new MaterialData(itemID, (byte)itemData); }
         public int           getShootDelay()     { return shootDelay;     }
         public int           getMaxDurability()  { return maxDurability;  }
-        public double        getDamage()         { return damage;         }
+        public double        getSkeletonBaseDamage() { return damage;         }
         public int           getRecoil()         { return recoilAmount;   }
         public String        getShootSound()     { return soundShoot;    }
         public String        getSilencedSound()  { return soundSilenced; }

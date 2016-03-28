@@ -47,7 +47,7 @@ public class ModifierLoreBuilder
     {
         final ArrayList<String> stats = new ArrayList<>();
         
-        stats.add(toTitle(gun.getSkeleton().getName() + " Stats"));
+        stats.add(toTitle(gun.getName() + " Stats"));
         stats.add(STAT_TYPE_SEPERATOR);
         stats.add(toTitle("Bullet Spread"));
         stats.addAll(this.getBulletSpreadModifierStats());
@@ -79,7 +79,6 @@ public class ModifierLoreBuilder
     {
         final ArrayList<String> stats = new ArrayList<>();
         double bleedoutDamageValuePerSecond = 0;
-        double bleedoutDamageMultFromBase = 0;
         double bleedoutDamageMultFromShrap = 0;
         double bleedoutDurationValue = 0;
         double bleedoutDurationMult = 0;
@@ -87,7 +86,6 @@ public class ModifierLoreBuilder
         for (BleedoutModifier mod : gun.getBleedoutModifiers())
         {
             bleedoutDamageValuePerSecond += mod.getBleedoutDamageValuePerSecond();
-            bleedoutDamageMultFromBase += mod.getBleedoutDamageMultiplierFromDamage();
             bleedoutDamageMultFromShrap += mod.getBleedoutDamageMultiplerFromShrapnel();
             bleedoutDurationValue += mod.getBleedoutDurationValue();
             bleedoutDurationMult += mod.getBleedoutDurationMultiplier();
@@ -108,7 +106,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getBoltModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final double baseBoltSpeed = gun.getSkeleton().getWeaponType().getAction().getBoltActionDurationInTicks();
+        final double baseBoltSpeed = gun.getWeaponType().getAction().getBoltActionDurationInTicks();
         final double newBoltSpeed;
         double boltDurationMultiplier = 0; 
         for (BoltModifier mod : gun.getBoltModifiers())
@@ -128,7 +126,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getBulletSpreadModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final double originalBS = gun.getSkeleton().getBulletSpread();
+        final double originalBS = gun.getBulletSpread();
         double bsMultiplier = 0;
         final double newBS;
         
@@ -167,29 +165,23 @@ public class ModifierLoreBuilder
     {
         final ArrayList<String> stats = new ArrayList<>();
         
-        final double totalDamage;
         final double totalHeadshotDamage;
-        final double stockDamage = gun.getSkeleton().getDamage();
-        double damageMultiplier = 0;
-        double damageValue = 0;
+        final double stockDamage = gun.getSkeletonBaseDamage();
         double headShotValue = 0;
         double headShotMultiplier = 0;
-        for (DamageModifier mod : gun.getDamageModifiers())
+        for (DamageModifier mod : gun.getBaseDamage().getModifiers())
         {
-            damageValue += mod.getDamageValue();
-            damageMultiplier += mod.getDamageMultiplier();
             headShotValue += mod.getHeadshotDamageModifier();
             headShotMultiplier += mod.getHeadshotDamageMultiplier();
         }
         
-        totalDamage = stockDamage + damageValue + (1.0 * damageMultiplier);
         totalHeadshotDamage = headShotValue + (1.0 * headShotMultiplier);
-        stats.add(getValueStat(totalDamage, "total base damage"));
+        stats.add(getValueStat(gun.getBaseDamage().getTotal(), "total base damage"));
         stats.add(getValueStat(totalHeadshotDamage, "extra damage on headshot"));
         stats.add(STAT_SEPERATOR);
         stats.add(getValueStat(stockDamage, "stock base damage"));
-        stats.add(getValueStat(damageValue, "base damage"));
-        stats.add(getMultiplierStat(damageMultiplier, "base damage"));
+        stats.add(getValueStat(gun.getBaseDamage().getValue(), "base damage"));
+        stats.add(getMultiplierStat(gun.getBaseDamage().getMultiplier(), "base damage"));
         stats.add(getValueStat(headShotValue, "head shot damage"));
         stats.add(getMultiplierStat(headShotMultiplier, "head shot damage"));
 
@@ -225,24 +217,20 @@ public class ModifierLoreBuilder
         double igniteChance = 0;
         double igniteDuration = 0;
         double igniteDamageFromFireMult = 0;
-        double igniteDamageFromBaseMult = 0;
         
         for (IgniteModifier mod : gun.getIgniteModifiers())
         {
             igniteChance += mod.getIgniteChance();
             igniteDuration += mod.getIgniteDuration();
             igniteDamageFromFireMult += mod.getIgniteDamageMultiplierFromFireDamage();
-            igniteDamageFromBaseMult += mod.getIgniteDamageMultiplierFromBaseDamage();
         }
-        totalIgniteDamage = (igniteDamageFromFireMult * gun.getFireDamage())
-                + (igniteDamageFromBaseMult * gun.getBaseDamage());
+        totalIgniteDamage = (igniteDamageFromFireMult * gun.getFireDamage());
         
         stats.add(getValueStat(totalIgniteDamage, "total ignite damage p/sec"));
         stats.add(getMultiplierStat(igniteChance, "ignite chance"));
         stats.add(getValueStat(igniteDuration, "ignite duration in seconds"));
         stats.add(STAT_SEPERATOR);
         stats.add(getMultiplierStat(igniteDamageFromFireMult, "ignite damage dealt from fire damage p/sec"));
-        stats.add(getMultiplierStat(igniteDamageFromBaseMult, "ignite damage dealt from base damage p/sec"));
         return stats;
     }
     

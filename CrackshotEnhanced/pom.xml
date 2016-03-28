@@ -26,13 +26,6 @@
 
 <dependencies>
     <dependency>
-        <groupId>org.spigotmc</groupId>
-        <artifactId>spigot-api</artifactId>
-        <version>1.8.6-R0.1-SNAPSHOT</version>
-        <type>jar</type>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
         <groupId>Crackshot</groupId>
         <artifactId>Crackshot</artifactId>
       <version>1.0</version>
