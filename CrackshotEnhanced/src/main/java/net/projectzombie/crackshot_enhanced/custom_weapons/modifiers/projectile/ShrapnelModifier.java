@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface ShrapnelModifier
+public interface ShrapnelModifier extends ProjectileHitModifier
 {
     public double getShrapnelDamageValue();
     public double getShrapnelDamageMultiplier();

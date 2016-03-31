@@ -5,14 +5,13 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Modifier;
+
 /**
  *
- * @author jesse
+ * @author jb
  */
-public interface MagazineModifier extends SkeletonModifier
+public interface SkeletonModifier  extends Modifier
 {
-    public int getMagazineSizeModifier();
-    public double getMagazineSizeMultiplier();
     
-    public double getReloadSpeedMultiplier();
 }

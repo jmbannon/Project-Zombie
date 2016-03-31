@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface IgniteModifier
+public interface IgniteModifier extends ProjectileHitModifier
 {
     public double getIgniteChance();
     public double getIgniteDuration();

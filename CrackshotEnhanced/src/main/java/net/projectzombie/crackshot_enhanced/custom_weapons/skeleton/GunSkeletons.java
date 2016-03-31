@@ -216,7 +216,7 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
         public SkeletonType  getWeaponType()     { return weaponType;     }
-        public double        getBulletSpread()   { return bulletSpread;   }
+        public double        getSkeletonBulletSpread()   { return bulletSpread;   }
         public int           getItemID()         { return itemID;         }
         public int           getItemData()       { return itemData;       }
         public Material      getMaterial()       { return Material.getMaterial(itemID); }

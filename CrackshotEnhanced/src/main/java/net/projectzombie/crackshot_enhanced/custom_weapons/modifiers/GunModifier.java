@@ -13,12 +13,12 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.Bo
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.HeadshotModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.DurabilityModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.FireModeModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.RunningModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.ShrapnelModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.SilencerModifier;
@@ -33,6 +33,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 
 /**
  *
@@ -250,6 +251,7 @@ public abstract class GunModifier extends CSVValue
         if (this instanceof BulletSpreadModifier) stats.addAll(getBulletSpreadModifierStats((BulletSpreadModifier)this));
         if (this instanceof CritModifier)         stats.addAll(getCritModifierStats((CritModifier)this));
         if (this instanceof DamageModifier)       stats.addAll(getDamageModifierStats((DamageModifier)this));
+        if (this instanceof HeadshotModifier)     stats.addAll(getHeadshotModifierStats((HeadshotModifier)this));
         if (this instanceof DurabilityModifier)   stats.addAll(getDurabilityModifierStats((DurabilityModifier)this));
         if (this instanceof FireModeModifier)     stats.addAll(getFireModeModifierStats((FireModeModifier)this));
         if (this instanceof IgniteModifier)       stats.addAll(getIgniteModifierStats((IgniteModifier)this));
@@ -332,11 +334,20 @@ public abstract class GunModifier extends CSVValue
         final ArrayList<String> stats = new ArrayList<>();
         final String damageValue = getValueStat(damageMod.getDamageValue(), "base damage");
         final String damageMultiplier = getMultiplierStat(damageMod.getDamageMultiplier(), "base damage");
-        final String headshotValue = getValueStat(damageMod.getHeadshotDamageModifier(), "headshot damage");
-        final String headshotMultiplier = getValueStat(damageMod.getHeadshotDamageMultiplier(), "headshot damage");
         
         if (damageValue != null)        stats.add(damageValue);
         if (damageMultiplier != null)   stats.add(damageMultiplier);
+        
+        return stats;
+    }
+    
+    static
+    private ArrayList<String> getHeadshotModifierStats(final HeadshotModifier headMod)
+    {
+        final ArrayList<String> stats = new ArrayList<>();
+        final String headshotValue = getValueStat(headMod.getHeadshotDamageModifier(), "headshot damage");
+        final String headshotMultiplier = getValueStat(headMod.getHeadshotDamageMultiplier(), "headshot damage");
+        
         if (headshotValue != null)      stats.add(headshotValue);
         if (headshotMultiplier != null) stats.add(headshotMultiplier);
         

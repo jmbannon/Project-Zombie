@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface BleedoutModifier
+public interface BleedoutModifier extends ProjectileHitModifier
 {
     public double getBleedoutDurationValue();
     public double getBleedoutDurationMultiplier();

@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface StunModifier
+public interface StunModifier extends ProjectileHitModifier
 {
     public double getStunChance();
     public double getStunDuration();

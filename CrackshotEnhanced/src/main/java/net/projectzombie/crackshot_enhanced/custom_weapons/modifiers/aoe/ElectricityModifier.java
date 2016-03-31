@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface ElectricityModifier
+public interface ElectricityModifier extends AOEModifier
 {
     public double getElectricityDamageValue();
     public double getElectricityDamageMultiplier();

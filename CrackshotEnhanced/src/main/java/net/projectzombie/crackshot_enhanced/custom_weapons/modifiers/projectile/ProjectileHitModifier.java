@@ -5,15 +5,13 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Modifier;
+
 /**
  *
- * @author jesse
+ * @author jb
  */
-public interface BulletSpreadModifier extends ProjectileHitModifier
+public interface ProjectileHitModifier extends Modifier
 {
-    /**
-     * Multiplier - percentage to modifiy the bullet spread.
-     * @return Percentage to modifiy the bullet spread (0, inf).
-     */
-    public double getBulletSpreadMultiplier();
+    
 }

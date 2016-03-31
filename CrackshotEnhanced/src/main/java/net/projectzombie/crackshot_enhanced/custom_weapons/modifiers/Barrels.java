@@ -10,9 +10,10 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Barrels.Bar
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.BulletSpreadModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.HeadshotModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.SilencerModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 
 /**
  *
@@ -131,6 +132,7 @@ public class Barrels extends CSVInput<Barrel>
 
     static public class Barrel extends GunModifier implements BulletSpreadModifier,
                                                               DamageModifier,
+                                                              HeadshotModifier,
                                                               ProjectileModifier,
                                                               SilencerModifier,
                                                               IncendiaryModifier

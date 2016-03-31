@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface RunningModifier
+public interface RunningModifier extends SkeletonModifier
 {
     public double getRunningBulletSpreadMultiplier();
     public double getRunningSpeedMultiplier();

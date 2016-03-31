@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface FlameAOE
+public interface FlameAOE extends AOEModifier
 {
     public double getFlameAOERadius();
     public double getFlameAOEDuration();

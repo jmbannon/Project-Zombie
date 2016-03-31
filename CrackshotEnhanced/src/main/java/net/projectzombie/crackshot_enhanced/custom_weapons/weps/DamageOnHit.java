@@ -5,19 +5,21 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import java.util.ArrayList;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Modifier;
 
 /**
  *
  * @author jb
+ * @param <T>
  */
-public abstract class DamageOnHit extends GunModifierSet
+public abstract class DamageOnHit<T extends Modifier> extends GunModifierSet<T>
 {
     private final double totalDamage;
     private final double damageValue;
     private final double damageMultiplier;
     
-    public DamageOnHit(GunModifier[] modifiers,
+    public DamageOnHit(ArrayList<T> modifiers,
                        final double damageValue,
                        final double damageMultiplier)
     {
@@ -30,5 +32,4 @@ public abstract class DamageOnHit extends GunModifierSet
     public double getValue()      { return damageValue; }
     public double getMultiplier() { return damageMultiplier; }
     public double getTotal()      { return totalDamage; }
-    
 }

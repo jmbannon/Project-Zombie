@@ -15,12 +15,12 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.MagazineModifier;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.skeleton.FirearmActions.FirearmAction;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.FORMATTER;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.TPS;
 import net.projectzombie.crackshot_enhanced.custom_weapons.weps.Guns.CrackshotGun;
 import org.bukkit.ChatColor;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.ProjectileModifier;
 
 /**
  *
@@ -126,7 +126,7 @@ public class ModifierLoreBuilder
     private ArrayList<String> getBulletSpreadModifierStats()
     {
         final ArrayList<String> stats = new ArrayList<>();
-        final double originalBS = gun.getBulletSpread();
+        final double originalBS = gun.getSkeletonBulletSpread();
         double bsMultiplier = 0;
         final double newBS;
         

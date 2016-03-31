@@ -18,13 +18,13 @@ public class GunShrapnelDamage extends DamageOnHit
     
     public GunShrapnelDamage(GunModifier[] modifiers)
     {
-        super(modifiers,
+        super(getShrapnelModifiers(modifiers),
               getShrapnelDamageValue(modifiers),
               getShrapnelDamageMultiplier(modifiers));
     }
     
     static
-    public double getShrapnelDamageValue(final GunModifier[] modifiers)
+    private double getShrapnelDamageValue(final GunModifier[] modifiers)
     {
         double shrapnelDamageValue = 0;
 
@@ -36,7 +36,7 @@ public class GunShrapnelDamage extends DamageOnHit
     }
     
     static
-    public double getShrapnelDamageMultiplier(final GunModifier[] modifiers)
+    private double getShrapnelDamageMultiplier(final GunModifier[] modifiers)
     {
         double shrapnelDamageMultiplier = 1.0;
 
@@ -52,7 +52,7 @@ public class GunShrapnelDamage extends DamageOnHit
     * @return Returns all ShrapnelModifiers on the gun.
     */
     static
-    public ArrayList<ShrapnelModifier> getShrapnelModifiers(final GunModifier[] modifiers)
+    private ArrayList<ShrapnelModifier> getShrapnelModifiers(final GunModifier[] modifiers)
     {
         final ArrayList<ShrapnelModifier> mods = new ArrayList<>();
         for (GunModifier mod : modifiers)

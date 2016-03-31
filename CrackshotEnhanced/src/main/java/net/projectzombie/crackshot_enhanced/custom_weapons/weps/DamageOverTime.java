@@ -5,20 +5,21 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.weps;
 
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.GunModifier;
+import java.util.ArrayList;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Modifier;
 import static net.projectzombie.crackshot_enhanced.custom_weapons.utilities.Constants.TPS;
 
 /**
  *
  * @author jb
  */
-public abstract class DamageOverTime extends GunModifierSet
+public abstract class DamageOverTime<T extends Modifier> extends GunModifierSet<T>
 {
     
     final double damagePerSecond;
     final double duration;
     
-    public DamageOverTime(GunModifier[] modifiers,
+    public DamageOverTime(ArrayList<T> modifiers,
                           final double damagePerSecond,
                           final double damageDuration)
     {

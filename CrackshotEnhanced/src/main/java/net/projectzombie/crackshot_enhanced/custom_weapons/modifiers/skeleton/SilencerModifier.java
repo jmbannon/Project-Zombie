@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface SilencerModifier
+public interface SilencerModifier extends SkeletonModifier
 {
     public boolean isSilencer();
 }

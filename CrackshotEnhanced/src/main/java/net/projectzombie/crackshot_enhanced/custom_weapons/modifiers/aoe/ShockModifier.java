@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface ShockModifier
+public interface ShockModifier extends AOEModifier
 {
     public double getShockChance();
     public double getShockDamageValue();

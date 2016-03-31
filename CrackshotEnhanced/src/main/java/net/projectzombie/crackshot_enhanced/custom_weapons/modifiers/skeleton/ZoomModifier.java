@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface ZoomModifier
+public interface ZoomModifier extends SkeletonModifier
 {
 
     public int getZoomAmount();

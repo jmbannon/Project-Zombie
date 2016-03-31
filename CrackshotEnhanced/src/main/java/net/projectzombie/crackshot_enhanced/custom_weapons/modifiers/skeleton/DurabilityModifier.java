@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface DurabilityModifier
+public interface DurabilityModifier extends SkeletonModifier
 {
     public int getDurabilityModifier();
     public double getDurabilityMultiplier();

@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface CombustModifier
+public interface CombustModifier extends AOEModifier
 {
     public double getCombustAOERadius();
     public double getCombustAOEDamageValue();

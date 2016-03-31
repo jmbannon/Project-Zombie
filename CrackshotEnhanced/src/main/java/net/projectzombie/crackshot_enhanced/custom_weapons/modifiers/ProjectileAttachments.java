@@ -13,6 +13,7 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Attachments.Attachment;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.CritModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.DamageModifier;
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.HeadshotModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IgniteModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.IncendiaryModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.ShrapnelModifier;
@@ -157,6 +158,7 @@ public class ProjectileAttachments extends CSVInput<ProjectileAttachment>
 
     static public class ProjectileAttachment extends Attachment implements BulletSpreadModifier, 
                                                 DamageModifier,
+                                                HeadshotModifier,
                                                 CritModifier,
                                                 BleedoutModifier,
                                                 IncendiaryModifier,

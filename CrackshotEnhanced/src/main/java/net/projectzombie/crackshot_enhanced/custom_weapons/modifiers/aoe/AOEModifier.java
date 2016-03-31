@@ -17,11 +17,13 @@
  */
 package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
 
+import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Modifier;
+
 /**
  *
  * @author jesse
  */
-public interface AOEModifier
+public interface AOEModifier extends Modifier
 {
     public double getAOERadiusValue();
     public double getAOERadiusMultiplier();

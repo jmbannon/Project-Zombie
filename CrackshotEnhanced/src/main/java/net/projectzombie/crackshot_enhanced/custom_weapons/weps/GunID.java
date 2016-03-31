@@ -111,7 +111,7 @@ public class GunID
                  final GunModifier modifier,
                  final GunModifierType type)
     {
-        this(gun.getSkeleton(),
+        this(gun,
             type.equals(SLOT_ONE_ATTACHMENT)   ? (ProjectileAttachment)modifier : gun.getAttachmentOne(), 
             type.equals(SLOT_TWO_ATTATCHMENT)   ? (ProjectileAttachment)modifier : gun.getAttachmentTwo(),  
             type.equals(SLOT_THREE_ATTATCHMENT) ? (ProjectileAttachment)modifier : gun.getAttachmentThree(), 

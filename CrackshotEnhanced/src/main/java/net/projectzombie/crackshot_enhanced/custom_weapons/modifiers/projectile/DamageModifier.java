@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface DamageModifier
+public interface DamageModifier extends ProjectileHitModifier
 {
     /**
      * Value - increase or decrease to base damage.
@@ -22,8 +22,4 @@ public interface DamageModifier
      * @return Percentage to be multiplied to base damage (0, inf).
      */
     public double getDamageMultiplier();
-    
-    public double getHeadshotDamageModifier();
-    
-    public double getHeadshotDamageMultiplier();
 }

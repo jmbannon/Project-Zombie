@@ -21,16 +21,14 @@ import org.bukkit.plugin.Plugin;
  *
  * @author jbannon
  */
-public class YAMLGenerator
+public class YAMLGenerator extends GunGenerator
 {
     static private File weps;
     static private FileConfiguration wepsYAML;
-    private final GunGenerator gen;
     
     private YAMLGenerator(final CrackshotGun gun)
     {
-        this.gen = new GunGenerator(gun);
-        
+        super(gun);
     }
     
     static
@@ -94,12 +92,12 @@ public class YAMLGenerator
     
     private void writeItemInformation()
     {
-        final String path = gen.getCSWeaponName() + ".Item_Information.";
+        final String path = super.getCSWeaponName() + ".Item_Information.";
         
-        wepsYAML.set(path + "Item_Name",         gen.getItemName());
-        wepsYAML.set(path + "Item_Type",         gen.getItemType());
-        wepsYAML.set(path + "Item_Lore",         gen.getItemLore());
-        wepsYAML.set(path + "Inventory_Control", gen.getInventoryControl());
+        wepsYAML.set(path + "Item_Name",         super.getItemName());
+        wepsYAML.set(path + "Item_Type",         super.getItemType());
+        wepsYAML.set(path + "Item_Lore",         super.getItemLore());
+        wepsYAML.set(path + "Inventory_Control", super.getInventoryControl());
         wepsYAML.set(path + "Sounds_Acquired",   "BAT_TAKEOFF-1-1-0");
         wepsYAML.set(path + "Skip_Name_check",    false);
         wepsYAML.set(path + "Remove_Unused_Tag",  true);
@@ -107,9 +105,9 @@ public class YAMLGenerator
     
     private void writeCritical()
     {
-        final String path = gen.getCSWeaponName() + ".Critical_Hits.";
-        final double criticalChance = gen.getCritChance();
-        final double criticalStrike = gen.getCritStrike();
+        final String path = super.getCSWeaponName() + ".Critical_Hits.";
+        final double criticalChance = super.getCritChance();
+        final double criticalStrike = super.getCritStrike();
         
         if (criticalChance > 0 && criticalStrike > 0)
         {
@@ -121,39 +119,39 @@ public class YAMLGenerator
     
     private void writeShooting()
     {
-        final String path = gen.getCSWeaponName() + ".Shooting.";
+        final String path = super.getCSWeaponName() + ".Shooting.";
         
         wepsYAML.set(path + "Right_Click_To_Shoot",            true);
         wepsYAML.set(path + "Cancel_Left_Click_Block_Damage",  true);
         wepsYAML.set(path + "Cancel_Right_Click_Interactions", true);
-        wepsYAML.set(path + "Delay_Between_Shots",             gen.getDelayBetweenShots());
-        wepsYAML.set(path + "Recoil_Amount",                   gen.getSkeleton().getRecoil());
-        wepsYAML.set(path + "Projectile_Amount",               gen.getProjectileAmount());
+        wepsYAML.set(path + "Delay_Between_Shots",             super.getDelayBetweenShots());
+        wepsYAML.set(path + "Recoil_Amount",                   super.getRecoil());
+        wepsYAML.set(path + "Projectile_Amount",               super.getProjectileAmount());
         wepsYAML.set(path + "Projectile_Type",                 "snowball");
-        wepsYAML.set(path + "Projectile_Speed",                gen.getProjectileSpeed());
-        wepsYAML.set(path + "Projectile_Damage",               gen.getGun().getBaseDamage().getValue());
-        wepsYAML.set(path + "Removal_Or_Drag_Delay",           gen.getRemovalOrDragDelay());
-        wepsYAML.set(path + "Bullet_Spread",                   gen.getBulletSpread());
-        wepsYAML.set(path + "Sounds_Shoot",                    gen.getSoundsShoot());
+        wepsYAML.set(path + "Projectile_Speed",                super.getProjectileSpeed());
+        wepsYAML.set(path + "Projectile_Damage",               super.getBaseDamage().getValue());
+        wepsYAML.set(path + "Removal_Or_Drag_Delay",           super.getRemovalOrDragDelay());
+        wepsYAML.set(path + "Bullet_Spread",                   super.getBulletSpread());
+        wepsYAML.set(path + "Sounds_Shoot",                    super.getSoundsShoot());
     }
     
     private void writeScope()
     {
-        if (gen.getGun().getScope().getZoomAmount() <= 0) return;
+        if (super.getScope().getZoomAmount() <= 0) return;
         
-        final String path = gen.getCSWeaponName() + ".Scope.";
+        final String path = super.getCSWeaponName() + ".Scope.";
         
         wepsYAML.set(path + "Enable",             true);
-        wepsYAML.set(path + "Zoom_Amount",        gen.getGun().getScope().getZoomAmount());
-        wepsYAML.set(path + "Zoom_Bullet_Spread", gen.getGun().getInitBulletSpread());
+        wepsYAML.set(path + "Zoom_Amount",        super.getScope().getZoomAmount());
+        wepsYAML.set(path + "Zoom_Bullet_Spread", super.getSkeletonBulletSpread());
         wepsYAML.set(path + "Sounds_Toggle_Zoom", "NOTE_STICKS-1-2-0");
     }
     
     private void writeBurstfire()
     {
-        if (!gen.getGun().getFireMode().isBurstFire()) return;
+        if (!super.getFireMode().isBurstFire()) return;
         
-        final String path = gen.getCSWeaponName() + ".Burstfire.";
+        final String path = super.getCSWeaponName() + ".Burstfire.";
         
         wepsYAML.set(path + "Enable",                       true);
         wepsYAML.set(path + "Shots_Per_Burst",              3);
@@ -163,8 +161,8 @@ public class YAMLGenerator
     
     private void writeFullyAutomatic()
     {
-        if (!gen.getGun().getFireMode().isAutomatic()) return;
-        final String path = gen.getCSWeaponName() + ".Fully_Automatic.";
+        if (!super.getFireMode().isAutomatic()) return;
+        final String path = super.getCSWeaponName() + ".Fully_Automatic.";
         
         wepsYAML.set(path + "Enable",    true);
         wepsYAML.set(path + "Fire_Rate", 3);
@@ -172,28 +170,28 @@ public class YAMLGenerator
     
     private void writeReload()
     {
-        final String path = gen.getCSWeaponName() + ".Reload.";
+        final String path = super.getCSWeaponName() + ".Reload.";
         
         wepsYAML.set(path + "Enable",                      true);
-        wepsYAML.set(path + "Reload_Amount",               gen.getReloadAmount());
-        wepsYAML.set(path + "Reload_Duration",             gen.getReloadDuration());
+        wepsYAML.set(path + "Reload_Amount",               super.getReloadAmount());
+        wepsYAML.set(path + "Reload_Duration",             super.getReloadDuration());
         wepsYAML.set(path + "Take_Ammo_On_Reload",         true);
-        wepsYAML.set(path + "Reload_Bullets_Individually", gen.getSkeleton().reloadsBulletsIndividually());
+        wepsYAML.set(path + "Reload_Bullets_Individually", super.reloadsBulletsIndividually());
         wepsYAML.set(path + "Sounds_Out_Of_Ammo",          "ITEM_BREAK-1-1-0");
-        wepsYAML.set(path + "Sounds_Reloading",            gen.getSkeleton().getReloadSound());
+        wepsYAML.set(path + "Sounds_Reloading",            super.getReloadSound());
     }
     
     private void writeFirearmAction()
     {
-        final FirearmAction action = gen.getSkeleton().getWeaponType().getAction();
-        final String path = gen.getCSWeaponName() + ".Firearm_Action.";
+        final FirearmAction action = super.getWeaponType().getAction();
+        final String path = super.getCSWeaponName() + ".Firearm_Action.";
         
         if (action == null) return;
 
         wepsYAML.set(path + "Type",              action.toString());
-        wepsYAML.set(path + "Open_Duration",     gen.getOpenDuration());
-        wepsYAML.set(path + "Close_Duration",    gen.getCloseDuration());
-        wepsYAML.set(path + "Close_Shoot_Delay", gen.getCloseShootDelay());
+        wepsYAML.set(path + "Open_Duration",     super.getOpenDuration());
+        wepsYAML.set(path + "Close_Duration",    super.getCloseDuration());
+        wepsYAML.set(path + "Close_Shoot_Delay", super.getCloseShootDelay());
         wepsYAML.set(path + "Sound_Open",        action.getSoundOpen());
         wepsYAML.set(path + "Sound_Close",       action.getSoundClose());
     }
@@ -201,24 +199,24 @@ public class YAMLGenerator
 
     private void writeHeadshot()
     {
-        final String path = gen.getCSWeaponName() + ".Headshot.";
+        final String path = super.getCSWeaponName() + ".Headshot.";
         
         wepsYAML.set(path + "Enable",        true);
-        wepsYAML.set(path + "Bonus_Damage",  gen.getSkeleton().getSkeletonBaseDamage() * 2);
+        wepsYAML.set(path + "Bonus_Damage",  super.getSkeletonBaseDamage() * 2);
         wepsYAML.set(path + "Sounds_Victim", "VILLAGER_NO-1-1-0");
     }
     
     private void writeAmmo()
     {
-        final String path = gen.getCSWeaponName() + ".Ammo.";
+        final String path = super.getCSWeaponName() + ".Ammo.";
         
         wepsYAML.set(path + "Enable",       true);
-        wepsYAML.set(path + "Ammo_Item_ID", gen.getAmmoID());
+        wepsYAML.set(path + "Ammo_Item_ID", super.getAmmoID());
     }
     
     private void writeHitEvents()
     {
-        final String path = gen.getCSWeaponName() + ".Hit_Events.";
+        final String path = super.getCSWeaponName() + ".Hit_Events.";
         
         wepsYAML.set(path + "Enable",        true);
         wepsYAML.set(path + "Sounds_Victim", "VILLAGER_IDLE-1-1-0");

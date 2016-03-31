@@ -7,7 +7,6 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers;
 
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVReader;
 import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.Bolts.Bolt;
-import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton.BoltModifier;
 import net.projectzombie.crackshot_enhanced.custom_weapons.csv.CSVInput;
 
 /**
@@ -83,7 +82,7 @@ public class Bolts extends CSVInput<Bolt>
         return toReturn;
     }
     
-    static public class Bolt extends GunModifier implements BoltModifier
+    static public class Bolt extends GunModifier
     {
         private final double durationMultiplier;
 
@@ -104,7 +103,7 @@ public class Bolts extends CSVInput<Bolt>
             this(0, null, null, 0, 0, null, 0);
         }
 
-        @Override public double getBoltDurationMultiplier() { return durationMultiplier; }
+        public double getBoltDurationMultiplier() { return durationMultiplier; }
         @Override public Bolt getNullModifier()             { return new Bolt(); }
     }
 }

@@ -21,7 +21,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.aoe;
  *
  * @author jesse
  */
-public interface PoisonAOEModifier
+public interface PoisonAOEModifier extends AOEModifier
 {
     public double getPoisonAOERadius();
     public double getPoisonAOEDuration();

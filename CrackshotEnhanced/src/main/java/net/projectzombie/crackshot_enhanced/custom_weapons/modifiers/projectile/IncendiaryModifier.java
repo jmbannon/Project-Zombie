@@ -21,8 +21,9 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile
  *
  * @author jesse
  */
-public interface IncendiaryModifier
+public interface IncendiaryModifier extends ProjectileHitModifier
 {
     public double getFireDamageValue();
     public double getFireDamageMultiplier();
+    
 }

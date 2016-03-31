@@ -13,20 +13,15 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.
  *
  * @author jb
  */
-public class GunBaseDamage extends DamageOnHit
+public class BaseDamage extends DamageOnHit<DamageModifier>
 {
     
-    public GunBaseDamage(GunModifier[] modifiers,
+    public BaseDamage(GunModifier[] modifiers,
                          final double skeletonBaseDamage)
     {
-        super(modifiers,
+        super(getDamageModifiers(modifiers),
               baseDamageValueSum(modifiers, skeletonBaseDamage),
               baseDamageMultiplierSum(modifiers));
-    }
-    
-    public ArrayList<DamageModifier> getModifiers()
-    {
-        return getDamageModifiers(super.modifierSet);
     }
     
     static private double baseDamageValueSum(final GunModifier[] modSet,
@@ -56,7 +51,7 @@ public class GunBaseDamage extends DamageOnHit
      * @param modSet
      * @return Returns all DamageModifiers on the gun.
      */
-    static public ArrayList<DamageModifier> getDamageModifiers(final GunModifier[] modSet)
+    static private ArrayList<DamageModifier> getDamageModifiers(final GunModifier[] modSet)
     {
         final ArrayList<DamageModifier> mods = new ArrayList<>();
         for (GunModifier mod : modSet)

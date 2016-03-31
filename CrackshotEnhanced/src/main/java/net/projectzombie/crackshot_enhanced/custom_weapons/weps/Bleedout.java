@@ -13,12 +13,12 @@ import net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.projectile.
  *
  * @author jb
  */
-public class GunBleedout extends DamageOverTime
+public class Bleedout extends DamageOverTime<BleedoutModifier>
 {    
-    public GunBleedout(final GunModifier[] modSet,
+    public Bleedout(final GunModifier[] modSet,
                        final double totalShrapnelDamage)
     {
-        super(modSet,
+        super(getBleedoutModifiers(modSet),
               calculateBleedoutDPS(modSet, totalShrapnelDamage),
               calculateBleedoutDuration(modSet));
     }
@@ -26,7 +26,7 @@ public class GunBleedout extends DamageOverTime
     /**
     * @return Returns all BleedoutModifiers on the gun.
     */
-   static final ArrayList<BleedoutModifier> getBleedoutModifiers(final GunModifier[] modifierSet)
+   private static ArrayList<BleedoutModifier> getBleedoutModifiers(final GunModifier[] modifierSet)
    {
        final ArrayList<BleedoutModifier> mods = new ArrayList<>();
        for (GunModifier mod : modifierSet)

@@ -9,7 +9,7 @@ package net.projectzombie.crackshot_enhanced.custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface ProjectileModifier
+public interface ProjectileModifier extends SkeletonModifier
 {
     public int getProjectileValue();
     public double getProjectileSpeedMultiplier();
