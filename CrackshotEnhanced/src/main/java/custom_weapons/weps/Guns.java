@@ -30,9 +30,12 @@ import custom_weapons.skeleton.GunSkeletons.GunSkeleton;
 import org.bukkit.inventory.ItemStack;
 import custom_weapons.modifiers.projectile.BulletSpreadSet;
 import custom_weapons.modifiers.GunModifierSet;
+import static custom_weapons.modifiers.ModifierLoreBuilder.STAT_SEPERATOR;
 import static custom_weapons.modifiers.ModifierLoreBuilder.toTitle;
 import custom_weapons.modifiers.projectile.StunSet;
 import custom_weapons.modifiers.skeleton.BoltSet;
+import custom_weapons.modifiers.skeleton.DurabilitySet;
+import custom_weapons.modifiers.skeleton.MotionSet;
 import custom_weapons.modifiers.skeleton.ProjectileSet;
 import java.util.ArrayList;
 
@@ -120,6 +123,8 @@ public class Guns
         private final BoltSet boltSet;
         private final ProjectileSet projectile;
         private final StunSet stun;
+        private final DurabilitySet durability;
+        private final MotionSet motion;
         
 
         public CrackshotGun(final GunSkeleton skeleton,
@@ -179,6 +184,14 @@ public class Guns
                     skeleton.getWeaponType().getProjectileSpeed(), 
                     skeleton.getWeaponType().getProjectileAmount());
             this.stun = new StunSet(modifiers);
+            this.durability = new DurabilitySet(modifiers, super.getSkeletonMaxDurability());
+            this.motion = new MotionSet(modifiers,
+                    super.getSkeletonRunningSpeedMultiplier(),
+                    super.getSkeletonSprintingSpeedMultiplier(),
+                    super.getSkeletonCrouchingBulletSpreadMultiplier(),
+                    super.getSkeletonStandingBulletSpreadMultiplier(),
+                    super.getSkeletonRunningBulletSpreadMultiplier(),
+                    super.getSkeletonSprintingBulletSpreadMultiplier());
             
         }
         
@@ -233,6 +246,36 @@ public class Guns
         public BoltSet getGunBolt()                   { return boltSet;       }
         public ProjectileSet getGunProjectile()       { return projectile;    }
         public StunSet getGunStun()                   { return stun;          }
+        public MotionSet getMotionSet()               { return motion;        }
+        public GunModifierSet[] getSets()
+        {
+            return new GunModifierSet[]
+            {
+                bulletSpread,
+                baseDamage,
+                headshot,
+                bleedout,
+                crit,
+                shrapnel,
+                fireDamage,
+                mag,
+                boltSet,
+                projectile,
+                stun,
+                motion,
+                durability
+            };
+        }
+        
+        public HashMap<String, GunModifierSet> getHashedSets()
+        {
+            final HashMap<String, GunModifierSet> hash = new HashMap<>();
+            for (GunModifierSet modSet : getSets())
+            {
+                hash.put(modSet.getName(), modSet);
+            }
+            return hash;
+        }
         
         @Override public String toString()        { return uniqueID;  }
         
@@ -288,20 +331,7 @@ public class Guns
         public ArrayList<String> getAllStatInfo()
         {
             final ArrayList<String> stats = new ArrayList<>();
-            final GunModifierSet modSets[] = new GunModifierSet[]
-            {
-                bulletSpread,
-                baseDamage,
-                headshot,
-                bleedout,
-                crit,
-                shrapnel,
-                fireDamage,
-                mag,
-                boltSet,
-                projectile,
-                stun
-            };
+            final GunModifierSet modSets[] = getSets();
             
             stats.add(toTitle(super.getName() + " Stats"));
             for (GunModifierSet modSet : modSets)
@@ -314,6 +344,82 @@ public class Guns
                 }
             }
             return stats;
+        }
+        
+        /**
+         * Returns stats of specified modifier names.
+         * Combines all args, removes spaces, replaces all characters other than a-z with ,
+         * @param cmdArgs String array args from a player command.
+         * @return 
+         */
+        public ArrayList<String> getSpecificStats(final String[] cmdArgs)
+        {
+            final StringBuilder stb = new StringBuilder();
+            for (String s : cmdArgs) stb.append(s);
+            
+            final String args = stb.toString();
+            final ArrayList<String> stats = new ArrayList<>();
+            final ArrayList<String> unrecognizedNames = new ArrayList();
+            
+            final HashMap<String, GunModifierSet> hash = getHashedSets();
+            final String[] modSetNames = args.toLowerCase().replace(" ", "").replaceAll("[^a-z]", ",").split(",");
+            GunModifierSet tmp;
+            
+            for (String modSetName : modSetNames)
+            {
+                if (hash.containsKey(modSetName))
+                {
+                    tmp = hash.get(modSetName);
+                    stats.add(STAT_TYPE_SEPERATOR);
+                    stats.add(toTitle(tmp.getName()));
+                    stats.addAll(tmp.getStats());
+                }
+                else
+                {
+                    unrecognizedNames.add(modSetName);
+                }
+            }
+            
+            if (!unrecognizedNames.isEmpty())
+            {
+                stats.add(STAT_SEPERATOR);
+                stats.add("Could not recognize the following stats:");
+                for (String unrec : unrecognizedNames)
+                {
+                    stats.add(unrec);
+                }
+            }
+                
+            return stats;
+        }
+        
+        public ArrayList<String> getEntireStatList()
+        {
+            final ArrayList<String> statList = new ArrayList<>();
+            
+            statList.add(toTitle("Full Stat List"));
+            for (GunModifierSet modSet : getSets())
+            {
+                statList.add(toTitle(modSet.getName()));
+            }
+            statList.add("/gun stats <name>,<name>,...,<name> for ordered list of stats");
+            return statList;
+        }
+        
+        public ArrayList<String> getUsefulStatList()
+        {
+            final ArrayList<String> statList = new ArrayList<>();
+            
+            statList.add(toTitle("Stat List"));
+            for (GunModifierSet modSet : getSets())
+            {
+                if (modSet.hasStats())
+                {
+                    statList.add(toTitle(modSet.getName()));
+                }
+            }
+            statList.add("/gun stats <name>,<name>,...,<name> for ordered list of stats");
+            return statList;
         }
     }
 }

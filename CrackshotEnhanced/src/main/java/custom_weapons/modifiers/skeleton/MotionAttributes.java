@@ -21,8 +21,13 @@ package custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface RunningAttributes extends SkeletonAttributes
+public interface MotionAttributes extends SkeletonAttributes
 {
-    public double getRunningBulletSpreadMultiplier();
     public double getRunningSpeedMultiplier();
+    public double getSprintingSpeedMultiplier();
+    
+    public double getCrouchingBulletSpreadMultiplier();
+    public double getStandingBulletSpreadMultiplier();
+    public double getRunningBulletSpreadMultiplier();
+    public double getSprintingBulletSpreadMultiplier();
 }

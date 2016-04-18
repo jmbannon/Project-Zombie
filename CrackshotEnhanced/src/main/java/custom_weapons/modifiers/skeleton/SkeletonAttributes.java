@@ -11,7 +11,7 @@ import custom_weapons.modifiers.Modifier;
  *
  * @author jb
  */
-public interface SkeletonAttributes  extends Modifier
+public interface SkeletonAttributes extends Modifier
 {
     
 }

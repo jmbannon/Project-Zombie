@@ -9,7 +9,7 @@ import custom_weapons.csv.CSVReader;
 import custom_weapons.csv.CSVInput;
 import custom_weapons.modifiers.Stocks.Stock;
 import custom_weapons.modifiers.projectile.BulletSpreadAttributes;
-import custom_weapons.modifiers.skeleton.RunningAttributes;
+import custom_weapons.modifiers.skeleton.MotionAttributes;
 
 /**
  *
@@ -33,8 +33,15 @@ public class Stocks extends CSVInput<Stock>
         "Price (INT)",
         "Color (STR)",
         "Bullet Spread Multiplier (DBL)",
+        
+        // UPDATE IN CSVs
+        "Running Speed Multiplier (DBL)",
+        "Sprinting Speed Multiplier (DBL)",
+        
+        "Crouching Bullet Spread Multiplier (DBL)",
+        "Standing Bullet Spread Multiplier (DBL)",
         "Running Bullet Spread Multiplier (DBL)",
-        "Running Speed Modifier (DBL)"
+        "Sprinting Bullet Spread Multiplier (DBL)"
     };
     
     private Stocks()
@@ -70,8 +77,13 @@ public class Stocks extends CSVInput<Stock>
         final int[]    price                = csv.getColumnInt(j++);
         final String[] colors               = csv.getColumnString(j++);
         final double[] bulletSpreadMultiplier = csv.getColumnDouble(j++);
-        final double[] runningBulletSpreadMultiplier = csv.getColumnDouble(j++);
         final double[] runningSpeedMultiplier = csv.getColumnDouble(j++);
+        final double[] sprintingSpeedMultiplier = csv.getColumnDouble(j++);
+        final double[] crouchingBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] standingBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] runningBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] sprintingBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        
         
         toReturn[0] = new Stock();
         for (int i = 0; i < rowCount; i++)
@@ -84,18 +96,29 @@ public class Stocks extends CSVInput<Stock>
                     price[i],
                     colors[i],
                     bulletSpreadMultiplier[i],
+                    runningSpeedMultiplier[i],
+                    sprintingSpeedMultiplier[i],
+                    crouchingBulletSpreadMultiplier[i],
+                    standingBulletSpreadMultiplier[i],
                     runningBulletSpreadMultiplier[i],
-                    runningSpeedMultiplier[i]);
+                    sprintingBulletSpreadMultiplier[i]);
         }
         return toReturn;
     }
     
     static public class Stock extends GunModifier implements BulletSpreadAttributes,
-                                                             RunningAttributes
+                                                             MotionAttributes
     {
         private final double bulletSpreadMultiplier;
-        private final double runningBulletSpreadMultiplier;
+        
         private final double runningSpeedMultiplier;
+        private final double sprintingSpeedMultiplier;
+        
+        private final double crouchingBulletSpreadMultiplier;
+        private final double standingBulletSpreadMultiplier;
+        private final double runningBulletSpreadMultiplier;
+        private final double sprintingBulletSpreadMultiplier;
+        
 
         private Stock(final int uniqueID,
                        final String displayName,
@@ -104,20 +127,36 @@ public class Stocks extends CSVInput<Stock>
                        final int price,
                        final String color,
                        final double bulletSpreadMultiplier,
+                       
+                       final double runningSpeedMultiplier,
+                       final double sprintingSpeedMultiplier,
+                       
+                       final double crouchingBulletSpreadMultiplier,
+                       final double standingBulletSpreadMultiplier,
                        final double runningBulletSpreadMultiplier,
-                       final double runningSpeedMultiplier)
+                       final double sprintingBulletSpreadMultiplier)
         {
             super(uniqueID, displayName, material, materialData, price, color);
             this.bulletSpreadMultiplier = bulletSpreadMultiplier;
-            this.runningBulletSpreadMultiplier = runningBulletSpreadMultiplier;
+            
             this.runningSpeedMultiplier = runningSpeedMultiplier;
+            this.sprintingSpeedMultiplier = sprintingSpeedMultiplier;
+            
+            this.crouchingBulletSpreadMultiplier = crouchingBulletSpreadMultiplier;
+            this.standingBulletSpreadMultiplier = standingBulletSpreadMultiplier;
+            this.runningBulletSpreadMultiplier = runningBulletSpreadMultiplier;
+            this.sprintingBulletSpreadMultiplier = sprintingBulletSpreadMultiplier;
         }
 
-        private Stock() { this(0, null, null, 0, 0, null, 0, 0, 0); }
+        private Stock() { this(0, null, null, 0, 0, null, 0, 0, 0, 0, 0, 0, 0); }
+        @Override public Stock getNullModifier() { return new Stock(); }
         
-        @Override public double getRunningBulletSpreadMultiplier() { return runningBulletSpreadMultiplier; }
-        @Override public double getRunningSpeedMultiplier()        { return runningSpeedMultiplier; }
-        @Override public Stock getNullModifier()         { return singleton.getNullValue(); }
-        @Override public double getBulletSpreadMultiplier() { return bulletSpreadMultiplier; }
+        @Override public double getBulletSpreadMultiplier()          { return bulletSpreadMultiplier; }
+        @Override public double getRunningSpeedMultiplier()          { return runningSpeedMultiplier; }
+        @Override public double getSprintingSpeedMultiplier()        { return sprintingSpeedMultiplier; }
+        @Override public double getCrouchingBulletSpreadMultiplier() { return crouchingBulletSpreadMultiplier; }
+        @Override public double getStandingBulletSpreadMultiplier()  { return standingBulletSpreadMultiplier; }
+        @Override public double getRunningBulletSpreadMultiplier()   { return runningBulletSpreadMultiplier; }
+        @Override public double getSprintingBulletSpreadMultiplier() { return sprintingBulletSpreadMultiplier; }
     }
 }

@@ -60,6 +60,16 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         "Reload Duration (INT)",
         "Reload Bullets Individually (T/F)",
         "Recoil Amount (INT)",
+        
+        // UPDATE
+        "Running Speed Multiplier (DBL)", 
+        "Sprinting Speed Multiplier (DBL)",
+        "Crouching Bullet Spread Multiplier (DBL)",
+        "Standing Bullet Spread Multiplier (DBL)",
+        "Running Bullet Spread Multiplier (DBL)",
+        "Sprinting Bullet Spread Multiplier (DBL)",
+        // END-UPDATE
+        
         "Shoot Sound (STR)",
         "Silenced Sound (STR)",
         "Particle Shoot (STR)",
@@ -96,7 +106,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         final int[]    reloadDurations      = csv.getColumnInt(j++);
         final boolean[] reloadIndividually  = csv.getColumnBoolean(j++);
         final int[]    recoilAmounts        = csv.getColumnInt(j++);
-        
+        final double[]  runningSpeedMultiplier = csv.getColumnDouble(j++);
+        final double[] sprintingSpeedMultiplier = csv.getColumnDouble(j++);
+        final double[] crouchingBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] standingBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] runningBulletSpreadMultiplier = csv.getColumnDouble(j++);
+        final double[] sprintingBulletSpreadMultiplier = csv.getColumnDouble(j++);
         final String[] shootSounds          = csv.getColumnString(j++);
         final String[] silencedSounds       = csv.getColumnString(j++);
         final String[] reloadSounds         = csv.getColumnString(j++);
@@ -122,6 +137,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                     reloadDurations[i],
                     reloadIndividually[i],
                     recoilAmounts[i],
+                    runningSpeedMultiplier[i],
+                    sprintingSpeedMultiplier[i],
+                    crouchingBulletSpreadMultiplier[i],
+                    standingBulletSpreadMultiplier[i],
+                    runningBulletSpreadMultiplier[i],
+                    sprintingBulletSpreadMultiplier[i],
                     shootSounds[i],
                     silencedSounds[i],
                     particleShoots[i],
@@ -139,6 +160,13 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         private final ModifierSet modSet;
         private final String particleShoot;
         private final boolean reloadBulletsIndividually;
+        
+        private final double runningSpeedMultiplier;
+        private final double sprintingSpeedMultiplier;
+        private final double crouchingBulletSpreadMultiplier;
+        private final double standingBulletSpreadMultiplier;
+        private final double runningBulletSpreadMultiplier;
+        private final double sprintingBulletSpreadMultiplier;
         
         private final int
                 itemID, 
@@ -168,6 +196,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
                             final int reload_duration,
                             final boolean reloadBulletsIndividually,
                             final int recoilAmount,
+                            final double runningSpeedMultiplier,
+                            final double sprintingSpeedMultiplier,
+                            final double crouchingBulletSpreadMultiplier,
+                            final double standingBulletSpreadMultiplier,
+                            final double runningBulletSpreadMultiplier,
+                            final double sprintingBulletSpreadMultiplier,
                             
                             final String sounds_shoot,
                             final String sounds_silenced,
@@ -191,6 +225,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
             this.soundReload = sounds_reloading;
             this.modSet = set;
             this.reloadBulletsIndividually = reloadBulletsIndividually;
+            this.runningSpeedMultiplier = runningSpeedMultiplier;
+            this.sprintingSpeedMultiplier = sprintingSpeedMultiplier;
+            this.crouchingBulletSpreadMultiplier = crouchingBulletSpreadMultiplier;
+            this.standingBulletSpreadMultiplier = standingBulletSpreadMultiplier;
+            this.runningBulletSpreadMultiplier = runningBulletSpreadMultiplier;
+            this.sprintingBulletSpreadMultiplier = sprintingBulletSpreadMultiplier;
         }
         
         public GunSkeleton(final GunSkeleton skele)
@@ -212,6 +252,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
             this.soundReload = skele.soundReload;
             this.modSet = skele.modSet;
             this.reloadBulletsIndividually = skele.reloadBulletsIndividually;
+            this.runningSpeedMultiplier = skele.runningSpeedMultiplier;
+            this.sprintingSpeedMultiplier = skele.sprintingSpeedMultiplier;
+            this.crouchingBulletSpreadMultiplier = skele.crouchingBulletSpreadMultiplier;
+            this.standingBulletSpreadMultiplier = skele.standingBulletSpreadMultiplier;
+            this.runningBulletSpreadMultiplier = skele.runningBulletSpreadMultiplier;
+            this.sprintingBulletSpreadMultiplier = skele.sprintingBulletSpreadMultiplier;
         }
 
         public String        getFileName()       { return super.getName().toLowerCase(); }
@@ -230,6 +276,12 @@ public class GunSkeletons extends CSVInput<GunSkeleton>
         public String        getShootParticle()  { return particleShoot; }
         public int           getSkeletonReloadAmount()   { return reloadAmount;   }
         public int           getSkeletonReloadDuration() { return reloadDuration; }
+        public double        getSkeletonRunningSpeedMultiplier()          { return runningSpeedMultiplier;  }
+        public double        getSkeletonSprintingSpeedMultiplier()        { return sprintingSpeedMultiplier;  }
+        public double        getSkeletonCrouchingBulletSpreadMultiplier() { return crouchingBulletSpreadMultiplier;  }
+        public double        getSkeletonStandingBulletSpreadMultiplier()  { return standingBulletSpreadMultiplier;  }
+        public double        getSkeletonRunningBulletSpreadMultiplier()   { return runningBulletSpreadMultiplier;  }
+        public double        getSkeletonSprintingBulletSpreadMultiplier() { return sprintingBulletSpreadMultiplier;  }
         public String        getReloadSound()    { return soundReload;   }
         public ItemStack     getBareItemStack()  { return new ItemStack(itemID, 1, (short)itemData); }
         public ModifierSet   getModifierSet()    { return modSet; }

@@ -8,6 +8,9 @@ package custom_weapons.modifiers.skeleton;
 import java.util.ArrayList;
 import custom_weapons.modifiers.GunModifier;
 import custom_weapons.modifiers.GunModifierSet;
+import static custom_weapons.modifiers.ModifierLoreBuilder.STAT_SEPERATOR;
+import static custom_weapons.modifiers.ModifierLoreBuilder.getMultiplierStat;
+import static custom_weapons.modifiers.ModifierLoreBuilder.getValueStat;
 
 /**
  *
@@ -17,20 +20,41 @@ public class MagazineSet extends GunModifierSet<MagazineAttributes>
 {
     static private final double MIN_RELOAD_SPEED = 1.0;
     
-    private final int magazineSize;
+    private final int extraMagSize;
+    private final int skeletonMagSize;
+    private final int totalMagSize;
     private final double reloadSpeed;
     
     public MagazineSet(final GunModifier[] gunMods,
                        final int skeletonMagSize,
                        final double skeletonReloadDuration)
     {
-        super(getMagazineModifiers(gunMods));
-        this.magazineSize = getMagazineSize(gunMods, skeletonMagSize);
+        super("Magazine");
+        this.skeletonMagSize = skeletonMagSize;
+        this.extraMagSize = getMagazineSize(gunMods, skeletonMagSize);
         this.reloadSpeed = getReloadSpeed(gunMods, skeletonReloadDuration);
+        this.totalMagSize = skeletonMagSize + extraMagSize;
     }
     
-    public int getMagazineSize()   { return magazineSize; }
+    public int getMagazineSize()   { return extraMagSize; }
     public double getReloadDuration() { return reloadSpeed;  }
+    
+    @Override
+    public ArrayList<String> getStats()
+    {
+        final ArrayList<String> stats = new ArrayList<>();
+        stats.add(getValueStat(totalMagSize, "total magazine size"));
+        stats.add(STAT_SEPERATOR);
+        stats.add(getValueStat(extraMagSize, "extra mag size"));
+        stats.add(getValueStat(skeletonMagSize, "stock mag size"));
+        return stats;
+    }
+
+    @Override
+    public boolean hasStats()
+    {
+        return extraMagSize > 0 && reloadSpeed > 0;
+    }
     
     static
     private double getReloadSpeed(final GunModifier[] gunMods,

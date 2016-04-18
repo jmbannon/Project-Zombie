@@ -128,7 +128,7 @@ public class YAMLGenerator extends GunGenerator
         wepsYAML.set(path + "Cancel_Right_Click_Interactions", true);
         wepsYAML.set(path + "Delay_Between_Shots",             super.getDelayBetweenShots());
         wepsYAML.set(path + "Recoil_Amount",                   super.getRecoil());
-        wepsYAML.set(path + "Projectile_Amount",               projectileSet.getProjectileAmount());
+        wepsYAML.set(path + "Projectile_Amount",               projectileSet.getTotalProjectileAmount());
         wepsYAML.set(path + "Projectile_Type",                 "snowball");
         wepsYAML.set(path + "Projectile_Speed",                projectileSet.getProjectileSpeed());
         wepsYAML.set(path + "Projectile_Damage",               super.getBaseDamage().getValue());

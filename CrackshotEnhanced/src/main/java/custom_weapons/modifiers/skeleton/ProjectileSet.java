@@ -8,6 +8,8 @@ package custom_weapons.modifiers.skeleton;
 import java.util.ArrayList;
 import custom_weapons.modifiers.GunModifier;
 import custom_weapons.modifiers.GunModifierSet;
+import static custom_weapons.modifiers.ModifierLoreBuilder.STAT_SEPERATOR;
+import static custom_weapons.modifiers.ModifierLoreBuilder.getValueStat;
 
 /**
  *
@@ -17,28 +19,64 @@ public class ProjectileSet extends GunModifierSet<ProjectileAttributes>
 {
     static private final int MIN_PROJECTILE_SPEED = 1;
     
-    private final int projectileRange;
-    private final int projectileSpeed;
-    private final int projectileAmount;
+    private final int totalProjectileRange;
+    private final int totalProjectileSpeed;
+    private final int totalProjectileAmount;
+    
+    private final int skeletonProjectileRange;
+    private final int skeletonProjectileSpeed;
+    private final int skeletonProjectileAmount;
     
     public ProjectileSet(final GunModifier[] gunMods,
                        final int skeletonProjectileRange,
                        final int skeletonProjectileSpeed,
                        final int skeletonProjectileAmount)
     {
-        super(getProjectileModifiers(gunMods));
-        this.projectileRange = getProjectileRange(gunMods, skeletonProjectileRange);
-        this.projectileSpeed = getProjectileSpeed(gunMods, skeletonProjectileSpeed);
-        this.projectileAmount = getProjectileAmount(gunMods, skeletonProjectileAmount);
+        super("Projectile");
+        this.skeletonProjectileRange = skeletonProjectileRange;
+        this.skeletonProjectileSpeed = skeletonProjectileSpeed;
+        this.skeletonProjectileAmount = skeletonProjectileAmount;
+        this.totalProjectileRange = getTotalProjectileRange(gunMods, skeletonProjectileRange);
+        this.totalProjectileSpeed = getTotalProjectileSpeed(gunMods, skeletonProjectileSpeed);
+        this.totalProjectileAmount = getTotalProjectileAmount(gunMods, skeletonProjectileAmount);
     }
     
-    public int getProjectileRange()   { return projectileRange; }
-    public int getProjectileSpeed()   { return projectileSpeed;  }
-    public int getProjectileAmount()  { return projectileAmount; }
+    public int getProjectileRange()        { return totalProjectileRange;  }
+    public int getProjectileSpeed()        { return totalProjectileSpeed;  }
+    public int getTotalProjectileAmount()  { return totalProjectileAmount; }
+    
+    @Override
+    public ArrayList<String> getStats()
+    {
+        final ArrayList<String> stats = new ArrayList<>();
+        
+        if (totalProjectileAmount > 1)
+            stats.add(getValueStat(totalProjectileAmount, "total projectiles per shot"));
+        else
+            stats.add(getValueStat(totalProjectileAmount, "total projectile per shot"));
+        stats.add(getValueStat(totalProjectileSpeed, "total projectile speed"));
+        stats.add(getValueStat(totalProjectileRange, "total projectile range"));
+        stats.add(STAT_SEPERATOR);
+        if (skeletonProjectileAmount > 1) 
+            stats.add(getValueStat(skeletonProjectileAmount, "stock projectiles per shot"));
+        else
+            stats.add(getValueStat(skeletonProjectileAmount, "stock projectile per shot"));
+        stats.add(getValueStat(skeletonProjectileSpeed, "stock projectile speed"));
+        stats.add(getValueStat(skeletonProjectileRange, "stock projectile range"));
+        stats.add(STAT_SEPERATOR);
+        
+        return stats;
+    }
+    
+    @Override
+    public boolean hasStats()
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     static
-    private int getProjectileSpeed(final GunModifier[] gunMods,
-                                      int skeletonProjectileSpeed)
+    private int getTotalProjectileSpeed(final GunModifier[] gunMods,
+                                   final int skeletonProjectileSpeed)
     {
         double projectileSpeedMultiplier = 1.0;
         for (ProjectileAttributes mod : getProjectileModifiers(gunMods))
@@ -49,7 +87,7 @@ public class ProjectileSet extends GunModifierSet<ProjectileAttributes>
     }
     
     static
-    private int getProjectileRange(final GunModifier[] gunMods,
+    private int getTotalProjectileRange(final GunModifier[] gunMods,
                                    int projectileRangeValue)
     {
         double projectileRangeMultiplier = 1.0;
@@ -62,14 +100,14 @@ public class ProjectileSet extends GunModifierSet<ProjectileAttributes>
     }
     
     static
-    private int getProjectileAmount(final GunModifier[] gunMods,
-                                    int skeletonProjectileAmount)
+    private int getTotalProjectileAmount(final GunModifier[] gunMods,
+                                         int skeletonProjectileAmount)
     {
         for (ProjectileAttributes mod : getProjectileModifiers(gunMods))
         {
             skeletonProjectileAmount += mod.getProjectileAmount();
         }
-        return Math.max(1, skeletonProjectileAmount);
+        return Math.max(0, skeletonProjectileAmount);
     }
     
     static
@@ -83,4 +121,5 @@ public class ProjectileSet extends GunModifierSet<ProjectileAttributes>
         }
         return mods;
     }
+
 }

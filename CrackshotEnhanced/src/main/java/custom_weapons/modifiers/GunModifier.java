@@ -31,9 +31,9 @@ import custom_weapons.modifiers.skeleton.DurabilityAttributes;
 import custom_weapons.modifiers.skeleton.FireModeAttributes;
 import custom_weapons.modifiers.skeleton.MagazineAttributes;
 import custom_weapons.modifiers.skeleton.ProjectileAttributes;
-import custom_weapons.modifiers.skeleton.RunningAttributes;
 import custom_weapons.modifiers.skeleton.SilencerAttributes;
 import custom_weapons.modifiers.skeleton.ZoomAttributes;
+import custom_weapons.modifiers.skeleton.MotionAttributes;
 
 /**
  *
@@ -258,7 +258,7 @@ public abstract class GunModifier extends CSVValue
         if (this instanceof FireDamageAttributes)   stats.addAll(getIncendiaryModifierStats((FireDamageAttributes)this));
         if (this instanceof MagazineAttributes)     stats.addAll(getMagazineModifierStats((MagazineAttributes)this));
         if (this instanceof ProjectileAttributes)   stats.addAll(getProjectileModifierStats((ProjectileAttributes)this));
-        if (this instanceof RunningAttributes)      stats.addAll(getRunningModifierStats((RunningAttributes)this));
+        if (this instanceof MotionAttributes)      stats.addAll(getRunningModifierStats((MotionAttributes)this));
         if (this instanceof ShrapnelDamageAttributes)     stats.addAll(getShrapnelModifierStats((ShrapnelDamageAttributes)this));
         if (this instanceof StunAttributes)         stats.addAll(getStunModifierStats((StunAttributes)this));
         if (this instanceof SilencerAttributes)     stats.addAll(getSilencerModifierStats((SilencerAttributes)this));
@@ -445,7 +445,7 @@ public abstract class GunModifier extends CSVValue
     }
     
     static
-    private ArrayList<String> getRunningModifierStats(final RunningAttributes runMod)
+    private ArrayList<String> getRunningModifierStats(final MotionAttributes runMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
         final String runningBS = getMultiplierStat(runMod.getRunningBulletSpreadMultiplier(), "bullet spread while running");
