@@ -37,6 +37,7 @@ import custom_weapons.modifiers.skeleton.BoltSet;
 import custom_weapons.modifiers.skeleton.DurabilitySet;
 import custom_weapons.modifiers.skeleton.MotionSet;
 import custom_weapons.modifiers.skeleton.ProjectileSet;
+import custom_weapons.modifiers.skeleton.ScopeSet;
 import java.util.ArrayList;
 
 
@@ -125,6 +126,7 @@ public class Guns
         private final StunSet stun;
         private final DurabilitySet durability;
         private final MotionSet motion;
+        private final ScopeSet scopeSet;
         
 
         public CrackshotGun(final GunSkeleton skeleton,
@@ -192,7 +194,7 @@ public class Guns
                     super.getSkeletonStandingBulletSpreadMultiplier(),
                     super.getSkeletonRunningBulletSpreadMultiplier(),
                     super.getSkeletonSprintingBulletSpreadMultiplier());
-            
+            this.scopeSet = new ScopeSet(modifiers);
         }
         
         public CrackshotGun(final CrackshotGun gun)
@@ -263,7 +265,8 @@ public class Guns
                 projectile,
                 stun,
                 motion,
-                durability
+                durability,
+                scopeSet
             };
         }
         

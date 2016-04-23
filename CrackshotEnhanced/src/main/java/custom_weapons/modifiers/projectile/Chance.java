@@ -6,7 +6,6 @@
 package custom_weapons.modifiers.projectile;
 
 import custom_weapons.modifiers.GunModifierSet;
-import java.util.ArrayList;
 import java.util.Random;
 import custom_weapons.modifiers.Modifier;
 

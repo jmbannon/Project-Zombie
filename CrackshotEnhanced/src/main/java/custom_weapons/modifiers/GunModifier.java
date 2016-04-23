@@ -32,8 +32,8 @@ import custom_weapons.modifiers.skeleton.FireModeAttributes;
 import custom_weapons.modifiers.skeleton.MagazineAttributes;
 import custom_weapons.modifiers.skeleton.ProjectileAttributes;
 import custom_weapons.modifiers.skeleton.SilencerAttributes;
-import custom_weapons.modifiers.skeleton.ZoomAttributes;
 import custom_weapons.modifiers.skeleton.MotionAttributes;
+import custom_weapons.modifiers.skeleton.ScopeAttributes;
 
 /**
  *
@@ -262,7 +262,7 @@ public abstract class GunModifier extends CSVValue
         if (this instanceof ShrapnelDamageAttributes)     stats.addAll(getShrapnelModifierStats((ShrapnelDamageAttributes)this));
         if (this instanceof StunAttributes)         stats.addAll(getStunModifierStats((StunAttributes)this));
         if (this instanceof SilencerAttributes)     stats.addAll(getSilencerModifierStats((SilencerAttributes)this));
-        if (this instanceof ZoomAttributes)         stats.addAll(getZoomModifierStats((ZoomAttributes)this));
+        if (this instanceof ScopeAttributes)         stats.addAll(getZoomModifierStats((ScopeAttributes)this));
 
         if (!stats.isEmpty())
         {
@@ -494,7 +494,7 @@ public abstract class GunModifier extends CSVValue
     }
     
     static
-    private ArrayList<String> getZoomModifierStats(final ZoomAttributes zoomMod)
+    private ArrayList<String> getZoomModifierStats(final ScopeAttributes zoomMod)
     {
         final ArrayList<String> stats = new ArrayList<>();
         final String zoomVal = getValueStat(zoomMod.getZoomAmount(), "zoom amount");

@@ -23,8 +23,12 @@ package custom_weapons.modifiers.aoe;
  */
 public interface PoisonAOEModifier extends AOEModifier
 {
-    public double getPoisonAOERadius();
-    public double getPoisonAOEDuration();
+    public abstract double getPoisonAOERadiusValue();
+    public abstract double getPoisonAOERadiusMultiplier();
+    
+    public abstract double getPoisonAOEDurationValue();
+    public abstract double getPoisonAOEDurationMultiplier();
+    
     public double getPoisonAOEDamagePerSecond();
     public double getPoisonAOEDamagePerSecondMultiplier();
 }

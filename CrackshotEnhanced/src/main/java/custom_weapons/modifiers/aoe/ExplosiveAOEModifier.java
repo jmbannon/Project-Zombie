@@ -23,7 +23,12 @@ package custom_weapons.modifiers.aoe;
  */
 public interface ExplosiveAOEModifier extends AOEModifier
 {
-    public double getExplosiveAOERadius();
+    public abstract double getExplosiveAOERadiusValue();
+    public abstract double getExplosiveAOERadiusMultiplier();
+    
+    public abstract double getExplosiveAOEDurationValue();
+    public abstract double getExplosiveAOEDurationMultiplier();
+    
     public double getExplosiveAOEDamageValue();
     public double getExplosiveAOEDamageMultiplier();
 }

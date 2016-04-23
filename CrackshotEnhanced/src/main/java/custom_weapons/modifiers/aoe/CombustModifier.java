@@ -23,7 +23,7 @@ package custom_weapons.modifiers.aoe;
  */
 public interface CombustModifier extends AOEModifier
 {
-    public double getCombustAOERadius();
-    public double getCombustAOEDamageValue();
-    public double getCombustAOEDamageMultiplier();
+    public double getCombustChance();
+    public double getCombustDamageValue();
+    public double getCombustDamageMultiplierFromFlame();
 }

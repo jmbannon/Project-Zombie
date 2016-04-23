@@ -23,8 +23,12 @@ package custom_weapons.modifiers.aoe;
  */
 public interface FlameAOE extends AOEModifier
 {
-    public double getFlameAOERadius();
-    public double getFlameAOEDuration();
+    public double getFlameAOERadiusValue();
+    public double getFlameAOERadiusMultiplier();
+    
+    public double getFlameAOEDurationValue();
+    public double getFlameAOEDurationMultiplier();
+    
     public double getFlameAOEDamagePerSecond();
     public double getFlameAOEDamagePerSecondMultiplier();
 }

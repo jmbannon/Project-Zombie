@@ -23,7 +23,13 @@ package custom_weapons.modifiers.aoe;
  */
 public interface ElectricityModifier extends AOEModifier
 {
+    public abstract double getElectricityAOERadiusValue();
+    public abstract double getElectricityAOERadiusMultiplier();
+    
+    public abstract double getElectricityAOEDurationValue();
+    public abstract double getElectricityAOEDurationMultiplier();
+    
     public double getElectricityDamageValue();
     public double getElectricityDamageMultiplier();
-    public double getConcurrentElectricityCount();
+    public int getConcurrentElectricityCount();
 }

@@ -21,7 +21,7 @@ package custom_weapons.modifiers.skeleton;
  *
  * @author jesse
  */
-public interface ZoomAttributes extends SkeletonAttributes
+public interface ScopeAttributes extends SkeletonAttributes
 {
 
     public int getZoomAmount();

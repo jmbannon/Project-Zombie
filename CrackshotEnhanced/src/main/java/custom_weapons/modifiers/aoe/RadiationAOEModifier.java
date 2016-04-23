@@ -23,8 +23,12 @@ package custom_weapons.modifiers.aoe;
  */
 public interface RadiationAOEModifier extends AOEModifier
 {
-    public double getRadiationAOERadius();
-    public double getRadiationAOEDuration();
+    public abstract double getRadiationAOERadiusValue();
+    public abstract double getRadiationAOERadiusMultiplier();
+    
+    public abstract double getRadiationAOEDurationValue();
+    public abstract double getRadiationAOEDurationMultiplier();
+    
     public double getRadiationAOEDamagePerSecond();
     public double getRadiationAOEDamagePerSecondMultiplier();
 }

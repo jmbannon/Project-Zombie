@@ -9,7 +9,7 @@ import custom_weapons.csv.CSVReader;
 import custom_weapons.modifiers.Sights.Scope;
 import custom_weapons.csv.CSVInput;
 import custom_weapons.modifiers.projectile.BulletSpreadAttributes;
-import custom_weapons.modifiers.skeleton.ZoomAttributes;
+import custom_weapons.modifiers.skeleton.ScopeAttributes;
 
 /**
  *
@@ -91,7 +91,7 @@ public class Sights extends CSVInput<Scope>
     }
     
     static public class Scope extends GunModifier implements BulletSpreadAttributes,
-                                                             ZoomAttributes
+                                                             ScopeAttributes
     {
         private final int zoomAmount;
         private final double bulletSpreadModifier;

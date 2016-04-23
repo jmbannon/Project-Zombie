@@ -23,11 +23,7 @@ import custom_weapons.modifiers.Modifier;
  *
  * @author jesse
  */
-public interface AOEModifier extends Modifier
+public abstract interface AOEModifier extends Modifier
 {
-    public double getAOERadiusValue();
-    public double getAOERadiusMultiplier();
-    
-    public double getAOEDurationValue();
-    public double getAOEDurationMultiplier();
+
 }

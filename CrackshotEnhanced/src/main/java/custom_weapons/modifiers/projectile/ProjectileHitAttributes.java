@@ -11,7 +11,7 @@ import custom_weapons.modifiers.Modifier;
  *
  * @author jb
  */
-public interface ProjectileHitAttributes extends Modifier
+public abstract interface ProjectileHitAttributes extends Modifier
 {
     
 }
