@@ -11,7 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import com.shampaggon.crackshot.events.WeaponHitBlockEvent;
 import net.projectzombie.block_buffer.buffer.Buffer;
-import static custom_weapons.utilities.Constants.CRACKSHOT;
+import static cs.guns.utilities.Constants.CRACKSHOT;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;

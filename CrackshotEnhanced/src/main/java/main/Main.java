@@ -1,23 +1,22 @@
 package main;
 
-import custom_weapons.crafting.Recipes;
-import custom_weapons.csv.CSVReader;
-import custom_weapons.modifiers.Attachments;
-import custom_weapons.modifiers.ProjectileAttachments;
-import custom_weapons.modifiers.Barrels;
-import custom_weapons.modifiers.Bolts;
-import custom_weapons.modifiers.FireModes;
-import custom_weapons.modifiers.Magazines;
-import custom_weapons.modifiers.ModifierSets;
-import custom_weapons.modifiers.Sights;
-import custom_weapons.modifiers.Stocks;
-import custom_weapons.skeleton.FirearmActions;
-import custom_weapons.skeleton.SkeletonTypes;
-import custom_weapons.skeleton.GunSkeletons;
-import custom_weapons.weps.Guns;
+import cs.guns.crafting.Recipes;
+import csv.CSVReader;
+import cs.guns.components.Attachments;
+import cs.guns.components.Barrels;
+import cs.guns.components.Bolts;
+import cs.guns.components.FireModes;
+import cs.guns.components.Magazines;
+import cs.guns.components.ModifierSets;
+import cs.guns.components.Sights;
+import cs.guns.components.Stocks;
+import cs.guns.skeleton.FirearmActions;
+import cs.guns.skeleton.SkeletonTypes;
+import cs.guns.skeleton.GunSkeletons;
+import cs.guns.weps.Guns;
 import windows.BlockBreakListener;
-import listeners.ShootListener;
-import listeners.ScopeZoomListener;
+import cs.guns.listeners.ShootListener;
+import cs.guns.listeners.ScopeZoomListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {

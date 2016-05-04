@@ -1,7 +1,7 @@
 package main;
 
 import windows.BlockBreakListener;
-import custom_weapons.yaml_generator.YAMLGenerator;
+import cs.guns.yaml_gen.YAMLGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

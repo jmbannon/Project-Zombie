@@ -8,20 +8,21 @@ package main;
 //import net.projectzombie.crackshot_enhanced.custom_weapons.GunSmithController;
 //import net.projectzombie.crackshot_enhanced.custom_weapons.types.Mod.ModType;
 import java.util.ArrayList;
-import custom_weapons.modifiers.Attachments;
-import custom_weapons.modifiers.ProjectileAttachments;
-import custom_weapons.modifiers.Barrels;
-import custom_weapons.modifiers.Bolts;
-import custom_weapons.modifiers.FireModes;
-import custom_weapons.modifiers.GunModifier;
-import custom_weapons.modifiers.GunModifier.GunModifierType;
-import static custom_weapons.modifiers.GunModifier.GunModifierType.*;
-import custom_weapons.modifiers.Magazines;
-import custom_weapons.modifiers.Sights;
-import custom_weapons.modifiers.Stocks;
-import custom_weapons.modifiers.ModifierLoreBuilder;
-import custom_weapons.weps.Guns.CrackshotGun;
-import listeners.ShootListener;
+import cs.guns.components.Attachments;
+import cs.guns.components.ProjectileAttachments;
+import cs.guns.components.Barrels;
+import cs.guns.components.Bolts;
+import cs.guns.components.FireModes;
+import cs.guns.components.GunModifier;
+import cs.guns.components.GunModifierType;
+import static cs.guns.components.GunModifierType.*;
+import cs.guns.components.Magazines;
+import cs.guns.components.Sights;
+import cs.guns.components.Stocks;
+import cs.guns.components.ModifierLoreBuilder;
+import cs.guns.weps.Guns.CrackshotGun;
+import cs.guns.listeners.ShootListener;
+import cs.guns.physical.components.GunModifierItemStack;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -145,38 +146,7 @@ public class GunSmithCommandExec implements CommandExecutor
     private ItemStack getModItem(final GunModifierType type,
                                  final int index)
     {
-        ItemStack toRet = null;
-        GunModifier mod;
-        switch(type)
-        {
-            case SLOT_ONE_ATTACHMENT:
-                mod = Attachments.getInstance().get(index); break;
-            case SLOT_TWO_ATTATCHMENT:
-                mod = Attachments.getInstance().get(index); break;
-            case SLOT_THREE_ATTATCHMENT:
-                mod = Attachments.getInstance().get(index); break;
-            case BARREL:
-                mod = Barrels.getInstance().get(index); break;
-            case BOLT:
-                mod = Bolts.getInstance().get(index); break;
-            case FIREMODE:
-                mod = FireModes.getInstance().get(index); break;
-            case MAGAZINE:
-                mod = Magazines.getInstance().get(index); break;
-            case SIGHT:
-                mod = Sights.getInstance().get(index); break;
-            case STOCK:
-                mod = Stocks.getInstance().get(index); break;
-            default:
-                mod = null;
-        }
-        
-        if (mod != null)
-        {
-            return mod.toItem(type);
-        }
-        else
-            return null;
+        return new GunModifierItemStack(type, index).toItem();
     }
     
     public void listCommands(final Player sender)
