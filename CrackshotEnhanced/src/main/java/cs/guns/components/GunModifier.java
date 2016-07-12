@@ -17,8 +17,6 @@ import org.bukkit.ChatColor;
  */
 public abstract class GunModifier extends CSVValue
 {
-    
-    
     private static final String DEFAULT_COLOR = ChatColor.GREEN.toString();
 
     private final int price;

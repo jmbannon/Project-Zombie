@@ -135,7 +135,10 @@ public class GunGenerator extends CrackshotGun
     
     public String getItemLore()
     {
-        final List<String> lore = new CrackshotGunLore(super.getGunID()).generatePreShotLore();
+        final List<String> lore = new CrackshotGunLore(super.getGunID())
+                                        .toPreShotLore()
+                                        .getLore();
+        
         final StringBuilder stb = new StringBuilder();
         
         for (int i = 0; i < lore.size() - 1; i++)

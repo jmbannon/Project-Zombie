@@ -13,7 +13,9 @@ import cs.guns.skeleton.FirearmActions.FirearmAction;
 
 /**
  *
- * @author jbannon
+ * @author Jesse Bannon
+ * Singleton CSV loader that contains all the FirearmActions specified in the
+ * CSV.
  */
 public class FirearmActions extends CSVInput<FirearmAction>
 {
@@ -50,7 +52,6 @@ public class FirearmActions extends CSVInput<FirearmAction>
         {
             return new FirearmAction[] { null };
         }
-        
         
         int j = 0;
         final FirearmAction[] toReturn   = new FirearmAction[rowCount + 1];

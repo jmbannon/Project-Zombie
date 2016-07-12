@@ -8,9 +8,9 @@ package cs.guns.qualities;
 import org.bukkit.ChatColor;
 
 /**
- * @author Jesse Bannon (jmbannon@uw.edu)
+ * @author Jesse Bannon
  * 
- * Types of tiers for weapons. Contains display information for the weapon lore.
+ * Condition tiers for CrackshotGuns. Display information in the weapon lore.
  */
 public enum Condition
 {
@@ -21,7 +21,7 @@ public enum Condition
     SCARRED (.10, 0.8, ChatColor.GRAY,       "Scarred"),
     RUSTY   (.0,  0.65, ChatColor.RED,       "Rusty"),
     BROKEN  (-1,  0.0, ChatColor.DARK_RED,   "Broken"),
-    PRESHOT (-1,  0.0, ChatColor.DARK_RED,   "ERROR");
+    PRESHOT (-2,  0.0, ChatColor.DARK_RED,   "ERROR");
     
     public static final String TITLE = "Condition: ";
     
@@ -71,21 +71,4 @@ public enum Condition
         }
         return Condition.BROKEN;
     }
-    
-//    /**
-//     * Returns the condition string based on the tier.  Returns null if tier 
-//     * does not match a condition.
-//     * 
-//     * @param tier Tier of the condition to get.
-//     * @return Returns the 
-//     */
-//    public static String getValue(final int tier)
-//    {
-//        for (Condition condition : Condition.values())
-//            if (tier == condition.multiplier)
-//                return condition.toString();
-//        
-//        return null;
-//    }
-    
 }

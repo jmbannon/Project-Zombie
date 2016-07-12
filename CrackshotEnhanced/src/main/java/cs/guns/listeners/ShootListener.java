@@ -162,7 +162,7 @@ public class ShootListener implements Listener
 
         if (csItem.isPreShot())
         {
-            csItem.generatePostShotLore();
+            csItem.toPostShotLore();
             csItem.decrementDurability();
             gunMeta.setLore(csItem.getLore());
         }

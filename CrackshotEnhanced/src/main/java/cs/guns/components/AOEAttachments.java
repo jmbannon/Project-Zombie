@@ -258,6 +258,7 @@ public class AOEAttachments extends CSVInput<AOEAttachment>
         private final double explosiveAOEDamageValue;
         private final double explosiveAOEDamageMultiplier;
 
+        
         private AOEAttachment(final int uniqueID,
                             final String displayname,
                             final String materialName,

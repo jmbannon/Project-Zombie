@@ -87,7 +87,7 @@ public abstract class HiddenLoreInfo
             info[idx] = String.valueOf(infoInt);
     }
     
-    public String getHiddenLore()
+    public String getHiddenInfo()
     {
         final StringBuilder stb = new StringBuilder();
         for (String inf : info)

@@ -9,7 +9,11 @@ import org.bukkit.ChatColor;
 
 /**
  *
- * @author jbannon
+ * @author Jesse Bannon
+ * 
+ * This enumeration represents different build qualities of a CrackshotGun,
+ * each one in ascending order giving it better stats i.e. bullet spread,
+ * durability, etc.
  */
 public enum Build
 {
@@ -35,11 +39,16 @@ public enum Build
         this.value = color + value;
     }
     
+    /** @return Returns the title, "Build: ". */
     public static String getTitle()     { return TITLE;     }
     
+    /** @return Display name of the Build. */
     public String getDisplayName()      { return value;     }
+    
+    /** @return The bullet-spread scalar of the Build. */
     public double getScalar()           { return scalar;    }
     
+    /** @return The enumeration name of the build defined in the .java file. */
     @Override
     public String toString() { return super.name(); }
 }

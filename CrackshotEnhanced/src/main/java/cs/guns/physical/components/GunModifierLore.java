@@ -108,7 +108,7 @@ public class GunModifierLore extends HiddenGunModifierInfo
     
     private String buildStatLore()
     {
-        return STATS_LINE + super.getHiddenLore();
+        return STATS_LINE + super.getHiddenInfo();
     }
     
     static
