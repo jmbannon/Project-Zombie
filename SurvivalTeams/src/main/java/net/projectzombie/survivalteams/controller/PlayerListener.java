@@ -23,12 +23,14 @@ import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 /**
  *
@@ -36,6 +38,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerListener implements Listener
 {
+
+    @EventHandler
+    public void spawnToCorrectBase(PlayerRespawnEvent event)
+    {
+        Player player = event.getPlayer();
+        Location loc = PlayerBuffer.getSpawnLocation(player);
+        if (loc != null) {
+            event.setRespawnLocation(loc);
+        }
+        //TODO add error player not online msg
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void AssignTeamPlayerOnLoogin(final PlayerLoginEvent event)
     {
