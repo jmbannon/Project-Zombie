@@ -5,26 +5,44 @@
     <artifactId>SurvivalTeams</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <repositories>
+        <repository>
+            <id>net.projectzombie</id>
+            <url>https://github.com/jmbannon/Project-Zombie.git</url>
+        </repository>
+        <repository>
+            <id>sk89q-repo-wg</id>
+            <url>http://maven.sk89q.com/artifactory/repo/com/sk89q/worldguard/</url>
+        </repository>
+        <repository>
+            <id>sk89q-repo-we</id>
+            <url>http://maven.sk89q.com/artifactory/repo/com/sk89q/worldedit/</url>
+        </repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
-            <groupId>Spitgot1.8.8</groupId>
-            <artifactId>Spigot1.8.8</artifactId>
-            <version>1.0</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>Worldguard1.8.8</groupId>
-            <artifactId>Worldguard1.8.8</artifactId>
-            <version>1.0</version>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldguard</artifactId>
+            <version>6.1</version>
         </dependency>
         <dependency>
-            <groupId>WorldEdit1.8.8</groupId>
-            <artifactId>Worldedit1.8.8</artifactId>
-            <version>1.0</version>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>chatapi</groupId>
-            <artifactId>chatapi</artifactId>
-            <version>1.0</version>
+            <groupId>net.projectzombie</groupId>
+            <artifactId>ConsistentChatAPI</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
