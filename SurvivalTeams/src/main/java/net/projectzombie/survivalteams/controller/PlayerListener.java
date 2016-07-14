@@ -16,7 +16,8 @@
 */
 package net.projectzombie.survivalteams.controller;
 
-import java.util.UUID;
+import java.util.*;
+
 import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
@@ -25,12 +26,17 @@ import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  *
@@ -38,6 +44,58 @@ import org.bukkit.event.player.PlayerRespawnEvent;
  */
 public class PlayerListener implements Listener
 {
+
+    @EventHandler
+    public void correctPVPHit(EntityDamageByEntityEvent event) {
+        //TODO Once updated to 1.10, area effect clouds will need to be taken into account.
+        if (event.getEntity() instanceof Player) {
+
+            // Handles all pvp with direct harm.
+            TeamPlayer p2 = PlayerBuffer.get(((Player) event.getEntity()).getUniqueId());
+            if (event.getDamager() instanceof Player) {
+                TeamPlayer p1 = PlayerBuffer.get(((Player) event.getDamager()).getUniqueId());
+
+                // Check if event should be cancelled, must be in if,
+                // or will always cancel or always enable.
+                // Allows other plugins to change event state.
+                if (p1 != null && p1.getTeam() == p2.getTeam()) {
+                    event.setCancelled(true);
+                }
+            } else if (event.getDamager() instanceof Projectile ||
+                        event.getDamager() instanceof ThrownPotion) { // Handles non-direct pvp.
+                TeamPlayer p1 = PlayerBuffer.get(((Player) ((Projectile) event.getDamager())
+                                .getShooter()).getUniqueId());
+
+                // More potion effects will have to be added in 1.10
+                Set<PotionEffectType> bannedPotionEffects = new HashSet<>();
+                bannedPotionEffects.add(PotionEffectType.BLINDNESS);
+                bannedPotionEffects.add(PotionEffectType.CONFUSION);
+                bannedPotionEffects.add(PotionEffectType.HARM);
+                bannedPotionEffects.add(PotionEffectType.HUNGER);
+                bannedPotionEffects.add(PotionEffectType.POISON);
+                bannedPotionEffects.add(PotionEffectType.SLOW);
+                bannedPotionEffects.add(PotionEffectType.SLOW_DIGGING);
+                bannedPotionEffects.add(PotionEffectType.WEAKNESS);
+                bannedPotionEffects.add(PotionEffectType.WITHER);
+                if (event.getDamager() instanceof ThrownPotion) {
+                    Collection<PotionEffect> effects = ((ThrownPotion) event.getDamager()).getEffects();
+                    for (PotionEffect effect : effects) {
+                        if (bannedPotionEffects.contains(effect.getType()) &&
+                                 p1 != null && p1.getTeam() == p2.getTeam()) {
+                            p2.getPlayer().sendMessage("Potion cancel");
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+
+                if (p1 != null && p1.getTeam() == p2.getTeam()) {
+                    p2.getPlayer().sendMessage("Should be cancelled");
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void spawnToCorrectBase(PlayerRespawnEvent event)
