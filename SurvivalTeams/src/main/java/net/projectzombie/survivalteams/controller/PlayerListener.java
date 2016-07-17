@@ -47,28 +47,34 @@ public class PlayerListener implements Listener
     private static Set<PotionEffectType> bannedPVPPotionEffects;
 
     @EventHandler
-    public void correctPVPHit(EntityDamageByEntityEvent event) {
+    public void correctPVPHit(EntityDamageByEntityEvent event)
+    {
         //TODO Once updated to 1.10, area effect clouds will need to be taken into account.
-        if (event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player)
+        {
 
             // Handles all pvp with direct harm.
             TeamPlayer p2 = PlayerBuffer.get(((Player) event.getEntity()).getUniqueId());
-            if (event.getDamager() instanceof Player) {
+            if (event.getDamager() instanceof Player)
+            {
                 TeamPlayer p1 = PlayerBuffer.get(((Player) event.getDamager()).getUniqueId());
 
                 // Check if event should be cancelled, must be in if,
                 // or will always cancel or always enable.
                 // Allows other plugins to change event state.
-                if (p1 != null && p1.getTeam() == p2.getTeam()) {
+                if (p1 != null && p1.getTeam() == p2.getTeam())
+                {
                     event.setCancelled(true);
                 }
-            } else if (event.getDamager() instanceof Projectile ||
+            }
+            else if (event.getDamager() instanceof Projectile ||
                         event.getDamager() instanceof ThrownPotion) { // Handles non-direct pvp.
                 TeamPlayer p1 = PlayerBuffer.get(((Player) ((Projectile) event.getDamager())
                                 .getShooter()).getUniqueId());
 
                 // More potion effects will have to be added in 1.10
-                if (bannedPVPPotionEffects == null) {
+                if (bannedPVPPotionEffects == null)
+                {
                     bannedPVPPotionEffects = new HashSet<>();
                     bannedPVPPotionEffects.add(PotionEffectType.BLINDNESS);
                     bannedPVPPotionEffects.add(PotionEffectType.CONFUSION);
@@ -80,20 +86,22 @@ public class PlayerListener implements Listener
                     bannedPVPPotionEffects.add(PotionEffectType.WEAKNESS);
                     bannedPVPPotionEffects.add(PotionEffectType.WITHER);
                 }
-                if (event.getDamager() instanceof ThrownPotion) {
+                if (event.getDamager() instanceof ThrownPotion)
+                {
                     Collection<PotionEffect> effects = ((ThrownPotion) event.getDamager()).getEffects();
-                    for (PotionEffect effect : effects) {
+                    for (PotionEffect effect : effects)
+                    {
                         if (bannedPVPPotionEffects.contains(effect.getType()) &&
-                                 p1 != null && p1.getTeam() == p2.getTeam()) {
-                            p2.getPlayer().sendMessage("Potion cancel");
+                                 p1 != null && p1.getTeam() == p2.getTeam())
+                        {
                             event.setCancelled(true);
                             return;
                         }
                     }
                 }
 
-                if (p1 != null && p1.getTeam() == p2.getTeam()) {
-                    p2.getPlayer().sendMessage("Should be cancelled");
+                if (p1 != null && p1.getTeam() == p2.getTeam())
+                {
                     event.setCancelled(true);
                 }
             }
@@ -105,7 +113,8 @@ public class PlayerListener implements Listener
     {
         Player player = event.getPlayer();
         Location loc = PlayerBuffer.getSpawnLocation(player);
-        if (loc != null) {
+        if (loc != null)
+        {
             event.setRespawnLocation(loc);
         }
         //TODO add error player not online msg
