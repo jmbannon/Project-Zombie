@@ -20,6 +20,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import java.util.UUID;
+
 /**
  *
  * @author jb
@@ -42,6 +44,6 @@ public class WorldCoordinate
     static public Location toLocation(final String worldCoordinate)
     {
         final String split[] = worldCoordinate.split(",");
-        return split.length == 4 ? new Location(Bukkit.getWorld(split[0]), Double.valueOf(split[1]), Double.valueOf(split[2]),  Double.valueOf(split[3])) : null;
+        return split.length == 4 ? new Location(Bukkit.getWorld(UUID.fromString(split[0])), Double.valueOf(split[1]), Double.valueOf(split[2]),  Double.valueOf(split[3])) : null;
     }
 }

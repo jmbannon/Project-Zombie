@@ -44,6 +44,7 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class PlayerListener implements Listener
 {
+    private static Set<PotionEffectType> bannedPVPPotionEffects;
 
     @EventHandler
     public void correctPVPHit(EntityDamageByEntityEvent event) {
@@ -67,20 +68,22 @@ public class PlayerListener implements Listener
                                 .getShooter()).getUniqueId());
 
                 // More potion effects will have to be added in 1.10
-                Set<PotionEffectType> bannedPotionEffects = new HashSet<>();
-                bannedPotionEffects.add(PotionEffectType.BLINDNESS);
-                bannedPotionEffects.add(PotionEffectType.CONFUSION);
-                bannedPotionEffects.add(PotionEffectType.HARM);
-                bannedPotionEffects.add(PotionEffectType.HUNGER);
-                bannedPotionEffects.add(PotionEffectType.POISON);
-                bannedPotionEffects.add(PotionEffectType.SLOW);
-                bannedPotionEffects.add(PotionEffectType.SLOW_DIGGING);
-                bannedPotionEffects.add(PotionEffectType.WEAKNESS);
-                bannedPotionEffects.add(PotionEffectType.WITHER);
+                if (bannedPVPPotionEffects == null) {
+                    bannedPVPPotionEffects = new HashSet<>();
+                    bannedPVPPotionEffects.add(PotionEffectType.BLINDNESS);
+                    bannedPVPPotionEffects.add(PotionEffectType.CONFUSION);
+                    bannedPVPPotionEffects.add(PotionEffectType.HARM);
+                    bannedPVPPotionEffects.add(PotionEffectType.HUNGER);
+                    bannedPVPPotionEffects.add(PotionEffectType.POISON);
+                    bannedPVPPotionEffects.add(PotionEffectType.SLOW);
+                    bannedPVPPotionEffects.add(PotionEffectType.SLOW_DIGGING);
+                    bannedPVPPotionEffects.add(PotionEffectType.WEAKNESS);
+                    bannedPVPPotionEffects.add(PotionEffectType.WITHER);
+                }
                 if (event.getDamager() instanceof ThrownPotion) {
                     Collection<PotionEffect> effects = ((ThrownPotion) event.getDamager()).getEffects();
                     for (PotionEffect effect : effects) {
-                        if (bannedPotionEffects.contains(effect.getType()) &&
+                        if (bannedPVPPotionEffects.contains(effect.getType()) &&
                                  p1 != null && p1.getTeam() == p2.getTeam()) {
                             p2.getPlayer().sendMessage("Potion cancel");
                             event.setCancelled(true);
