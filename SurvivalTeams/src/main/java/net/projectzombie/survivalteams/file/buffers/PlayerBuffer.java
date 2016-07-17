@@ -35,7 +35,7 @@ public class PlayerBuffer
     public static TeamPlayer get(final UUID uuid)
     {
         final TeamPlayer tp = ONLINE_PLAYERS.get(uuid);
-        return tp.isOnline() ? tp : null;
+        return tp != null && tp.isOnline() ? tp : null;
     }
     
     public static boolean contains(final UUID uuid)
