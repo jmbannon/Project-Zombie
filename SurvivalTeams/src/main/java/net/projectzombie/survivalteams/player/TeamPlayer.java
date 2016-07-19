@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import net.projectzombie.survivalteams.file.FileWrite;
+import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.file.FileRead;
 import static net.projectzombie.survivalteams.player.TPText.*;
@@ -141,6 +142,7 @@ public class TeamPlayer
             if (FileWrite.removeTeam(team))
             {
                 removeSpawnFlag(team.getSpawn());
+                SBlockBuffer.removeTeamBlocks(team.getName());
                 for (TeamPlayer teamMembers : team.getPlayers())
                     teamMembers.disbandedFromTeam();
             }

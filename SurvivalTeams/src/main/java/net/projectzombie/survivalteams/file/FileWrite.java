@@ -5,9 +5,9 @@
  */
 package net.projectzombie.survivalteams.file;
 
+import net.projectzombie.survivalteams.block.SurvivalBlock;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import static net.projectzombie.survivalteams.file.FileContents.*;
-import static net.projectzombie.survivalteams.file.FilePath.*;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
@@ -29,6 +29,64 @@ public class FileWrite
     ////////////////////////////////////////////////////////////////////////////
     // Write functions
     //
+    public static boolean writeBreakNaturally(boolean natural)
+    {
+        TEAM_YAML.set(FilePath.breakNaturally(), natural);
+        return saveConfig();
+    }
+
+    public static boolean writeAttackDelay(int delay)
+    {
+        TEAM_YAML.set(FilePath.attackDelay(), delay);
+        return saveConfig();
+    }
+
+    public static boolean writeSBlockHealth(final String teamName, final Location loc, final int health)
+    {
+        TEAM_YAML.set(FilePath.teamBlockHealth(teamName, loc), health);
+        return saveConfig();
+    }
+
+    public static boolean writeDefaultSBuildRadius(final int buildRadius)
+    {
+        TEAM_YAML.set(FilePath.buildRadius(), buildRadius);
+        return saveConfig();
+    }
+
+    public static boolean writeDefaultSBlockHealth(final String material, final int health)
+    {
+        TEAM_YAML.set(FilePath.defaultBlockHealth(material), health);
+        return saveConfig();
+    }
+
+    /**
+     * Used for destroying block for disc.
+     * @param material
+     * @param ob
+     * @return
+     */
+    public static boolean writeDefaultSBlock(final String material, final Object ob)
+    {
+        TEAM_YAML.set(FilePath.defaultBlock(material), ob);
+        return saveConfig();
+    }
+
+    /**
+     * Used for destroying block from disc.
+     * @param ID
+     * @param ob
+     * @return
+     */
+    public static boolean writeSBlock(String ID, Object ob)
+    {
+        TEAM_YAML.set(FilePath.teamBlock(ID), ob);
+        return saveConfig();
+    }
+
+    public static boolean writeSBlockHealth(final SurvivalBlock sB) {
+        return writeSBlockHealth(sB.getTeamName(), sB.getLocation(), sB.getHealth());
+    }
+
     public static boolean writeTeam(final TeamPlayer creator, final Team team)
     {
         final String teamName = team.getName();

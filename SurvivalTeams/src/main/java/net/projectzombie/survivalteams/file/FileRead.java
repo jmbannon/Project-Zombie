@@ -6,6 +6,7 @@
 package net.projectzombie.survivalteams.file;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
 import static net.projectzombie.survivalteams.file.FileContents.*;
 import static net.projectzombie.survivalteams.file.FilePath.*;
@@ -19,6 +20,51 @@ import org.bukkit.Location;
  */
 public class FileRead
 {
+
+    public static final int ATTACK_DEFAULT = 10;
+
+    static public boolean getBreakNaturally()
+    {
+        return TEAM_YAML.contains(FilePath.breakNaturally()) ?
+                TEAM_YAML.getBoolean(FilePath.breakNaturally()) : false;
+    }
+
+    static public int getAttackDelay()
+    {
+        return TEAM_YAML.contains(FilePath.attackDelay()) ?
+                TEAM_YAML.getInt(FilePath.attackDelay()) : ATTACK_DEFAULT;
+    }
+
+    static public int getBuildRadius() {
+        return TEAM_YAML.contains(FilePath.buildRadius()) ?
+                TEAM_YAML.getInt(FilePath.buildRadius()) : -1;
+    }
+
+    static public Set<String> getDefaultSBlocks() {
+        return TEAM_YAML.contains(FilePath.defaultBlocks()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.defaultBlocks()).getKeys(false) : null;
+    }
+
+    static public int getDefaultSBlockHealth(String material) {
+        return TEAM_YAML.contains(FilePath.defaultBlockHealth(material)) ?
+                TEAM_YAML.getInt(FilePath.defaultBlockHealth(material)) : -1;
+    }
+
+    static public Set<String> getTeamSBlocks() {
+        return TEAM_YAML.contains(FilePath.rootTeamBlocks()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.rootTeamBlocks()).getKeys(false) : null;
+    }
+
+    static public int getTeamSBlockHealth(String teamName, Location loc) {
+        return TEAM_YAML.contains(FilePath.teamBlockHealth(teamName, loc)) ?
+                TEAM_YAML.getInt(FilePath.teamBlockHealth(teamName, loc)) : -1;
+    }
+
+    static public int getTeamSBlockHealth(String iD) {
+        return TEAM_YAML.contains(FilePath.teamBlockHealth(iD)) ?
+                TEAM_YAML.getInt(FilePath.teamBlockHealth(iD)) : -1;
+    }
+
     static public TeamRank getMemberRank(final String teamName,
                                          final UUID uuid)
     {

@@ -18,25 +18,34 @@ package net.projectzombie.survivalteams.controller;
 
 import java.util.*;
 
+import net.projectzombie.survivalteams.block.SurvivalBlock;
 import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
+import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  *
@@ -45,6 +54,65 @@ import org.bukkit.potion.PotionEffectType;
 public class PlayerListener implements Listener
 {
     private static Set<PotionEffectType> bannedPVPPotionEffects;
+    private static JavaPlugin plugin;
+
+    public static void setPlugin(JavaPlugin pluginN)
+    {
+        plugin = pluginN;
+    }
+
+    @EventHandler
+    public void trackSBlocks(BlockPlaceEvent event)
+    {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        if ((SBlockBuffer.getPlaceableBlocks()).contains(block.getType()))
+        {
+            TeamPlayer tP = PlayerBuffer.get(event.getPlayer().getUniqueId());
+            if (tP != null)
+            {
+                Team team = tP.getTeam();
+                if (team != null)
+                {
+                    Location spawn = team.getSpawn();
+                    if (spawn != null &&
+                        Math.abs(spawn.distance(block.getLocation())) <= SBlockBuffer.getBuildRadius())
+                    {
+                        event.setCancelled(false);
+                        SurvivalBlock.createSBlock(block, team.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void trackSPlayerDamage(BlockDamageEvent event)
+    {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        if ((SBlockBuffer.getPlaceableBlocks()).contains(block.getType()))
+        {
+            SurvivalBlock sB = SBlockBuffer.getSB(block.getLocation());
+            if (sB != null)
+            {
+                sB.takeDamage(player.getInventory());
+            }
+        }
+    }
+
+    @EventHandler
+    public void trackSCreatureDamage(EntityTargetEvent event)
+    {
+        if (event.getEntity() instanceof Zombie)
+        {
+            Zombie zombie = (Zombie) event.getEntity();
+            BukkitScheduler scheduler = plugin.getServer().getScheduler();
+            scheduler.scheduleSyncDelayedTask(plugin,
+                         new CreatureChase(zombie, scheduler, plugin),
+                         SBlockBuffer.getAttackDelay());
+        }
+    }
 
     @EventHandler
     public void correctPVPHit(EntityDamageByEntityEvent event)
@@ -117,7 +185,6 @@ public class PlayerListener implements Listener
         {
             event.setRespawnLocation(loc);
         }
-        //TODO add error player not online msg
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

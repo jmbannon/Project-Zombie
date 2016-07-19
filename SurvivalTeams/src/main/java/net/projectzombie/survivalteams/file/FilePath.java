@@ -19,6 +19,7 @@ package net.projectzombie.survivalteams.file;
 import java.util.UUID;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
+import org.bukkit.Location;
 
 /**
  *
@@ -27,8 +28,74 @@ import net.projectzombie.survivalteams.team.Team;
 public class FilePath
 {
     private static final String ROOT_PATH      = "teams";
+    private static final String ROOT_BLOCKS    = "blocks";
     
     private FilePath() { /* Do nothing */ }
+
+    static protected String buildRadius()
+    {
+        return ROOT_BLOCKS + ".build-R";
+    }
+
+    static protected String breakNaturally()
+    {
+        return ROOT_BLOCKS + ".break-N";
+    }
+
+    static protected String attackDelay()
+    {
+        return ROOT_BLOCKS + ".delay";
+    }
+
+    static protected String defaultBlocks()
+    {
+        return ROOT_BLOCKS + ".defaults";
+    }
+
+    static protected String defaultBlock(String material)
+    {
+        return defaultBlocks() + "." + material;
+    }
+
+    static protected String defaultBlockHealth(String material)
+    {
+        return defaultBlock(material) + ".health";
+    }
+
+    static protected String rootTeamBlocks()
+    {
+        return ROOT_BLOCKS + ".team";
+    }
+
+    static protected String teamBlock(String teamName, Location loc)
+    {
+        return teamBlock(WorldCoordinate.toStringLocID(teamName, loc.getBlock()));
+    }
+
+    static protected String teamBlock(String ID)
+    {
+        return rootTeamBlocks() + "." + ID;
+    }
+
+    static protected String teamBlockHealth(String ID)
+    {
+        return teamBlock(ID) + ".health";
+    }
+
+    static protected String teamBlock(Team team, Location loc)
+    {
+        return teamBlock(team.getName(), loc);
+    }
+
+    static protected String teamBlockHealth(String teamName, Location loc)
+    {
+        return teamBlock(teamName, loc) + ".health";
+    }
+
+    static protected String teamBlockHealth(Team team, Location loc)
+    {
+        return teamBlockHealth(team.getName(), loc);
+    }
 
     static protected String teams()
     {
