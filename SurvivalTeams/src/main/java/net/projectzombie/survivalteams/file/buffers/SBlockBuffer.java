@@ -22,10 +22,16 @@ public class SBlockBuffer
     private static int buildRadius;
     private static boolean breakNaturally;
     private static int attackDelay;
+    private static Material tool;
 
     public static boolean isBreakNaturally()
     {
         return breakNaturally;
+    }
+
+    public static Material getTool()
+    {
+        return tool;
     }
 
     public static int getAttackDelay()
@@ -52,6 +58,7 @@ public class SBlockBuffer
         buildRadius = FileRead.getBuildRadius();
         breakNaturally = FileRead.getBreakNaturally();
         attackDelay = FileRead.getAttackDelay();
+        tool = FileRead.getSBTool();
 
         Set<String> blocks = FileRead.getDefaultSBlocks();
 

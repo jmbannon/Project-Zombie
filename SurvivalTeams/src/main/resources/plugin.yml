@@ -8,4 +8,4 @@ commands:
     usage: "WIP"
   sb:
     description: Full suite of Survival Block changes.
-    usage: "/cd <add>"
+    usage: "/sb <add:br:bn:delay:tool>"

@@ -29,6 +29,12 @@ public class FileWrite
     ////////////////////////////////////////////////////////////////////////////
     // Write functions
     //
+    public static boolean writeSBTool(Material tool)
+    {
+        TEAM_YAML.set(FilePath.sBCheckTool(), tool.toString());
+        return saveConfig();
+    }
+
     public static boolean writeBreakNaturally(boolean natural)
     {
         TEAM_YAML.set(FilePath.breakNaturally(), natural);

@@ -13,6 +13,8 @@ import static net.projectzombie.survivalteams.file.FilePath.*;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -22,6 +24,12 @@ public class FileRead
 {
 
     public static final int ATTACK_DEFAULT = 10;
+
+    static public Material getSBTool()
+    {
+        return TEAM_YAML.contains(FilePath.sBCheckTool()) ?
+                Material.valueOf(TEAM_YAML.getString(FilePath.sBCheckTool())) : null;
+    }
 
     static public boolean getBreakNaturally()
     {

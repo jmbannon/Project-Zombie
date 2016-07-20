@@ -18,6 +18,7 @@ package net.projectzombie.survivalteams.controller;
 
 import java.util.*;
 
+import net.md_5.bungee.api.ChatColor;
 import net.projectzombie.survivalteams.block.SurvivalBlock;
 import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
@@ -27,6 +28,7 @@ import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -39,6 +41,7 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -59,6 +62,33 @@ public class PlayerListener implements Listener
     public static void setPlugin(JavaPlugin pluginN)
     {
         plugin = pluginN;
+    }
+
+    @EventHandler
+    public void showSBlockInfo(PlayerInteractEvent event)
+    {
+        if (event.getMaterial() == SBlockBuffer.getTool())
+        {
+            if (event.getPlayer().hasPermission(CMDText.SB_PERMS))
+            {
+                Player player = event.getPlayer();
+                Set<Material> transparentB = null;
+                Block block = player.getTargetBlock(transparentB, 4);
+
+                if ((SBlockBuffer.getPlaceableBlocks()).contains(block.getType()))
+                {
+                    SurvivalBlock sB = SBlockBuffer.getSB(block.getLocation());
+                    if (sB != null)
+                    {
+                        player.sendMessage("[" + ChatColor.BLUE + "Block"  + ChatColor.RESET + "]: ");
+                        player.sendMessage("    Health: " + sB.getHealth());
+                        player.sendMessage("    Team: " + sB.getTeamName());
+                    }
+                    else
+                        player.sendMessage("This is not a survival block.");
+                }
+            }
+        }
     }
 
     @EventHandler

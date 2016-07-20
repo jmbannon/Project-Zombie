@@ -1,6 +1,8 @@
 package net.projectzombie.survivalteams.controller;
 
 import net.projectzombie.survivalteams.file.FileWrite;
+import static net.projectzombie.survivalteams.controller.CMDText.*;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,13 +12,6 @@ import org.bukkit.command.CommandSender;
  */
 public class SurvivalBlockCommands implements CommandExecutor
 {
-    public static final String
-        ADD_USAGE = "/sb add <Type> <Health>",
-        BR_USAGE = "/sb br <radius size>",
-        BN_USAGE = "/sb bn <true:false>",
-        DELAY_USAGE = "/sb delay <time>",
-
-        SB_PERMS = "SB.all";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -34,6 +29,7 @@ public class SurvivalBlockCommands implements CommandExecutor
                     if (isInt && health != -1)
                     {
                         FileWrite.writeDefaultSBlockHealth(args[1], health);
+                        sender.sendMessage(ADD_FINALIZE);
                     }
                     else
                         sender.sendMessage(ADD_USAGE);
@@ -53,6 +49,7 @@ public class SurvivalBlockCommands implements CommandExecutor
                     if (isInt && radius != -1)
                     {
                         FileWrite.writeDefaultSBuildRadius(radius);
+                        sender.sendMessage(BR_FINALIZE + radius);
                     }
                     else
                         sender.sendMessage(BR_USAGE);
@@ -68,6 +65,7 @@ public class SurvivalBlockCommands implements CommandExecutor
                 {
                     bN = Boolean.valueOf(args[1]);
                     FileWrite.writeBreakNaturally(bN);
+                    sender.sendMessage(BN_FINALIZE + bN);
                 }
                 else
                     sender.sendMessage(BN_USAGE);
@@ -84,12 +82,25 @@ public class SurvivalBlockCommands implements CommandExecutor
                     if (isInt && delay != -1)
                     {
                         FileWrite.writeAttackDelay(delay);
+                        sender.sendMessage(DELAY_FINALIZE + delay);
                     }
                     else
                         sender.sendMessage(DELAY_USAGE);
                 }
                 else
                     sender.sendMessage(DELAY_USAGE);
+                return true;
+            }
+            else if (args[0].equals("tool"))
+            {
+                if (args.length == 2)
+                {
+                    Material material = Material.valueOf(args[1]);
+                    FileWrite.writeSBTool(material);
+                    sender.sendMessage(TOOL_FINALIZE + material);
+                }
+                else
+                    sender.sendMessage(TOOL_USAGE);
                 return true;
             }
         }

@@ -32,6 +32,11 @@ public class FilePath
     
     private FilePath() { /* Do nothing */ }
 
+    static protected String sBCheckTool()
+    {
+        return ROOT_BLOCKS + ".tool";
+    }
+
     static protected String buildRadius()
     {
         return ROOT_BLOCKS + ".build-R";

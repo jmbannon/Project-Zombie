@@ -41,7 +41,20 @@ public class CMDText
     ARG_HELP   = new String[]  { "help",    "commands" },
             
     ARG_REMOVE_SPAWNS   = new String[]  { "removeAllSpawns" };
-    
-    
+
+    public static final String
+            ADD_USAGE = "/sb add <Type> <Health>",
+            BR_USAGE = "/sb br <radius size>",
+            BN_USAGE = "/sb bn <true:false>",
+            DELAY_USAGE = "/sb delay <time>",
+            TOOL_USAGE = "/sb tool <Material>",
+
+            ADD_FINALIZE = "Default type added.",
+            BR_FINALIZE = "Build radius set to ",
+            BN_FINALIZE = "Break naturally set to ",
+            DELAY_FINALIZE = "Delay set to ",
+            TOOL_FINALIZE = "SB tool set to ",
+
+    SB_PERMS = "SB.all";
             
 }
