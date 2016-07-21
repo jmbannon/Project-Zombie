@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by maxgr on 7/20/2016.
+ * Holds all weapon types.
  */
 public class SBWeaponBuffer
 {
@@ -42,6 +42,14 @@ public class SBWeaponBuffer
         return weapons.keySet();
     }
 
+    public static void remove(Material material)
+    {
+        weapons.remove(material);
+    }
+
+    /**
+     * Reads in all types and defaults, and stores in buffer.
+     */
     public static void readInDefaults()
     {
         defaultDamage = FileRead.getDefaultDamage();

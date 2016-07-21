@@ -230,6 +230,7 @@ public class TeamPlayer
                 {
                     removeSpawnFlag(team.getSpawn());
                     team.setSpawn(location);
+                    SBlockBuffer.removeTeamBlocksFar(team.getName());
                     for (TeamPlayer member : team.getPlayers())
                         member.getPlayer().sendMessage(NEW_SPAWN);
                 }

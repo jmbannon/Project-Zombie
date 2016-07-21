@@ -36,6 +36,12 @@ public class FileWrite
         return saveConfig();
     }
 
+    public static boolean wipeSBWeapon(Material material)
+    {
+        TEAM_YAML.set(FilePath.sBWeapon(material), null);
+        return saveConfig();
+    }
+
     public static boolean writeSBDefaultDurability(int durability)
     {
         TEAM_YAML.set(FilePath.sBDefaultDurability(), durability);
@@ -87,24 +93,28 @@ public class FileWrite
     /**
      * Used for destroying block for disc.
      * @param material
-     * @param ob
      * @return
      */
-    public static boolean writeDefaultSBlock(final String material, final Object ob)
+    public static boolean wipeDefaultSBlock(final Material material)
     {
-        TEAM_YAML.set(FilePath.defaultBlock(material), ob);
+        TEAM_YAML.set(FilePath.defaultBlock(material.toString()), null);
         return saveConfig();
     }
 
     /**
      * Used for destroying block from disc.
      * @param ID
-     * @param ob
      * @return
      */
-    public static boolean writeSBlock(String ID, Object ob)
+    public static boolean wipeSBlock(String ID)
     {
-        TEAM_YAML.set(FilePath.teamBlock(ID), ob);
+        TEAM_YAML.set(FilePath.teamBlock(ID), null);
+        return saveConfig();
+    }
+
+    public static boolean wipeSBlocks()
+    {
+        TEAM_YAML.set(FilePath.rootTeamBlocks(), null);
         return saveConfig();
     }
 

@@ -2,7 +2,6 @@ package net.projectzombie.survivalteams.controller;
 
 import net.projectzombie.survivalteams.block.SurvivalBlock;
 import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,11 +13,13 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.util.Set;
 
 /**
- * Created by maxgr on 7/19/2016.
+ * Zombie block hitting scheduler, if a zombie is chasing a person, it will check if a block
+ *  is in between them and try to break it.
  */
 public class CreatureChase implements Runnable
 {
-    public static final int ZOMBIE_Hit_RANGE = 15; // Same as player
+    // Magic number, can be changed, just allows a valid loc.
+    public static final int ZOMBIE_Hit_RANGE = 15;
 
     private Zombie zombie;
     private BukkitScheduler scheduler;
@@ -38,7 +39,8 @@ public class CreatureChase implements Runnable
     }
 
     /**
-     * If a zombie
+     * Checks if a zombie is targeting a player, if so keeps a delayed hit event and tries to
+     *  damage the blocks at eye level, above head, and at the zombie's feet.
      */
     @Override
     public void run()
@@ -48,25 +50,29 @@ public class CreatureChase implements Runnable
             scheduler.scheduleSyncDelayedTask(plugin, this, SBlockBuffer.getAttackDelay());
             Set<Material> transparentB = null;
 
-            // TODO change to be the blocks infront of zombie
-            // could use its location and just see if those are blocks.
-            // or just add all.
-
+            // Lower block, at zombie's feet.
             Block main = zombie.getLocation().getBlock().getRelative(BlockFace.UP, 1);
             Block look = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE);
+            isBreakableBlock(main, main.getX() - look.getX(), main.getZ() - look.getZ());
 
+            // Block at eye level.
             Block main2 = zombie.getLocation().getBlock();
             Block look2 = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.DOWN, 1);
+            isBreakableBlock(main2, main2.getX() - look2.getX(), main2.getZ() - look2.getZ());
 
+            // Block above head.
             Block main3 = zombie.getLocation().getBlock().getRelative(BlockFace.UP, 2);
             Block look3 = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.UP, 1);
-
-            isBreakableBlock(main, main.getX() - look.getX(), main.getZ() - look.getZ());
-            isBreakableBlock(main2, main2.getX() - look2.getX(), main2.getZ() - look2.getZ());
             isBreakableBlock(main3, main3.getX() - look3.getX(), main3.getZ() - look3.getZ());
         }
     }
 
+    /**
+     * The GPS part of the block break, it finds the zombie's direction.
+     * @param main = Reference block, the one at zombie's body.
+     * @param x = Determines direction of E or W if not 0.
+     * @param z = Determines direction of N or S if not 0.
+     */
     public void isBreakableBlock(Block main, int x, int z)
     {
         BlockFace mainDirection = null;

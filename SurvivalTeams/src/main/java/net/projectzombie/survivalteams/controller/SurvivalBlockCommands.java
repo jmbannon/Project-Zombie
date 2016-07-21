@@ -3,6 +3,7 @@ package net.projectzombie.survivalteams.controller;
 import net.projectzombie.survivalteams.file.FileWrite;
 import static net.projectzombie.survivalteams.controller.CMDText.*;
 
+import net.projectzombie.survivalteams.file.WorldCoordinate;
 import net.projectzombie.survivalteams.file.buffers.SBWeaponBuffer;
 import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
 import org.bukkit.Material;
@@ -11,7 +12,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- * Created by maxgr on 7/18/2016.
+ * Conveyance commands. Although a couple have to be set up to make server work properly.
+ * Help:
+ *  add--------- allows adding of default block types.
+ *  br --------- Build radius, how far players can build from spawn flag. (default 0)
+ *  bn --------- Break naturally, if drops occur. (default false)
+ *  delay ------ How often zombies damage blocks when chasing a human. (default 10)
+ *  tool ------- Sets the tool for checking block stats. (no default)
+ *  damage ----- Default damage. (default 0)
+ *  weapon ----- Allows specification of a blocks damage from the item and the durability
+ *                  decrease of a hit.
+ *  durability - Default item durability decrease on hit. (default 0)
+ *  rdsb ------- Removes a default SB from disc.
+ *  rsb -------- Removes a SB from disc.
+ *  rw --------- Removes a S weapon.
+ *  rall ------- Removes all SBs.
+ *
  */
 public class SurvivalBlockCommands implements CommandExecutor
 {
@@ -180,7 +196,79 @@ public class SurvivalBlockCommands implements CommandExecutor
                     sender.sendMessage(DURABILITY_USAGE);
                 return true;
             }
+            else if (args[0].equals("rdsb"))
+            {
+                if (args.length == 2)
+                {
+                    Material material = Material.valueOf(args[1]);
+                    FileWrite.wipeDefaultSBlock(material);
+                    SBlockBuffer.removeDefault(material);
+                    sender.sendMessage(RDSB_FINALIZE);
+                }
+                else
+                    sender.sendMessage(RDSB_USAGE);
+                return true;
+            }
+            else if (args[0].equals("rsb"))
+            {
+                if (args.length == 2)
+                {
+                    FileWrite.wipeSBlock(args[1]);
+                    SBlockBuffer.removeSB(WorldCoordinate.toLocation(args[1]));
+                    SBlockBuffer.remove(WorldCoordinate.toLocation(args[1]));
+                    sender.sendMessage(RSB_FINALIZE);
+                }
+                else
+                    sender.sendMessage(RSB_USAGE);
+                return true;
+            }
+            else if (args[0].equals("rw"))
+            {
+                if (args.length == 2)
+                {
+                    Material material = Material.valueOf(args[1]);
+                    FileWrite.wipeSBWeapon(material);
+                    SBWeaponBuffer.remove(material);
+                    sender.sendMessage(RW_FINALIZE);
+                }
+                else
+                    sender.sendMessage(RW_USAGE);
+                return true;
+            }
+            else if (args[0].equals("rall"))
+            {
+                FileWrite.wipeSBlocks();
+                SBlockBuffer.clearBuffer();
+                sender.sendMessage(RALL_FINALIZE);
+                return true;
+            }
+            else if (args[0].equals("help"))
+            {
+                String[] helps = {"add--------- allows adding of default block types.",
+                                "br --------- Build radius, how far players can build from spawn flag. (default 0)",
+                                "bn --------- Break naturally, if drops occur. (default false)",
+                                "delay ------ How often zombies damage blocks when chasing a human. (default 10)",
+                                "tool ------- Sets the tool for checking block stats. (no default)",
+                                "damage ----- Default damage. (default 0)",
+                                "weapon ----- Allows specification of a blocks damage from the item and the ",
+                                "   durability decrease of a hit.",
+                                "durability - Default item durability decrease on hit. (default 0)",
+                                "rdsb ------- Removes a default SB from disc.",
+                                "rsb -------- Removes a SB from disc.",
+                                "rw --------- Removes a S weapon.",
+                                "rall ------- Removes all SBs."};
+                help(sender, helps);
+                return true;
+            }
         }
         return false;
+    }
+
+    public void help(CommandSender sender, String[] helps)
+    {
+        for (String help : helps)
+        {
+            sender.sendMessage(help);
+        }
     }
 }

@@ -18,7 +18,6 @@ package net.projectzombie.survivalteams.controller;
 
 import java.util.*;
 
-import net.md_5.bungee.api.ChatColor;
 import net.projectzombie.survivalteams.block.SurvivalBlock;
 import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
@@ -27,6 +26,7 @@ import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

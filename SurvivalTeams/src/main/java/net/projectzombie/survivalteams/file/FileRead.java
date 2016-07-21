@@ -9,12 +9,9 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 import static net.projectzombie.survivalteams.file.FileContents.*;
-import static net.projectzombie.survivalteams.file.FilePath.*;
-import net.projectzombie.survivalteams.team.Team;
 import net.projectzombie.survivalteams.team.TeamRank;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -75,7 +72,7 @@ public class FileRead
 
     static public int getBuildRadius() {
         return TEAM_YAML.contains(FilePath.buildRadius()) ?
-                TEAM_YAML.getInt(FilePath.buildRadius()) : -1;
+                TEAM_YAML.getInt(FilePath.buildRadius()) : 0;
     }
 
     static public Set<String> getDefaultSBlocks() {

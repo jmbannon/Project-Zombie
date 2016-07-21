@@ -49,6 +49,12 @@ public class WorldCoordinate
                 Double.valueOf(split[1]), Double.valueOf(split[2]),  Double.valueOf(split[3])) : null;
     }
 
+    /**
+     * Special SB ID, just location and team name.
+     * @param teamName = Owner of SB.
+     * @param location = Location of SB.
+     * @return = String ID of the SB.
+     */
     static public String toStringLocID(final String teamName, final Block location) {
         final StringBuilder stb = new StringBuilder();
 
@@ -59,6 +65,11 @@ public class WorldCoordinate
         return stb.toString();
     }
 
+    /**
+     * Quick getter for the team name from the SB ID.
+     * @param ID = SB ID.
+     * @return = Name of team SB belongs to.
+     */
     static public String toTeamName(final String ID) {
         final String split[] = ID.split(",");
         return split.length == 5 ? split[4] : null;

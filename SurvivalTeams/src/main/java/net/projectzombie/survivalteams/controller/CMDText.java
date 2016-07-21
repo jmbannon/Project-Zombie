@@ -51,6 +51,9 @@ public class CMDText
             WEAPON_USAGE = "/sb weapon <material> <damage> <durability>",
             DAMAGE_USAGE = "/sb damage <damage>",
             DURABILITY_USAGE = "/sb durability <durability>",
+            RDSB_USAGE = "/sb rdsb <Material>",
+            RSB_USAGE = "/sb rsb <ID>",
+            RW_USAGE = "/sb rw <Material",
 
             ADD_FINALIZE = "Default type added.",
             BR_FINALIZE = "Build radius set to ",
@@ -61,6 +64,11 @@ public class CMDText
             DAMAGE_FINALIZE = "Default damage set to ",
             RELOAD_FINALIZE = "Survival Blocks and Survival Weapons reloaded.",
             DURABILITY_FINALIZE = "Default durability set to ",
+            RDSB_FINALIZE = "Removed default SB.",
+            RSB_FINALIZE = "Removed SB.",
+            RW_FINALIZE = "Removed SW.",
+            RALL_FINALIZE = "All SB have been removed.",
+
 
     SB_PERMS = "SB.all";
             
