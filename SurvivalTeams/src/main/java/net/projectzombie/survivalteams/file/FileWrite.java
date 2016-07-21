@@ -29,6 +29,25 @@ public class FileWrite
     ////////////////////////////////////////////////////////////////////////////
     // Write functions
     //
+    public static boolean writeSBWeapon(Material material, int damage, int durability)
+    {
+        TEAM_YAML.set(FilePath.sBWeaponDamage(material), damage);
+        TEAM_YAML.set(FilePath.sBWeaponDurability(material), durability);
+        return saveConfig();
+    }
+
+    public static boolean writeSBDefaultDurability(int durability)
+    {
+        TEAM_YAML.set(FilePath.sBDefaultDurability(), durability);
+        return saveConfig();
+    }
+
+    public static boolean writeSBDefaultDamage(int damage)
+    {
+        TEAM_YAML.set(FilePath.sBDefaultDamage(), damage);
+        return saveConfig();
+    }
+
     public static boolean writeSBTool(Material tool)
     {
         TEAM_YAML.set(FilePath.sBCheckTool(), tool.toString());

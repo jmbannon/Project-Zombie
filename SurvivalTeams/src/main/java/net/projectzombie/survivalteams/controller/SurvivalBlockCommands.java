@@ -2,6 +2,9 @@ package net.projectzombie.survivalteams.controller;
 
 import net.projectzombie.survivalteams.file.FileWrite;
 import static net.projectzombie.survivalteams.controller.CMDText.*;
+
+import net.projectzombie.survivalteams.file.buffers.SBWeaponBuffer;
+import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -101,6 +104,80 @@ public class SurvivalBlockCommands implements CommandExecutor
                 }
                 else
                     sender.sendMessage(TOOL_USAGE);
+                return true;
+            }
+            else if (args[0].equals("damage"))
+            {
+                boolean isInt = true;
+                int damage = -1;
+                if (args.length == 2)
+                {
+                    try { damage = Integer.parseInt(args[1]); }
+                    catch (NumberFormatException e) { isInt = false; }
+                    if (isInt && damage != -1)
+                    {
+                        FileWrite.writeSBDefaultDamage(damage);
+                        sender.sendMessage(DAMAGE_FINALIZE + damage);
+                    }
+                    else
+                        sender.sendMessage(DAMAGE_USAGE);
+                }
+                else
+                    sender.sendMessage(DAMAGE_USAGE);
+                return true;
+            }
+            else if (args[0].equals("weapon"))
+            {
+                boolean isInt = true;
+                int damage = 0;
+                int durability = 0;
+                if (args.length == 4)
+                {
+                    try
+                    {
+                        damage = Integer.parseInt(args[2]);
+                        durability = Integer.parseInt(args[3]);
+                    }
+                    catch (NumberFormatException e) { isInt = false; }
+                    Material material = Material.valueOf(args[1]);
+                    if (isInt)
+                    {
+                        FileWrite.writeSBWeapon(material, damage, durability);
+                        sender.sendMessage(WEAPON_FINALIZE);
+                    }
+                    else
+                        sender.sendMessage(WEAPON_USAGE);
+                }
+                else
+                    sender.sendMessage(WEAPON_USAGE);
+                return true;
+            }
+            else if (args[0].equals("reload"))
+            {
+                SBlockBuffer.readInDefaults();
+                SBlockBuffer.readInPlacedSBlocks();
+                SBWeaponBuffer.readInDefaults();
+                sender.sendMessage(RELOAD_FINALIZE);
+                return true;
+            }
+            else if (args[0].equals("durability"))
+            {
+                boolean isInt = true;
+                int durability = -1;
+                if (args.length == 2)
+                {
+                    try { durability = Integer.parseInt(args[1]); }
+                    catch (NumberFormatException e) { isInt = false; }
+                    if (isInt && durability != -1)
+                    {
+                        FileWrite.writeSBDefaultDurability(durability);
+                        sender.sendMessage(DURABILITY_FINALIZE + durability);
+                    }
+                    else
+                        sender.sendMessage(DURABILITY_USAGE);
+                }
+                else
+                    sender.sendMessage(DURABILITY_USAGE);
                 return true;
             }
         }

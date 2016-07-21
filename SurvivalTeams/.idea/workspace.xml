@@ -23,22 +23,69 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PlayerListener.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PlayerListener.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36455983">
-              <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="74" column="38" selection-start-line="74" selection-start-column="38" selection-end-line="74" selection-end-column="38" />
               <folding>
-                <element signature="method#showSBlockInfo#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#trackSBlocks#0;class#PlayerListener#0" expanded="false" />
-                <element signature="method#trackSPlayerDamage#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#trackSCreatureDamage#0;class#PlayerListener#0" expanded="false" />
-                <element signature="method#correctPVPHit#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#spawnToCorrectBase#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#removeTeamPlayerOnLogout#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#initializePlayer#0;class#PlayerListener#0" expanded="false" />
                 <element signature="method#getTeam#0;class#PlayerListener#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SurvivalBlockCommands.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/SurvivalBlockCommands.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="160" column="28" selection-start-line="160" selection-start-column="28" selection-end-line="160" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SurvivalBlock.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalBlock.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="71" column="73" selection-start-line="71" selection-start-column="73" selection-end-line="71" selection-end-column="73" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#SurvivalBlock#1;class#SurvivalBlock#0" expanded="false" />
+                <element signature="method#setHealth#0;class#SurvivalBlock#0" expanded="false" />
+                <element signature="method#takeDamage#1;class#SurvivalBlock#0" expanded="false" />
+                <element signature="method#onDeath#0;class#SurvivalBlock#0" expanded="false" />
+                <element signature="method#kill#0;class#SurvivalBlock#0" expanded="false" />
+                <element signature="method#createSBlock#0;class#SurvivalBlock#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plugin.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/plugin.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.20816326">
+              <caret line="9" column="54" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CMDText.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CMDText.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="62" column="63" selection-start-line="62" selection-start-column="63" selection-end-line="62" selection-end-column="63" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,20 +107,22 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/PlayerBuffer.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/WorldCoordinate.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/player/TeamPlayer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalBlock.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CreatureChase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBlockBuffer.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/main/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FilePath.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileRead.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileWrite.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBlockBuffer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CreatureChase.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBWeaponBuffer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalWeapon.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileRead.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CMDText.java" />
         <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/SurvivalBlockCommands.java" />
-        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/PlayerBuffer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalBlock.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/plugin.yml" />
       </list>
     </option>
   </component>
@@ -147,7 +196,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -405,7 +454,7 @@
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -882,27 +931,39 @@
       <workItem from="1468864914352" duration="29575000" />
       <workItem from="1468947896301" duration="336000" />
       <workItem from="1468949533451" duration="26177000" />
+      <workItem from="1469000526039" duration="597000" />
+      <workItem from="1469051867656" duration="18024000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70559000" />
+    <option name="totallyTimeSpent" value="89180000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="843" y="0" width="1084" height="1047" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16699219" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16699219" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16520788" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16520788" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22460938" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24916574" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -913,7 +974,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -967,6 +1027,24 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="method#showSBlockInfo#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#trackSBlocks#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#trackSPlayerDamage#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#trackSCreatureDamage#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#correctPVPHit#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#spawnToCorrectBase#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#removeTeamPlayerOnLogout#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#initializePlayer#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#getTeam#0;class#PlayerListener#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileRead.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1110,9 +1188,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="63" column="38" selection-start-line="63" selection-start-column="38" selection-end-line="63" selection-end-column="38" />
           <folding>
-            <element signature="e#906#907#0" expanded="false" />
-            <element signature="e#953#954#0" expanded="false" />
             <element signature="method#teamBlock#0;class#FilePath#0" expanded="false" />
+            <element signature="method#teamBlockHealth#1;class#FilePath#0" expanded="false" />
+            <element signature="method#member#0;class#FilePath#0" expanded="false" />
+            <element signature="method#member#1;class#FilePath#0" expanded="false" />
+            <element signature="method#member#2;class#FilePath#0" expanded="false" />
+            <element signature="method#memberRank#0;class#FilePath#0" expanded="false" />
+            <element signature="method#memberName#0;class#FilePath#0" expanded="false" />
+            <element signature="method#leaderName#0;class#FilePath#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1144,7 +1227,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="method#writeSBTool#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeBreakNaturally#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeAttackDelay#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSBlockHealth#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeDefaultSBuildRadius#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeDefaultSBlockHealth#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeDefaultSBlock#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSBlock#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSBlockHealth#1;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeTeam#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writePlayerToTeam#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSpawn#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#getPlayer#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#removePlayerFromTeam#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#removeTeam#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#removeSpawn#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#removeAllTeamSpawns#0;class#FileWrite#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1178,9 +1280,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#906#907#0" expanded="false" />
-            <element signature="e#953#954#0" expanded="false" />
             <element signature="method#teamBlock#0;class#FilePath#0" expanded="false" />
+            <element signature="method#teamBlockHealth#1;class#FilePath#0" expanded="false" />
+            <element signature="method#member#0;class#FilePath#0" expanded="false" />
+            <element signature="method#member#1;class#FilePath#0" expanded="false" />
+            <element signature="method#member#2;class#FilePath#0" expanded="false" />
+            <element signature="method#memberRank#0;class#FilePath#0" expanded="false" />
+            <element signature="method#memberName#0;class#FilePath#0" expanded="false" />
+            <element signature="method#leaderName#0;class#FilePath#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1218,21 +1325,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/PlayerBuffer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileContents.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42212188">
-          <caret line="31" column="37" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/player/TeamPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28470254">
@@ -1259,43 +1351,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/main/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CreatureChase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49887133">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.520316">
+          <caret line="43" column="43" selection-start-line="43" selection-start-column="43" selection-end-line="43" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerCommands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53724605">
+          <caret line="50" column="50" selection-start-line="50" selection-start-column="50" selection-end-line="50" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileRead.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32505643">
-          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="30" selection-start-line="44" selection-start-column="30" selection-end-line="44" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBlockBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.748307">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
           <folding>
-            <element signature="method#getAttackDelay#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getBuildRadius#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getDefaultSBlocks#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getDefaultSBlockHealth#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getTeamSBlocks#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getTeamSBlockHealth#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getTeamSBlockHealth#1;class#FileRead#0" expanded="false" />
-            <element signature="method#getMemberRank#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getMemberName#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getLeaderName#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getMemberUUIDs#0;class#FileRead#0" expanded="false" />
-            <element signature="method#containsMemberUUID#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getTeamName#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getLeaderUUID#0;class#FileRead#0" expanded="false" />
-            <element signature="method#getSpawn#0;class#FileRead#0" expanded="false" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#readInDefaults#0;class#SBlockBuffer#0" expanded="false" />
+            <element signature="method#readInPlacedSBlocks#0;class#SBlockBuffer#0" expanded="false" />
+            <element signature="method#removeTeamBlocks#0;class#SBlockBuffer#0" expanded="false" />
+            <element signature="method#saveSBlocks#0;class#SBlockBuffer#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FilePath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34311512">
-          <caret line="39" column="38" selection-start-line="39" selection-start-column="38" selection-end-line="39" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.6139955">
+          <caret line="72" column="45" selection-start-line="72" selection-start-column="45" selection-end-line="72" selection-end-column="45" />
           <folding>
+            <element signature="e#1610#1611#0" expanded="true" />
+            <element signature="e#1662#1663#0" expanded="true" />
             <element signature="method#teamBlock#0;class#FilePath#0" expanded="false" />
             <element signature="method#teamBlockHealth#1;class#FilePath#0" expanded="false" />
             <element signature="method#member#0;class#FilePath#0" expanded="false" />
@@ -1308,12 +1410,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileContents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42212188">
+          <caret line="31" column="37" selection-start-line="31" selection-start-column="37" selection-end-line="31" selection-end-column="37" />
+          <folding>
+            <element signature="e#850#851#0" expanded="true" />
+            <element signature="e#885#886#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileWrite.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.36455983">
+          <caret line="39" column="4" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="4" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <element signature="method#writeSBWeapon#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSBDefaultDurability#0;class#FileWrite#0" expanded="false" />
+            <element signature="method#writeSBDefaultDamage#0;class#FileWrite#0" expanded="false" />
             <element signature="method#writeSBTool#0;class#FileWrite#0" expanded="false" />
             <element signature="method#writeBreakNaturally#0;class#FileWrite#0" expanded="false" />
             <element signature="method#writeAttackDelay#0;class#FileWrite#0" expanded="false" />
@@ -1335,64 +1450,99 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CreatureChase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.520316">
-          <caret line="43" column="43" selection-start-line="43" selection-start-column="43" selection-end-line="43" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBlockBuffer.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/FileRead.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="42" selection-start-line="51" selection-start-column="42" selection-end-line="51" selection-end-column="42" />
+          <caret line="41" column="74" selection-start-line="41" selection-start-column="74" selection-end-line="41" selection-end-column="74" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#readInDefaults#0;class#SBlockBuffer#0" expanded="false" />
-            <element signature="method#readInPlacedSBlocks#0;class#SBlockBuffer#0" expanded="false" />
-            <element signature="method#removeTeamBlocks#0;class#SBlockBuffer#0" expanded="false" />
-            <element signature="method#saveSBlocks#0;class#SBlockBuffer#0" expanded="false" />
+            <element signature="method#getSBWeapons#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getBuildRadius#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getDefaultSBlocks#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getDefaultSBlockHealth#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getTeamSBlocks#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getTeamSBlockHealth#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getTeamSBlockHealth#1;class#FileRead#0" expanded="false" />
+            <element signature="method#getMemberRank#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getMemberName#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getLeaderName#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getMemberUUIDs#0;class#FileRead#0" expanded="false" />
+            <element signature="method#containsMemberUUID#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getTeamName#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getLeaderUUID#0;class#FileRead#0" expanded="false" />
+            <element signature="method#getSpawn#0;class#FileRead#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/SurvivalBlockCommands.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="63" selection-start-line="99" selection-start-column="63" selection-end-line="99" selection-end-column="63" />
+          <caret line="74" column="38" selection-start-line="74" selection-start-column="38" selection-end-line="74" selection-end-column="38" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="method#trackSBlocks#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#trackSCreatureDamage#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#spawnToCorrectBase#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#removeTeamPlayerOnLogout#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#initializePlayer#0;class#PlayerListener#0" expanded="false" />
+            <element signature="method#getTeam#0;class#PlayerListener#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerCommands.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.53724605">
-          <caret line="50" column="50" selection-start-line="50" selection-start-column="50" selection-end-line="50" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/CMDText.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="39" selection-start-line="51" selection-start-column="39" selection-end-line="51" selection-end-column="39" />
+          <caret line="62" column="63" selection-start-line="62" selection-start-column="63" selection-end-line="62" selection-end-column="63" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/PlayerBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27755103">
+          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/file/buffers/SBWeaponBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42312926">
+          <caret line="36" column="33" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
+          <folding>
+            <element signature="e#846#847#0" expanded="true" />
+            <element signature="e#886#887#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalWeapon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16190477">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/SurvivalBlockCommands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="160" column="28" selection-start-line="160" selection-start-column="28" selection-end-line="160" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/block/SurvivalBlock.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
+          <caret line="71" column="73" selection-start-line="71" selection-start-column="73" selection-end-line="71" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#SurvivalBlock#1;class#SurvivalBlock#0" expanded="false" />
             <element signature="method#setHealth#0;class#SurvivalBlock#0" expanded="false" />
+            <element signature="method#takeDamage#1;class#SurvivalBlock#0" expanded="false" />
             <element signature="method#onDeath#0;class#SurvivalBlock#0" expanded="false" />
             <element signature="method#kill#0;class#SurvivalBlock#0" expanded="false" />
             <element signature="method#createSBlock#0;class#SurvivalBlock#0" expanded="false" />
@@ -1402,27 +1552,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/plugin.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1918736">
-          <caret line="10" column="39" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.20816326">
+          <caret line="9" column="54" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/net/projectzombie/survivalteams/controller/PlayerListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36455983">
-          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding>
-            <element signature="method#showSBlockInfo#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#trackSBlocks#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#trackSPlayerDamage#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#trackSCreatureDamage#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#correctPVPHit#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#spawnToCorrectBase#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#removeTeamPlayerOnLogout#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#initializePlayer#0;class#PlayerListener#0" expanded="false" />
-            <element signature="method#getTeam#0;class#PlayerListener#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

@@ -20,6 +20,7 @@ import java.util.UUID;
 import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 /**
  *
@@ -32,6 +33,26 @@ public class FilePath
     
     private FilePath() { /* Do nothing */ }
 
+    static protected String sBWeaponDurability(Material material)
+    {
+        return sBWeapon(material) + ".durability";
+    }
+
+    static protected String sBWeapons()
+    {
+        return ROOT_BLOCKS + ".weapons";
+    }
+
+    static protected String sBWeapon(Material material)
+    {
+        return sBWeapons() + "." + material.toString();
+    }
+
+    static protected String sBWeaponDamage(Material material)
+    {
+        return sBWeapon(material) + ".health";
+    }
+
     static protected String sBCheckTool()
     {
         return ROOT_BLOCKS + ".tool";
@@ -40,6 +61,16 @@ public class FilePath
     static protected String buildRadius()
     {
         return ROOT_BLOCKS + ".build-R";
+    }
+
+    static protected String sBDefaultDamage()
+    {
+        return ROOT_BLOCKS + ".damage-D";
+    }
+
+    static protected String sBDefaultDurability()
+    {
+        return ROOT_BLOCKS + ".durability-D";
     }
 
     static protected String breakNaturally()

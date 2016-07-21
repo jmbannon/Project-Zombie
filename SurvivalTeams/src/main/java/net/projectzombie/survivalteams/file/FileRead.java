@@ -25,6 +25,36 @@ public class FileRead
 
     public static final int ATTACK_DEFAULT = 10;
 
+    static public int getSBWeaponDamage(Material material)
+    {
+        return TEAM_YAML.contains(FilePath.sBWeaponDamage(material)) ?
+                TEAM_YAML.getInt(FilePath.sBWeaponDamage(material)) : 0;
+    }
+
+    static public int getSBDefaultDurability()
+    {
+        return TEAM_YAML.contains(FilePath.sBDefaultDurability()) ?
+                TEAM_YAML.getInt(FilePath.sBDefaultDurability()) : 0;
+    }
+
+    static public short getSBWeaponDurability(Material material)
+    {
+        return TEAM_YAML.contains(FilePath.sBWeaponDurability(material)) ?
+                (short) (TEAM_YAML.getInt(FilePath.sBWeaponDurability(material))) : 0;
+    }
+
+    static public Set<String> getSBWeapons()
+    {
+        return TEAM_YAML.contains(FilePath.sBWeapons()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.sBWeapons()).getKeys(false) : null;
+    }
+
+    static public int getDefaultDamage()
+    {
+        return TEAM_YAML.contains(FilePath.sBDefaultDamage()) ?
+                TEAM_YAML.getInt(FilePath.sBDefaultDamage()) : 0;
+    }
+
     static public Material getSBTool()
     {
         return TEAM_YAML.contains(FilePath.sBCheckTool()) ?

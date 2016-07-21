@@ -65,7 +65,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void showSBlockInfo(PlayerInteractEvent event)
+    public void showSBlockInfo(final PlayerInteractEvent event)
     {
         if (event.getMaterial() == SBlockBuffer.getTool())
         {
@@ -92,7 +92,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void trackSBlocks(BlockPlaceEvent event)
+    public void trackSBlocks(final BlockPlaceEvent event)
     {
         Player player = event.getPlayer();
         Block block = event.getBlock();
@@ -117,7 +117,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void trackSPlayerDamage(BlockDamageEvent event)
+    public void trackSPlayerDamage(final BlockDamageEvent event)
     {
         Player player = event.getPlayer();
         Block block = event.getBlock();
@@ -132,7 +132,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void trackSCreatureDamage(EntityTargetEvent event)
+    public void trackSCreatureDamage(final EntityTargetEvent event)
     {
         if (event.getEntity() instanceof Zombie)
         {
@@ -145,7 +145,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void correctPVPHit(EntityDamageByEntityEvent event)
+    public void correctPVPHit(final EntityDamageByEntityEvent event)
     {
         //TODO Once updated to 1.10, area effect clouds will need to be taken into account.
         if (event.getEntity() instanceof Player)
@@ -207,7 +207,7 @@ public class PlayerListener implements Listener
     }
 
     @EventHandler
-    public void spawnToCorrectBase(PlayerRespawnEvent event)
+    public void spawnToCorrectBase(final PlayerRespawnEvent event)
     {
         Player player = event.getPlayer();
         Location loc = PlayerBuffer.getSpawnLocation(player);
@@ -222,7 +222,8 @@ public class PlayerListener implements Listener
     {
         initializePlayer(event.getPlayer());
     }
-    
+
+    @EventHandler
     public void removeTeamPlayerOnLogout(final PlayerQuitEvent event)
     {
         PlayerBuffer.remove(event.getPlayer().getUniqueId());

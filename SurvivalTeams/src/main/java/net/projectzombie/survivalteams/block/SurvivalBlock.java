@@ -2,11 +2,14 @@ package net.projectzombie.survivalteams.block;
 
 import net.projectzombie.survivalteams.file.FileWrite;
 import net.projectzombie.survivalteams.file.WorldCoordinate;
+import net.projectzombie.survivalteams.file.buffers.SBWeaponBuffer;
 import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 /**
@@ -65,14 +68,43 @@ public class SurvivalBlock {
     }
 
     public void takeDamage(PlayerInventory pI) {
-        health -= 10;
-        onDeath();
+        ItemStack item = pI.getItemInHand();
+        SurvivalWeapon weapon = SBWeaponBuffer.getWeapon(item.getType());
+        if (item.getType().getMaxDurability() != 0)
+        {
+            if (weapon != null)
+                weapon.itemHit(item);
+            else
+            {
+                short itemHealth = (short) (item.getDurability() +
+                                    SBWeaponBuffer.getDefaultDurability());
+                item.setDurability(itemHealth);
+            }
+            if (item.getDurability() >= item.getType().getMaxDurability())
+                pI.remove(pI.getItemInHand());
+        }
+        takeDamage(item);
     }
 
     public void takeDamage(EntityEquipment eE) {
-        health -= 10;
+        ItemStack weapon = eE.getItemInHand();
+        weapon.setDurability(weapon.getDurability());
+        takeDamage(weapon);
+    }
+
+    private void takeDamage(ItemStack weapon)
+    {
+        if (SBWeaponBuffer.getWeapons().contains(weapon.getType()))
+        {
+            int damage = SBWeaponBuffer.getWeaponDamage(weapon.getType()).getHitPoints();
+            health += damage;
+        }
+        else
+        {
+            health += SBWeaponBuffer.getDefaultDamage();
+        }
+
         onDeath();
-        // TODO unify create damage and player damage
     }
 
     public boolean isDead()

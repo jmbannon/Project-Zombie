@@ -48,12 +48,19 @@ public class CMDText
             BN_USAGE = "/sb bn <true:false>",
             DELAY_USAGE = "/sb delay <time>",
             TOOL_USAGE = "/sb tool <Material>",
+            WEAPON_USAGE = "/sb weapon <material> <damage> <durability>",
+            DAMAGE_USAGE = "/sb damage <damage>",
+            DURABILITY_USAGE = "/sb durability <durability>",
 
             ADD_FINALIZE = "Default type added.",
             BR_FINALIZE = "Build radius set to ",
             BN_FINALIZE = "Break naturally set to ",
             DELAY_FINALIZE = "Delay set to ",
             TOOL_FINALIZE = "SB tool set to ",
+            WEAPON_FINALIZE = "Weapon added.",
+            DAMAGE_FINALIZE = "Default damage set to ",
+            RELOAD_FINALIZE = "Survival Blocks and Survival Weapons reloaded.",
+            DURABILITY_FINALIZE = "Default durability set to ",
 
     SB_PERMS = "SB.all";
             

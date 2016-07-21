@@ -20,6 +20,7 @@ import net.projectzombie.survivalteams.controller.PlayerCommands;
 import net.projectzombie.survivalteams.controller.PlayerListener;
 import net.projectzombie.survivalteams.controller.SurvivalBlockCommands;
 import net.projectzombie.survivalteams.file.FileContents;
+import net.projectzombie.survivalteams.file.buffers.SBWeaponBuffer;
 import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -39,6 +40,7 @@ public class Main extends JavaPlugin
         FileContents.initialize(this);
         SBlockBuffer.readInDefaults();
         SBlockBuffer.readInPlacedSBlocks();
+        SBWeaponBuffer.readInDefaults();
         PlayerListener.setPlugin(this);
         this.getCommand("sb").setExecutor(new SurvivalBlockCommands());
         this.getCommand("party").setExecutor(new PlayerCommands());

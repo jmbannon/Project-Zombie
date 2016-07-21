@@ -60,13 +60,10 @@ public class SBlockBuffer
         attackDelay = FileRead.getAttackDelay();
         tool = FileRead.getSBTool();
 
+        // Read in default blocks.
         Set<String> blocks = FileRead.getDefaultSBlocks();
-
         if (defaultBlocks == null)
-        {
             defaultBlocks = new HashMap<Material, SurvivalBlock>();
-        }
-
         if (blocks != null)
         {
             for (String block : blocks)
