@@ -1,25 +1,29 @@
 package net.projectzombie.survivalteams.file.buffers;
 
 import net.projectzombie.survivalteams.block.SurvivalBlock;
+import net.projectzombie.survivalteams.block.TeamBlock;
 import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.FileWrite;
 import net.projectzombie.survivalteams.file.WorldCoordinate;
+import net.projectzombie.survivalteams.player.TeamPlayer;
 import net.projectzombie.survivalteams.team.Team;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Buffer to hold default types and all SBs placed.
+ * Buffer to hold default types and all Team blocks placed.
  */
-public class SBlockBuffer
+public class BlockBuffer
 {
 
     private static Map<Material, SurvivalBlock> defaultBlocks;
-    private static Map<Location, SurvivalBlock> teamBlocks;
+    private static Map<Location, TeamBlock> teamBlocks;
     private static int buildRadius;
     private static boolean breakNaturally;
     private static int attackDelay;
@@ -40,7 +44,7 @@ public class SBlockBuffer
         return attackDelay;
     }
 
-    public static void removeDefault(Material material)
+    public static void removeSurvivalBlock(Material material)
     {
         defaultBlocks.remove(material);
     }
@@ -61,7 +65,7 @@ public class SBlockBuffer
 
     /**
      * @param material = Type of block needed from defaults.
-     * @return The SB default holding the default SB info. Null if not a saved type.
+     * @return The SurvivalBlocks with default Team block info. Null if not a saved type.
      */
     public static SurvivalBlock getDefault(Material material) {
         return defaultBlocks.get(material);
@@ -75,17 +79,17 @@ public class SBlockBuffer
         buildRadius = FileRead.getBuildRadius();
         breakNaturally = FileRead.getBreakNaturally();
         attackDelay = FileRead.getAttackDelay();
-        tool = FileRead.getSBTool();
+        tool = FileRead.getTeamBlockCheckerTool();
 
         // Read in default blocks.
-        Set<String> blocks = FileRead.getDefaultSBlocks();
+        Set<String> blocks = FileRead.getSurvivalBlocks();
         if (defaultBlocks == null)
             defaultBlocks = new HashMap<Material, SurvivalBlock>();
         if (blocks != null)
         {
             for (String block : blocks)
             {
-                int health = FileRead.getDefaultSBlockHealth(block);
+                int health = FileRead.getSurvivalBlockHealth(block);
                 defaultBlocks.put(Material.valueOf(block), new SurvivalBlock(health));
             }
         }
@@ -94,49 +98,49 @@ public class SBlockBuffer
     /**
      * Use readInDefaults before using this method. It reads in already placed blocks.
      */
-    public static void readInPlacedSBlocks()
+    public static void readInPlacedTeamBlocks()
     {
-        Set<String> blocks = FileRead.getTeamSBlocks();
+        Set<String> blocks = FileRead.getTeamBlocks();
 
         if (teamBlocks == null)
         {
-            teamBlocks = new HashMap<Location, SurvivalBlock>();
+            teamBlocks = new HashMap<Location, TeamBlock>();
         }
 
         if (blocks != null)
         {
             for (String iD : blocks)
             {
-                int health = FileRead.getTeamSBlockHealth(iD);
+                int health = FileRead.getTeamBlockHealth(iD);
                 String teamName = WorldCoordinate.toTeamName(iD);
                 Location loc = WorldCoordinate.toLocation(iD);
-                SurvivalBlock sB = new SurvivalBlock(health, teamName, loc);
-                teamBlocks.put(loc, sB);
+                TeamBlock teamBlock = new TeamBlock(health, teamName, loc);
+                teamBlocks.put(loc, teamBlock);
             }
         }
     }
 
     /**
-     * Receives a SB from the buffer.
-     * @param loc = Location of SB.
-     * @return = SB at location, null if not found.
+     * Receives a TeamBlock from the buffer.
+     * @param loc = Location of TeamBlock.
+     * @return = TeamBlock at location, null if not found.
      */
-    public static SurvivalBlock getSB(Location loc) {
+    public static TeamBlock getTeamBlock(Location loc) {
         return teamBlocks.get(loc);
     }
 
     /**
-     * SB to be added by its location.
-     * @param sB = Sb to be added.
+     * TeamBlock to be added by its location.
+     * @param teamBlock = tB to be added.
      * @param loc = Location to find it in buffer.
      */
-    public static void add(SurvivalBlock sB, Location loc)
+    public static void add(TeamBlock teamBlock, Location loc)
     {
-        teamBlocks.put(loc, sB);
+        teamBlocks.put(loc, teamBlock);
     }
 
     /**
-     * @param loc = SB to be removed from buffer.
+     * @param loc = TeamBlock to be removed from buffer.
      */
     public static void remove(Location loc)
     {
@@ -149,12 +153,12 @@ public class SBlockBuffer
      */
     public static void removeTeamBlocks(String teamName)
     {
-        Map<Location, SurvivalBlock> tempTeamBlocks = new HashMap<>();
+        Map<Location, TeamBlock> tempTeamBlocks = new HashMap<>();
         for (Location loc : teamBlocks.keySet())
         {
             if (teamBlocks.get(loc).getTeamName().equals(teamName))
             {
-                removeSB(loc);
+                removeTeamBlock(loc);
             }
             else
                 tempTeamBlocks.put(loc, teamBlocks.get(loc));
@@ -170,13 +174,13 @@ public class SBlockBuffer
     {
         Team team = TeamBuffer.get(teamName);
         Location spawn = team.getSpawn();
-        Map<Location, SurvivalBlock> tempTeamBlocks = new HashMap<>();
+        Map<Location, TeamBlock> tempTeamBlocks = new HashMap<>();
         for (Location loc : teamBlocks.keySet())
         {
             if (teamBlocks.get(loc).getTeamName().equals(teamName) && spawn != null &&
-                Math.abs(spawn.distance(loc)) > SBlockBuffer.getBuildRadius())
+                Math.abs(spawn.distance(loc)) > BlockBuffer.getBuildRadius())
             {
-                removeSB(loc);
+                removeTeamBlock(loc);
             }
             else
                 tempTeamBlocks.put(loc, teamBlocks.get(loc));
@@ -187,12 +191,12 @@ public class SBlockBuffer
     /**
      * Wipes all disc saved blocks, and saves what is in memory.
      */
-    public static void saveSBlocks()
+    public static void saveTeamBlocks()
     {
-        FileWrite.wipeSBlocks(); // Wipe before save of all blocks in memory.
-        for (SurvivalBlock sB : teamBlocks.values())
-            if (sB.getLocation().getBlock().getType() != Material.AIR)
-                sB.saveSBlock();
+        FileWrite.wipeTeamBlocks(); // Wipe before save of all blocks in memory.
+        for (TeamBlock teamBlock : teamBlocks.values())
+            if (teamBlock.getLocation().getBlock().getType() != Material.AIR)
+                teamBlock.saveTeamBlock();
     }
 
     /**
@@ -202,20 +206,72 @@ public class SBlockBuffer
     {
         for (Location loc : teamBlocks.keySet())
         {
-            removeSB(loc);
+            removeTeamBlock(loc);
         }
 
         teamBlocks.clear();
     }
 
     /**
-     * Removes the SB.
-     * @param loc = SB's location.
+     * Removes the TeamBlock.
+     * @param loc = TeamBlock's location.
      */
-    public static void removeSB(Location loc)
+    public static void removeTeamBlock(Location loc)
     {
 
-        FileWrite.wipeSBlock(teamBlocks.get(loc).getID());
+        FileWrite.wipeTeamBlock(teamBlocks.get(loc).getID());
         loc.getBlock().setType(Material.AIR);
+    }
+
+    public static boolean isInTeamBase(Player player)
+    {
+        Location loc = player.getLocation();
+        TeamPlayer tP = PlayerBuffer.get(player.getUniqueId());
+
+        if (tP != null)
+        {
+            Team team = tP.getTeam();
+            if (team != null)
+            {
+                Location spawn = team.getSpawn();
+                if (spawn != null)
+                    return spawn.distance(loc) <= BlockBuffer.getBuildRadius();
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isInEnemyBase(Player player)
+    {
+        return getMinDistanceFromEnemyBase(player) <= BlockBuffer.getBuildRadius();
+    }
+
+    public static double getMinDistanceFromEnemyBase(Player player)
+    {
+        double shortestDistance = -1;
+        Location loc = player.getLocation();
+        TeamPlayer tP = PlayerBuffer.get(player.getUniqueId());
+
+        Set<Location> spawns = new HashSet<>();
+        spawns.addAll(TeamBuffer.getSpawns());
+        if (tP != null)
+        {
+            Team team = tP.getTeam();
+            if (team != null)
+            {
+                spawns.remove(team.getSpawn());
+                for (Location spawn : spawns)
+                {
+                    double distance = spawn.distance(loc);
+                    if (shortestDistance == -1)
+                        shortestDistance = distance;
+                    if (distance < shortestDistance)
+                        shortestDistance = distance;
+                }
+            }
+        }
+
+        return shortestDistance;
     }
 }

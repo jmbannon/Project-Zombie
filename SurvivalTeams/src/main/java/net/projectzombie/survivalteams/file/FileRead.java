@@ -6,6 +6,7 @@
 package net.projectzombie.survivalteams.file;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import static net.projectzombie.survivalteams.file.FileContents.*;
@@ -22,40 +23,40 @@ public class FileRead
 
     public static final int ATTACK_DEFAULT = 10;
 
-    static public int getSBWeaponDamage(Material material)
+    static public int getHitToolHitPoints(Material material)
     {
-        return TEAM_YAML.contains(FilePath.sBWeaponDamage(material)) ?
-                TEAM_YAML.getInt(FilePath.sBWeaponDamage(material)) : 0;
+        return TEAM_YAML.contains(FilePath.hitToolHitPoints(material)) ?
+                TEAM_YAML.getInt(FilePath.hitToolHitPoints(material)) : 0;
     }
 
-    static public int getSBDefaultDurability()
+    static public int getHitToolDefaultDurability()
     {
-        return TEAM_YAML.contains(FilePath.sBDefaultDurability()) ?
-                TEAM_YAML.getInt(FilePath.sBDefaultDurability()) : 0;
+        return TEAM_YAML.contains(FilePath.hitToolDefaultDurability()) ?
+                TEAM_YAML.getInt(FilePath.hitToolDefaultDurability()) : 0;
     }
 
-    static public short getSBWeaponDurability(Material material)
+    static public short getHitToolDurability(Material material)
     {
-        return TEAM_YAML.contains(FilePath.sBWeaponDurability(material)) ?
-                (short) (TEAM_YAML.getInt(FilePath.sBWeaponDurability(material))) : 0;
+        return TEAM_YAML.contains(FilePath.hitToolDurability(material)) ?
+                (short) (TEAM_YAML.getInt(FilePath.hitToolDurability(material))) : 0;
     }
 
-    static public Set<String> getSBWeapons()
+    static public Set<String> getHitTools()
     {
-        return TEAM_YAML.contains(FilePath.sBWeapons()) ?
-                TEAM_YAML.getConfigurationSection(FilePath.sBWeapons()).getKeys(false) : null;
+        return TEAM_YAML.contains(FilePath.hitTools()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.hitTools()).getKeys(false) : null;
     }
 
-    static public int getDefaultDamage()
+    static public int getDefaultHitToolDamage()
     {
-        return TEAM_YAML.contains(FilePath.sBDefaultDamage()) ?
-                TEAM_YAML.getInt(FilePath.sBDefaultDamage()) : 0;
+        return TEAM_YAML.contains(FilePath.hitToolDefaultHitPoints()) ?
+                TEAM_YAML.getInt(FilePath.hitToolDefaultHitPoints()) : 0;
     }
 
-    static public Material getSBTool()
+    static public Material getTeamBlockCheckerTool()
     {
-        return TEAM_YAML.contains(FilePath.sBCheckTool()) ?
-                Material.valueOf(TEAM_YAML.getString(FilePath.sBCheckTool())) : null;
+        return TEAM_YAML.contains(FilePath.teamBlockCheckerTool()) ?
+                Material.valueOf(TEAM_YAML.getString(FilePath.teamBlockCheckerTool())) : null;
     }
 
     static public boolean getBreakNaturally()
@@ -75,29 +76,46 @@ public class FileRead
                 TEAM_YAML.getInt(FilePath.buildRadius()) : 0;
     }
 
-    static public Set<String> getDefaultSBlocks() {
-        return TEAM_YAML.contains(FilePath.defaultBlocks()) ?
-                TEAM_YAML.getConfigurationSection(FilePath.defaultBlocks()).getKeys(false) : null;
+    static public Set<String> getSurvivalBlocks() {
+        return TEAM_YAML.contains(FilePath.survivalBlocks()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.survivalBlocks()).getKeys(false) : null;
     }
 
-    static public int getDefaultSBlockHealth(String material) {
-        return TEAM_YAML.contains(FilePath.defaultBlockHealth(material)) ?
-                TEAM_YAML.getInt(FilePath.defaultBlockHealth(material)) : -1;
+    static public int getSurvivalBlockHealth(String material) {
+        return TEAM_YAML.contains(FilePath.survivalBlockHealth(material)) ?
+                TEAM_YAML.getInt(FilePath.survivalBlockHealth(material)) : -1;
     }
 
-    static public Set<String> getTeamSBlocks() {
-        return TEAM_YAML.contains(FilePath.rootTeamBlocks()) ?
-                TEAM_YAML.getConfigurationSection(FilePath.rootTeamBlocks()).getKeys(false) : null;
+    static public Set<String> getTeamBlocks() {
+        return TEAM_YAML.contains(FilePath.teamBlocks()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.teamBlocks()).getKeys(false) : null;
     }
 
-    static public int getTeamSBlockHealth(String teamName, Location loc) {
+    static public int getTeamBlockHealth(String teamName, Location loc) {
         return TEAM_YAML.contains(FilePath.teamBlockHealth(teamName, loc)) ?
                 TEAM_YAML.getInt(FilePath.teamBlockHealth(teamName, loc)) : -1;
     }
 
-    static public int getTeamSBlockHealth(String iD) {
+    static public int getTeamBlockHealth(String iD) {
         return TEAM_YAML.contains(FilePath.teamBlockHealth(iD)) ?
                 TEAM_YAML.getInt(FilePath.teamBlockHealth(iD)) : -1;
+    }
+
+    static public Set<String> getTeamNames()
+    {
+        return TEAM_YAML.contains(FilePath.teams()) ?
+                TEAM_YAML.getConfigurationSection(FilePath.teams()).getKeys(false) : null;
+    }
+
+    static public Set<Location> getTeamSpawns()
+    {
+        Set<String> teamNames = getTeamNames();
+        Set<Location> spawns = new HashSet<>();
+
+        for (String teamName : teamNames)
+            spawns.add(getSpawn(teamName));
+
+        return spawns;
     }
 
     static public TeamRank getMemberRank(final String teamName,

@@ -33,27 +33,27 @@ public class FilePath
     
     private FilePath() { /* Do nothing */ }
 
-    static protected String sBWeaponDurability(Material material)
+    static protected String hitToolDurability(Material material)
     {
-        return sBWeapon(material) + ".durability";
+        return hitTool(material) + ".durability";
     }
 
-    static protected String sBWeapons()
+    static protected String hitTools()
     {
         return ROOT_BLOCKS + ".weapons";
     }
 
-    static protected String sBWeapon(Material material)
+    static protected String hitTool(Material material)
     {
-        return sBWeapons() + "." + material.toString();
+        return hitTools() + "." + material.toString();
     }
 
-    static protected String sBWeaponDamage(Material material)
+    static protected String hitToolHitPoints(Material material)
     {
-        return sBWeapon(material) + ".health";
+        return hitTool(material) + ".health";
     }
 
-    static protected String sBCheckTool()
+    static protected String teamBlockCheckerTool()
     {
         return ROOT_BLOCKS + ".tool";
     }
@@ -63,12 +63,12 @@ public class FilePath
         return ROOT_BLOCKS + ".build-R";
     }
 
-    static protected String sBDefaultDamage()
+    static protected String hitToolDefaultHitPoints()
     {
-        return ROOT_BLOCKS + ".damage-D";
+        return ROOT_BLOCKS + ".hitPoints-D";
     }
 
-    static protected String sBDefaultDurability()
+    static protected String hitToolDefaultDurability()
     {
         return ROOT_BLOCKS + ".durability-D";
     }
@@ -83,22 +83,22 @@ public class FilePath
         return ROOT_BLOCKS + ".delay";
     }
 
-    static protected String defaultBlocks()
+    static protected String survivalBlocks()
     {
         return ROOT_BLOCKS + ".defaults";
     }
 
-    static protected String defaultBlock(String material)
+    static protected String survivalBlock(String material)
     {
-        return defaultBlocks() + "." + material;
+        return survivalBlocks() + "." + material;
     }
 
-    static protected String defaultBlockHealth(String material)
+    static protected String survivalBlockHealth(String material)
     {
-        return defaultBlock(material) + ".health";
+        return survivalBlock(material) + ".health";
     }
 
-    static protected String rootTeamBlocks()
+    static protected String teamBlocks()
     {
         return ROOT_BLOCKS + ".team";
     }
@@ -110,7 +110,7 @@ public class FilePath
 
     static protected String teamBlock(String ID)
     {
-        return rootTeamBlocks() + "." + ID;
+        return teamBlocks() + "." + ID;
     }
 
     static protected String teamBlockHealth(String ID)

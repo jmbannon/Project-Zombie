@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import net.projectzombie.survivalteams.file.FileWrite;
-import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
+import net.projectzombie.survivalteams.file.buffers.BlockBuffer;
 import net.projectzombie.survivalteams.file.buffers.TeamBuffer;
 import net.projectzombie.survivalteams.file.FileRead;
 import static net.projectzombie.survivalteams.player.TPText.*;
@@ -142,7 +142,7 @@ public class TeamPlayer
             if (FileWrite.removeTeam(team))
             {
                 removeSpawnFlag(team.getSpawn());
-                SBlockBuffer.removeTeamBlocks(team.getName());
+                BlockBuffer.removeTeamBlocks(team.getName());
                 for (TeamPlayer teamMembers : team.getPlayers())
                     teamMembers.disbandedFromTeam();
             }
@@ -224,13 +224,15 @@ public class TeamPlayer
         final Location location = player.getEyeLocation();
         if (isLeader())
         {
-            if (isValidSpawnSet(location))
+            double distanceFromEnemy = BlockBuffer.getMinDistanceFromEnemyBase(player);
+            boolean noLandConflicts = distanceFromEnemy > (BlockBuffer.getBuildRadius() * 2);
+            if (isValidSpawnSet(location) && noLandConflicts)
             {
                 if (FileWrite.writeSpawn(team, location))
                 {
                     removeSpawnFlag(team.getSpawn());
                     team.setSpawn(location);
-                    SBlockBuffer.removeTeamBlocksFar(team.getName());
+                    BlockBuffer.removeTeamBlocksFar(team.getName());
                     for (TeamPlayer member : team.getPlayers())
                         member.getPlayer().sendMessage(NEW_SPAWN);
                 }

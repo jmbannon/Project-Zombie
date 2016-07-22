@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
  *  damage and durability decreases. Types that can not take durability damage like stone
  *  can have specified hitPoints, but durability decrease will have no effect.
  */
-public class SurvivalWeapon
+public class TeamHitTool
 {
-    private int hitToDurabilityRatio;
+    private int hitToDurabilityDecrement;
     private int hitPoints;
 
     /**
@@ -17,15 +17,15 @@ public class SurvivalWeapon
      * @param hitToDurabilityRatio = Amount that type of weapon is hurt on hit.
      * @param hitPoints = Amount of damage does to block.
      */
-    public SurvivalWeapon(int hitToDurabilityRatio, int hitPoints)
+    public TeamHitTool(int hitToDurabilityRatio, int hitPoints)
     {
-        this.hitToDurabilityRatio = hitToDurabilityRatio;
+        this.hitToDurabilityDecrement = hitToDurabilityRatio;
         this.hitPoints = hitPoints;
     }
 
-    public int getHitToDurabilityRatio()
+    public int getHitToDurabilityDecrement()
     {
-        return hitToDurabilityRatio;
+        return hitToDurabilityDecrement;
     }
 
     public int getHitPoints()
@@ -39,7 +39,7 @@ public class SurvivalWeapon
      */
     public void itemHit(ItemStack item)
     {
-        short itemHealth = (short) (item.getDurability() + hitToDurabilityRatio);
+        short itemHealth = (short) (item.getDurability() + hitToDurabilityDecrement);
         item.setDurability(itemHealth);
     }
 }

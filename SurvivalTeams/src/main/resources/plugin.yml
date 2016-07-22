@@ -6,6 +6,6 @@ commands:
   party:
     description: Nope.
     usage: "WIP"
-  sb:
+  tb:
     description: Full suite of Survival Block changes.
-    usage: "/sb <add:br:bn:delay:tool:damage:durability:weapon:reload:rdsb:rsb:rw:rall>"
+    usage: "/tb <add:br:bn:delay:tool:hitpoints:durability:hittool:reload:rsb:rtb:rht:rall>"

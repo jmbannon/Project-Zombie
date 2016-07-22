@@ -1,19 +1,18 @@
 package net.projectzombie.survivalteams.controller;
 
-import net.projectzombie.survivalteams.block.SurvivalBlock;
-import net.projectzombie.survivalteams.file.buffers.SBlockBuffer;
+import net.projectzombie.survivalteams.block.TeamBlock;
+import net.projectzombie.survivalteams.file.buffers.BlockBuffer;
+import net.projectzombie.survivalteams.main.PluginHelpers;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Set;
 
 /**
- * Zombie block hitting scheduler, if a zombie is chasing a person, it will check if a block
+ * Zombie block hitting scheduler, if a monster is chasing a person, it will check if a block
  *  is in between them and try to break it.
  */
 public class CreatureChase implements Runnable
@@ -21,59 +20,55 @@ public class CreatureChase implements Runnable
     // Magic number, can be changed, just allows a valid loc.
     public static final int ZOMBIE_Hit_RANGE = 15;
 
-    private Zombie zombie;
-    private BukkitScheduler scheduler;
-    private JavaPlugin plugin;
+    private Monster monster;
 
     /**
-     * Basic constructor to get things needed to track reoccurring zombie block breaks.
-     * @param zombie = The zombie chasing a player.
-     * @param scheduler = Thing to schedule new block break event.
-     * @param plugin = Needed for scheduling new events.
+     * Basic constructor to get things needed to track reoccurring monster block breaks.
+     * @param monster = The monster chasing a player.
      */
-    public CreatureChase(Zombie zombie, BukkitScheduler scheduler, JavaPlugin plugin)
+    public CreatureChase(Monster monster)
     {
-        this.zombie = zombie;
-        this.scheduler = scheduler;
-        this.plugin = plugin;
+        this.monster = monster;
     }
 
     /**
-     * Checks if a zombie is targeting a player, if so keeps a delayed hit event and tries to
-     *  damage the blocks at eye level, above head, and at the zombie's feet.
+     * Checks if a monster is targeting a player, if so keeps a delayed hit event and tries to
+     *  damage the blocks at eye level, above head, and at the monster's feet.
      */
     @Override
     public void run()
     {
-        if (zombie.getTarget() instanceof Player && !zombie.isDead())
+        if (monster.getTarget() instanceof Player && !monster.isDead())
         {
-            scheduler.scheduleSyncDelayedTask(plugin, this, SBlockBuffer.getAttackDelay());
+            PluginHelpers.getScheduler().scheduleSyncDelayedTask(
+                PluginHelpers.getPlugin(), this, BlockBuffer.getAttackDelay());
+
             Set<Material> transparentB = null;
 
-            // Lower block, at zombie's feet.
-            Block main = zombie.getLocation().getBlock().getRelative(BlockFace.UP, 1);
-            Block look = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE);
-            isBreakableBlock(main, main.getX() - look.getX(), main.getZ() - look.getZ());
+            // Lower block, at monster's feet.
+            Block main = monster.getLocation().getBlock().getRelative(BlockFace.UP, 1);
+            Block look = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE);
+            breakBlock(main, main.getX() - look.getX(), main.getZ() - look.getZ());
 
             // Block at eye level.
-            Block main2 = zombie.getLocation().getBlock();
-            Block look2 = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.DOWN, 1);
-            isBreakableBlock(main2, main2.getX() - look2.getX(), main2.getZ() - look2.getZ());
+            Block main2 = monster.getLocation().getBlock();
+            Block look2 = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.DOWN, 1);
+            breakBlock(main2, main2.getX() - look2.getX(), main2.getZ() - look2.getZ());
 
             // Block above head.
-            Block main3 = zombie.getLocation().getBlock().getRelative(BlockFace.UP, 2);
-            Block look3 = zombie.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.UP, 1);
-            isBreakableBlock(main3, main3.getX() - look3.getX(), main3.getZ() - look3.getZ());
+            Block main3 = monster.getLocation().getBlock().getRelative(BlockFace.UP, 2);
+            Block look3 = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.UP, 1);
+            breakBlock(main3, main3.getX() - look3.getX(), main3.getZ() - look3.getZ());
         }
     }
 
     /**
-     * The GPS part of the block break, it finds the zombie's direction.
-     * @param main = Reference block, the one at zombie's body.
+     * Block hit, it the block is there and not air.
+     * @param main = Reference block, the one at monster's body.
      * @param x = Determines direction of E or W if not 0.
      * @param z = Determines direction of N or S if not 0.
      */
-    public void isBreakableBlock(Block main, int x, int z)
+    public void breakBlock(Block main, int x, int z)
     {
         BlockFace mainDirection = null;
         if (x != 0)
@@ -95,10 +90,10 @@ public class CreatureChase implements Runnable
         {
             Block middle = main.getRelative(mainDirection, 1);
 
-            SurvivalBlock middleSB = SBlockBuffer.getSB(middle.getLocation());
-            if (middleSB != null)
+            TeamBlock middleTB = BlockBuffer.getTeamBlock(middle.getLocation());
+            if (middleTB != null)
             {
-                middleSB.takeDamage(zombie.getEquipment());
+                middleTB.takeHit(monster.getEquipment());
             }
         }
     }

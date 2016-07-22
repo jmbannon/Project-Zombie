@@ -5,11 +5,11 @@
  */
 package net.projectzombie.survivalteams.file.buffers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
+
+import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.team.Team;
+import org.bukkit.Location;
 
 /**
  *
@@ -18,7 +18,7 @@ import net.projectzombie.survivalteams.team.Team;
 public class TeamBuffer
 {
     protected static final HashMap<String, Team> ONLINE_TEAMS = new HashMap<>();
-    
+    private static Set<Location> spawns;
     
     public static ArrayList<Team> getAll()
     {
@@ -30,6 +30,18 @@ public class TeamBuffer
         
         Collections.sort(sortedTeams);
         return sortedTeams;
+    }
+
+    public static Set<Location> getSpawns()
+    {
+        return spawns;
+    }
+
+    public static void loadUpSpawns()
+    {
+        spawns = FileRead.getTeamSpawns();
+        if (spawns == null)
+            spawns = new HashSet<>();
     }
     
     
@@ -45,6 +57,9 @@ public class TeamBuffer
     
     static public void remove(final Team team)
     {
+        if (team.getSpawn() != null)
+            spawns.remove(team.getSpawn());
+
         ONLINE_TEAMS.remove(team.getName());
     }
     
