@@ -135,7 +135,7 @@ public class TeamBlock extends SurvivalBlock {
     private void hit(final int hitValue)
     {
         if (hitValue >= 0)
-            addToHealth(hitValue);
+            safeAddToHealth(hitValue, loc.getBlock().getType());
         else
             decrementHealth(hitValue);
     }
@@ -202,7 +202,7 @@ public class TeamBlock extends SurvivalBlock {
      * @return = If write of new block is successful.
      */
     public static boolean createTeamBlock(Block block, String teamNameN) {
-        SurvivalBlock sBT = BlockBuffer.getDefault(block.getType());
+        SurvivalBlock sBT = BlockBuffer.getServivalBlock(block.getType());
         TeamBlock sB = new TeamBlock(sBT.getHealth(), teamNameN, block.getLocation());
 
         BlockBuffer.add(sB, block.getLocation());

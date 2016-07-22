@@ -67,7 +67,7 @@ public class BlockBuffer
      * @param material = Type of block needed from defaults.
      * @return The SurvivalBlocks with default Team block info. Null if not a saved type.
      */
-    public static SurvivalBlock getDefault(Material material) {
+    public static SurvivalBlock getServivalBlock(Material material) {
         return defaultBlocks.get(material);
     }
 

@@ -1,5 +1,8 @@
 package net.projectzombie.survivalteams.block;
 
+import net.projectzombie.survivalteams.file.buffers.BlockBuffer;
+import org.bukkit.Material;
+
 /**
  * Created by maxgr on 7/22/2016.
  */
@@ -39,6 +42,18 @@ public class SurvivalBlock {
     public void addToHealth(final int healing)
     {
         health += healing;
+    }
+
+    /**
+     * Adds a number to health.
+     * @param healing
+     */
+    public void safeAddToHealth(final int healing, Material material)
+    {
+        int maxHealth = BlockBuffer.getServivalBlock(material).getHealth();
+        addToHealth(healing);
+        if (getHealth() > maxHealth)
+            setHealth(maxHealth);
     }
 
     /**
