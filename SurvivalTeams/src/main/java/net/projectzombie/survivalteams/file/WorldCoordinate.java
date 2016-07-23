@@ -51,9 +51,9 @@ public class WorldCoordinate
 
     /**
      * Special SB ID, just location and team name.
-     * @param teamName = Owner of SB.
-     * @param location = Location of SB.
-     * @return = String ID of the SB.
+     * @param teamName Owner of SB.
+     * @param location Location of SB.
+     * @return String ID of the SB.
      */
     static public String toStringLocID(final String teamName, final Block location) {
         final StringBuilder stb = new StringBuilder();
@@ -67,8 +67,8 @@ public class WorldCoordinate
 
     /**
      * Quick getter for the team name from the SB ID.
-     * @param ID = SB ID.
-     * @return = Name of team SB belongs to.
+     * @param ID SB ID.
+     * @return Name of team SB belongs to.
      */
     static public String toTeamName(final String ID) {
         final String split[] = ID.split(",");

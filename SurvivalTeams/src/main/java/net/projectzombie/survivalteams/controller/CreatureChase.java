@@ -3,13 +3,12 @@ package net.projectzombie.survivalteams.controller;
 import net.projectzombie.survivalteams.block.TeamBlock;
 import net.projectzombie.survivalteams.file.buffers.BlockBuffer;
 import net.projectzombie.survivalteams.main.PluginHelpers;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
+import org.bukkit.util.Vector;
 
 /**
  * Zombie block hitting scheduler, if a monster is chasing a person, it will check if a block
@@ -24,7 +23,7 @@ public class CreatureChase implements Runnable
 
     /**
      * Basic constructor to get things needed to track reoccurring monster block breaks.
-     * @param monster = The monster chasing a player.
+     * @param monster The monster chasing a player.
      */
     public CreatureChase(Monster monster)
     {
@@ -43,32 +42,57 @@ public class CreatureChase implements Runnable
             PluginHelpers.getScheduler().scheduleSyncDelayedTask(
                 PluginHelpers.getPlugin(), this, BlockBuffer.getAttackDelay());
 
-            Set<Material> transparentB = null;
-
-            // Lower block, at monster's feet.
-            Block main = monster.getLocation().getBlock().getRelative(BlockFace.UP, 1);
-            Block look = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE);
-            breakBlock(main, main.getX() - look.getX(), main.getZ() - look.getZ());
-
-            // Block at eye level.
-            Block main2 = monster.getLocation().getBlock();
-            Block look2 = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.DOWN, 1);
-            breakBlock(main2, main2.getX() - look2.getX(), main2.getZ() - look2.getZ());
-
-            // Block above head.
-            Block main3 = monster.getLocation().getBlock().getRelative(BlockFace.UP, 2);
-            Block look3 = monster.getTargetBlock(transparentB, ZOMBIE_Hit_RANGE).getRelative(BlockFace.UP, 1);
-            breakBlock(main3, main3.getX() - look3.getX(), main3.getZ() - look3.getZ());
+            Location monsterFeetLoc = monster.getLocation();
+            hitBlock(monsterFeetLoc, 0); // Foot level block
+            hitBlock(monsterFeetLoc, 1); // Eye level block
+            hitBlock(monsterFeetLoc, 2); // One above head block
         }
     }
 
     /**
-     * Block hit, it the block is there and not air.
-     * @param main = Reference block, the one at monster's body.
-     * @param x = Determines direction of E or W if not 0.
-     * @param z = Determines direction of N or S if not 0.
+     * Will hit the block one in front of direction. If yMovement above 0, block hit will move up.
+     * @param mobLoc Specifies the direction of zombie, and reference point for hit.
+     * @param yMovement The number of blocks above that location that will be hit.
      */
-    public void breakBlock(Block main, int x, int z)
+    public void hitBlock(Location mobLoc, int yMovement)
+    {
+        Vector direction = mobLoc.getDirection();
+        int xChange = 0;
+        int zChange = 0;
+
+        if (Math.abs(direction.getX()) > Math.abs(direction.getZ()))
+        {
+            if (direction.getX() > 0.0)
+                xChange = 1;
+            else
+                xChange = -1;
+        }
+        else
+        {
+            if (direction.getY() > 0.0)
+                zChange = 1;
+            else
+                zChange = -1;
+        }
+
+        Block middle = mobLoc.getBlock().getRelative(xChange, yMovement, zChange);
+
+        TeamBlock middleTB = BlockBuffer.getTeamBlock(middle.getLocation());
+        if (middleTB != null)
+        {
+            middleTB.takeHit(monster.getEquipment());
+        }
+
+    }
+
+    /**
+     * Block hit, it the block is there and not air.
+     * @param main Reference block, the one at monster's body.
+     * @param x Determines direction of E or W if not 0.
+     * @param z Determines direction of N or S if not 0.
+     */
+    @Deprecated
+    public void hitBlock(Block main, int x, int z)
     {
         BlockFace mainDirection = null;
         if (x != 0)

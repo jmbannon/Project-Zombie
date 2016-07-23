@@ -64,7 +64,7 @@ public class BlockBuffer
     }
 
     /**
-     * @param material = Type of block needed from defaults.
+     * @param material Type of block needed from defaults.
      * @return The SurvivalBlocks with default Team block info. Null if not a saved type.
      */
     public static SurvivalBlock getServivalBlock(Material material) {
@@ -122,8 +122,8 @@ public class BlockBuffer
 
     /**
      * Receives a TeamBlock from the buffer.
-     * @param loc = Location of TeamBlock.
-     * @return = TeamBlock at location, null if not found.
+     * @param loc Location of TeamBlock.
+     * @return TeamBlock at location, null if not found.
      */
     public static TeamBlock getTeamBlock(Location loc) {
         return teamBlocks.get(loc);
@@ -131,8 +131,8 @@ public class BlockBuffer
 
     /**
      * TeamBlock to be added by its location.
-     * @param teamBlock = tB to be added.
-     * @param loc = Location to find it in buffer.
+     * @param teamBlock tB to be added.
+     * @param loc Location to find it in buffer.
      */
     public static void add(TeamBlock teamBlock, Location loc)
     {
@@ -140,7 +140,7 @@ public class BlockBuffer
     }
 
     /**
-     * @param loc = TeamBlock to be removed from buffer.
+     * @param loc TeamBlock to be removed from buffer.
      */
     public static void remove(Location loc)
     {
@@ -149,7 +149,7 @@ public class BlockBuffer
 
     /**
      * Remove blocks belonging to a team.
-     * @param teamName = Team that owns the blocks.
+     * @param teamName Team that owns the blocks.
      */
     public static void removeTeamBlocks(String teamName)
     {
@@ -168,7 +168,7 @@ public class BlockBuffer
 
     /**
      * Removes blocks out of range from the base.
-     * @param teamName = Team that owns the blocks.
+     * @param teamName Team that owns the blocks.
      */
     public static void removeTeamBlocksFar(String teamName)
     {
@@ -214,7 +214,7 @@ public class BlockBuffer
 
     /**
      * Removes the TeamBlock.
-     * @param loc = TeamBlock's location.
+     * @param loc TeamBlock's location.
      */
     public static void removeTeamBlock(Location loc)
     {
@@ -234,7 +234,7 @@ public class BlockBuffer
             if (team != null)
             {
                 Location spawn = team.getSpawn();
-                if (spawn != null)
+                if (spawn != null && spawn.getWorld() == loc.getWorld())
                     return spawn.distance(loc) <= BlockBuffer.getBuildRadius();
             }
         }
@@ -265,11 +265,14 @@ public class BlockBuffer
                     return BlockBuffer.getBuildRadius() * 4;
                 for (Location spawn : spawns)
                 {
-                    double distance = spawn.distance(loc);
-                    if (shortestDistance == -1)
-                        shortestDistance = distance;
-                    if (distance < shortestDistance)
-                        shortestDistance = distance;
+                    if (spawn.getWorld() == loc.getWorld())
+                    {
+                        double distance = spawn.distance(loc);
+                        if (shortestDistance == -1)
+                            shortestDistance = distance;
+                        if (distance < shortestDistance)
+                            shortestDistance = distance;
+                    }
                 }
             }
         }

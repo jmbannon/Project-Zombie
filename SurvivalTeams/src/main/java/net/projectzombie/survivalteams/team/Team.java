@@ -18,8 +18,6 @@ package net.projectzombie.survivalteams.team;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import net.projectzombie.survivalteams.file.FilePath;
-import net.projectzombie.survivalteams.file.FileRead;
 import net.projectzombie.survivalteams.file.FileWrite;
 import net.projectzombie.survivalteams.file.buffers.PlayerBuffer;
 import net.projectzombie.survivalteams.player.TPText;

@@ -11,7 +11,7 @@ public class SurvivalBlock {
 
     /**
      * Default block types.
-     * @param health = Block's health.
+     * @param health Block's health.
      */
     public SurvivalBlock(final int health)
     {
@@ -19,7 +19,7 @@ public class SurvivalBlock {
     }
 
     /**
-     * @return = Block's health. May not match disc value, until restart.
+     * @return Block's health. May not match disc value, until restart.
      */
     public int getHealth()
     {
@@ -27,7 +27,7 @@ public class SurvivalBlock {
     }
 
     /**
-     * @param nHealth = The new value of the block's health.
+     * @param nHealth The new value of the block's health.
      */
     public void setHealth(final int nHealth)
     {

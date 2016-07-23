@@ -15,7 +15,7 @@ public class TeamHitTool
     /**
      * Used to make new types of SW.
      * @param hitToDurabilityRatio = Amount that type of weapon is hurt on hit.
-     * @param hitPoints = Amount of damage does to block.
+     * @param hitPoints Amount of damage does to block.
      */
     public TeamHitTool(int hitToDurabilityRatio, int hitPoints)
     {
@@ -35,7 +35,7 @@ public class TeamHitTool
 
     /**
      * Gives item damage.
-     * @param item = Decreases durability.
+     * @param item Decreases durability.
      */
     public void itemHit(ItemStack item)
     {

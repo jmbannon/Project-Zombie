@@ -20,9 +20,9 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Main constructor, meant for all blocks that are not default.
-     * @param health = Block's health.
-     * @param teamName = Team that placed the block.
-     * @param loc = Location of block.
+     * @param health Block's health.
+     * @param teamName Team that placed the block.
+     * @param loc Location of block.
      */
     public TeamBlock(final int health, final String teamName, final Location loc)
     {
@@ -32,15 +32,7 @@ public class TeamBlock extends SurvivalBlock {
     }
 
     /**
-     * @param loc = New value of the block's location.
-     */
-    public void setLocation(final Location loc)
-    {
-        this.loc = loc;
-    }
-
-    /**
-     * @param teamName = New team the block belongs to. Only should be used when migrating
+     * @param teamName New team the block belongs to. Only should be used when migrating
      *                      from default.
      */
     public void setTeamName(final String teamName)
@@ -49,7 +41,7 @@ public class TeamBlock extends SurvivalBlock {
     }
 
     /**
-     * @return = Name of team block belongs to.
+     * @return Name of team block belongs to.
      */
     public String getTeamName()
     {
@@ -57,7 +49,7 @@ public class TeamBlock extends SurvivalBlock {
     }
 
     /**
-     * @return = Location of block.
+     * @return Location of block.
      */
     public Location getLocation()
     {
@@ -67,8 +59,8 @@ public class TeamBlock extends SurvivalBlock {
     /**
      * Given the item in hand the block will take damage, item will also take damage,
      *  if damageable.
-     * @param pI = Player's inventory that is doing the attack.
-     * @Return = True if the block broke because of the hit and did so successfully.
+     * @param pI Player's inventory that is doing the attack.
+     * @Return True if the block broke because of the hit and did so successfully.
      */
     public boolean takeHit(PlayerInventory pI) {
         // Tool damage if damageable hitTool.
@@ -93,8 +85,8 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Zombie specific damage event.
-     * @param eE = Zombie's inventory.
-     * @Return = True if the block broke because of the hit and did so successfully.
+     * @param eE Zombie's inventory.
+     * @Return True if the block broke because of the hit and did so successfully.
      */
     public boolean takeHit(EntityEquipment eE) {
         // Can be changed to specify zombie's as a whole damage.
@@ -105,8 +97,8 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Unifying damage event, given item gives block damage.
-     * @param weapon = Damage specifier.
-     * @Return = True if the block broke because of the hit and did so successfully.
+     * @param weapon Damage specifier.
+     * @Return True if the block broke because of the hit and did so successfully.
      */
     private boolean takeHit(ItemStack weapon)
     {
@@ -130,7 +122,7 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Subtracts or adds to health depending on sign of hitValue.
-     * @param hitValue = amount to add or subtract from health.
+     * @param hitValue amount to add or subtract from health.
      */
     private void hit(final int hitValue)
     {
@@ -143,8 +135,8 @@ public class TeamBlock extends SurvivalBlock {
     /**
      * Gives a hitValue value to the block, negative numbers will hurt the block, and
      *  positive numbers will heal it. Returns true if the block broke from the hitValue.
-     * @param hitValue = Hit value on block, negative for block damage and positive for healing.
-     * @return = True if the block broke because of the hit and did so successfully.
+     * @param hitValue Hit value on block, negative for block damage and positive for healing.
+     * @return True if the block broke because of the hit and did so successfully.
      */
     public boolean takeHit(final int hitValue)
     {
@@ -159,7 +151,7 @@ public class TeamBlock extends SurvivalBlock {
     }
 
     /**
-     * @return = True if dead.
+     * @return True if dead.
      */
     public boolean isDead()
     {
@@ -173,7 +165,7 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Kills the block.
-     * @Return = True if the disc deletion of the block was successful.
+     * @Return True if the disc deletion of the block was successful.
      */
     public boolean kill()
     {
@@ -189,7 +181,7 @@ public class TeamBlock extends SurvivalBlock {
 
     /**
      * Saves the block.
-     * @return = True if save was successful.
+     * @return True if save was successful.
      */
     public boolean saveTeamBlock() {
         return FileWrite.writeTeamBlockHealth(teamName, loc, getHealth());
@@ -199,7 +191,7 @@ public class TeamBlock extends SurvivalBlock {
      * Creates a SB and adds it to buffer.
      * @param block
      * @param teamNameN
-     * @return = If write of new block is successful.
+     * @return If write of new block is successful.
      */
     public static boolean createTeamBlock(Block block, String teamNameN) {
         SurvivalBlock sBT = BlockBuffer.getServivalBlock(block.getType());

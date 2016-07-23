@@ -58,7 +58,7 @@ public class PlayerListener implements Listener
 {
     /**
      * Allows the player to check block health on interact.
-     * @param event = Player clicking on a block to check its health stats.
+     * @param event Player clicking on a block to check its health stats.
      */
     @EventHandler
     public void showTeamBlockInfo(final PlayerInteractEvent event)
@@ -89,7 +89,7 @@ public class PlayerListener implements Listener
 
     /**
      * Allows players to place certain blocks near their base, and then tracks them in a buffer.
-     * @param event = Player's place event.
+     * @param event Player's place event.
      */
     @EventHandler
     public void trackTeamBlocks(final BlockPlaceEvent event)
@@ -106,7 +106,7 @@ public class PlayerListener implements Listener
 
     /**
      * Tracks player's hitting blocks, and damages Survival Blocks if the block is a SB.
-     * @param event = Event of block being damaged.
+     * @param event Event of block being damaged.
      */
     @EventHandler
     public void trackTeamBlockPlayerDamage(final BlockDamageEvent event)
@@ -126,7 +126,7 @@ public class PlayerListener implements Listener
     /**
      * Tracks Zombies targeting players, so to allow breaking blocks which block the
      *  zombie from the player.
-     * @param event = Zombie targeting the player.
+     * @param event Zombie targeting the player.
      */
     @EventHandler
     public void trackTeamBlockMonsterDamage(final EntityTargetEvent event)
@@ -142,7 +142,7 @@ public class PlayerListener implements Listener
 
     /**
      * Tracks when players get damaged, so team members don't damage each other.
-     * @param event = Entity attacking an entity.
+     * @param event Entity attacking an entity.
      */
     @EventHandler
     public void correctPVPHit(final EntityDamageByEntityEvent event)
@@ -205,7 +205,7 @@ public class PlayerListener implements Listener
 
     /**
      * If player's team has a usable base, it will spawn them there.
-     * @param event = Player's death.
+     * @param event Player's death.
      */
     @EventHandler
     public void spawnToCorrectBase(final PlayerRespawnEvent event)
