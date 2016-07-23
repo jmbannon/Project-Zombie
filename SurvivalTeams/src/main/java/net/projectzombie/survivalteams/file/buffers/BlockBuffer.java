@@ -261,6 +261,8 @@ public class BlockBuffer
             if (team != null)
             {
                 spawns.remove(team.getSpawn());
+                if (spawns.isEmpty())
+                    return BlockBuffer.getBuildRadius() * 4;
                 for (Location spawn : spawns)
                 {
                     double distance = spawn.distance(loc);

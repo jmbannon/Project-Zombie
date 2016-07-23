@@ -225,11 +225,13 @@ public class TeamPlayer
         if (isLeader())
         {
             double distanceFromEnemy = BlockBuffer.getMinDistanceFromEnemyBase(player);
+            Bukkit.getPlayer("Gephery").sendMessage("" + distanceFromEnemy);
             boolean noLandConflicts = distanceFromEnemy > (BlockBuffer.getBuildRadius() * 2);
             if (isValidSpawnSet(location) && noLandConflicts)
             {
                 if (FileWrite.writeSpawn(team, location))
                 {
+                    TeamBuffer.getSpawns().remove(team.getSpawn());
                     removeSpawnFlag(team.getSpawn());
                     team.setSpawn(location);
                     BlockBuffer.removeTeamBlocksFar(team.getName());
